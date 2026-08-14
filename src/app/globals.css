@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-canvas: #ffffff;
+  --color-surface-soft: #f7f7f5;
+  --color-surface-muted: #ebebea;
+  --color-brand-green: #00872e;
+  --color-brand-green-hover: #007327;
+  --color-text-primary: #121212;
+  --color-text-secondary: #4b5563;
+  --color-text-muted: #6b7280;
+  --color-border: #e5e7eb;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    border-color: var(--color-border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    color-scheme: light;
+    background-color: #ffffff;
+    color: #121212;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: #ffffff;
+    color: #121212;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* Editorial Headings */
+  h1, h2, h3, .font-editorial {
+    font-family: var(--font-serif), Newsreader, Georgia, serif;
+    letter-spacing: -0.02em;
+    font-weight: 500;
+  }
+
+  /* Minimal Clean Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #ffffff;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+  }
+}
+
+@layer components {
+  /* Brilliant-style Solid Green CTA Button */
+  .btn-brilliant-primary {
+    @apply inline-flex items-center justify-center font-medium bg-[#00872e] text-white hover:bg-[#007327] rounded-full px-6 py-3 transition-colors shadow-button cursor-pointer select-none active:scale-[0.99];
+  }
+
+  /* Brilliant-style Ghost Outline Pill */
+  .btn-brilliant-secondary {
+    @apply inline-flex items-center justify-center font-medium bg-transparent text-[#121212] border border-[#d1d5db] hover:border-[#121212] rounded-full px-6 py-3 transition-colors cursor-pointer select-none active:scale-[0.99];
+  }
+
+  /* Minimalist Interactive Card */
+  .brilliant-card {
+    @apply bg-white border border-[#e5e7eb] rounded-2xl p-6 transition-all;
+  }
+
+  /* Pastel Feature Card Containers */
+  .card-tint-peach {
+    @apply bg-[#fbf3ea] rounded-3xl p-6 sm:p-10 border border-[#f2e2cf];
+  }
+
+  .card-tint-mint {
+    @apply bg-[#eaf6ed] rounded-3xl p-6 sm:p-10 border border-[#d4edd9];
+  }
+
+  .card-tint-sky {
+    @apply bg-[#edf4fb] rounded-3xl p-6 sm:p-10 border border-[#d7e6f6];
+  }
+
+  .card-tint-gray {
+    @apply bg-[#f7f7f5] rounded-3xl p-6 sm:p-10 border border-[#e5e5e2];
+  }
+}
