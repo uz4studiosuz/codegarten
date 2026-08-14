@@ -12,7 +12,7 @@ export const LifestylePedagogySections: React.FC = () => {
             <div className="lg:col-span-6">
               <div className="rounded-3xl overflow-hidden aspect-[4/3] relative border border-[#e5e7eb] shadow-card">
                 <Image
-                  src="/assets/photo-desktop-wide.jpg"
+                  src="/assets/images/photo-desktop-wide.jpg"
                   alt="Learning on schedule"
                   fill
                   className="object-cover"
@@ -64,7 +64,7 @@ export const LifestylePedagogySections: React.FC = () => {
             <div className="lg:col-span-6">
               <div className="rounded-3xl overflow-hidden aspect-[4/3] relative border border-[#e5e7eb] shadow-card">
                 <Image
-                  src="/assets/experts-desktop.png"
+                  src="/assets/images/experts-desktop.png"
                   alt="Top University Experts"
                   fill
                   className="object-cover"

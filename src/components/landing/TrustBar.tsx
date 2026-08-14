@@ -10,7 +10,7 @@ export const TrustBar: React.FC = () => {
           <div className="flex flex-col items-center text-center px-4 pt-4 md:pt-0">
             <div className="relative w-8 h-8 mb-3">
               <Image
-                src="/assets/award-1.svg"
+                src="/assets/icons/award-1.svg"
                 alt="Award"
                 fill
                 className="object-contain"
@@ -28,7 +28,7 @@ export const TrustBar: React.FC = () => {
           <div className="flex flex-col items-center text-center px-4 pt-4 md:pt-0">
             <div className="relative w-24 h-6 mb-3">
               <Image
-                src="/assets/review-stars.svg"
+                src="/assets/icons/review-stars.svg"
                 alt="5 Stars"
                 fill
                 className="object-contain"
@@ -46,7 +46,7 @@ export const TrustBar: React.FC = () => {
           <div className="flex flex-col items-center text-center px-4 pt-4 md:pt-0">
             <div className="relative w-8 h-8 mb-3">
               <Image
-                src="/assets/learners-1.svg"
+                src="/assets/icons/learners-1.svg"
                 alt="Learners"
                 fill
                 className="object-contain"

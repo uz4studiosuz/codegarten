@@ -37,8 +37,8 @@ export const InteractiveStorySection: React.FC = () => {
                 playsInline
                 className="w-full h-full object-cover rounded-2xl"
               >
-                <source src="/assets/concepts-click-desktop.webm" type="video/webm" />
-                <source src="/assets/concepts-click-desktop.mp4" type="video/mp4" />
+                <source src="/assets/videos/concepts-click-desktop.webm" type="video/webm" />
+                <source src="/assets/videos/concepts-click-desktop.mp4" type="video/mp4" />
               </video>
             </div>
           </div>
@@ -76,8 +76,8 @@ export const InteractiveStorySection: React.FC = () => {
                 playsInline
                 className="w-full h-full object-cover rounded-2xl"
               >
-                <source src="/assets/built-to-think-desktop.webm" type="video/webm" />
-                <source src="/assets/built-to-think-desktop.mp4" type="video/mp4" />
+                <source src="/assets/videos/built-to-think-desktop.webm" type="video/webm" />
+                <source src="/assets/videos/built-to-think-desktop.mp4" type="video/mp4" />
               </video>
             </div>
           </div>
@@ -95,8 +95,8 @@ export const InteractiveStorySection: React.FC = () => {
                 playsInline
                 className="w-full h-full object-cover rounded-2xl"
               >
-                <source src="/assets/adapts-desktop.webm" type="video/webm" />
-                <source src="/assets/adapts-desktop.mp4" type="video/mp4" />
+                <source src="/assets/videos/adapts-desktop.webm" type="video/webm" />
+                <source src="/assets/videos/adapts-desktop.mp4" type="video/mp4" />
               </video>
             </div>
           </div>
@@ -134,8 +134,8 @@ export const InteractiveStorySection: React.FC = () => {
                 playsInline
                 className="w-full h-full object-cover rounded-2xl"
               >
-                <source src="/assets/keep-learning-desktop.webm" type="video/webm" />
-                <source src="/assets/keep-learning-desktop.mp4" type="video/mp4" />
+                <source src="/assets/videos/keep-learning-desktop.webm" type="video/webm" />
+                <source src="/assets/videos/keep-learning-desktop.mp4" type="video/mp4" />
               </video>
             </div>
           </div>

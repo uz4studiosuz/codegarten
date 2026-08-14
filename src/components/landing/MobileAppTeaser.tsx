@@ -2,16 +2,13 @@ import React from "react";
 import Image from "next/image";
 import { Container } from "@/design-system/primitives/Container";
 import { Badge } from "@/design-system/primitives/Badge";
-import { Smartphone, Check, Zap, Download } from "lucide-react";
+import { Smartphone, Check } from "lucide-react";
 
 export const MobileAppTeaser: React.FC = () => {
   return (
-    <section id="mobile-app" className="py-20 md:py-28 relative bg-bg-secondary/40 border-t border-border-subtle overflow-hidden">
+    <section id="mobile-app" className="py-20 md:py-28 relative bg-[#f7f7f5] border-t border-[#e5e7eb] overflow-hidden">
       <Container size="xl">
-        <div className="rounded-3xl bg-gradient-to-br from-bg-card via-[#161a24] to-bg-card border border-border-medium p-8 sm:p-12 lg:p-16 shadow-deep relative overflow-hidden">
-          {/* Ambient Glows */}
-          <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-brand-electric/15 rounded-full blur-[120px] pointer-events-none" />
-
+        <div className="rounded-3xl bg-white border border-[#e5e7eb] p-8 sm:p-12 lg:p-16 shadow-card relative overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             {/* Left: Info */}
             <div className="lg:col-span-7 flex flex-col items-start">
@@ -20,51 +17,48 @@ export const MobileAppTeaser: React.FC = () => {
                 iOS &amp; Android Mobil Ilovasi
               </Badge>
 
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-5 leading-tight">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-normal text-[#121212] tracking-tight mb-5 font-serif">
                 Xohlagan joyda,{" "}
-                <span className="text-gradient-brand">cho&apos;ntagingizda o&apos;rganing</span>
+                <span className="italic">cho&apos;ntagingizda o&apos;rganing</span>
               </h2>
 
-              <p className="text-base sm:text-lg text-text-secondary leading-relaxed mb-8">
+              <p className="text-base sm:text-lg text-[#4b5563] leading-relaxed mb-8">
                 Metroda, navbatda yoki sayrda — mobil ilovamiz to&apos;liq oflayn rejimni va sensorli qulay interaktiv vazifalarni qo&apos;llab-quvvatlaydi.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 w-full">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-5 h-5 rounded-full bg-accent-green/20 text-accent-green flex items-center justify-center shrink-0">
+                  <div className="w-5 h-5 rounded-full bg-[#e6f4ea] text-[#00872e] flex items-center justify-center shrink-0">
                     <Check className="w-3.5 h-3.5 stroke-[3]" />
                   </div>
-                  <span className="text-sm font-medium text-text-primary">Oflayn rejimda ishlash</span>
+                  <span className="text-sm font-medium text-[#121212]">Oflayn rejimda ishlash</span>
                 </div>
                 <div className="flex items-center gap-2.5">
-                  <div className="w-5 h-5 rounded-full bg-accent-green/20 text-accent-green flex items-center justify-center shrink-0">
+                  <div className="w-5 h-5 rounded-full bg-[#e6f4ea] text-[#00872e] flex items-center justify-center shrink-0">
                     <Check className="w-3.5 h-3.5 stroke-[3]" />
                   </div>
-                  <span className="text-sm font-medium text-text-primary">Tezkor haptik fikr-mulohaza</span>
+                  <span className="text-sm font-medium text-[#121212]">Tezkor sensorli fikr-mulohaza</span>
                 </div>
                 <div className="flex items-center gap-2.5">
-                  <div className="w-5 h-5 rounded-full bg-accent-green/20 text-accent-green flex items-center justify-center shrink-0">
+                  <div className="w-5 h-5 rounded-full bg-[#e6f4ea] text-[#00872e] flex items-center justify-center shrink-0">
                     <Check className="w-3.5 h-3.5 stroke-[3]" />
                   </div>
-                  <span className="text-sm font-medium text-text-primary">Kompyuter bilan sinxronizatsiya</span>
+                  <span className="text-sm font-medium text-[#121212]">Kompyuter bilan sinxronizatsiya</span>
                 </div>
                 <div className="flex items-center gap-2.5">
-                  <div className="w-5 h-5 rounded-full bg-accent-green/20 text-accent-green flex items-center justify-center shrink-0">
+                  <div className="w-5 h-5 rounded-full bg-[#e6f4ea] text-[#00872e] flex items-center justify-center shrink-0">
                     <Check className="w-3.5 h-3.5 stroke-[3]" />
                   </div>
-                  <span className="text-sm font-medium text-text-primary">Kunlik vidjetlar va streak</span>
+                  <span className="text-sm font-medium text-[#121212]">Kunlik vidjetlar va streak</span>
                 </div>
               </div>
 
               {/* App Store / Google Play Buttons */}
               <div className="flex flex-wrap items-center gap-4">
-                <a
-                  href="#"
-                  className="hover:opacity-90 transition-opacity hover:scale-105 transition-transform"
-                >
+                <a href="#" className="hover:opacity-90 transition-opacity">
                   <div className="relative w-40 h-12">
                     <Image
-                      src="/assets/download-on-the-app-store.svg"
+                      src="/assets/icons/download-on-the-app-store.svg"
                       alt="Download on App Store"
                       fill
                       className="object-contain"
@@ -72,13 +66,10 @@ export const MobileAppTeaser: React.FC = () => {
                   </div>
                 </a>
 
-                <a
-                  href="#"
-                  className="hover:opacity-90 transition-opacity hover:scale-105 transition-transform"
-                >
+                <a href="#" className="hover:opacity-90 transition-opacity">
                   <div className="relative w-40 h-12">
                     <Image
-                      src="/assets/get-it-on-google-play.svg"
+                      src="/assets/icons/get-it-on-google-play.svg"
                       alt="Get it on Google Play"
                       fill
                       className="object-contain"
@@ -90,9 +81,9 @@ export const MobileAppTeaser: React.FC = () => {
 
             {/* Right: Graphic Media */}
             <div className="lg:col-span-5 flex justify-center">
-              <div className="relative w-full max-w-sm aspect-[4/5] rounded-3xl overflow-hidden border border-border-bright shadow-deep bg-bg-card">
+              <div className="relative w-full max-w-sm aspect-[4/5] rounded-3xl overflow-hidden border border-[#e5e7eb] shadow-card bg-white">
                 <Image
-                  src="/assets/experts-desktop.png"
+                  src="/assets/images/experts-desktop.png"
                   alt="Mobile App Preview"
                   fill
                   className="object-cover"

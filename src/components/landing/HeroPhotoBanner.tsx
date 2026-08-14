@@ -1,6 +1,5 @@
 import React from "react";
 import Image from "next/image";
-import { Button } from "@/design-system/primitives/Button";
 
 export const HeroPhotoBanner: React.FC = () => {
   return (
@@ -8,7 +7,7 @@ export const HeroPhotoBanner: React.FC = () => {
       {/* Background Photography Asset */}
       <div className="absolute inset-0 -z-10">
         <Image
-          src="/assets/photo-desktop-wide.jpg"
+          src="/assets/images/photo-desktop-wide.jpg"
           alt="Student Coding Tutor"
           fill
           className="object-cover brightness-50"
@@ -35,7 +34,7 @@ export const HeroPhotoBanner: React.FC = () => {
           <a href="#" className="hover:opacity-90 transition-opacity">
             <div className="relative w-36 h-11">
               <Image
-                src="/assets/download-on-the-app-store.svg"
+                src="/assets/icons/download-on-the-app-store.svg"
                 alt="Download on App Store"
                 fill
                 className="object-contain"
@@ -45,7 +44,7 @@ export const HeroPhotoBanner: React.FC = () => {
           <a href="#" className="hover:opacity-90 transition-opacity">
             <div className="relative w-36 h-11">
               <Image
-                src="/assets/get-it-on-google-play.svg"
+                src="/assets/icons/get-it-on-google-play.svg"
                 alt="Get it on Google Play"
                 fill
                 className="object-contain"

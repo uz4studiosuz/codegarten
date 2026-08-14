@@ -1,7 +1,7 @@
 import React from "react";
 import { Container } from "@/design-system/primitives/Container";
 import { Badge } from "@/design-system/primitives/Badge";
-import { Check, X, Sparkles, Brain, Cpu, Compass, Flame } from "lucide-react";
+import { Check, X, Brain, Cpu, Compass } from "lucide-react";
 
 export const WhyCodegarten: React.FC = () => {
   const comparisonItems = [
@@ -31,68 +31,66 @@ export const WhyCodegarten: React.FC = () => {
     {
       title: "Har bir konsepsiya bitta bosishda oydinlashadi",
       description: "Murakkab mavzular qismlarga ajratilib, intuitiv vizual elementlar orqali ko'rsatiladi.",
-      video: "/assets/concepts-click-desktop.webm",
-      icon: <Brain className="w-5 h-5 text-accent-green" />,
+      video: "/assets/videos/concepts-click-desktop.webm",
+      icon: <Brain className="w-5 h-5 text-[#00872e]" />,
     },
     {
       title: "Fikrlashga undovchi arxitektura",
       description: "Tayyor kodni ko'chirib olish emas, balki nima uchun shunday yozilishini anglab yetish.",
-      video: "/assets/built-to-think-desktop.webm",
-      icon: <Cpu className="w-5 h-5 text-brand-light" />,
+      video: "/assets/videos/built-to-think-desktop.webm",
+      icon: <Cpu className="w-5 h-5 text-[#213c9e]" />,
     },
     {
       title: "Darajangizga moslashuvchan algoritm",
       description: "Sizning bilmingizga qarab topshiriqlar murakkabligi avtomatik moslashadi.",
-      video: "/assets/adapts-desktop.webm",
-      icon: <Compass className="w-5 h-5 text-accent-purple" />,
+      video: "/assets/videos/adapts-desktop.webm",
+      icon: <Compass className="w-5 h-5 text-[#8a5cf6]" />,
     },
   ];
 
   return (
-    <section id="why-codegarten" className="py-20 md:py-28 relative bg-bg-canvas">
+    <section id="why-codegarten" className="py-20 md:py-28 relative bg-white border-t border-[#e5e7eb]">
       <Container size="xl">
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-16">
-          <Badge variant="glow" size="md" className="mb-4">
-            <Sparkles className="w-3.5 h-3.5 mr-1" />
+          <Badge variant="brand" size="md" className="mb-4">
             Ilmiy Asoslangan Metodika
           </Badge>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-4 leading-tight">
-            Nima uchun Codegarten{" "}
-            <span className="text-gradient-rainbow">videolardan ustun?</span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-normal text-[#121212] tracking-tight mb-4 font-serif">
+            Nima uchun Codegarten <span className="italic">videolardan ustun?</span>
           </h2>
 
-          <p className="text-base sm:text-lg text-text-secondary leading-relaxed">
+          <p className="text-base sm:text-lg text-[#4b5563] leading-relaxed font-normal">
             Inson miyasi passiv ma&apos;lumotni tez unutadi. Codegarten sizni har bir daqiqada faol fikrlashga va sinovdan o&apos;tkazishga undaydi.
           </p>
         </div>
 
         {/* Comparison Table / Matrix */}
-        <div className="max-w-4xl mx-auto mb-20 rounded-2xl bg-bg-card border border-border-medium overflow-hidden shadow-deep">
-          <div className="grid grid-cols-12 bg-[#121620] p-4 sm:p-5 border-b border-border-subtle text-xs sm:text-sm font-bold">
-            <div className="col-span-4 text-text-muted">XUSUSIYAT</div>
-            <div className="col-span-4 text-accent-red flex items-center gap-1.5">
+        <div className="max-w-4xl mx-auto mb-20 rounded-3xl bg-[#f7f7f5] border border-[#e5e5e2] overflow-hidden shadow-sm">
+          <div className="grid grid-cols-12 bg-[#ebebea] p-4 sm:p-5 border-b border-[#e5e5e2] text-xs sm:text-sm font-bold text-[#121212]">
+            <div className="col-span-4 text-[#6b7280]">XUSUSIYAT</div>
+            <div className="col-span-4 text-[#dc2626] flex items-center gap-1.5">
               <X className="w-4 h-4" /> Passiv Video Kurslar
             </div>
-            <div className="col-span-4 text-accent-green flex items-center gap-1.5 font-extrabold">
+            <div className="col-span-4 text-[#00872e] flex items-center gap-1.5 font-extrabold">
               <Check className="w-4 h-4" /> Codegarten Usuli
             </div>
           </div>
 
-          <div className="divide-y divide-border-subtle">
+          <div className="divide-y divide-[#e5e5e2]">
             {comparisonItems.map((item, idx) => (
               <div
                 key={idx}
-                className="grid grid-cols-12 p-4 sm:p-5 text-xs sm:text-sm items-center hover:bg-bg-elevated/40 transition-colors"
+                className="grid grid-cols-12 p-4 sm:p-5 text-xs sm:text-sm items-center hover:bg-white transition-colors"
               >
-                <div className="col-span-4 font-semibold text-white">
+                <div className="col-span-4 font-semibold text-[#121212]">
                   {item.feature}
                 </div>
-                <div className="col-span-4 text-text-muted pr-2">
+                <div className="col-span-4 text-[#6b7280] pr-2">
                   {item.passive}
                 </div>
-                <div className="col-span-4 text-brand-light font-medium flex items-center gap-2">
-                  <Check className="w-4 h-4 text-accent-green shrink-0" />
+                <div className="col-span-4 text-[#00872e] font-medium flex items-center gap-2">
+                  <Check className="w-4 h-4 text-[#00872e] shrink-0" />
                   <span>{item.codegarten}</span>
                 </div>
               </div>
@@ -105,15 +103,15 @@ export const WhyCodegarten: React.FC = () => {
           {featureCards.map((feat, idx) => (
             <div
               key={idx}
-              className="flex flex-col rounded-2xl bg-bg-card/90 border border-border-subtle overflow-hidden hover:border-brand-electric/40 transition-all duration-300 shadow-card hover:shadow-glow group"
+              className="flex flex-col rounded-3xl bg-white border border-[#e5e7eb] overflow-hidden hover:border-[#d1d5db] transition-all duration-200 shadow-card hover:shadow-float group"
             >
-              <div className="relative aspect-[4/3] w-full bg-[#0a0c10] overflow-hidden">
+              <div className="relative aspect-[4/3] w-full bg-[#f9fafb] overflow-hidden">
                 <video
                   autoPlay
                   muted
                   loop
                   playsInline
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover"
                 >
                   <source src={feat.video} type="video/webm" />
                 </video>
@@ -121,14 +119,14 @@ export const WhyCodegarten: React.FC = () => {
 
               <div className="p-6 flex flex-col justify-between flex-1">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-9 h-9 rounded-xl bg-bg-elevated border border-border-subtle flex items-center justify-center">
+                  <div className="w-9 h-9 rounded-xl bg-[#f3f4f6] border border-[#e5e7eb] flex items-center justify-center">
                     {feat.icon}
                   </div>
-                  <h3 className="text-base sm:text-lg font-bold text-white leading-snug">
+                  <h3 className="text-base sm:text-lg font-bold text-[#121212] leading-snug font-sans">
                     {feat.title}
                   </h3>
                 </div>
-                <p className="text-xs sm:text-sm text-text-secondary leading-relaxed">
+                <p className="text-xs sm:text-sm text-[#4b5563] leading-relaxed font-normal">
                   {feat.description}
                 </p>
               </div>
