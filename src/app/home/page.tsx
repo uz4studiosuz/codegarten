@@ -4,19 +4,15 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { AppNavbar } from "@/components/dashboard/AppNavbar";
 import { HomeDashboard } from "@/components/dashboard/HomeDashboard";
-import { InteractiveLessonModal } from "@/components/dashboard/InteractiveLessonModal";
 import { AboutModal } from "@/components/dashboard/AboutModal";
 import { mockUserProfile } from "@/data/mockCourseData";
 
 export default function HomePage() {
   const router = useRouter();
-  const [activeLessonModalOpen, setActiveLessonModalOpen] = useState(false);
-  const [currentModuleId, setCurrentModuleId] = useState<string>("mod-2");
   const [isAboutOpen, setIsAboutOpen] = useState(false);
 
   const handleStartLesson = (moduleId: string) => {
-    setCurrentModuleId(moduleId);
-    setActiveLessonModalOpen(true);
+    router.push(`/courses/${moduleId}`);
   };
 
   return (
@@ -27,18 +23,11 @@ export default function HomePage() {
         onClose={() => setIsAboutOpen(false)}
       />
 
-      {/* Interactive Lesson Modal / Player */}
-      <InteractiveLessonModal
-        moduleId={currentModuleId}
-        isOpen={activeLessonModalOpen}
-        onClose={() => setActiveLessonModalOpen(false)}
-      />
-
       {/* App Top Navigation Bar with activeTab="home" */}
       <AppNavbar
         activeTab="home"
         user={mockUserProfile}
-        onOpenStreakModal={() => handleStartLesson("mod-2")}
+        onOpenStreakModal={() => router.push("/learn/mod-2/step-1")}
         onOpenAbout={() => setIsAboutOpen(true)}
       />
 

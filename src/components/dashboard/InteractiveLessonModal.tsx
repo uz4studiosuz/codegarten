@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import confetti from "canvas-confetti";
 import {
   IconX,
   IconCircleCheckFilled,
@@ -34,16 +33,23 @@ export const InteractiveLessonModal: React.FC<InteractiveLessonModalProps> = ({
 
   const correctAnswer = 1; // Option B
 
-  const handleCheckAnswer = () => {
+  const handleCheckAnswer = async () => {
     if (selectedOption === null) return;
     setIsAnswerChecked(true);
 
     if (selectedOption === correctAnswer) {
-      confetti({
-        particleCount: 60,
-        spread: 60,
-        origin: { y: 0.6 },
-      });
+      if (typeof window !== "undefined") {
+        try {
+          const confetti = (await import("canvas-confetti")).default;
+          confetti({
+            particleCount: 60,
+            spread: 60,
+            origin: { y: 0.6 },
+          });
+        } catch (e) {
+          console.error(e);
+        }
+      }
     }
   };
 

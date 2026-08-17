@@ -47,7 +47,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-md bg-white dark:bg-[#1c1c1e] text-[#000000] dark:text-white rounded-[32px] shadow-2xl p-6 sm:p-8 border border-gray-100 dark:border-zinc-800 z-10 animate-scaleIn">
+      <div className="relative w-full max-w-md bg-white dark:bg-[#1c1c1e] text-[#000000] dark:text-white rounded-[15px] shadow-2xl p-6 sm:p-8 border-2 border-gray-200 dark:border-zinc-800 z-10 animate-scaleIn">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -68,7 +68,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               <button
                 type="button"
                 onClick={() => setTheme("light")}
-                className={`py-3 px-4 rounded-2xl border flex items-center justify-center gap-2 text-xs font-bold transition-all cursor-pointer ${
+                className={`py-3 px-4 rounded-[12px] border flex items-center justify-center gap-2 text-xs font-bold transition-all cursor-pointer ${
                   theme === "light"
                     ? "border-[#22C55E] bg-[#22C55E]/10 text-[#22C55E]"
                     : "border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-600 dark:text-gray-300"
@@ -81,7 +81,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               <button
                 type="button"
                 onClick={() => setTheme("dark")}
-                className={`py-3 px-4 rounded-2xl border flex items-center justify-center gap-2 text-xs font-bold transition-all cursor-pointer ${
+                className={`py-3 px-4 rounded-[12px] border flex items-center justify-center gap-2 text-xs font-bold transition-all cursor-pointer ${
                   theme === "dark"
                     ? "border-[#22C55E] bg-[#22C55E]/10 text-[#22C55E]"
                     : "border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-600 dark:text-gray-300"
@@ -102,7 +102,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               type="text"
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
-              className="w-full px-4 py-2.5 text-sm bg-gray-50 dark:bg-zinc-800/80 border border-gray-200 dark:border-zinc-700 rounded-2xl outline-none focus:border-[#22C55E]"
+              className="w-full px-4 py-2.5 text-sm bg-gray-50 dark:bg-zinc-800/80 border border-gray-200 dark:border-zinc-700 rounded-[12px] outline-none focus:border-[#22C55E]"
             />
           </div>
 
@@ -130,7 +130,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           {/* Save Button */}
           <button
             type="submit"
-            className="w-full py-3 rounded-full bg-[#22C55E] hover:bg-[#16a34a] text-white text-sm font-bold shadow-md transition-all active:scale-[0.99] cursor-pointer mt-2"
+            className="w-full py-3 rounded-[15px] bg-[#22C55E] hover:bg-[#16a34a] text-white text-sm font-bold shadow-md transition-all active:scale-[0.99] cursor-pointer mt-2"
           >
             {isSaved ? "Saqlandi!" : "Saqlash"}
           </button>

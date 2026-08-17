@@ -237,7 +237,7 @@ export const SettingsView: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setShowAddEmailModal(true)}
-                  className="w-full py-2.5 rounded-full bg-white dark:bg-zinc-100 border border-gray-200 dark:border-white text-black dark:text-black text-sm font-bold transition-all shadow-xs hover:bg-gray-50 active:scale-[0.99] cursor-pointer"
+                  className="w-full py-2.5 rounded-xl bg-white dark:bg-zinc-100 border border-gray-200 dark:border-white text-black dark:text-black text-sm font-bold transition-all shadow-xs hover:bg-gray-50 active:scale-[0.99] cursor-pointer"
                 >
                   Add another email
                 </button>
@@ -249,7 +249,7 @@ export const SettingsView: React.FC = () => {
                   Password
                 </h2>
 
-                <div className="bg-[#1e3a8a]/20 dark:bg-[#1e3a8a]/30 border border-[#3b82f6]/40 dark:border-[#3b82f6]/30 text-blue-900 dark:text-blue-200 rounded-2xl p-4 flex items-start gap-3">
+                <div className="bg-[#1e3a8a]/20 dark:bg-[#1e3a8a]/30 border border-[#3b82f6]/40 dark:border-[#3b82f6]/30 text-blue-900 dark:text-blue-200 rounded-[15px] p-4 flex items-start gap-3">
                   <IconInfoCircle size={20} className="text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
                   <p className="text-xs leading-relaxed">
                     Your account doesn&apos;t have a password set. You sign in using social authentication.
@@ -271,7 +271,7 @@ export const SettingsView: React.FC = () => {
                     </span>
                     <button
                       type="button"
-                      className="px-4 py-1.5 rounded-full border border-gray-200 dark:border-zinc-700 bg-white dark:bg-[#1F1F1F] text-xs font-bold text-black dark:text-white hover:bg-gray-50 dark:hover:bg-zinc-800 transition-all cursor-pointer"
+                      className="px-4 py-1.5 rounded-[12px] border border-gray-200 dark:border-zinc-700 bg-white dark:bg-[#1F1F1F] text-xs font-bold text-black dark:text-white hover:bg-gray-50 dark:hover:bg-zinc-800 transition-all cursor-pointer"
                     >
                       Connect
                     </button>
@@ -283,7 +283,7 @@ export const SettingsView: React.FC = () => {
                     </span>
                     <button
                       type="button"
-                      className="px-4 py-1.5 rounded-full border border-gray-200 dark:border-zinc-700 bg-white dark:bg-[#1F1F1F] text-xs font-bold text-black dark:text-white hover:bg-gray-50 dark:hover:bg-zinc-800 transition-all cursor-pointer"
+                      className="px-4 py-1.5 rounded-[12px] border border-gray-200 dark:border-zinc-700 bg-white dark:bg-[#1F1F1F] text-xs font-bold text-black dark:text-white hover:bg-gray-50 dark:hover:bg-zinc-800 transition-all cursor-pointer"
                     >
                       Connect
                     </button>
@@ -295,7 +295,7 @@ export const SettingsView: React.FC = () => {
                     </span>
                     <button
                       type="button"
-                      className="px-4 py-1.5 rounded-full border border-gray-200 dark:border-zinc-700 bg-white dark:bg-[#1F1F1F] text-xs font-bold text-black dark:text-white hover:bg-gray-50 dark:hover:bg-zinc-800 transition-all cursor-pointer"
+                      className="px-4 py-1.5 rounded-[12px] border border-gray-200 dark:border-zinc-700 bg-white dark:bg-[#1F1F1F] text-xs font-bold text-black dark:text-white hover:bg-gray-50 dark:hover:bg-zinc-800 transition-all cursor-pointer"
                     >
                       Connect
                     </button>
@@ -818,8 +818,8 @@ export const SettingsView: React.FC = () => {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="bg-white dark:bg-[#1F1F1F] rounded-[20px] border-2 border-[#22C55E] p-6 shadow-sm flex flex-col justify-between relative overflow-hidden">
-                  <span className="absolute top-3 right-3 px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#22C55E] text-white">
+                <div className="bg-white dark:bg-[#1F1F1F] rounded-[15px] border-2 border-[#22C55E] p-6 shadow-sm flex flex-col justify-between relative overflow-hidden">
+                  <span className="absolute top-3 right-3 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-[#22C55E] text-white">
                     TAVSIYA
                   </span>
                   <div>
@@ -852,13 +852,13 @@ export const SettingsView: React.FC = () => {
                   </div>
                   <button
                     type="button"
-                    className="btn-primary-tactile w-full py-2.5 text-xs font-bold"
+                    className="w-full py-3 rounded-[15px] bg-[#22C55E] hover:bg-[#16a34a] text-white text-xs font-bold transition-all shadow-md active:scale-[0.99] cursor-pointer"
                   >
                     Yillik tarifni tanlash
                   </button>
                 </div>
 
-                <div className="bg-white dark:bg-[#1F1F1F] rounded-[20px] border border-gray-200 dark:border-zinc-800 p-6 flex flex-col justify-between">
+                <div className="bg-white dark:bg-[#1F1F1F] rounded-[15px] border-2 border-gray-200 dark:border-zinc-800 p-6 flex flex-col justify-between">
                   <div>
                     <h3 className="text-lg font-bold text-black dark:text-white mb-1">
                       Oylik Obuna
@@ -885,7 +885,7 @@ export const SettingsView: React.FC = () => {
                   </div>
                   <button
                     type="button"
-                    className="w-full py-2.5 rounded-full border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 text-black dark:text-white text-xs font-bold hover:bg-gray-100 transition-colors"
+                    className="w-full py-3 rounded-[15px] border-2 border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 text-black dark:text-white text-xs font-bold hover:bg-gray-100 transition-colors cursor-pointer"
                   >
                     Oylik tarifni tanlash
                   </button>
@@ -931,7 +931,7 @@ export const SettingsView: React.FC = () => {
             className="fixed inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => setShowAddEmailModal(false)}
           />
-          <div className="relative bg-white dark:bg-[#1c1c1e] text-black dark:text-white rounded-3xl p-6 max-w-sm w-full z-10 border border-gray-100 dark:border-zinc-800 shadow-2xl animate-scaleIn">
+          <div className="relative bg-white dark:bg-[#1c1c1e] text-black dark:text-white rounded-[15px] p-6 max-w-sm w-full z-10 border-2 border-gray-200 dark:border-zinc-800 shadow-2xl animate-scaleIn">
             <h3 className="text-lg font-bold mb-2">Boshqa email qo&apos;shish</h3>
             <p className="text-xs text-gray-500 dark:text-zinc-400 mb-4">
               Hisobingizga qo&apos;shimcha email manzilini biriktiring.
@@ -941,13 +941,13 @@ export const SettingsView: React.FC = () => {
               value={newEmailInput}
               onChange={(e) => setNewEmailInput(e.target.value)}
               placeholder="example@mail.com"
-              className="w-full px-4 py-2 text-sm bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl mb-4 outline-none focus:border-[#22C55E]"
+              className="w-full px-4 py-2.5 text-sm bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-[12px] mb-4 outline-none focus:border-[#22C55E]"
             />
             <div className="flex gap-2">
               <button
                 type="button"
                 onClick={() => setShowAddEmailModal(false)}
-                className="flex-1 py-2 rounded-xl bg-gray-100 dark:bg-zinc-800 text-xs font-bold"
+                className="flex-1 py-2.5 rounded-[12px] bg-gray-100 dark:bg-zinc-800 text-xs font-bold cursor-pointer"
               >
                 Bekor qilish
               </button>
@@ -960,7 +960,7 @@ export const SettingsView: React.FC = () => {
                     setNewEmailInput("");
                   }
                 }}
-                className="flex-1 py-2 rounded-xl bg-[#22C55E] text-white text-xs font-bold"
+                className="flex-1 py-2.5 rounded-[12px] bg-[#22C55E] text-white text-xs font-bold cursor-pointer"
               >
                 Qo&apos;shish
               </button>
@@ -976,7 +976,7 @@ export const SettingsView: React.FC = () => {
             className="fixed inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => setShowDeleteConfirm(false)}
           />
-          <div className="relative bg-white dark:bg-[#1c1c1e] text-black dark:text-white rounded-3xl p-6 max-w-sm w-full z-10 border border-gray-100 dark:border-zinc-800 shadow-2xl animate-scaleIn">
+          <div className="relative bg-white dark:bg-[#1c1c1e] text-black dark:text-white rounded-[15px] p-6 max-w-sm w-full z-10 border-2 border-gray-200 dark:border-zinc-800 shadow-2xl animate-scaleIn">
             <h3 className="text-lg font-bold mb-2">Hisobni ajratish</h3>
             <p className="text-xs text-gray-500 dark:text-zinc-400 mb-4">
               Haqiqatan ham Google akkauntini ushbu profildan uzmoqchimisiz?
@@ -985,7 +985,7 @@ export const SettingsView: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowDeleteConfirm(false)}
-                className="flex-1 py-2 rounded-xl bg-gray-100 dark:bg-zinc-800 text-xs font-bold cursor-pointer"
+                className="flex-1 py-2.5 rounded-[12px] bg-gray-100 dark:bg-zinc-800 text-xs font-bold cursor-pointer"
               >
                 Bekor qilish
               </button>
@@ -995,7 +995,7 @@ export const SettingsView: React.FC = () => {
                   setConnectedAccountSelected(null);
                   setShowDeleteConfirm(false);
                 }}
-                className="flex-1 py-2 rounded-xl bg-red-600 text-white text-xs font-bold cursor-pointer"
+                className="flex-1 py-2.5 rounded-[12px] bg-red-600 text-white text-xs font-bold cursor-pointer"
               >
                 O&apos;chirish
               </button>

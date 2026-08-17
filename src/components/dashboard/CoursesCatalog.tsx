@@ -149,7 +149,7 @@ export const CoursesCatalog: React.FC<CoursesCatalogProps> = ({
         </div>
 
         {/* ── INNER GRAY CONTAINER with horizontal cards ── */}
-        <div className="relative bg-white dark:bg-[#1F1F1F] rounded-[18px] p-4">
+        <div className="relative bg-[#F8F9FA] dark:bg-[#1F1F1F] rounded-[15px] border border-gray-200/80 dark:border-zinc-800/80 p-4 sm:p-5 shadow-2xs">
 
           {/* Left scroll button */}
           {canScrollLeft && (
@@ -194,9 +194,9 @@ export const CoursesCatalog: React.FC<CoursesCatalogProps> = ({
                 <div
                   key={mod.id}
                   onClick={() => handleCardClick(mod.id, isLocked)}
-                  className={`min-w-[140px] sm:min-w-[148px] lg:min-w-[155px] w-[148px] shrink-0 bg-[#ffffff] dark:bg-[#141414] rounded-[16px] border border-gray-200 dark:border-zinc-700/60 p-3.5 flex flex-col justify-between h-[215px] sm:h-[230px] transition-all duration-200 ${isLocked
+                  className={`min-w-[140px] sm:min-w-[148px] lg:min-w-[155px] w-[148px] shrink-0 bg-[#ffffff] dark:bg-[#141414] rounded-[15px] border border-gray-200 dark:border-zinc-700/60 p-3.5 flex flex-col justify-between h-[215px] sm:h-[230px] transition-all duration-200 ${isLocked
                     ? "cursor-not-allowed opacity-75"
-                    : "cursor-pointer hover:shadow-md active:scale-[0.99]"
+                    : "cursor-pointer hover:shadow-md hover:border-gray-300 dark:hover:border-zinc-500 active:scale-[0.99]"
                     }`}
                 >
                   {/* Top row: number + status icon */}
@@ -256,7 +256,7 @@ export const CoursesCatalog: React.FC<CoursesCatalogProps> = ({
 
       {/* ── O'RTA BOSQICH ── */}
       <section className="mb-3">
-        <div className="bg-white dark:bg-[#1F1F1F] rounded-[18px] border border-gray-200 dark:border-zinc-700/60 p-5 sm:p-6">
+        <div className="bg-white dark:bg-[#1F1F1F] rounded-[15px] border border-gray-200 dark:border-zinc-700/60 p-5 sm:p-6 shadow-xs">
           <div className="flex items-center justify-between gap-4">
             <div>
               <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-zinc-500 block mb-1">
@@ -279,7 +279,7 @@ export const CoursesCatalog: React.FC<CoursesCatalogProps> = ({
 
       {/* ── MAXSUS BOSQICH ── */}
       <section>
-        <div className="bg-white dark:bg-[#1F1F1F] rounded-[18px] border border-gray-200 dark:border-zinc-700/60 p-5 sm:p-6">
+        <div className="bg-white dark:bg-[#1F1F1F] rounded-[15px] border border-gray-200 dark:border-zinc-700/60 p-5 sm:p-6 shadow-xs">
           <div className="flex items-center justify-between gap-4">
             <div>
               <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-zinc-500 block mb-1">

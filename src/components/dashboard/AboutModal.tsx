@@ -19,7 +19,7 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-md bg-white dark:bg-[#1c1c1e] text-[#000000] dark:text-white rounded-[32px] shadow-2xl p-7 border border-gray-100 dark:border-zinc-800 z-10 animate-scaleIn text-center">
+      <div className="relative w-full max-w-md bg-white dark:bg-[#1c1c1e] text-[#000000] dark:text-white rounded-[15px] shadow-2xl p-7 border-2 border-gray-200 dark:border-zinc-800 z-10 animate-scaleIn text-center">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -49,7 +49,7 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
           algoritmik tafakkur va dasturlash ta&apos;limi platformasi.
         </p>
 
-        <div className="mt-5 p-3.5 bg-gray-50 dark:bg-zinc-800/50 rounded-2xl border border-gray-100 dark:border-zinc-800 text-left text-xs text-gray-600 dark:text-gray-300 space-y-1.5">
+        <div className="mt-5 p-3.5 bg-gray-50 dark:bg-zinc-800/50 rounded-[12px] border border-gray-200 dark:border-zinc-800 text-left text-xs text-gray-600 dark:text-gray-300 space-y-1.5">
           <div className="flex items-center gap-2">
             <IconCircleCheckFilled size={16} className="text-[#22C55E] shrink-0" />
             <span>Interaktiv mantiqiy labirint va modullar</span>

@@ -1,20 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { AppNavbar } from "@/components/dashboard/AppNavbar";
 import { CoursesCatalog } from "@/components/dashboard/CoursesCatalog";
-import { InteractiveLessonModal } from "@/components/dashboard/InteractiveLessonModal";
 import { AboutModal } from "@/components/dashboard/AboutModal";
 import { mockUserProfile } from "@/data/mockCourseData";
 
 export default function CoursesPage() {
-  const [activeLessonModalOpen, setActiveLessonModalOpen] = useState(false);
-  const [currentModuleId, setCurrentModuleId] = useState<string>("mod-2");
+  const router = useRouter();
   const [isAboutOpen, setIsAboutOpen] = useState(false);
 
-  const handleStartLesson = (moduleId: string) => {
-    setCurrentModuleId(moduleId);
-    setActiveLessonModalOpen(true);
+  const handleSelectModule = (moduleId: string) => {
+    router.push(`/courses/${moduleId}`);
   };
 
   return (
@@ -25,24 +23,17 @@ export default function CoursesPage() {
         onClose={() => setIsAboutOpen(false)}
       />
 
-      {/* Interactive Lesson Modal / Player */}
-      <InteractiveLessonModal
-        moduleId={currentModuleId}
-        isOpen={activeLessonModalOpen}
-        onClose={() => setActiveLessonModalOpen(false)}
-      />
-
       {/* App Top Navigation Bar with activeTab="courses" */}
       <AppNavbar
         activeTab="courses"
         user={mockUserProfile}
-        onOpenStreakModal={() => handleStartLesson("mod-2")}
+        onOpenStreakModal={() => router.push("/learn/mod-2/step-1")}
         onOpenAbout={() => setIsAboutOpen(true)}
       />
 
       {/* Main Body View (Courses Catalog) */}
       <main className="flex-1">
-        <CoursesCatalog onSelectModule={handleStartLesson} />
+        <CoursesCatalog onSelectModule={handleSelectModule} />
       </main>
     </div>
   );
