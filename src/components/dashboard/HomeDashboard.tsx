@@ -245,8 +245,8 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                   key={mod.id}
                   onClick={() => handleSelectModule(idx)}
                   className={`aspect-square rounded-[15px] p-2 flex items-center justify-center transition-all duration-200 cursor-pointer ${isSelected
-                    ? "border-2 border-[#22C55E] shadow-xs scale-105 bg-[#22C55E]/20"
-                    : "border-2 border-gray-200 dark:border-[#27272a] bg-white dark:bg-[#1b1c20] hover:border-gray-300 dark:hover:border-zinc-700 opacity-80 hover:opacity-100"
+                    ? "border-2 border-[#22C55E] shadow-xs scale-105 bg-[#22C55E]/10"
+                    : "border-2 border-gray-200 dark:border-[#27272a] hover:border-gray-300 dark:hover:border-zinc-700 opacity-80 hover:opacity-100"
                     }`}
                   title={mod.title}
                 >
