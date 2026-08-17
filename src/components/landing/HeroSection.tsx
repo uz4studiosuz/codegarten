@@ -4,10 +4,12 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { Button } from "@/design-system/primitives/Button";
 import { Check, ArrowRight, RotateCcw } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 export const HeroSection: React.FC = () => {
   const [selectedPoint, setSelectedPoint] = useState<number | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const { openAuthModal } = useAuth();
 
   const handlePointClick = (index: number) => {
     setSelectedPoint(index);
@@ -37,11 +39,13 @@ export const HeroSection: React.FC = () => {
 
             {/* Action Buttons: Solid Green Pill + Outline Pill */}
             <div className="flex flex-wrap items-center gap-3.5 mb-10">
-              <a href="#interactive-demo">
-                <Button size="lg" variant="primary">
-                  Bepul boshlash
-                </Button>
-              </a>
+              <Button
+                size="lg"
+                variant="primary"
+                onClick={() => openAuthModal("register")}
+              >
+                Bepul boshlash
+              </Button>
               <a href="#curriculum">
                 <Button size="lg" variant="secondary">
                   O&apos;quv yo&apos;nalishini tanlang

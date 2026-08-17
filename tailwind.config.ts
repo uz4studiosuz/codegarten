@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  darkMode: "class",
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -11,51 +12,64 @@ const config: Config = {
     extend: {
       colors: {
         canvas: "#ffffff",
-        surface: {
-          DEFAULT: "#ffffff",
-          soft: "#f7f7f5",
-          muted: "#ebebea",
-          card: "#ffffff",
+        darkCanvas: "#141414",
+        darkSurface: "#1c1c1e",
+        darkSurfaceSubtle: "#242426",
+        darkBorder: "#27272a",
+        brandGreen: {
+          DEFAULT: "#22C55E",
+          hover: "#16a34a",
+          dark: "#15803d",
+          light: "#eaf6ed",
         },
-        tint: {
-          peach: "#fbf3ea",
-          mint: "#eaf6ed",
-          sky: "#edf4fb",
-          lavender: "#f4f1fb",
+        primary: {
+          DEFAULT: "#ff8d23",
+          dark: "#ce6809",
+          light: "#ffe8d3",
         },
-        brand: {
-          DEFAULT: "#00872e",
-          hover: "#007327",
-          light: "#e6f4ea",
-          blue: "#213c9e",
-          blueHover: "#192f7e",
+        secondary: {
+          DEFAULT: "#9d62ff",
+          dark: "#7139cc",
+          light: "#f5efff",
+        },
+        teal: {
+          DEFAULT: "#2cb0a1",
+          dark: "#218478",
+          light: "#d5efec",
         },
         ink: {
-          DEFAULT: "#121212",
-          secondary: "#4b5563",
-          muted: "#6b7280",
-          faint: "#9ca3af",
+          DEFAULT: "#000000",
+          secondary: "#364153",
+          muted: "#636366",
+          faint: "#8e8e93",
         },
         border: {
-          DEFAULT: "#e5e7eb",
-          subtle: "#f3f4f6",
-          medium: "#d1d5db",
-          dark: "#111827",
+          DEFAULT: "#f5efff",
+          subtle: "#f5efff",
+          medium: "rgba(0, 0, 0, 0.1)",
+          dark: "#1c1c1e",
         },
       },
       borderRadius: {
-        sm: "6px",
-        md: "10px",
+        sm: "2px",
+        md: "8px",
         lg: "16px",
-        xl: "24px",
-        "2xl": "32px",
+        xl: "20px",
+        "2xl": "24px",
+        "3xl": "32px",
+        card: "24px",
         pill: "9999px",
       },
       boxShadow: {
         subtle: "0 1px 3px 0 rgba(0, 0, 0, 0.05)",
-        card: "0 4px 20px -2px rgba(0, 0, 0, 0.06)",
-        float: "0 12px 32px -4px rgba(0, 0, 0, 0.1)",
-        button: "0 2px 4px rgba(0, 0, 0, 0.08)",
+        card: "0 0 15px 0 rgba(0, 0, 0, 0.05)",
+        float: "0 0 25px 0 rgba(0, 0, 0, 0.1)",
+        "tactile-purple": "0 4px 0 0 #7139cc",
+        "tactile-orange": "0 4px 0 0 #ce6809",
+        "tactile-teal": "0 4px 0 0 #218478",
+        "tactile-green": "0 4px 0 0 #1ba842",
+        "tactile-dark": "0 4px 0 0 #27272a",
+        "tactile-outline": "0 3px 0 0 rgba(0, 0, 0, 0.06)",
       },
       fontFamily: {
         serif: [
@@ -67,6 +81,7 @@ const config: Config = {
         ],
         sans: [
           "var(--font-sans)",
+          "Outfit",
           "Inter",
           "-apple-system",
           "BlinkMacSystemFont",

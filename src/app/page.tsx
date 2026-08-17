@@ -1,43 +1,79 @@
-import React from "react";
-import { Navbar } from "@/components/landing/Navbar";
-import { HeroSection } from "@/components/landing/HeroSection";
-import { TrustBar } from "@/components/landing/TrustBar";
-import { InteractiveStorySection } from "@/components/landing/InteractiveStorySection";
-import { CurriculumSection } from "@/components/landing/CurriculumSection";
-import { LifestylePedagogySections } from "@/components/landing/LifestylePedagogySections";
-import { TestimonialsSection } from "@/components/landing/TestimonialsSection";
-import { HeroPhotoBanner } from "@/components/landing/HeroPhotoBanner";
-import { Footer } from "@/components/landing/Footer";
+"use client";
 
-export default function HomePage() {
+import React, { useState } from "react";
+import { AuthProvider } from "@/context/AuthContext";
+import { ThemeProvider } from "@/context/ThemeContext";
+import { AuthModal } from "@/components/auth/AuthModal";
+import { AppNavbar } from "@/components/dashboard/AppNavbar";
+import { HomeDashboard } from "@/components/dashboard/HomeDashboard";
+import { CoursesCatalog } from "@/components/dashboard/CoursesCatalog";
+import { InteractiveLessonModal } from "@/components/dashboard/InteractiveLessonModal";
+import { SettingsModal } from "@/components/dashboard/SettingsModal";
+import { AboutModal } from "@/components/dashboard/AboutModal";
+import { mockUserProfile } from "@/data/mockCourseData";
+
+export default function AppRoot() {
+  const [activeTab, setActiveTab] = useState<"home" | "courses">("home");
+  const [activeLessonModalOpen, setActiveLessonModalOpen] = useState(false);
+  const [currentModuleId, setCurrentModuleId] = useState<string>("mod-2");
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
+
+  const handleStartLesson = (moduleId: string) => {
+    setCurrentModuleId(moduleId);
+    setActiveLessonModalOpen(true);
+  };
+
   return (
-    <main className="min-h-screen bg-white text-[#121212] flex flex-col font-sans">
-      {/* 1. Clean Minimalist Navbar */}
-      <Navbar />
+    <ThemeProvider>
+      <AuthProvider>
+        <div className="min-h-screen bg-[#ffffff] dark:bg-[#141414] text-[#000000] dark:text-white flex flex-col font-sans transition-colors duration-200 selection:bg-[#22C55E]/20 selection:text-[#22C55E]">
+          {/* Auth Dialog */}
+          <AuthModal />
 
-      {/* 2. Hero Section with Interactive Card */}
-      <HeroSection />
+          {/* Settings Modal */}
+          <SettingsModal
+            isOpen={isSettingsOpen}
+            onClose={() => setIsSettingsOpen(false)}
+            user={mockUserProfile}
+          />
 
-      {/* 3. 3-Column Trust Bar (Award, 150K Reviews, 10M Learners) */}
-      <TrustBar />
+          {/* About Modal */}
+          <AboutModal
+            isOpen={isAboutOpen}
+            onClose={() => setIsAboutOpen(false)}
+          />
 
-      {/* 4. Meet Koji (Tutor) & 4 Zig-Zag Interactive Story Sections */}
-      <InteractiveStorySection />
+          {/* Interactive Lesson Modal / Player */}
+          <InteractiveLessonModal
+            moduleId={currentModuleId}
+            isOpen={activeLessonModalOpen}
+            onClose={() => setActiveLessonModalOpen(false)}
+          />
 
-      {/* 5. Curriculum Directory ("From grade 5 to college and beyond") */}
-      <CurriculumSection />
+          {/* 1. App Top Navigation Bar with Menu Dropdown */}
+          <AppNavbar
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            user={mockUserProfile}
+            onOpenStreakModal={() => handleStartLesson("mod-2")}
+            onOpenSettings={() => setIsSettingsOpen(true)}
+            onOpenAbout={() => setIsAboutOpen(true)}
+          />
 
-      {/* 6. Lifestyle & Expert Pedagogy Sections */}
-      <LifestylePedagogySections />
-
-      {/* 7. Testimonials Carousel ("Students, parents, and teachers love us") */}
-      <TestimonialsSection />
-
-      {/* 8. Full-Width Photo Banner with CTAs & App Store Badges */}
-      <HeroPhotoBanner />
-
-      {/* 9. Clean Charcoal Footer */}
-      <Footer />
-    </main>
+          {/* 2. Main Body View (Home Dashboard vs Courses Catalog) */}
+          <main className="flex-1">
+            {activeTab === "home" ? (
+              <HomeDashboard
+                onStartLesson={handleStartLesson}
+                onNavigateToCourses={() => setActiveTab("courses")}
+              />
+            ) : (
+              <CoursesCatalog onSelectModule={handleStartLesson} />
+            )}
+          </main>
+        </div>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }

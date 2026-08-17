@@ -4,9 +4,9 @@
 
 export const typography = {
   fontFamilies: {
-    sans: 'var(--font-inter), system-ui, -apple-system, sans-serif',
+    sans: 'var(--font-sans), "Outfit", system-ui, -apple-system, sans-serif',
     mono: 'var(--font-mono), "JetBrains Mono", "Fira Code", monospace',
-    display: 'var(--font-inter), system-ui, sans-serif',
+    display: 'var(--font-sans), "Outfit", system-ui, sans-serif',
   },
   fontSize: {
     display: { size: "2.75rem", lineHeight: "1.15", tracking: "-0.03em" },   // 44px

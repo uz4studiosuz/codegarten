@@ -1,9 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Lora, JetBrains_Mono } from "next/font/google";
+import { Outfit, Lora, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
+const outfit = Outfit({
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
   variable: "--font-sans",
   display: "swap",
 });
@@ -33,6 +34,11 @@ export const metadata: Metadata = {
   title: "Codegarten | Your Personal Tutor for Computer Science and Coding",
   description:
     "A personalized, interactive tutor that builds deep intuition for CS, algorithms, React internals, and AI through active problem-solving.",
+  icons: {
+    icon: "/Logo.svg",
+    shortcut: "/Logo.svg",
+    apple: "/Logo.svg",
+  },
   keywords: [
     "Codegarten",
     "Brilliant style learning",
@@ -60,7 +66,7 @@ export default function RootLayout({
   return (
     <html
       lang="uz"
-      className={`${inter.variable} ${lora.variable} ${jetbrainsMono.variable}`}
+      className={`${outfit.variable} ${lora.variable} ${jetbrainsMono.variable}`}
     >
       <body className="bg-white text-ink font-sans min-h-screen antialiased selection:bg-brand-light selection:text-brand">
         {children}

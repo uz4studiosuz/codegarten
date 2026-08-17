@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { footerLinks } from "@/data/navigation";
 import { Github, Twitter, Linkedin, Youtube } from "lucide-react";
 
@@ -11,8 +12,14 @@ export const Footer: React.FC = () => {
           {/* Col 1: Brand */}
           <div className="col-span-2 flex flex-col items-start pr-4">
             <Link href="/" className="flex items-center gap-2 mb-4 group">
-              <div className="w-7 h-7 rounded-md bg-[#00872e] flex items-center justify-center text-white font-bold text-xs">
-                K
+              <div className="w-8 h-8 group-hover:scale-105 transition-transform shrink-0">
+                <Image
+                  src="/Logo.svg"
+                  alt="Codegarten"
+                  width={32}
+                  height={32}
+                  className="w-full h-full object-contain"
+                />
               </div>
               <span className="text-xl font-bold tracking-tight text-white font-sans">
                 Codegarten

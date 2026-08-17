@@ -35,7 +35,7 @@ export const colors = {
   // Clean Borders & Dividers
   borderLight: "#e5e7eb",
   borderMedium: "#d1d5db",
-  borderDark: "#111827",
+  borderDark: "#434343",
 
   // Status Colors
   success: "#00872e",
