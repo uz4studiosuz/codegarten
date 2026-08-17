@@ -1,343 +1,9 @@
-// "use client";
-
-// import React, { useRef, useState, useEffect, useCallback } from "react";
-// import Image from "next/image";
-// import {
-//   CheckCircle2,
-//   Lock,
-//   ChevronRight,
-//   ChevronLeft,
-// } from "lucide-react";
-// import {
-//   foundationalLearningPath,
-// } from "@/data/mockCourseData";
-
-// interface CoursesCatalogProps {
-//   onSelectModule: (moduleId: string) => void;
-// }
-
-// export const CoursesCatalog: React.FC<CoursesCatalogProps> = ({
-//   onSelectModule,
-// }) => {
-//   const mainPath = foundationalLearningPath;
-
-//   const scrollContainerRef = useRef<HTMLDivElement>(null);
-//   const [canScrollLeft, setCanScrollLeft] = useState(false);
-//   const [canScrollRight, setCanScrollRight] = useState(false);
-
-//   // Mouse drag-to-scroll state
-//   const isDraggingRef = useRef(false);
-//   const startXRef = useRef(0);
-//   const scrollLeftRef = useRef(0);
-//   const [isDraggingState, setIsDraggingState] = useState(false);
-//   const hasDraggedRef = useRef(false);
-
-//   const checkScrollability = useCallback(() => {
-//     const el = scrollContainerRef.current;
-//     if (!el) return;
-//     const { scrollLeft, scrollWidth, clientWidth } = el;
-//     setCanScrollLeft(scrollLeft > 4);
-//     setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 4);
-//   }, []);
-
-//   useEffect(() => {
-//     checkScrollability();
-//     window.addEventListener("resize", checkScrollability);
-//     return () => window.removeEventListener("resize", checkScrollability);
-//   }, [checkScrollability]);
-
-//   const handleScroll = (direction: "left" | "right") => {
-//     const el = scrollContainerRef.current;
-//     if (!el) return;
-//     const scrollAmount = 260;
-//     el.scrollBy({
-//       left: direction === "left" ? -scrollAmount : scrollAmount,
-//       behavior: "smooth",
-//     });
-//   };
-
-//   // Mouse Drag to Scroll Handlers
-//   const onMouseDown = (e: React.MouseEvent) => {
-//     const el = scrollContainerRef.current;
-//     if (!el) return;
-//     isDraggingRef.current = true;
-//     hasDraggedRef.current = false;
-//     startXRef.current = e.pageX - el.offsetLeft;
-//     scrollLeftRef.current = el.scrollLeft;
-//     setIsDraggingState(true);
-//   };
-
-//   const onMouseMove = (e: React.MouseEvent) => {
-//     if (!isDraggingRef.current) return;
-//     e.preventDefault();
-//     const el = scrollContainerRef.current;
-//     if (!el) return;
-//     const x = e.pageX - el.offsetLeft;
-//     const walk = (x - startXRef.current) * 1.2;
-//     if (Math.abs(walk) > 4) {
-//       hasDraggedRef.current = true;
-//     }
-//     el.scrollLeft = scrollLeftRef.current - walk;
-//     checkScrollability();
-//   };
-
-//   const onMouseUp = () => {
-//     isDraggingRef.current = false;
-//     setIsDraggingState(false);
-//   };
-
-//   const onMouseLeave = () => {
-//     if (isDraggingRef.current) {
-//       isDraggingRef.current = false;
-//       setIsDraggingState(false);
-//     }
-//   };
-
-//   const handleCardClick = (moduleId: string, isLocked: boolean) => {
-//     if (hasDraggedRef.current || isLocked) return;
-//     onSelectModule(moduleId);
-//   };
-
-//   return (
-//     <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 font-sans transition-colors duration-200">
-//       {/* ========================================================= */}
-//       {/* HEADER SECTION: Title & Subtitle matching Figma 1:1       */}
-//       {/* ========================================================= */}
-//       <div className="mb-6 sm:mb-8">
-//         <h1 className="text-2xl sm:text-3xl font-extrabold text-[#000000] dark:text-white tracking-tight">
-//           O&apos;quv Yo&apos;nalishlari
-//         </h1>
-//         <p className="text-xs sm:text-sm text-gray-500 dark:text-zinc-400 mt-1">
-//           Mukammallikka erishish uchun qadamma-qadam yo&apos;nalishlar
-//         </p>
-//       </div>
-
-//       {/* ========================================================= */}
-//       {/* 1. DASTURIY TAFAKKUR & ALGORITMLAR (matching Figma 1:1)   */}
-//       {/* ========================================================= */}
-//       <section className="mb-6">
-//         <div className="bg-white dark:bg-[#1F1F1F] rounded-[20px] border-2 border-gray-200 dark:border-[#27272a] p-6 sm:p-8 shadow-xs transition-colors">
-//           {/* Header Info: Title & Progress Pill */}
-//           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-//             <div>
-//               <h2 className="text-xl sm:text-2xl font-extrabold text-[#000000] dark:text-white tracking-tight">
-//                 {mainPath.title}
-//               </h2>
-//               <p className="text-xs sm:text-sm text-gray-500 dark:text-zinc-400 mt-1">
-//                 {mainPath.description}
-//               </p>
-//             </div>
-
-//             {/* Circular Progress Pill matching Figma */}
-//             <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-gray-50 dark:bg-zinc-800/80 border border-gray-200 dark:border-zinc-700 self-start sm:self-center shrink-0">
-//               <div className="relative w-4 h-4 flex items-center justify-center">
-//                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-//                   <path
-//                     className="text-gray-200 dark:text-zinc-700"
-//                     strokeWidth="4"
-//                     stroke="currentColor"
-//                     fill="none"
-//                     d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-//                   />
-//                   <path
-//                     className="text-[#22C55E]"
-//                     strokeDasharray="15, 100"
-//                     strokeWidth="4"
-//                     strokeLinecap="round"
-//                     stroke="currentColor"
-//                     fill="none"
-//                     d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-//                   />
-//                 </svg>
-//               </div>
-//               <span className="text-xs font-bold text-[#000000] dark:text-white">
-//                 15% bajarildi
-//               </span>
-//             </div>
-//           </div>
-
-//           {/* INNER CONTAINER WITH MODULE CARDS, DRAG-TO-SCROLL & CONDITIONAL BUTTONS */}
-//           <div className="relative bg-[#f4f4f6] dark:bg-[#161618] p-4 sm:p-5 rounded-[18px] border border-gray-200/60 dark:border-zinc-800/80">
-//             {/* Conditional Left Button */}
-//             {canScrollLeft && (
-//               <button
-//                 type="button"
-//                 onClick={() => handleScroll("left")}
-//                 className="w-9 h-9 rounded-full bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 shadow-md flex items-center justify-center text-gray-600 dark:text-gray-200 hover:scale-110 active:scale-95 transition-all absolute -left-4 top-1/2 -translate-y-1/2 z-20 cursor-pointer animate-fadeIn"
-//                 title="Oldingi modullar"
-//               >
-//                 <ChevronLeft className="w-4 h-4" />
-//               </button>
-//             )}
-
-//             {/* Conditional Right Button */}
-//             {canScrollRight && (
-//               <button
-//                 type="button"
-//                 onClick={() => handleScroll("right")}
-//                 className="w-9 h-9 rounded-full bg-[#e4e4e7] dark:bg-zinc-700 shadow-sm flex items-center justify-center text-gray-700 dark:text-gray-200 hover:scale-110 active:scale-95 transition-all absolute -right-4 top-1/2 -translate-y-1/2 z-20 cursor-pointer animate-fadeIn"
-//                 title="Keyingi modullar"
-//               >
-//                 <ChevronRight className="w-4 h-4" />
-//               </button>
-//             )}
-
-//             {/* DRAGGABLE HORIZONTAL MODULE STRIP (1:1 Figma card sizes and layout) */}
-//             <div
-//               ref={scrollContainerRef}
-//               onScroll={checkScrollability}
-//               onMouseDown={onMouseDown}
-//               onMouseMove={onMouseMove}
-//               onMouseUp={onMouseUp}
-//               onMouseLeave={onMouseLeave}
-//               className={`flex gap-3 sm:gap-3.5 overflow-x-auto scrollbar-none py-1 select-none transition-[cursor] ${
-//                 isDraggingState ? "cursor-grabbing" : "cursor-grab"
-//               }`}
-//               style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-//             >
-//               {mainPath.modules.map((mod, idx) => {
-//                 const isCompleted = mod.status === "completed";
-//                 const isActive = mod.status === "active";
-//                 const isLocked = mod.status === "locked";
-
-//                 return (
-//                   <div
-//                     key={mod.id}
-//                     onClick={() => handleCardClick(mod.id, isLocked)}
-//                     className={`min-w-[140px] sm:min-w-[150px] lg:min-w-[155px] flex-1 shrink-0 group relative bg-white dark:bg-[#1F1F1F] rounded-[18px] border-2 p-3.5 sm:p-4 flex flex-col justify-between h-[235px] sm:h-[250px] transition-all duration-200 ${
-//                       isCompleted
-//                         ? "border-gray-200 dark:border-zinc-800 hover:border-[#22C55E] cursor-pointer shadow-xs"
-//                         : isActive
-//                         ? "border-2 border-gray-200 dark:border-zinc-700 shadow-xs cursor-pointer"
-//                         : "border-gray-200/80 dark:border-zinc-800/80 opacity-80 cursor-not-allowed"
-//                     }`}
-//                   >
-//                     <div>
-//                       {/* Top Bar: 01, 02... & Icon */}
-//                       <div className="flex items-center justify-between mb-2 pointer-events-none">
-//                         <span className="text-xs font-mono font-bold text-gray-400 dark:text-zinc-500">
-//                           0{idx + 1}
-//                         </span>
-//                         {isCompleted ? (
-//                           <CheckCircle2 className="w-4 h-4 text-[#22C55E]" />
-//                         ) : isActive ? (
-//                           <span className="w-2 h-2 rounded-full bg-[#22C55E]" />
-//                         ) : (
-//                           <Lock className="w-3.5 h-3.5 text-gray-300 dark:text-zinc-600" />
-//                         )}
-//                       </div>
-
-//                       {/* 3D Isometric Image */}
-//                       <div className="w-full h-16 sm:h-20 flex items-center justify-center my-1 pointer-events-none">
-//                         <div className="relative w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center">
-//                           <Image
-//                             src={mod.imageSrc || "/images/loops.png"}
-//                             alt={mod.title}
-//                             width={64}
-//                             height={64}
-//                             className="w-full h-full object-contain select-none"
-//                             draggable={false}
-//                           />
-//                         </div>
-//                       </div>
-
-//                       {/* Title Centered */}
-//                       <h3 className="text-xs sm:text-[13px] font-bold text-[#000000] dark:text-white text-center leading-snug min-h-[38px] flex items-center justify-center pointer-events-none px-1">
-//                         {mod.title}
-//                       </h3>
-//                     </div>
-
-//                     {/* Bottom Progress Bar & Text */}
-//                     <div className="mt-2 pt-1 pointer-events-none">
-//                       <div className="w-full h-[3px] bg-gray-100 dark:bg-zinc-800 rounded-full overflow-hidden mb-1.5">
-//                         <div
-//                           className={`h-full rounded-full ${
-//                             isCompleted || isActive ? "bg-[#22C55E]" : "bg-transparent"
-//                           }`}
-//                           style={{ width: `${mod.progressPercent}%` }}
-//                         />
-//                       </div>
-//                       <span className="text-[10px] font-mono font-medium text-gray-400 dark:text-zinc-500 block text-left">
-//                         {mod.progressPercent}%
-//                       </span>
-//                     </div>
-//                   </div>
-//                 );
-//               })}
-//             </div>
-//           </div>
-//         </div>
-//       </section>
-
-//       {/* ========================================================= */}
-//       {/* 2. O'RTA BOSQICH: Ma'lumotlar Tahlili va Python           */}
-//       {/* ========================================================= */}
-//       <section className="mb-4">
-//         <div className="bg-white dark:bg-[#1F1F1F] rounded-[20px] border-2 border-gray-200 dark:border-[#27272a] p-5 sm:p-6 shadow-xs transition-colors">
-//           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-//             <div>
-//               <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-gray-400 dark:text-zinc-500 block mb-1">
-//                 O&apos;RTA BOSQICH
-//               </span>
-//               <h3 className="text-base sm:text-lg font-extrabold text-[#000000] dark:text-white tracking-tight">
-//                 Ma&apos;lumotlar Tahlili va Python
-//               </h3>
-//               <p className="text-xs sm:text-sm text-gray-500 dark:text-zinc-400 mt-0.5">
-//                 Katta ma&apos;lumotlar tahlili, grafiklar va statistik vizualizatsiya.
-//               </p>
-//             </div>
-
-//             {/* Tez kunda Pill */}
-//             <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-gray-50 dark:bg-zinc-800/80 border border-gray-200 dark:border-zinc-700 text-xs font-semibold text-gray-600 dark:text-zinc-400 self-start sm:self-center shrink-0">
-//               <Lock className="w-3.5 h-3.5" />
-//               <span>Tez kunda</span>
-//             </div>
-//           </div>
-//         </div>
-//       </section>
-
-//       {/* ========================================================= */}
-//       {/* 3. MAXSUS BOSQICH: Sun'iy Intellekt va Neyron Tarmoqlar   */}
-//       {/* ========================================================= */}
-//       <section>
-//         <div className="bg-white dark:bg-[#1F1F1F] rounded-[20px] border-2 border-gray-200 dark:border-[#27272a] p-5 sm:p-6 shadow-xs transition-colors">
-//           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-//             <div>
-//               <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-gray-400 dark:text-zinc-500 block mb-1">
-//                 MAXSUS BOSQICH
-//               </span>
-//               <h3 className="text-base sm:text-lg font-extrabold text-[#000000] dark:text-white tracking-tight">
-//                 Sun&apos;iy Intellekt va Neyron Tarmoqlar
-//               </h3>
-//               <p className="text-xs sm:text-sm text-gray-500 dark:text-zinc-400 mt-0.5">
-//                 Mashinaviy ta&apos;lim, vaznlar, aktivatsiya funksiyalari va LLM larni chuqur tushunish.
-//               </p>
-//             </div>
-
-//             {/* Tez kunda Pill */}
-//             <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-gray-50 dark:bg-zinc-800/80 border border-gray-200 dark:border-zinc-700 text-xs font-semibold text-gray-600 dark:text-zinc-400 self-start sm:self-center shrink-0">
-//               <Lock className="w-3.5 h-3.5" />
-//               <span>Tez kunda</span>
-//             </div>
-//           </div>
-//         </div>
-//       </section>
-//     </div>
-//   );
-// };
 "use client";
 
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import {
-  CheckCircle2,
-  Lock,
-  ChevronRight,
-  ChevronLeft,
-} from "lucide-react";
-import {
-  foundationalLearningPath,
-} from "@/data/mockCourseData";
+import { CheckCircle2, Lock, ChevronRight, ChevronLeft } from "lucide-react";
+import { foundationalLearningPath } from "@/data/mockCourseData";
 
 interface CoursesCatalogProps {
   onSelectModule: (moduleId: string) => void;
@@ -352,7 +18,6 @@ export const CoursesCatalog: React.FC<CoursesCatalogProps> = ({
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
 
-  // Mouse drag-to-scroll state
   const isDraggingRef = useRef(false);
   const startXRef = useRef(0);
   const scrollLeftRef = useRef(0);
@@ -376,14 +41,12 @@ export const CoursesCatalog: React.FC<CoursesCatalogProps> = ({
   const handleScroll = (direction: "left" | "right") => {
     const el = scrollContainerRef.current;
     if (!el) return;
-    const scrollAmount = 260;
     el.scrollBy({
-      left: direction === "left" ? -scrollAmount : scrollAmount,
+      left: direction === "left" ? -260 : 260,
       behavior: "smooth",
     });
   };
 
-  // Mouse Drag to Scroll Handlers
   const onMouseDown = (e: React.MouseEvent) => {
     const el = scrollContainerRef.current;
     if (!el) return;
@@ -401,9 +64,7 @@ export const CoursesCatalog: React.FC<CoursesCatalogProps> = ({
     if (!el) return;
     const x = e.pageX - el.offsetLeft;
     const walk = (x - startXRef.current) * 1.2;
-    if (Math.abs(walk) > 4) {
-      hasDraggedRef.current = true;
-    }
+    if (Math.abs(walk) > 4) hasDraggedRef.current = true;
     el.scrollLeft = scrollLeftRef.current - walk;
     checkScrollability();
   };
@@ -426,226 +87,214 @@ export const CoursesCatalog: React.FC<CoursesCatalogProps> = ({
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 font-sans transition-colors duration-200">
-      {/* ========================================================= */}
-      {/* HEADER SECTION: Title & Subtitle                          */}
-      {/* ========================================================= */}
-      <div className="mb-6 sm:mb-8">
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-[#000000] dark:text-white tracking-tight">
+    <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 font-sans">
+
+      {/* ── PAGE HEADER ── */}
+      <div className="mb-7">
+        <h1 className="text-2xl sm:text-[28px] font-extrabold text-black dark:text-white tracking-tight leading-tight">
           O&apos;quv Yo&apos;nalishlari
         </h1>
-        <p className="text-xs sm:text-sm text-gray-500 dark:text-zinc-400 mt-1">
+        <p className="text-sm text-gray-400 dark:text-zinc-500 mt-1">
           Mukammallikka erishish uchun qadamma-qadam yo&apos;nalishlar
         </p>
       </div>
 
-      {/* ========================================================= */}
-      {/* 1. DASTURIY TAFAKKUR & ALGORITMLAR                        */}
-      {/* ========================================================= */}
-      <section className="mb-6">
-        <div className="bg-white dark:bg-[#1F1F1F] rounded-[20px] border border-gray-200 dark:border-[#27272a] p-6 sm:p-8 shadow-sm transition-colors">
-          {/* Header Info: Title & Progress Pill */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-            <div>
-              <h2 className="text-xl sm:text-2xl font-extrabold text-[#000000] dark:text-white tracking-tight">
-                {mainPath.title}
-              </h2>
-              <p className="text-xs sm:text-sm text-gray-500 dark:text-zinc-400 mt-1">
-                {mainPath.description}
-              </p>
-            </div>
-
-            {/* Progress Pill matching Figma */}
-            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white dark:bg-zinc-800/80 border border-gray-200 dark:border-zinc-700 self-start sm:self-center shrink-0">
-              <div className="relative w-4 h-4 flex items-center justify-center">
-                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                  <path
-                    className="text-gray-200 dark:text-zinc-700"
-                    strokeWidth="4"
-                    stroke="currentColor"
-                    fill="none"
-                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  />
-                  <path
-                    className="text-[#22C55E]"
-                    strokeDasharray="15, 100"
-                    strokeWidth="4"
-                    strokeLinecap="round"
-                    stroke="currentColor"
-                    fill="none"
-                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  />
-                </svg>
-              </div>
-              <span className="text-xs font-bold text-[#000000] dark:text-white">
-                15% bajarildi
-              </span>
-            </div>
+      {/* ── MAIN PATH: Dasturiy Tafakkur & Algoritmlar ── */}
+      <section className="mb-4">
+        {/* Title row — NO outer card wrapper, matches screenshot */}
+        <div className="flex items-start justify-between gap-4 mb-4">
+          <div>
+            <h2 className="text-xl sm:text-2xl font-extrabold text-black dark:text-white tracking-tight leading-tight">
+              {mainPath.title}
+            </h2>
+            <p className="text-[13px] text-gray-400 dark:text-zinc-500 mt-0.5">
+              {mainPath.description}
+            </p>
           </div>
 
-          {/* INNER CONTAINER WITH MODULE CARDS */}
-          <div className="relative bg-[#f4f4f6] dark:bg-[#161618] p-4 sm:p-5 rounded-[18px] border border-gray-200/60 dark:border-zinc-800/80">
-            {/* Conditional Left Button */}
-            {canScrollLeft && (
-              <button
-                type="button"
-                onClick={() => handleScroll("left")}
-                className="w-9 h-9 rounded-full bg-gray-200/60 hover:bg-gray-200/80 dark:bg-zinc-700/60 dark:hover:bg-zinc-700/80 border border-gray-300 dark:border-zinc-600 shadow-md flex items-center justify-center text-gray-700 dark:text-gray-200 hover:scale-110 active:scale-95 transition-all absolute -left-4 top-1/2 -translate-y-1/2 z-20 cursor-pointer animate-fadeIn"
-                title="Oldingi modullar"
+          {/* 15% bajarildi pill — right-aligned */}
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white dark:bg-[#1F1F1F] border border-gray-200 dark:border-zinc-700 shrink-0 shadow-xs">
+            {/* Mini ring progress */}
+            <div className="relative w-[18px] h-[18px] shrink-0">
+              <svg
+                className="w-full h-full -rotate-90"
+                viewBox="0 0 36 36"
               >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-            )}
+                <circle
+                  cx="18" cy="18" r="14"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="5"
+                  className="text-gray-200 dark:text-zinc-700"
+                />
+                <circle
+                  cx="18" cy="18" r="14"
+                  fill="none"
+                  stroke="#22C55E"
+                  strokeWidth="5"
+                  strokeLinecap="round"
+                  strokeDasharray="13.2 87.96"
+                />
+              </svg>
+            </div>
+            <span className="text-[13px] font-semibold text-black dark:text-white whitespace-nowrap">
+              15% bajarildi
+            </span>
+          </div>
+        </div>
 
-            {/* Conditional Right Button */}
-            {canScrollRight && (
-              <button
-                type="button"
-                onClick={() => handleScroll("right")}
-                className="w-9 h-9 rounded-full bg-gray-200/60 hover:bg-gray-200/80 dark:bg-zinc-700/60 dark:hover:bg-zinc-700/80 border border-gray-300 dark:border-zinc-600 shadow-md flex items-center justify-center text-gray-700 dark:text-gray-200 hover:scale-110 active:scale-95 transition-all absolute -right-4 top-1/2 -translate-y-1/2 z-20 cursor-pointer animate-fadeIn"
-                title="Keyingi modullar"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            )}
+        {/* ── INNER GRAY CONTAINER with horizontal cards ── */}
+        <div className="relative bg-white dark:bg-[#1F1F1F] rounded-[18px] p-4">
 
-            {/* DRAGGABLE HORIZONTAL MODULE STRIP */}
-            <div
-              ref={scrollContainerRef}
-              onScroll={checkScrollability}
-              onMouseDown={onMouseDown}
-              onMouseMove={onMouseMove}
-              onMouseUp={onMouseUp}
-              onMouseLeave={onMouseLeave}
-              className={`flex gap-3 sm:gap-4 overflow-x-auto scrollbar-none py-1 select-none transition-[cursor] ${isDraggingState ? "cursor-grabbing" : "cursor-grab"
-                }`}
-              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          {/* Left scroll button */}
+          {canScrollLeft && (
+            <button
+              type="button"
+              onClick={() => handleScroll("left")}
+              className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 shadow flex items-center justify-center text-gray-500 dark:text-gray-300 hover:scale-105 active:scale-95 transition-all cursor-pointer"
             >
-              {mainPath.modules.map((mod, idx) => {
-                const isCompleted = mod.status === "completed";
-                const isActive = mod.status === "active";
-                const isLocked = mod.status === "locked";
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+          )}
 
-                return (
-                  <div
-                    key={mod.id}
-                    onClick={() => handleCardClick(mod.id, isLocked)}
-                    className={`min-w-[140px] sm:min-w-[150px] lg:min-w-[160px] flex-1 shrink-0 group relative bg-white dark:bg-[#1F1F1F] rounded-[18px] border border-gray-200 dark:border-zinc-700 p-3.5 sm:p-4 flex flex-col justify-between h-[235px] sm:h-[245px] transition-all duration-200 cursor-pointer ${isCompleted
-                      ? "border-gray-200 dark:border-zinc-700 hover:shadow-lg"
-                      : isActive
-                        ? "border-gray-200 dark:border-zinc-700 hover:shadow-lg"
-                        : "border-gray-200 dark:border-zinc-700 cursor-not-allowed"
-                      }`}
-                  >
-                    <div>
-                      {/* Top Bar: 01, 02... & Icon */}
-                      <div className="flex items-center justify-between mb-2 pointer-events-none">
-                        <span className="text-xs font-mono font-bold text-gray-400 dark:text-zinc-500">
-                          0{idx + 1}
-                        </span>
-                        {isCompleted ? (
-                          <CheckCircle2 className="w-4 h-4 text-[#22C55E]" />
-                        ) : isActive ? (
-                          <span className="w-2 h-2 rounded-full bg-[#22C55E]" />
-                        ) : (
-                          <Lock className="w-3.5 h-3.5 text-gray-300 dark:text-zinc-600" />
-                        )}
-                      </div>
+          {/* Right scroll button — visible when can scroll right */}
+          {canScrollRight && (
+            <button
+              type="button"
+              onClick={() => handleScroll("right")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 shadow flex items-center justify-center text-gray-500 dark:text-gray-300 hover:scale-105 active:scale-95 transition-all cursor-pointer"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          )}
 
-                      {/* 3D Isometric Image */}
-                      <div className="w-full h-16 sm:h-20 flex items-center justify-center my-1 pointer-events-none">
-                        <div className="relative w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center">
-                          <Image
-                            src={mod.imageSrc || "/images/loops.png"}
-                            alt={mod.title}
-                            width={64}
-                            height={64}
-                            className="w-full h-full object-contain select-none"
-                            draggable={false}
-                          />
-                        </div>
-                      </div>
+          {/* Draggable cards strip */}
+          <div
+            ref={scrollContainerRef}
+            onScroll={checkScrollability}
+            onMouseDown={onMouseDown}
+            onMouseMove={onMouseMove}
+            onMouseUp={onMouseUp}
+            onMouseLeave={onMouseLeave}
+            className={`flex gap-3 overflow-x-auto scrollbar-none select-none ${isDraggingState ? "cursor-grabbing" : "cursor-grab"
+              }`}
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
+            {mainPath.modules.map((mod, idx) => {
+              const isCompleted = mod.status === "completed";
+              const isActive = mod.status === "active";
+              const isLocked = mod.status === "locked";
 
-                      {/* Title Centered */}
-                      <h3 className="text-[13px] sm:text-[14px] font-bold text-[#000000] dark:text-white text-center leading-snug min-h-[38px] flex items-center justify-center pointer-events-none px-1">
-                        {mod.title}
-                      </h3>
+              return (
+                <div
+                  key={mod.id}
+                  onClick={() => handleCardClick(mod.id, isLocked)}
+                  className={`min-w-[140px] sm:min-w-[148px] lg:min-w-[155px] w-[148px] shrink-0 bg-[#ffffff] dark:bg-[#141414] rounded-[16px] border border-gray-200 dark:border-zinc-700/60 p-3.5 flex flex-col justify-between h-[215px] sm:h-[230px] transition-all duration-200 ${isLocked
+                    ? "cursor-not-allowed opacity-75"
+                    : "cursor-pointer hover:shadow-md active:scale-[0.99]"
+                    }`}
+                >
+                  {/* Top row: number + status icon */}
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-[11px] font-mono font-bold text-gray-300 dark:text-zinc-600">
+                        {String(idx + 1).padStart(2, "0")}
+                      </span>
+                      {isCompleted ? (
+                        <CheckCircle2 className="w-4 h-4 text-[#22C55E]" />
+                      ) : isActive ? (
+                        <span className="w-2.5 h-2.5 rounded-full bg-[#22C55E]" />
+                      ) : (
+                        <Lock className="w-3.5 h-3.5 text-gray-300 dark:text-zinc-600" />
+                      )}
                     </div>
 
-                    {/* Bottom Progress Bar & Text */}
-                    <div className="mt-2 pt-1 pointer-events-none">
-                      <div className="w-full h-1 bg-gray-100 dark:bg-zinc-800 rounded-full overflow-hidden mb-1.5">
-                        <div
-                          className={`h-full rounded-full ${isCompleted || isActive ? "bg-[#22C55E]" : "bg-transparent"
-                            }`}
-                          style={{ width: `${mod.progressPercent}%` }}
+                    {/* 3D image */}
+                    <div className="w-full flex items-center justify-center mb-3">
+                      <div className="w-[60px] h-[60px] sm:w-[68px] sm:h-[68px]">
+                        <Image
+                          src={mod.imageSrc || "/images/loops.png"}
+                          alt={mod.title}
+                          width={68}
+                          height={68}
+                          className="w-full h-full object-contain"
+                          draggable={false}
                         />
                       </div>
-                      <span className="text-[10px] font-mono font-medium text-gray-400 dark:text-zinc-500 block text-left">
-                        {mod.progressPercent}%
-                      </span>
                     </div>
+
+                    {/* Title */}
+                    <h3 className="text-[13px] font-bold text-black dark:text-white text-center leading-snug min-h-[36px] flex items-center justify-center px-1">
+                      {mod.title}
+                    </h3>
                   </div>
-                );
-              })}
-            </div>
+
+                  {/* Progress bar + percent */}
+                  <div className="mt-2">
+                    <div className="w-full h-1 bg-gray-100 dark:bg-zinc-800 rounded-full overflow-hidden mb-1">
+                      <div
+                        className={`h-full rounded-full ${isCompleted || isActive ? "bg-[#22C55E]" : "bg-transparent"
+                          }`}
+                        style={{ width: `${mod.progressPercent}%` }}
+                      />
+                    </div>
+                    <span className="text-[11px] font-mono text-gray-400 dark:text-zinc-500">
+                      {mod.progressPercent}%
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* ========================================================= */}
-      {/* 2. O'RTA BOSQICH: Ma'lumotlar Tahlili va Python           */}
-      {/* ========================================================= */}
-      <section className="mb-4">
-        <div className="bg-white dark:bg-[#1F1F1F] rounded-[20px] border border-gray-200 dark:border-[#27272a] p-5 sm:p-6 transition-colors">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      {/* ── O'RTA BOSQICH ── */}
+      <section className="mb-3">
+        <div className="bg-white dark:bg-[#1F1F1F] rounded-[18px] border border-gray-200 dark:border-zinc-700/60 p-5 sm:p-6">
+          <div className="flex items-center justify-between gap-4">
             <div>
-              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-gray-400 dark:text-zinc-500 block mb-1">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-zinc-500 block mb-1">
                 O&apos;RTA BOSQICH
               </span>
-              <h3 className="text-base sm:text-lg font-extrabold text-[#000000] dark:text-white tracking-tight">
+              <h3 className="text-[15px] sm:text-base font-extrabold text-black dark:text-white">
                 Ma&apos;lumotlar Tahlili va Python
               </h3>
-              <p className="text-xs sm:text-sm text-gray-500 dark:text-zinc-400 mt-0.5">
+              <p className="text-[13px] text-gray-400 dark:text-zinc-500 mt-0.5">
                 Katta ma&apos;lumotlar tahlili, grafiklar va statistik vizualizatsiya.
               </p>
             </div>
-
-            {/* Tez kunda Pill */}
-            <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 text-xs font-semibold text-gray-600 dark:text-zinc-400 self-start sm:self-center shrink-0">
-              <Lock className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 text-[12px] font-medium text-gray-500 dark:text-zinc-400 shrink-0 shadow-xs whitespace-nowrap">
+              <Lock className="w-3 h-3" />
               <span>Tez kunda</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ========================================================= */}
-      {/* 3. MAXSUS BOSQICH: Sun'iy Intellekt va Neyron Tarmoqlar   */}
-      {/* ========================================================= */}
+      {/* ── MAXSUS BOSQICH ── */}
       <section>
-        <div className="bg-white dark:bg-[#1F1F1F] rounded-[20px] border border-gray-200 dark:border-[#27272a] p-5 sm:p-6 transition-colors">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="bg-white dark:bg-[#1F1F1F] rounded-[18px] border border-gray-200 dark:border-zinc-700/60 p-5 sm:p-6">
+          <div className="flex items-center justify-between gap-4">
             <div>
-              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-gray-400 dark:text-zinc-500 block mb-1">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-zinc-500 block mb-1">
                 MAXSUS BOSQICH
               </span>
-              <h3 className="text-base sm:text-lg font-extrabold text-[#000000] dark:text-white tracking-tight">
+              <h3 className="text-[15px] sm:text-base font-extrabold text-black dark:text-white">
                 Sun&apos;iy Intellekt va Neyron Tarmoqlar
               </h3>
-              <p className="text-xs sm:text-sm text-gray-500 dark:text-zinc-400 mt-0.5">
+              <p className="text-[13px] text-gray-400 dark:text-zinc-500 mt-0.5">
                 Mashinaviy ta&apos;lim, vaznlar, aktivatsiya funksiyalari va LLM larni chuqur tushunish.
               </p>
             </div>
-
-            {/* Tez kunda Pill */}
-            <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 text-xs font-semibold text-gray-600 dark:text-zinc-400 self-start sm:self-center shrink-0">
-              <Lock className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 text-[12px] font-medium text-gray-500 dark:text-zinc-400 shrink-0 shadow-xs whitespace-nowrap">
+              <Lock className="w-3 h-3" />
               <span>Tez kunda</span>
             </div>
           </div>
         </div>
       </section>
+
     </div>
   );
 };
