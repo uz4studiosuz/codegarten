@@ -3,7 +3,7 @@ import { Container } from "@/design-system/primitives/Container";
 import { Badge } from "@/design-system/primitives/Badge";
 import { TestimonialCard } from "@/design-system/molecules/TestimonialCard";
 import { testimonialsData } from "@/data/testimonials";
-import { Heart, Star } from "lucide-react";
+import { IconHeartFilled, IconStarFilled } from "@tabler/icons-react";
 
 export const Testimonials: React.FC = () => {
   return (
@@ -14,7 +14,7 @@ export const Testimonials: React.FC = () => {
       <Container size="xl">
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-16">
           <Badge variant="glow" size="md" className="mb-4">
-            <Heart className="w-3.5 h-3.5 mr-1 fill-accent-red text-accent-red" />
+            <IconHeartFilled size={14} className="mr-1 text-accent-red" />
             Hamjamiyat Fikri
           </Badge>
 

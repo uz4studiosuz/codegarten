@@ -1,5 +1,5 @@
 import React from "react";
-import { Check, X, Circle } from "lucide-react";
+import { IconCheck, IconX, IconCircleFilled } from "@tabler/icons-react";
 
 export interface InteractiveChoiceProps {
   id: string;
@@ -67,15 +67,15 @@ export const InteractiveChoice: React.FC<InteractiveChoiceProps> = ({
       <div className="shrink-0 pl-2">
         {isCorrect === true ? (
           <div className="w-5 h-5 rounded-full bg-[#00872e] text-white flex items-center justify-center">
-            <Check className="w-3.5 h-3.5 stroke-[3]" />
+            <IconCheck size={14} stroke={3} />
           </div>
         ) : isCorrect === false && isSelected ? (
           <div className="w-5 h-5 rounded-full bg-[#dc2626] text-white flex items-center justify-center">
-            <X className="w-3.5 h-3.5 stroke-[3]" />
+            <IconX size={14} stroke={3} />
           </div>
         ) : isSelected ? (
           <div className="w-5 h-5 rounded-full bg-[#00872e] text-white flex items-center justify-center">
-            <Circle className="w-2 h-2 fill-current" />
+            <IconCircleFilled size={8} />
           </div>
         ) : (
           <div className="w-5 h-5 rounded-full border border-[#d1d5db] bg-white" />

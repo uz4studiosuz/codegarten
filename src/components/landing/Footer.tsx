@@ -2,7 +2,12 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { footerLinks } from "@/data/navigation";
-import { Github, Twitter, Linkedin, Youtube } from "lucide-react";
+import {
+  IconBrandGithub,
+  IconBrandTwitter,
+  IconBrandLinkedin,
+  IconBrandYoutube,
+} from "@tabler/icons-react";
 
 export const Footer: React.FC = () => {
   return (
@@ -32,16 +37,16 @@ export const Footer: React.FC = () => {
 
             <div className="flex items-center gap-4 text-[#6b7280]">
               <a href="#" className="hover:text-white transition-colors" aria-label="Twitter">
-                <Twitter className="w-4 h-4" />
+                <IconBrandTwitter size={18} stroke={1.5} />
               </a>
               <a href="#" className="hover:text-white transition-colors" aria-label="LinkedIn">
-                <Linkedin className="w-4 h-4" />
+                <IconBrandLinkedin size={18} stroke={1.5} />
               </a>
               <a href="#" className="hover:text-white transition-colors" aria-label="GitHub">
-                <Github className="w-4 h-4" />
+                <IconBrandGithub size={18} stroke={1.5} />
               </a>
               <a href="#" className="hover:text-white transition-colors" aria-label="YouTube">
-                <Youtube className="w-4 h-4" />
+                <IconBrandYoutube size={18} stroke={1.5} />
               </a>
             </div>
           </div>

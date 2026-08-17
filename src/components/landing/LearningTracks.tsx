@@ -5,7 +5,7 @@ import { Container } from "@/design-system/primitives/Container";
 import { Badge } from "@/design-system/primitives/Badge";
 import { Button } from "@/design-system/primitives/Button";
 import { learningTracks } from "@/data/tracks";
-import { Clock, BookOpen, ArrowRight, Sparkles, Layers } from "lucide-react";
+import { IconClock, IconBook, IconArrowRight, IconSparkles, IconStack2 } from "@tabler/icons-react";
 
 export const LearningTracks: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
@@ -29,7 +29,7 @@ export const LearningTracks: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
             <Badge variant="brand" size="md" className="mb-4">
-              <Layers className="w-3.5 h-3.5 mr-1" />
+              <IconStack2 size={14} className="mr-1" />
               Tizimli Dastur
             </Badge>
 
@@ -131,11 +131,11 @@ export const LearningTracks: React.FC = () => {
                 <div className="pt-4 border-t border-border-subtle flex items-center justify-between">
                   <div className="flex items-center gap-4 text-xs font-medium text-text-muted">
                     <span className="flex items-center gap-1.5">
-                      <BookOpen className="w-4 h-4 text-brand-light" />
+                      <IconBook size={16} className="text-brand-light" />
                       {track.lessonsCount} ta vazifa
                     </span>
                     <span className="flex items-center gap-1.5">
-                      <Clock className="w-4 h-4 text-accent-green" />
+                      <IconClock size={16} className="text-accent-green" />
                       {track.estimatedHours}
                     </span>
                   </div>
@@ -144,7 +144,7 @@ export const LearningTracks: React.FC = () => {
                     size="sm"
                     variant="ghost"
                     className="text-brand-light hover:text-white font-bold"
-                    rightIcon={<ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />}
+                    rightIcon={<IconArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />}
                   >
                     Boshlash
                   </Button>

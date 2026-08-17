@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Check, Copy, Terminal } from "lucide-react";
+import { IconCheck, IconCopy, IconTerminal2 } from "@tabler/icons-react";
 
 export interface CodePreviewProps {
   code: string;
@@ -42,7 +42,7 @@ export const CodePreview: React.FC<CodePreviewProps> = ({
           </div>
           {filename ? (
             <span className="text-xs text-text-secondary font-sans font-medium ml-2 flex items-center gap-1.5">
-              <Terminal className="w-3.5 h-3.5 text-brand-light" />
+              <IconTerminal2 size={14} className="text-brand-light" />
               {filename}
             </span>
           ) : (
@@ -59,12 +59,12 @@ export const CodePreview: React.FC<CodePreviewProps> = ({
         >
           {copied ? (
             <>
-              <Check className="w-3.5 h-3.5 text-accent-green" />
+              <IconCheck size={14} className="text-accent-green" />
               <span className="text-accent-green font-sans">Nusxalandi</span>
             </>
           ) : (
             <>
-              <Copy className="w-3.5 h-3.5" />
+              <IconCopy size={14} />
               <span className="font-sans">Nusxa</span>
             </>
           )}

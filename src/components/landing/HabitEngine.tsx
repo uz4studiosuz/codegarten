@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Container } from "@/design-system/primitives/Container";
 import { Badge } from "@/design-system/primitives/Badge";
 import { Button } from "@/design-system/primitives/Button";
-import { Flame, Calendar, Zap, ArrowRight } from "lucide-react";
+import { IconFlame, IconCalendar, IconBolt, IconArrowRight } from "@tabler/icons-react";
 
 export const HabitEngine: React.FC = () => {
   return (
@@ -13,7 +13,7 @@ export const HabitEngine: React.FC = () => {
           {/* Left Column: Description & Habit features */}
           <div className="lg:col-span-6 flex flex-col items-start">
             <Badge variant="warning" size="md" className="mb-4">
-              <Flame className="w-4 h-4 fill-current mr-1 text-amber-600" />
+              <IconFlame size={16} className="fill-current mr-1 text-amber-600" />
               Kunlik Streak &amp; Odat Mexanizmi
             </Badge>
 
@@ -28,7 +28,7 @@ export const HabitEngine: React.FC = () => {
             <div className="space-y-4 w-full mb-8">
               <div className="flex items-start gap-3.5 p-4 rounded-2xl bg-white border border-[#e5e7eb] shadow-sm">
                 <div className="w-8 h-8 rounded-lg bg-[#fef3c7] text-[#b45309] flex items-center justify-center shrink-0 mt-0.5">
-                  <Flame className="w-4 h-4 fill-current" />
+                  <IconFlame size={16} className="fill-current" />
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-[#121212] mb-0.5">
@@ -42,7 +42,7 @@ export const HabitEngine: React.FC = () => {
 
               <div className="flex items-start gap-3.5 p-4 rounded-2xl bg-white border border-[#e5e7eb] shadow-sm">
                 <div className="w-8 h-8 rounded-lg bg-[#e6f4ea] text-[#00872e] flex items-center justify-center shrink-0 mt-0.5">
-                  <Calendar className="w-4 h-4" />
+                  <IconCalendar size={16} stroke={2} />
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-[#121212] mb-0.5">
@@ -56,7 +56,7 @@ export const HabitEngine: React.FC = () => {
 
               <div className="flex items-start gap-3.5 p-4 rounded-2xl bg-white border border-[#e5e7eb] shadow-sm">
                 <div className="w-8 h-8 rounded-lg bg-[#e6f4ea] text-[#00872e] flex items-center justify-center shrink-0 mt-0.5">
-                  <Zap className="w-4 h-4" />
+                  <IconBolt size={16} stroke={2} />
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-[#121212] mb-0.5">
@@ -72,7 +72,7 @@ export const HabitEngine: React.FC = () => {
             <Button
               size="lg"
               variant="primary"
-              rightIcon={<ArrowRight className="w-5 h-5" />}
+              rightIcon={<IconArrowRight size={20} stroke={2} />}
             >
               Bugungi Mashg&apos;ulotni Boshlash
             </Button>

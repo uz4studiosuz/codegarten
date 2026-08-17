@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Play, RotateCcw, ChevronRight, CheckCircle2, Search, Zap } from "lucide-react";
+import { IconPlayerPlay, IconRotate2, IconChevronRight, IconCircleCheckFilled, IconSearch, IconBolt } from "@tabler/icons-react";
 import { Button } from "@/design-system/primitives/Button";
 import { Badge } from "@/design-system/primitives/Badge";
 
@@ -63,101 +63,107 @@ export const AlgorithmVisualizer: React.FC = () => {
     }
   };
 
+  // Auto-play interval
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (isPlaying && !isFound && left <= right) {
       timer = setTimeout(() => {
         nextStep();
-      }, 1200);
-    } else if (isPlaying && (isFound || left > right)) {
-      setIsPlaying(false);
+      }, 900);
     }
     return () => clearTimeout(timer);
-  }, [isPlaying, left, right, isFound, mid]);
+  }, [isPlaying, isFound, left, right, step]);
 
   return (
     <div className="w-full rounded-2xl bg-[#0f1218] border border-border-subtle p-5 sm:p-7 shadow-deep">
-      {/* Visualizer header */}
+      {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6 pb-4 border-b border-border-subtle">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-brand/30 border border-brand-electric/40 flex items-center justify-center text-brand-light">
-            <Search className="w-4 h-4" />
+          <div className="w-8 h-8 rounded-lg bg-accent-green/20 border border-accent-green/40 flex items-center justify-center text-accent-green">
+            <IconSearch size={16} stroke={2} />
           </div>
           <div>
             <h4 className="text-base font-bold text-white flex items-center gap-2">
-              Binary Search Interaktiv Simulyatori
-              <Badge variant="success" size="sm">O(log N)</Badge>
+              Algoritmlar Laboratoriyasi: Binary Search Vizualizatori
             </h4>
             <p className="text-xs text-text-muted">
-              Elementlar soni: {INITIAL_ARRAY.length} ta &bull; Saralangan massiv
+              Har bir qadamda qidiruv maydoni 50% ga qisqaradi — O(log N) murakkablik
             </p>
           </div>
         </div>
 
-        {/* Target picker */}
+        {/* Complexity badge */}
         <div className="flex items-center gap-2">
-          <span className="text-xs text-text-secondary font-medium">Nishon:</span>
-          <div className="flex gap-1.5 bg-bg-card p-1 rounded-lg border border-border-subtle">
-            {[15, 54, 79, 92].map((num) => (
-              <button
-                key={num}
-                onClick={() => resetSearch(num)}
-                className={`px-2.5 py-1 text-xs rounded font-semibold transition-colors ${
-                  target === num
-                    ? "bg-brand-electric text-white shadow-glow"
-                    : "text-text-secondary hover:text-white"
-                }`}
-              >
-                {num}
-              </button>
-            ))}
-          </div>
+          <Badge variant="success" size="sm">
+            Vaqt: O(log N)
+          </Badge>
+          <Badge variant="brand" size="sm">
+            Xotira: O(1)
+          </Badge>
         </div>
       </div>
 
-      {/* Array visualization bar */}
-      <div className="my-6 overflow-x-auto pb-4">
-        <div className="flex items-center justify-center gap-2 sm:gap-3 min-w-[500px]">
+      {/* Target selector pills */}
+      <div className="flex flex-wrap items-center gap-2 mb-6">
+        <span className="text-xs font-semibold text-text-secondary">Nishon qiymat:</span>
+        <div className="flex flex-wrap gap-1.5">
+          {INITIAL_ARRAY.map((val) => (
+            <button
+              key={val}
+              onClick={() => resetSearch(val)}
+              className={`w-9 h-8 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
+                target === val
+                  ? "bg-brand-electric text-white shadow-glow scale-105"
+                  : "bg-bg-card border border-border-subtle text-text-secondary hover:text-white hover:border-border-medium"
+              }`}
+            >
+              {val}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Visual Array Canvas */}
+      <div className="mb-6 p-4 rounded-xl bg-bg-card border border-border-subtle overflow-x-auto">
+        <div className="flex items-center justify-center min-w-[500px] gap-2 sm:gap-2.5 py-4">
           {INITIAL_ARRAY.map((val, idx) => {
+            const isMid = mid === idx;
             const isEliminated = idx < left || idx > right;
-            const isMid = idx === mid;
             const isTarget = isFound && val === target;
 
+            let cardStyles = "bg-bg-elevated border-border-medium text-white";
+            if (isTarget) {
+              cardStyles = "bg-accent-green text-black border-accent-green shadow-glow-green scale-110";
+            } else if (isMid) {
+              cardStyles = "bg-brand-electric text-white border-brand-light shadow-glow ring-2 ring-brand-light/50";
+            } else if (isEliminated) {
+              cardStyles = "bg-bg-base/40 border-border-subtle/40 text-text-dim opacity-30 scale-95";
+            }
+
             return (
-              <div key={idx} className="flex flex-col items-center gap-2">
-                {/* Pointer tags */}
-                <div className="h-5 flex items-center justify-center text-[10px] font-bold">
-                  {idx === left && idx === right && (
-                    <span className="text-amber-400 font-extrabold">L=R</span>
-                  )}
-                  {idx === left && idx !== right && (
-                    <span className="text-blue-400">Left ({left})</span>
-                  )}
-                  {idx === right && idx !== left && (
-                    <span className="text-purple-400">Right ({right})</span>
-                  )}
+              <div key={idx} className="flex flex-col items-center gap-1.5 flex-1 max-w-[52px]">
+                {/* Index label */}
+                <span className="text-[10px] font-mono text-text-dim">[{idx}]</span>
+
+                {/* Array Node */}
+                <div
+                  className={`w-full aspect-square rounded-xl border flex items-center justify-center font-mono text-sm sm:text-base font-bold transition-all duration-300 ${cardStyles}`}
+                >
+                  {val}
                 </div>
 
-                {/* Array Cell */}
-                <div
-                  className={`
-                    w-11 h-13 sm:w-13 sm:h-15 rounded-xl flex flex-col items-center justify-center font-mono font-bold text-sm sm:text-base
-                    border transition-all duration-300 relative
-                    ${
-                      isTarget
-                        ? "bg-accent-green text-black border-white shadow-glow-green scale-110 z-10"
-                        : isMid
-                        ? "bg-brand-electric text-white border-brand-light shadow-glow scale-105"
-                        : isEliminated
-                        ? "bg-bg-elevated/30 text-text-dim border-transparent opacity-30 line-through"
-                        : "bg-bg-card text-white border-border-medium hover:border-brand-electric/40"
-                    }
-                  `}
-                >
-                  <span>{val}</span>
-                  <span className="text-[9px] font-sans font-normal text-text-dim block mt-0.5">
-                    [{idx}]
-                  </span>
+                {/* Pointer tags */}
+                <div className="h-4 flex items-center justify-center gap-1 text-[9px] font-mono font-bold">
+                  {idx === left && (
+                    <span className="text-accent-amber" title="Left Pointer">
+                      L
+                    </span>
+                  )}
+                  {idx === right && (
+                    <span className="text-accent-purple" title="Right Pointer">
+                      R
+                    </span>
+                  )}
                 </div>
 
                 {/* Mid pointer indicator */}
@@ -177,9 +183,9 @@ export const AlgorithmVisualizer: React.FC = () => {
       {/* Real-time explanation log */}
       <div className="p-4 rounded-xl bg-[#141822] border border-border-subtle flex items-start gap-3 mb-5">
         {isFound ? (
-          <CheckCircle2 className="w-5 h-5 text-accent-green shrink-0 mt-0.5" />
+          <IconCircleCheckFilled size={20} className="text-accent-green shrink-0 mt-0.5" />
         ) : (
-          <Zap className="w-5 h-5 text-brand-light shrink-0 mt-0.5 animate-pulse" />
+          <IconBolt size={20} className="text-brand-light shrink-0 mt-0.5 animate-pulse" />
         )}
         <div className="text-xs sm:text-sm text-text-secondary leading-relaxed">
           <span className="font-semibold text-white block mb-0.5">
@@ -197,7 +203,7 @@ export const AlgorithmVisualizer: React.FC = () => {
             variant="primary"
             disabled={isFound || left > right}
             onClick={nextStep}
-            rightIcon={<ChevronRight className="w-4 h-4" />}
+            rightIcon={<IconChevronRight size={16} stroke={2} />}
           >
             Keyingi Qadam
           </Button>
@@ -207,7 +213,7 @@ export const AlgorithmVisualizer: React.FC = () => {
             variant="secondary"
             disabled={isFound || left > right}
             onClick={() => setIsPlaying(!isPlaying)}
-            leftIcon={<Play className={`w-3.5 h-3.5 ${isPlaying ? "text-accent-green" : ""}`} />}
+            leftIcon={<IconPlayerPlay size={14} className={isPlaying ? "text-accent-green" : ""} />}
           >
             {isPlaying ? "To'xtatish" : "Avto Ijro"}
           </Button>
@@ -217,7 +223,7 @@ export const AlgorithmVisualizer: React.FC = () => {
           size="sm"
           variant="ghost"
           onClick={() => resetSearch(target)}
-          leftIcon={<RotateCcw className="w-3.5 h-3.5" />}
+          leftIcon={<IconRotate2 size={14} stroke={2} />}
         >
           Qayta Boshlash
         </Button>

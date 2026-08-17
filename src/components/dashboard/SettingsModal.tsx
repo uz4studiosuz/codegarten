@@ -2,14 +2,14 @@
 
 import React, { useState } from "react";
 import {
-  X,
-  Moon,
-  Sun,
-  User,
-  Bell,
-  Shield,
-  Check,
-} from "lucide-react";
+  IconX,
+  IconMoon,
+  IconSun,
+  IconUser,
+  IconBell,
+  IconShield,
+  IconCheck,
+} from "@tabler/icons-react";
 import { useTheme } from "@/context/ThemeContext";
 import { UserProfileMock } from "@/data/mockCourseData";
 
@@ -53,7 +53,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           onClick={onClose}
           className="absolute top-5 right-5 w-8 h-8 rounded-full bg-gray-100 dark:bg-zinc-800 text-gray-500 hover:text-black dark:hover:text-white flex items-center justify-center transition-colors cursor-pointer"
         >
-          <X className="w-4 h-4" />
+          <IconX size={16} stroke={2} />
         </button>
 
         <h3 className="text-xl font-extrabold mb-5">Sozlamalar</h3>
@@ -74,7 +74,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     : "border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-600 dark:text-gray-300"
                 }`}
               >
-                <Sun className="w-4 h-4 text-amber-500" />
+                <IconSun size={16} stroke={2} className="text-amber-500" />
                 <span>Kunduzgi (Light)</span>
               </button>
 
@@ -87,7 +87,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     : "border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-600 dark:text-gray-300"
                 }`}
               >
-                <Moon className="w-4 h-4 text-purple-400" />
+                <IconMoon size={16} stroke={2} className="text-purple-400" />
                 <span>Tungi (Dark)</span>
               </button>
             </div>
@@ -109,7 +109,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           {/* Audio toggle */}
           <div className="flex items-center justify-between py-2 border-t border-gray-100 dark:border-zinc-800">
             <div className="flex items-center gap-2 text-xs font-semibold text-gray-700 dark:text-gray-300">
-              <Bell className="w-4 h-4 text-gray-400" />
+              <IconBell size={16} stroke={2} className="text-gray-400" />
               <span>Ovozli effektlar</span>
             </div>
             <button
@@ -139,3 +139,4 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     </div>
   );
 };
+

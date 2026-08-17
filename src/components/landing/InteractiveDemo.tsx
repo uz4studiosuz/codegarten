@@ -6,7 +6,7 @@ import { Badge } from "@/design-system/primitives/Badge";
 import { AlgorithmVisualizer } from "@/components/widgets/AlgorithmVisualizer";
 import { LogicChallenge } from "@/components/widgets/LogicChallenge";
 import { InteractiveStateDemo } from "@/components/widgets/InteractiveStateDemo";
-import { Search, BrainCircuit, Cpu, Sparkles } from "lucide-react";
+import { IconSearch, IconBrain, IconCpu, IconSparkles } from "@tabler/icons-react";
 
 export const InteractiveDemo: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"binary-search" | "logic" | "system">("binary-search");
@@ -20,7 +20,7 @@ export const InteractiveDemo: React.FC = () => {
       <Container size="xl">
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-12">
           <Badge variant="glow" size="md" className="mb-4">
-            <Sparkles className="w-3.5 h-3.5 mr-1" />
+            <IconSparkles size={14} className="mr-1" />
             Amaliy Sinov Maydoni
           </Badge>
 
@@ -45,7 +45,7 @@ export const InteractiveDemo: React.FC = () => {
                   : "text-text-secondary hover:text-white hover:bg-white/5"
               }`}
             >
-              <Search className="w-4 h-4 text-accent-green" />
+              <IconSearch size={16} stroke={2} className="text-accent-green" />
               <span>1. Algoritm Visualizer</span>
             </button>
 
@@ -57,7 +57,7 @@ export const InteractiveDemo: React.FC = () => {
                   : "text-text-secondary hover:text-white hover:bg-white/5"
               }`}
             >
-              <BrainCircuit className="w-4 h-4 text-accent-amber" />
+              <IconBrain size={16} stroke={2} className="text-accent-amber" />
               <span>2. Mini-Kod Savoli</span>
             </button>
 
@@ -69,7 +69,7 @@ export const InteractiveDemo: React.FC = () => {
                   : "text-text-secondary hover:text-white hover:bg-white/5"
               }`}
             >
-              <Cpu className="w-4 h-4 text-accent-purple" />
+              <IconCpu size={16} stroke={2} className="text-accent-purple" />
               <span>3. Cache & Latency</span>
             </button>
           </div>

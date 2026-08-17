@@ -4,25 +4,27 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import confetti from "canvas-confetti";
 import {
-  X,
-  MessageSquare,
-  Send,
-  Eye,
-  EyeOff,
-  CheckCircle2,
-  Mail,
-  Phone,
-  ArrowLeft,
-  Calendar,
-  MapPin,
-  ChevronDown,
-  User,
-  Sparkles,
-} from "lucide-react";
+  IconX,
+  IconMessage,
+  IconSend,
+  IconEye,
+  IconEyeOff,
+  IconCircleCheck,
+  IconMail,
+  IconPhone,
+  IconArrowLeft,
+  IconCalendar,
+  IconMapPin,
+  IconChevronDown,
+  IconUser,
+  IconSparkles,
+} from "@tabler/icons-react";
 import { useAuth } from "@/context/AuthContext";
 import { UZBEKISTAN_REGIONS } from "@/data/regionsData";
+import { useRouter } from "next/navigation";
 
 export const AuthModal: React.FC = () => {
+  const router = useRouter();
   const {
     isOpen,
     mode,
@@ -284,6 +286,7 @@ export const AuthModal: React.FC = () => {
 
       setTimeout(() => {
         closeAuthModal();
+        router.push("/home");
       }, 900);
     }, 600);
   };
@@ -294,6 +297,7 @@ export const AuthModal: React.FC = () => {
       phoneOrEmail,
     });
     closeAuthModal();
+    router.push("/home");
   };
 
   const resendCode = () => {
@@ -303,22 +307,22 @@ export const AuthModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 font-sans selection:bg-[#e6f4ea] selection:text-[#00872e]">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 font-sans selection:bg-[#e6f4ea] selection:text-[#00872e]">
       {/* Ultra-clean backdrop blur */}
       <div
-        className="fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 animate-fadeIn"
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 animate-fadeIn"
         onClick={closeAuthModal}
       />
 
       {/* Main Minimalist Modal Card */}
-      <div className="relative w-full max-w-[460px] bg-white rounded-[32px] shadow-2xl p-7 sm:p-9 border border-gray-100/80 z-10 animate-scaleIn max-h-[92vh] overflow-y-auto">
+      <div className="relative w-full max-w-[460px] bg-white dark:bg-[#1C1C1E] text-black dark:text-white rounded-[32px] shadow-2xl p-7 sm:p-9 border border-gray-100 dark:border-zinc-800 z-10 animate-scaleIn max-h-[92vh] overflow-y-auto">
         {/* Close Button (X) */}
         <button
           onClick={closeAuthModal}
-          className="absolute top-5 right-5 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-gray-900 flex items-center justify-center transition-colors cursor-pointer"
+          className="absolute top-5 right-5 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white flex items-center justify-center transition-colors cursor-pointer"
           aria-label="Yopish"
         >
-          <X className="w-4 h-4" />
+          <IconX size={16} stroke={2} />
         </button>
 
         {/* Mascot / Floating Top Badge */}
@@ -630,7 +634,7 @@ export const AuthModal: React.FC = () => {
                     : "text-gray-500 hover:text-[#121212]"
                 }`}
               >
-                <Phone className="w-3.5 h-3.5" />
+                <IconPhone size={15} stroke={2} />
                 <span>Telefon</span>
               </button>
               <button
@@ -645,7 +649,7 @@ export const AuthModal: React.FC = () => {
                     : "text-gray-500 hover:text-[#121212]"
                 }`}
               >
-                <Mail className="w-3.5 h-3.5" />
+                <IconMail size={15} stroke={2} />
                 <span>Email</span>
               </button>
             </div>
@@ -688,7 +692,7 @@ export const AuthModal: React.FC = () => {
                           : "bg-white border-gray-200 text-gray-600 hover:border-gray-300"
                       }`}
                     >
-                      <MessageSquare className="w-3.5 h-3.5" />
+                      <IconMessage size={15} stroke={2} />
                       <span>SMS orqali</span>
                     </button>
                     <button
@@ -700,7 +704,7 @@ export const AuthModal: React.FC = () => {
                           : "bg-white border-gray-200 text-gray-600 hover:border-gray-300"
                       }`}
                     >
-                      <Send className="w-3.5 h-3.5" />
+                      <IconSend size={15} stroke={2} />
                       <span>Telegram orqali</span>
                     </button>
                   </div>
@@ -736,9 +740,9 @@ export const AuthModal: React.FC = () => {
                     className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   >
                     {showPassword ? (
-                      <EyeOff className="w-4 h-4" />
+                      <IconEyeOff size={16} stroke={1.75} />
                     ) : (
-                      <Eye className="w-4 h-4" />
+                      <IconEye size={16} stroke={1.75} />
                     )}
                   </button>
                 </div>
@@ -763,9 +767,9 @@ export const AuthModal: React.FC = () => {
                     className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   >
                     {showConfirmPassword ? (
-                      <EyeOff className="w-4 h-4" />
+                      <IconEyeOff size={16} stroke={1.75} />
                     ) : (
-                      <Eye className="w-4 h-4" />
+                      <IconEye size={16} stroke={1.75} />
                     )}
                   </button>
                 </div>

@@ -1,12 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { Container } from "@/design-system/primitives/Container";
 import { Badge } from "@/design-system/primitives/Badge";
 import { Button } from "@/design-system/primitives/Button";
-import { Check, Zap, Sparkles, ShieldCheck } from "lucide-react";
+import { IconCircleCheckFilled, IconBolt, IconSparkles, IconShieldCheck } from "@tabler/icons-react";
+import { useAuth } from "@/context/AuthContext";
 
 export const PricingTeaser: React.FC = () => {
+  const { openAuthModal } = useAuth();
   const [isAnnual, setIsAnnual] = useState(true);
 
   return (
@@ -17,7 +20,7 @@ export const PricingTeaser: React.FC = () => {
       <Container size="xl">
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-12">
           <Badge variant="glow" size="md" className="mb-4">
-            <Zap className="w-3.5 h-3.5 mr-1 text-accent-green" />
+            <IconBolt size={14} className="mr-1 text-accent-green" />
             Shaffof Tariflar
           </Badge>
 
@@ -80,27 +83,33 @@ export const PricingTeaser: React.FC = () => {
 
               <div className="space-y-3.5 mb-8">
                 <div className="flex items-center gap-3">
-                  <Check className="w-5 h-5 text-accent-green shrink-0" />
+                  <IconCircleCheckFilled size={20} className="text-accent-green shrink-0" />
                   <span className="text-sm text-text-primary">Kuniga 3 ta bepul interaktiv dars</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Check className="w-5 h-5 text-accent-green shrink-0" />
+                  <IconCircleCheckFilled size={20} className="text-accent-green shrink-0" />
                   <span className="text-sm text-text-primary">Asosiy CS va Algoritmlar ko&apos;rinishi</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Check className="w-5 h-5 text-accent-green shrink-0" />
+                  <IconCircleCheckFilled size={20} className="text-accent-green shrink-0" />
                   <span className="text-sm text-text-primary">Hamjamiyat muhokamalari va forumi</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Check className="w-5 h-5 text-accent-green shrink-0" />
+                  <IconCircleCheckFilled size={20} className="text-accent-green shrink-0" />
                   <span className="text-sm text-text-primary">Oddiy kunlik streak hisobi</span>
                 </div>
               </div>
             </div>
 
-            <Button size="lg" variant="secondary" fullWidth>
-              Hozir Bepul Boshlash
-            </Button>
+            <Link href="/register" className="w-full block">
+              <Button
+                size="lg"
+                variant="secondary"
+                fullWidth
+              >
+                Hozir Bepul Boshlash
+              </Button>
+            </Link>
           </div>
 
           {/* Pro Tier (Featured) */}
@@ -114,7 +123,7 @@ export const PricingTeaser: React.FC = () => {
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-xl font-bold text-white flex items-center gap-2">
                   Codegarten Pro
-                  <Sparkles className="w-4 h-4 text-accent-amber" />
+                  <IconSparkles size={16} className="text-accent-amber" />
                 </h3>
                 <Badge variant="glow" size="sm">Cheksiz Kirish</Badge>
               </div>
@@ -134,36 +143,43 @@ export const PricingTeaser: React.FC = () => {
 
               <div className="space-y-3.5 mb-8">
                 <div className="flex items-center gap-3">
-                  <Check className="w-5 h-5 text-accent-green shrink-0" />
+                  <IconCircleCheckFilled size={20} className="text-accent-green shrink-0" />
                   <span className="text-sm font-semibold text-white">Barcha 15+ Treklarga 100% cheksiz kirish</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Check className="w-5 h-5 text-accent-green shrink-0" />
+                  <IconCircleCheckFilled size={20} className="text-accent-green shrink-0" />
                   <span className="text-sm font-semibold text-white">System Design &amp; AI Transformer chuqurlashtirilgan modullari</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Check className="w-5 h-5 text-accent-green shrink-0" />
+                  <IconCircleCheckFilled size={20} className="text-accent-green shrink-0" />
                   <span className="text-sm text-text-primary">Cheksiz kod sandboxt va real-time simulyatorlar</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Check className="w-5 h-5 text-accent-green shrink-0" />
+                  <IconCircleCheckFilled size={20} className="text-accent-green shrink-0" />
                   <span className="text-sm text-text-primary">Mobil ilovada oflayn yuklab olish</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Check className="w-5 h-5 text-accent-green shrink-0" />
+                  <IconCircleCheckFilled size={20} className="text-accent-green shrink-0" />
                   <span className="text-sm text-text-primary">Rasmiy sertifikat va LinkedIn tasdiqlash</span>
                 </div>
               </div>
             </div>
 
-            <Button size="lg" variant="gradient" fullWidth className="shadow-glow">
-              7 Kun Bepul Pro Sinash
-            </Button>
+            <Link href="/register" className="w-full block">
+              <Button
+                size="lg"
+                variant="gradient"
+                fullWidth
+                className="shadow-glow"
+              >
+                7 Kun Bepul Pro Sinash
+              </Button>
+            </Link>
           </div>
         </div>
 
         <div className="flex items-center justify-center gap-2 mt-8 text-xs text-text-muted">
-          <ShieldCheck className="w-4 h-4 text-accent-green" />
+          <IconShieldCheck size={16} className="text-accent-green" />
           <span>Istalgan vaqtda obunani bekor qilish mumkin &bull; 14 kunlik to&apos;liq kafolat</span>
         </div>
       </Container>

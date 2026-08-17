@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import { Container } from "@/design-system/primitives/Container";
 import { Badge } from "@/design-system/primitives/Badge";
-import { Smartphone, Check } from "lucide-react";
+import { IconDeviceMobile, IconCheck } from "@tabler/icons-react";
 
 export const MobileAppTeaser: React.FC = () => {
   return (
@@ -13,7 +13,7 @@ export const MobileAppTeaser: React.FC = () => {
             {/* Left: Info */}
             <div className="lg:col-span-7 flex flex-col items-start">
               <Badge variant="brand" size="md" className="mb-4">
-                <Smartphone className="w-4 h-4 mr-1" />
+                <IconDeviceMobile size={16} className="mr-1" />
                 iOS &amp; Android Mobil Ilovasi
               </Badge>
 
@@ -29,25 +29,25 @@ export const MobileAppTeaser: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 w-full">
                 <div className="flex items-center gap-2.5">
                   <div className="w-5 h-5 rounded-full bg-[#e6f4ea] text-[#00872e] flex items-center justify-center shrink-0">
-                    <Check className="w-3.5 h-3.5 stroke-[3]" />
+                    <IconCheck size={14} stroke={3} />
                   </div>
                   <span className="text-sm font-medium text-[#121212]">Oflayn rejimda ishlash</span>
                 </div>
                 <div className="flex items-center gap-2.5">
                   <div className="w-5 h-5 rounded-full bg-[#e6f4ea] text-[#00872e] flex items-center justify-center shrink-0">
-                    <Check className="w-3.5 h-3.5 stroke-[3]" />
+                    <IconCheck size={14} stroke={3} />
                   </div>
                   <span className="text-sm font-medium text-[#121212]">Tezkor sensorli fikr-mulohaza</span>
                 </div>
                 <div className="flex items-center gap-2.5">
                   <div className="w-5 h-5 rounded-full bg-[#e6f4ea] text-[#00872e] flex items-center justify-center shrink-0">
-                    <Check className="w-3.5 h-3.5 stroke-[3]" />
+                    <IconCheck size={14} stroke={3} />
                   </div>
                   <span className="text-sm font-medium text-[#121212]">Kompyuter bilan sinxronizatsiya</span>
                 </div>
                 <div className="flex items-center gap-2.5">
                   <div className="w-5 h-5 rounded-full bg-[#e6f4ea] text-[#00872e] flex items-center justify-center shrink-0">
-                    <Check className="w-3.5 h-3.5 stroke-[3]" />
+                    <IconCheck size={14} stroke={3} />
                   </div>
                   <span className="text-sm font-medium text-[#121212]">Kunlik vidjetlar va streak</span>
                 </div>

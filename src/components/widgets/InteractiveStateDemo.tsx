@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Database, Zap, HardDrive, RefreshCw, Cpu, Server } from "lucide-react";
+import { IconBolt, IconServer, IconRotateClockwise, IconCpu, IconDeviceDesktop } from "@tabler/icons-react";
 import { Button } from "@/design-system/primitives/Button";
 import { Badge } from "@/design-system/primitives/Badge";
 
@@ -30,7 +30,7 @@ export const InteractiveStateDemo: React.FC = () => {
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6 pb-4 border-b border-border-subtle">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-lg bg-accent-purple/20 border border-accent-purple/40 flex items-center justify-center text-accent-purple">
-            <Cpu className="w-4 h-4" />
+            <IconCpu size={16} stroke={2} />
           </div>
           <div>
             <h4 className="text-base font-bold text-white flex items-center gap-2">
@@ -72,10 +72,10 @@ export const InteractiveStateDemo: React.FC = () => {
         {/* Node 1: API Gateway */}
         <div className="p-4 rounded-xl bg-bg-card border border-border-medium flex flex-col items-center text-center relative">
           <div className="w-10 h-10 rounded-full bg-brand/30 border border-brand-electric/50 flex items-center justify-center text-brand-light mb-2">
-            <Server className="w-5 h-5" />
+            <IconServer size={20} stroke={2} />
           </div>
           <span className="text-xs font-bold text-white">Edge API Gateway</span>
-          <span className="text-[10px] text-text-muted mt-0.5">So'rov qabul qiluvchi</span>
+          <span className="text-[10px] text-text-muted mt-0.5">So&apos;rov qabul qiluvchi</span>
         </div>
 
         {/* Flow indicator */}
@@ -107,7 +107,7 @@ export const InteractiveStateDemo: React.FC = () => {
                 : "bg-bg-elevated border border-border-medium text-brand-light"
             }`}
           >
-            {useCache ? <Zap className="w-5 h-5" /> : <HardDrive className="w-5 h-5" />}
+            {useCache ? <IconBolt size={20} stroke={2} /> : <IconDeviceDesktop size={20} stroke={2} />}
           </div>
           <span className="text-xs font-bold text-white">
             {useCache ? "In-Memory RAM Cache" : "PostgreSQL Disk DB"}
@@ -148,7 +148,7 @@ export const InteractiveStateDemo: React.FC = () => {
       {/* Trigger Button */}
       <div className="flex items-center justify-between">
         <span className="text-xs text-text-muted">
-          So'rovlar soni: {requestCount}
+          So&apos;rovlar soni: {requestCount}
         </span>
 
         <Button
@@ -156,9 +156,9 @@ export const InteractiveStateDemo: React.FC = () => {
           variant="primary"
           onClick={triggerRequest}
           isLoading={requestState === "fetching"}
-          leftIcon={<RefreshCw className="w-3.5 h-3.5" />}
+          leftIcon={<IconRotateClockwise size={14} stroke={2} />}
         >
-          So'rov Yuborish (Test Request)
+          So&apos;rov Yuborish (Test Request)
         </Button>
       </div>
     </div>

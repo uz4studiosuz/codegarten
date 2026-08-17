@@ -3,42 +3,49 @@
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import {
-  Home,
-  BookOpen,
-  Zap,
-  Menu,
-  X,
-  Settings,
-  Info,
-  HelpCircle,
-  LogOut,
-  Moon,
-  Sun,
-  ChevronRight,
-} from "lucide-react";
-import { UserProfileMock } from "@/data/mockCourseData";
+  IconHome,
+  IconBook,
+  IconBolt,
+  IconMenu2,
+  IconX,
+  IconSettings,
+  IconInfoCircle,
+  IconHelp,
+  IconLogout,
+  IconMoon,
+  IconSun,
+  IconChevronRight,
+} from "@tabler/icons-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
+import { UserProfileMock, mockUserProfile } from "@/data/mockCourseData";
 import { useTheme } from "@/context/ThemeContext";
 
 interface AppNavbarProps {
-  activeTab: "home" | "courses";
-  setActiveTab: (tab: "home" | "courses") => void;
-  user: UserProfileMock;
+  activeTab?: "home" | "courses" | "settings";
+  setActiveTab?: (tab: "home" | "courses") => void;
+  user?: UserProfileMock;
   onOpenStreakModal?: () => void;
   onOpenSettings?: () => void;
   onOpenAbout?: () => void;
 }
 
 export const AppNavbar: React.FC<AppNavbarProps> = ({
-  activeTab,
+  activeTab = "home",
   setActiveTab,
-  user,
+  user: propUser,
   onOpenStreakModal,
   onOpenSettings,
   onOpenAbout,
 }) => {
+  const router = useRouter();
   const { theme, toggleTheme } = useTheme();
+  const { logout, user: authUser } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  const displayUser = propUser || mockUserProfile;
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -51,6 +58,12 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const handleLogout = () => {
+    setIsMenuOpen(false);
+    logout();
+    router.push("/");
+  };
+
   return (
     <header className="sticky top-0 left-0 right-0 z-40 bg-white dark:bg-[#1F1F1F] border-b border-gray-100 dark:border-[#27272a] transition-colors duration-200 font-sans">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -59,8 +72,8 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
           {/* LEFT: Codegarten Brand Logo                               */}
           {/* ========================================================= */}
           <div className="flex items-center gap-8">
-            <button
-              onClick={() => setActiveTab("home")}
+            <Link
+              href="/home"
               className="flex items-center gap-2.5 group cursor-pointer focus:outline-none select-none"
             >
               <div className="w-8 h-8 group-hover:scale-105 transition-transform shrink-0">
@@ -76,41 +89,43 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
               <span className="text-xl font-bold tracking-tight text-[#000000] dark:text-white font-sans">
                 Codegarten
               </span>
-            </button>
+            </Link>
 
             {/* ========================================================= */}
             {/* CENTER: Clean Tabs (Bosh sahifa, Kurslar)                 */}
             {/* ========================================================= */}
             <nav className="hidden md:flex items-center gap-6">
-              <button
-                type="button"
-                onClick={() => setActiveTab("home")}
-                className={`relative py-5 text-sm font-semibold transition-colors flex items-center gap-2 cursor-pointer ${activeTab === "home"
+              <Link
+                href="/home"
+                onClick={() => setActiveTab?.("home")}
+                className={`relative py-5 text-sm font-semibold transition-colors flex items-center gap-2 cursor-pointer ${
+                  activeTab === "home"
                     ? "text-[#000000] dark:text-white font-bold"
                     : "text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white"
-                  }`}
+                }`}
               >
-                <Home className="w-4 h-4" />
+                <IconHome size={18} stroke={2} />
                 <span>Bosh sahifa</span>
                 {activeTab === "home" && (
                   <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-black dark:bg-white rounded-full" />
                 )}
-              </button>
+              </Link>
 
-              <button
-                type="button"
-                onClick={() => setActiveTab("courses")}
-                className={`relative py-5 text-sm font-semibold transition-colors flex items-center gap-2 cursor-pointer ${activeTab === "courses"
+              <Link
+                href="/courses"
+                onClick={() => setActiveTab?.("courses")}
+                className={`relative py-5 text-sm font-semibold transition-colors flex items-center gap-2 cursor-pointer ${
+                  activeTab === "courses"
                     ? "text-[#000000] dark:text-white font-bold"
                     : "text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white"
-                  }`}
+                }`}
               >
-                <BookOpen className="w-4 h-4" />
+                <IconBook size={18} stroke={2} />
                 <span>Kurslar</span>
                 {activeTab === "courses" && (
                   <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-black dark:bg-white rounded-full" />
                 )}
-              </button>
+              </Link>
             </nav>
           </div>
 
@@ -125,11 +140,11 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
               className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-gray-200 dark:border-zinc-700 bg-white dark:bg-[#1c1c1e] text-black dark:text-white hover:bg-gray-50 dark:hover:bg-zinc-800 transition-all cursor-pointer select-none font-bold text-xs shadow-xs"
               title="2 kunlik faollik"
             >
-              <Zap className="w-3.5 h-3.5 text-[#22C55E] fill-[#22C55E] dark:text-amber-400 dark:fill-amber-400" />
-              <span className="font-mono text-sm">{user.streakDays}</span>
+              <IconBolt size={16} stroke={2} className="text-[#22C55E] fill-[#22C55E] dark:text-amber-400 dark:fill-amber-400" />
+              <span className="font-mono text-sm">{displayUser.streakDays}</span>
             </button>
 
-            {/* Menu Hamburger Button (Rounded full border matching Figma) */}
+            {/* Menu Hamburger Button */}
             <div className="relative" ref={menuRef}>
               <button
                 type="button"
@@ -137,14 +152,15 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
                 className="w-9 h-9 rounded-full border border-gray-200 dark:border-zinc-700 bg-white dark:bg-[#1F1F1F] text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-zinc-800 flex items-center justify-center transition-colors cursor-pointer shadow-xs"
                 aria-label="Menu"
               >
-                <Menu className="w-4 h-4" />
+                <IconMenu2 size={18} stroke={2} />
               </button>
 
-              {/* Exact Dropdown Menu (Screenshot 3 Style) */}
+              {/* Exact Dropdown Menu */}
               {isMenuOpen && (
                 <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-[#1c1c1e] rounded-2xl shadow-2xl border border-gray-100 dark:border-zinc-800 py-2 z-50 animate-scaleIn">
                   {/* Settings */}
-                  <button
+                  <Link
+                    href="/settings"
                     onClick={() => {
                       setIsMenuOpen(false);
                       onOpenSettings?.();
@@ -152,10 +168,10 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
                     className="w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-zinc-800/60 transition-colors text-left cursor-pointer"
                   >
                     <div className="flex items-center gap-3">
-                      <Settings className="w-4 h-4 text-gray-500" />
+                      <IconSettings size={18} stroke={1.75} className="text-gray-500" />
                       <span>Sozlamalar</span>
                     </div>
-                  </button>
+                  </Link>
 
                   {/* About */}
                   <button
@@ -166,7 +182,7 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
                     className="w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-zinc-800/60 transition-colors text-left cursor-pointer"
                   >
                     <div className="flex items-center gap-3">
-                      <Info className="w-4 h-4 text-gray-500" />
+                      <IconInfoCircle size={18} stroke={1.75} className="text-gray-500" />
                       <span>Haqida</span>
                     </div>
                   </button>
@@ -180,9 +196,9 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
                   >
                     <div className="flex items-center gap-3">
                       {theme === "dark" ? (
-                        <Sun className="w-4 h-4 text-amber-400" />
+                        <IconSun size={18} stroke={1.75} className="text-amber-400" />
                       ) : (
-                        <Moon className="w-4 h-4 text-purple-600" />
+                        <IconMoon size={18} stroke={1.75} className="text-purple-600" />
                       )}
                       <span>{theme === "dark" ? "Kunduzgi rejim" : "Tungi rejim"}</span>
                     </div>
@@ -195,12 +211,10 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
 
                   {/* Log out */}
                   <button
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                    }}
+                    onClick={handleLogout}
                     className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors text-left cursor-pointer"
                   >
-                    <LogOut className="w-4 h-4 text-red-500" />
+                    <IconLogout size={18} stroke={1.75} className="text-red-500" />
                     <span>Chiqish</span>
                   </button>
                 </div>
@@ -212,3 +226,5 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
     </header>
   );
 };
+
+

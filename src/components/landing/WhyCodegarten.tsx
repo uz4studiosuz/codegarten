@@ -1,7 +1,7 @@
 import React from "react";
 import { Container } from "@/design-system/primitives/Container";
 import { Badge } from "@/design-system/primitives/Badge";
-import { Check, X, Brain, Cpu, Compass } from "lucide-react";
+import { IconCheck, IconX, IconBrain, IconCpu, IconCompass } from "@tabler/icons-react";
 
 export const WhyCodegarten: React.FC = () => {
   const comparisonItems = [
@@ -32,19 +32,19 @@ export const WhyCodegarten: React.FC = () => {
       title: "Har bir konsepsiya bitta bosishda oydinlashadi",
       description: "Murakkab mavzular qismlarga ajratilib, intuitiv vizual elementlar orqali ko'rsatiladi.",
       video: "/assets/videos/concepts-click-desktop.webm",
-      icon: <Brain className="w-5 h-5 text-[#00872e]" />,
+      icon: <IconBrain size={20} className="text-[#00872e]" />,
     },
     {
       title: "Fikrlashga undovchi arxitektura",
       description: "Tayyor kodni ko'chirib olish emas, balki nima uchun shunday yozilishini anglab yetish.",
       video: "/assets/videos/built-to-think-desktop.webm",
-      icon: <Cpu className="w-5 h-5 text-[#213c9e]" />,
+      icon: <IconCpu size={20} className="text-[#213c9e]" />,
     },
     {
       title: "Darajangizga moslashuvchan algoritm",
       description: "Sizning bilmingizga qarab topshiriqlar murakkabligi avtomatik moslashadi.",
       video: "/assets/videos/adapts-desktop.webm",
-      icon: <Compass className="w-5 h-5 text-[#8a5cf6]" />,
+      icon: <IconCompass size={20} className="text-[#8a5cf6]" />,
     },
   ];
 
@@ -70,10 +70,10 @@ export const WhyCodegarten: React.FC = () => {
           <div className="grid grid-cols-12 bg-[#ebebea] p-4 sm:p-5 border-b border-[#e5e5e2] text-xs sm:text-sm font-bold text-[#121212]">
             <div className="col-span-4 text-[#6b7280]">XUSUSIYAT</div>
             <div className="col-span-4 text-[#dc2626] flex items-center gap-1.5">
-              <X className="w-4 h-4" /> Passiv Video Kurslar
+              <IconX size={16} stroke={2} /> Passiv Video Kurslar
             </div>
             <div className="col-span-4 text-[#00872e] flex items-center gap-1.5 font-extrabold">
-              <Check className="w-4 h-4" /> Codegarten Usuli
+              <IconCheck size={16} stroke={2} /> Codegarten Usuli
             </div>
           </div>
 
@@ -90,7 +90,7 @@ export const WhyCodegarten: React.FC = () => {
                   {item.passive}
                 </div>
                 <div className="col-span-4 text-[#00872e] font-medium flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#00872e] shrink-0" />
+                  <IconCheck size={16} stroke={2} className="text-[#00872e] shrink-0" />
                   <span>{item.codegarten}</span>
                 </div>
               </div>

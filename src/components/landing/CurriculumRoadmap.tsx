@@ -4,7 +4,16 @@ import React, { useState } from "react";
 import { Container } from "@/design-system/primitives/Container";
 import { Badge } from "@/design-system/primitives/Badge";
 import { Button } from "@/design-system/primitives/Button";
-import { Map, CheckCircle2, ChevronRight, Sparkles, Terminal, Code2, Server, Brain } from "lucide-react";
+import {
+  IconMap,
+  IconCircleCheckFilled,
+  IconChevronRight,
+  IconSparkles,
+  IconTerminal2,
+  IconCode,
+  IconServer,
+  IconBrain,
+} from "@tabler/icons-react";
 
 export const CurriculumRoadmap: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -14,7 +23,7 @@ export const CurriculumRoadmap: React.FC = () => {
       step: "01",
       title: "Muhandislik Asoslari (CS Foundations)",
       tag: "1-bosqich",
-      icon: <Terminal className="w-5 h-5 text-accent-green" />,
+      icon: <IconTerminal2 size={20} className="text-accent-green" />,
       topics: [
         "Xotira strukturasi: Stack vs Heap",
         "Ikkilik sanoq va Bitwise amallar",
@@ -27,7 +36,7 @@ export const CurriculumRoadmap: React.FC = () => {
       step: "02",
       title: "Algoritmlar & Ma'lumotlar Tuzilmasi",
       tag: "2-bosqich",
-      icon: <Code2 className="w-5 h-5 text-brand-light" />,
+      icon: <IconCode size={20} className="text-brand-light" />,
       topics: [
         "Binary Search va Two Pointers texnikalari",
         "Bog'langan ro'yxatlar (Linked Lists) va Hash jadvallar",
@@ -40,7 +49,7 @@ export const CurriculumRoadmap: React.FC = () => {
       step: "03",
       title: "Zamonaviy Fullstack & React Internals",
       tag: "3-bosqich",
-      icon: <Server className="w-5 h-5 text-accent-purple" />,
+      icon: <IconServer size={20} className="text-accent-purple" />,
       topics: [
         "React Fiber va Virtual DOM rekonsilyatsiyasi",
         "Server Components va Edge Rendering oqimi",
@@ -53,7 +62,7 @@ export const CurriculumRoadmap: React.FC = () => {
       step: "04",
       title: "Taqsimlangan Tizimlar & AI Muhandisligi",
       tag: "4-bosqich",
-      icon: <Brain className="w-5 h-5 text-accent-amber" />,
+      icon: <IconBrain size={20} className="text-accent-amber" />,
       topics: [
         "Taqsimlangan Kesh (Redis, Memcached) va Sharding",
         "Xabarlar navbati (Kafka, RabbitMQ) va Event-Driven",
@@ -69,7 +78,7 @@ export const CurriculumRoadmap: React.FC = () => {
       <Container size="xl">
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-16">
           <Badge variant="glow" size="md" className="mb-4">
-            <Map className="w-3.5 h-3.5 mr-1" />
+            <IconMap size={14} className="mr-1" />
             Karyera Xaritasi
           </Badge>
 
@@ -118,7 +127,7 @@ export const CurriculumRoadmap: React.FC = () => {
               </div>
 
               <span className="text-xs text-brand-light font-semibold flex items-center gap-1 mt-4">
-                Mavzularni ko&apos;rish <ChevronRight className="w-3.5 h-3.5" />
+                Mavzularni ko&apos;rish <IconChevronRight size={14} />
               </span>
             </div>
           ))}
@@ -151,7 +160,7 @@ export const CurriculumRoadmap: React.FC = () => {
                 key={idx}
                 className="flex items-center gap-3 p-3.5 rounded-xl bg-bg-secondary border border-border-subtle"
               >
-                <CheckCircle2 className="w-5 h-5 text-accent-green shrink-0" />
+                <IconCircleCheckFilled size={20} className="text-accent-green shrink-0" />
                 <span className="text-sm font-medium text-text-primary">{t}</span>
               </div>
             ))}

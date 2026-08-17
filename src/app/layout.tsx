@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Outfit, Lora, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { AppProviders } from "@/components/providers/AppProviders";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -68,8 +69,10 @@ export default function RootLayout({
       lang="uz"
       className={`${outfit.variable} ${lora.variable} ${jetbrainsMono.variable}`}
     >
-      <body className="bg-white text-ink font-sans min-h-screen antialiased selection:bg-brand-light selection:text-brand">
-        {children}
+      <body className="bg-white dark:bg-[#141414] text-black dark:text-white font-sans min-h-screen antialiased selection:bg-[#22C55E]/20 selection:text-[#22C55E] transition-colors duration-200">
+        <AppProviders>
+          {children}
+        </AppProviders>
       </body>
     </html>
   );

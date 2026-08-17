@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { Button } from "@/design-system/primitives/Button";
-import { ArrowRight, Play } from "lucide-react";
+import { IconArrowRight, IconPlayerPlay } from "@tabler/icons-react";
 
 interface CategoryData {
   id: string;
@@ -132,11 +133,11 @@ export const CurriculumSection: React.FC = () => {
                 ))}
               </ul>
 
-              <a href="#interactive-demo">
-                <Button size="md" variant="primary" rightIcon={<ArrowRight className="w-4 h-4" />}>
+              <Link href="/register">
+                <Button size="md" variant="primary" rightIcon={<IconArrowRight size={16} stroke={2} />}>
                   Darslarni Boshlash
                 </Button>
-              </a>
+              </Link>
             </div>
 
             {/* Right: Looping Video Preview Card (-refresh.webm) */}

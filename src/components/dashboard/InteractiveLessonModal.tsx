@@ -3,17 +3,17 @@
 import React, { useState } from "react";
 import confetti from "canvas-confetti";
 import {
-  X,
-  CheckCircle2,
-  AlertCircle,
-  ArrowRight,
-  RotateCcw,
-  Sparkles,
-  Zap,
-  Check,
-  Code2,
-  Repeat,
-} from "lucide-react";
+  IconX,
+  IconCircleCheckFilled,
+  IconAlertCircle,
+  IconArrowRight,
+  IconRotate2,
+  IconSparkles,
+  IconBolt,
+  IconCheck,
+  IconCode,
+  IconRepeat,
+} from "@tabler/icons-react";
 
 interface InteractiveLessonModalProps {
   moduleId: string;
@@ -75,7 +75,7 @@ export const InteractiveLessonModal: React.FC<InteractiveLessonModalProps> = ({
         <div className="flex items-center justify-between pb-4 mb-5 border-b border-gray-100">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-purple-600 text-white flex items-center justify-center text-xs font-bold shadow-xs">
-              <Repeat className="w-4 h-4" />
+              <IconRepeat className="w-4 h-4" />
             </div>
             <div>
               <span className="text-xs font-bold text-[#121212]">
@@ -99,7 +99,7 @@ export const InteractiveLessonModal: React.FC<InteractiveLessonModalProps> = ({
               onClick={onClose}
               className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center transition-colors cursor-pointer"
             >
-              <X className="w-4 h-4" />
+              <IconX size={16} stroke={2} />
             </button>
           </div>
         </div>
@@ -116,7 +116,7 @@ export const InteractiveLessonModal: React.FC<InteractiveLessonModalProps> = ({
             {/* Visual Code Pattern Canvas */}
             <div className="bg-[#FAF5FF] rounded-2xl border border-purple-100 p-4 mb-6 font-mono text-xs text-purple-950 flex flex-col items-center justify-center">
               <div className="text-[11px] text-gray-500 font-sans mb-2 flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-purple-600" />
+                <IconSparkles size={14} className="text-purple-600" />
                 <span>Kutilayotgan harakat: 4 ta to&apos;rtburchak qirrasi</span>
               </div>
               <div className="bg-white rounded-xl border border-purple-200 p-3 shadow-xs w-full max-w-sm">
@@ -138,12 +138,12 @@ export const InteractiveLessonModal: React.FC<InteractiveLessonModalProps> = ({
                 {
                   id: 1,
                   code: "repeat (4) { oldinga(); o'ngga(); }",
-                  label: "B) 4 marta sikl orqali takrorlash",
+                  label: "B) 4 marta takrorlash (Tavsiya)",
                 },
                 {
                   id: 2,
-                  code: "while (true) { oldinga(); }",
-                  label: "C) Cheksiz sikl",
+                  code: "repeat (8) { oldinga(); o'ngga(); }",
+                  label: "C) 8 marta takrorlash",
                 },
               ].map((opt) => {
                 const isSelected = selectedOption === opt.id;
@@ -173,7 +173,7 @@ export const InteractiveLessonModal: React.FC<InteractiveLessonModalProps> = ({
                     </div>
 
                     {isAnswerChecked && isCorrect && (
-                      <CheckCircle2 className="w-5 h-5 text-[#29CC57] shrink-0" />
+                      <IconCircleCheckFilled size={20} className="text-[#29CC57] shrink-0" />
                     )}
                   </button>
                 );
@@ -190,9 +190,9 @@ export const InteractiveLessonModal: React.FC<InteractiveLessonModalProps> = ({
                 }`}
               >
                 {selectedOption === correctAnswer ? (
-                  <CheckCircle2 className="w-5 h-5 text-[#29CC57] shrink-0 mt-0.5" />
+                  <IconCircleCheckFilled size={20} className="text-[#29CC57] shrink-0 mt-0.5" />
                 ) : (
-                  <AlertCircle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+                  <IconAlertCircle size={20} className="text-red-500 shrink-0 mt-0.5" />
                 )}
                 <div>
                   <h4 className="text-xs font-bold">
@@ -217,7 +217,7 @@ export const InteractiveLessonModal: React.FC<InteractiveLessonModalProps> = ({
                   onClick={handleReset}
                   className="px-5 py-2.5 rounded-full border border-gray-300 hover:border-gray-900 text-xs font-bold text-[#121212] flex items-center gap-1.5 cursor-pointer"
                 >
-                  <RotateCcw className="w-3.5 h-3.5" />
+                  <IconRotate2 size={14} stroke={2} />
                   <span>Qaytadan urinish</span>
                 </button>
               ) : <div />}
@@ -238,7 +238,7 @@ export const InteractiveLessonModal: React.FC<InteractiveLessonModalProps> = ({
                   className="px-8 py-3 rounded-full bg-[#29CC57] hover:bg-[#00872e] text-white text-xs sm:text-sm font-bold transition-all shadow-md flex items-center gap-2 cursor-pointer ml-auto"
                 >
                   <span>Keyingi qadam</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <IconArrowRight size={16} stroke={2} />
                 </button>
               ) : null}
             </div>
@@ -247,7 +247,7 @@ export const InteractiveLessonModal: React.FC<InteractiveLessonModalProps> = ({
           /* Completion State */
           <div className="py-12 flex flex-col items-center justify-center text-center">
             <div className="w-16 h-16 rounded-full bg-[#eaf6ed] text-[#29CC57] flex items-center justify-center mb-4 shadow-sm animate-bounce">
-              <Check className="w-8 h-8 stroke-[3]" />
+              <IconCheck size={32} stroke={3} />
             </div>
             <h3 className="text-2xl font-extrabold text-[#121212] tracking-tight">
               Topshiriq bajarildi! +20 XP 🔥
@@ -261,3 +261,4 @@ export const InteractiveLessonModal: React.FC<InteractiveLessonModalProps> = ({
     </div>
   );
 };
+

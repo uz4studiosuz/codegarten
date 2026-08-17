@@ -2,8 +2,9 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/design-system/primitives/Button";
-import { Check, ArrowRight, RotateCcw } from "lucide-react";
+import { IconRotate2 } from "@tabler/icons-react";
 import { useAuth } from "@/context/AuthContext";
 
 export const HeroSection: React.FC = () => {
@@ -39,13 +40,11 @@ export const HeroSection: React.FC = () => {
 
             {/* Action Buttons: Solid Green Pill + Outline Pill */}
             <div className="flex flex-wrap items-center gap-3.5 mb-10">
-              <Button
-                size="lg"
-                variant="primary"
-                onClick={() => openAuthModal("register")}
-              >
-                Bepul boshlash
-              </Button>
+              <Link href="/register">
+                <Button size="lg" variant="primary">
+                  Bepul boshlash
+                </Button>
+              </Link>
               <a href="#curriculum">
                 <Button size="lg" variant="secondary">
                   O&apos;quv yo&apos;nalishini tanlang
@@ -188,7 +187,7 @@ export const HeroSection: React.FC = () => {
                       : "Noto'g'ri: BST da o'ng shox ildizdan katta bo'lishi kerak."}
                   </span>
                   <button onClick={resetInteractive} className="ml-2 text-xs underline cursor-pointer">
-                    <RotateCcw className="w-3.5 h-3.5" />
+                    <IconRotate2 size={14} stroke={2} />
                   </button>
                 </div>
               )}

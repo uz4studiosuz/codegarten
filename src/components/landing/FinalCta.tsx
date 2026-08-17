@@ -1,10 +1,16 @@
+"use client";
+
 import React from "react";
+import Link from "next/link";
 import { Container } from "@/design-system/primitives/Container";
 import { Button } from "@/design-system/primitives/Button";
 import { Badge } from "@/design-system/primitives/Badge";
-import { ArrowRight, Sparkles, Code2, Flame } from "lucide-react";
+import { IconArrowRight, IconSparkles, IconCode, IconFlame } from "@tabler/icons-react";
+import { useAuth } from "@/context/AuthContext";
 
 export const FinalCta: React.FC = () => {
+  const { openAuthModal } = useAuth();
+
   return (
     <section className="py-20 md:py-28 relative bg-bg-canvas overflow-hidden">
       <Container size="xl">
@@ -14,7 +20,7 @@ export const FinalCta: React.FC = () => {
 
           <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center">
             <Badge variant="glow" size="md" className="mb-6">
-              <Sparkles className="w-3.5 h-3.5 mr-1.5 text-accent-green" />
+              <IconSparkles size={14} className="mr-1.5 text-accent-green" />
               Bugundan O&apos;rganishni Boshlang
             </Badge>
 
@@ -30,14 +36,16 @@ export const FinalCta: React.FC = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto justify-center">
-              <Button
-                size="xl"
-                variant="gradient"
-                className="w-full sm:w-auto px-10 py-5 text-lg shadow-glow-lg"
-                rightIcon={<ArrowRight className="w-5 h-5" />}
-              >
-                Bepul Hisob Yaratish
-              </Button>
+              <Link href="/register">
+                <Button
+                  size="xl"
+                  variant="gradient"
+                  className="w-full sm:w-auto px-10 py-5 text-lg shadow-glow-lg"
+                  rightIcon={<IconArrowRight size={20} stroke={2} />}
+                >
+                  Bepul Hisob Yaratish
+                </Button>
+              </Link>
             </div>
 
             <p className="text-xs text-text-muted mt-6">

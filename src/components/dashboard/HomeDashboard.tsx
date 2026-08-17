@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useCallback } from "react";
 import Image from "next/image";
-import { Zap, ArrowRight } from "lucide-react";
+import { IconBolt, IconArrowRight } from "@tabler/icons-react";
 import { mockUserProfile, foundationalLearningPath } from "@/data/mockCourseData";
 
 interface HomeDashboardProps {
@@ -96,7 +96,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
           <div className="rounded-[15px] border-2 border-gray-200 dark:border-[#27272a] p-5 shadow-xs transition-colors">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <Zap className="w-4 h-4 text-amber-500 fill-amber-500" />
+                <IconBolt size={18} stroke={2} className="text-amber-500 fill-amber-500" />
                 <span className="text-sm sm:text-base font-bold text-[#000000] dark:text-white">
                   {user.streakDays} kunlik faollik
                 </span>
@@ -117,8 +117,10 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                         : "bg-gray-100 dark:bg-[#24252a] text-gray-400 dark:text-zinc-600"
                     }`}
                   >
-                    <Zap
-                      className={`w-3.5 h-3.5 ${
+                    <IconBolt
+                      size={16}
+                      stroke={2}
+                      className={`${
                         day.isCompleted
                           ? "fill-white text-white"
                           : day.isToday

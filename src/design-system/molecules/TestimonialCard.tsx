@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { Star, ShieldCheck } from "lucide-react";
+import { IconStarFilled, IconShieldCheck } from "@tabler/icons-react";
 import { Testimonial } from "@/types/testimonial";
 
 export interface TestimonialCardProps {
@@ -14,9 +14,10 @@ export const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial })
         {/* Star rating */}
         <div className="flex items-center gap-1 mb-4">
           {[...Array(testimonial.rating)].map((_, i) => (
-            <Star
+            <IconStarFilled
               key={i}
-              className="w-4 h-4 fill-accent-amber text-accent-amber"
+              size={16}
+              className="text-accent-amber"
             />
           ))}
           <span className="text-xs font-semibold text-accent-amber ml-2">
@@ -46,7 +47,7 @@ export const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial })
             <span className="text-sm font-bold text-white truncate">
               {testimonial.name}
             </span>
-            <ShieldCheck className="w-4 h-4 text-accent-green shrink-0" />
+            <IconShieldCheck size={16} className="text-accent-green shrink-0" />
           </div>
           <span className="text-xs text-text-secondary truncate">
             {testimonial.role} &bull; <span className="text-brand-light font-medium">{testimonial.companyOrSchool}</span>

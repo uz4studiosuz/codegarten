@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { X, Sparkles, CheckCircle2, Heart } from "lucide-react";
+import { IconX, IconSparkles, IconCircleCheckFilled, IconHeart } from "@tabler/icons-react";
 
 interface AboutModalProps {
   isOpen: boolean;
@@ -25,7 +25,7 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
           onClick={onClose}
           className="absolute top-5 right-5 w-8 h-8 rounded-full bg-gray-100 dark:bg-zinc-800 text-gray-500 hover:text-black dark:hover:text-white flex items-center justify-center transition-colors cursor-pointer"
         >
-          <X className="w-4 h-4" />
+          <IconX size={16} stroke={2} />
         </button>
 
         {/* Logo */}
@@ -51,22 +51,22 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
 
         <div className="mt-5 p-3.5 bg-gray-50 dark:bg-zinc-800/50 rounded-2xl border border-gray-100 dark:border-zinc-800 text-left text-xs text-gray-600 dark:text-gray-300 space-y-1.5">
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-[#22C55E] shrink-0" />
+            <IconCircleCheckFilled size={16} className="text-[#22C55E] shrink-0" />
             <span>Interaktiv mantiqiy labirint va modullar</span>
           </div>
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-[#22C55E] shrink-0" />
+            <IconCircleCheckFilled size={16} className="text-[#22C55E] shrink-0" />
             <span>Haftalik Strike va XP reytingi</span>
           </div>
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-[#22C55E] shrink-0" />
-            <span>O&apos;zbek tilidagi qulay interfeys</span>
+            <IconCircleCheckFilled size={16} className="text-[#22C55E] shrink-0" />
+            <span>Xalqaro standartdagi STEM pedagogikasi</span>
           </div>
         </div>
 
-        <div className="mt-6 flex items-center justify-center gap-1 text-[11px] text-gray-400">
-          <span>Sevgi bilan yaratilgan</span>
-          <Heart className="w-3.5 h-3.5 text-red-500 fill-red-500" />
+        <div className="mt-6 pt-4 border-t border-gray-100 dark:border-zinc-800 flex items-center justify-center gap-1.5 text-xs text-gray-400">
+          <span>Toshkentda mehr bilan yaratilgan</span>
+          <IconHeart size={14} className="text-red-500 fill-red-500" />
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import confetti from "canvas-confetti";
-import { Sparkles, Trophy, HelpCircle, CheckCircle2, RotateCcw, ArrowRight } from "lucide-react";
+import { IconSparkles, IconTrophy, IconHelpCircle, IconCircleCheckFilled, IconRotate2, IconArrowRight } from "@tabler/icons-react";
 import { interactiveChallenges } from "@/data/challenges";
 import { InteractiveChoice } from "@/design-system/molecules/InteractiveChoice";
 import { CodePreview } from "@/design-system/molecules/CodePreview";
@@ -68,7 +68,7 @@ export const LogicChallenge: React.FC = () => {
 
         {/* Gamified XP pill */}
         <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-accent-amber/15 border border-accent-amber/30 text-accent-amber text-xs font-bold">
-          <Trophy className="w-3.5 h-3.5" />
+          <IconTrophy size={14} stroke={2} />
           <span>+{currentChallenge.xpReward} XP</span>
           <span className="text-white/40">|</span>
           <span className="text-white">Jami: {totalXp} XP</span>
@@ -133,9 +133,9 @@ export const LogicChallenge: React.FC = () => {
         >
           <div className="flex items-start gap-3">
             {isCorrect ? (
-              <CheckCircle2 className="w-5 h-5 text-accent-green shrink-0 mt-0.5" />
+              <IconCircleCheckFilled size={20} className="text-accent-green shrink-0 mt-0.5" />
             ) : (
-              <HelpCircle className="w-5 h-5 text-accent-red shrink-0 mt-0.5" />
+              <IconHelpCircle size={20} className="text-accent-red shrink-0 mt-0.5" />
             )}
             <div className="text-xs sm:text-sm leading-relaxed">
               <span className="font-bold block mb-1">
@@ -159,7 +159,7 @@ export const LogicChallenge: React.FC = () => {
               size="sm"
               variant="secondary"
               onClick={handleRetry}
-              leftIcon={<RotateCcw className="w-3.5 h-3.5" />}
+              leftIcon={<IconRotate2 size={14} stroke={2} />}
             >
               Qayta urinish
             </Button>
@@ -169,7 +169,7 @@ export const LogicChallenge: React.FC = () => {
             size="sm"
             variant="primary"
             onClick={handleNextChallenge}
-            rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
+            rightIcon={<IconArrowRight size={14} stroke={2} />}
           >
             Keyingi Savol
           </Button>

@@ -2,7 +2,12 @@
 
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { CheckCircle2, Lock, ChevronRight, ChevronLeft } from "lucide-react";
+import {
+  IconCircleCheckFilled,
+  IconLock,
+  IconChevronRight,
+  IconChevronLeft,
+} from "@tabler/icons-react";
 import { foundationalLearningPath } from "@/data/mockCourseData";
 
 interface CoursesCatalogProps {
@@ -153,7 +158,7 @@ export const CoursesCatalog: React.FC<CoursesCatalogProps> = ({
               onClick={() => handleScroll("left")}
               className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 shadow flex items-center justify-center text-gray-500 dark:text-gray-300 hover:scale-105 active:scale-95 transition-all cursor-pointer"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <IconChevronLeft size={16} stroke={2} />
             </button>
           )}
 
@@ -164,7 +169,7 @@ export const CoursesCatalog: React.FC<CoursesCatalogProps> = ({
               onClick={() => handleScroll("right")}
               className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 shadow flex items-center justify-center text-gray-500 dark:text-gray-300 hover:scale-105 active:scale-95 transition-all cursor-pointer"
             >
-              <ChevronRight className="w-4 h-4" />
+              <IconChevronRight size={16} stroke={2} />
             </button>
           )}
 
@@ -201,11 +206,11 @@ export const CoursesCatalog: React.FC<CoursesCatalogProps> = ({
                         {String(idx + 1).padStart(2, "0")}
                       </span>
                       {isCompleted ? (
-                        <CheckCircle2 className="w-4 h-4 text-[#22C55E]" />
+                        <IconCircleCheckFilled size={18} className="text-[#22C55E]" />
                       ) : isActive ? (
                         <span className="w-2.5 h-2.5 rounded-full bg-[#22C55E]" />
                       ) : (
-                        <Lock className="w-3.5 h-3.5 text-gray-300 dark:text-zinc-600" />
+                        <IconLock size={15} stroke={2} className="text-gray-300 dark:text-zinc-600" />
                       )}
                     </div>
 
@@ -265,7 +270,7 @@ export const CoursesCatalog: React.FC<CoursesCatalogProps> = ({
               </p>
             </div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 text-[12px] font-medium text-gray-500 dark:text-zinc-400 shrink-0 shadow-xs whitespace-nowrap">
-              <Lock className="w-3 h-3" />
+              <IconLock size={14} stroke={2} />
               <span>Tez kunda</span>
             </div>
           </div>
@@ -288,7 +293,7 @@ export const CoursesCatalog: React.FC<CoursesCatalogProps> = ({
               </p>
             </div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 text-[12px] font-medium text-gray-500 dark:text-zinc-400 shrink-0 shadow-xs whitespace-nowrap">
-              <Lock className="w-3 h-3" />
+              <IconLock size={14} stroke={2} />
               <span>Tez kunda</span>
             </div>
           </div>
