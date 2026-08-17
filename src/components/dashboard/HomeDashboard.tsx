@@ -194,18 +194,29 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
               <div
                 key={animKey}
                 style={{
-                  animation: animKey === 0
-                    ? "none"
-                    : `cardSlideIn 360ms cubic-bezier(0.16,1,0.3,1) both`,
-                  // CSS variable for direction
-                  ["--enter-x" as string]: enterTranslate,
+                  animation:
+                    animKey === 0
+                      ? "none"
+                      : swipeDir === 1
+                      ? "cardSlideInRight 350ms cubic-bezier(0.16, 1, 0.3, 1) both"
+                      : "cardSlideInLeft 350ms cubic-bezier(0.16, 1, 0.3, 1) both",
                 }}
               >
                 <style>{`
-                  @keyframes cardSlideIn {
+                  @keyframes cardSlideInRight {
                     from {
                       opacity: 0;
-                      transform: var(--enter-x) scale(0.96);
+                      transform: translateX(60px) scale(0.96);
+                    }
+                    to {
+                      opacity: 1;
+                      transform: translateX(0) scale(1);
+                    }
+                  }
+                  @keyframes cardSlideInLeft {
+                    from {
+                      opacity: 0;
+                      transform: translateX(-60px) scale(0.96);
                     }
                     to {
                       opacity: 1;

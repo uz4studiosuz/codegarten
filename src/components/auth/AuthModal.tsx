@@ -10,6 +10,7 @@ import {
   IconEye,
   IconEyeOff,
   IconCircleCheck,
+  IconCircleCheckFilled,
   IconMail,
   IconPhone,
   IconArrowLeft,
@@ -421,7 +422,7 @@ export const AuthModal: React.FC = () => {
                   <option value="male">Erkak</option>
                   <option value="female">Ayol</option>
                 </select>
-                <ChevronDown className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <IconChevronDown size={16} className="text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               </div>
             </div>
 
@@ -443,7 +444,7 @@ export const AuthModal: React.FC = () => {
             {/* Manzil: Viloyat > Tuman/Shahar (Cascading Selector) */}
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-1 flex items-center gap-1">
-                <MapPin className="w-3 h-3 text-gray-400" />
+                <IconMapPin size={14} className="text-gray-400" />
                 <span>Manzil (Viloyat va Tuman/Shahar)</span>
               </label>
               
@@ -468,7 +469,7 @@ export const AuthModal: React.FC = () => {
                       </option>
                     ))}
                   </select>
-                  <ChevronDown className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <IconChevronDown size={16} className="text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 </div>
 
                 {/* 2. Tuman / Shahar Tanlash */}
@@ -489,7 +490,7 @@ export const AuthModal: React.FC = () => {
                       </option>
                     ))}
                   </select>
-                  <ChevronDown className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <IconChevronDown size={16} className="text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 </div>
               </div>
             </div>
@@ -506,7 +507,7 @@ export const AuthModal: React.FC = () => {
                 ) : (
                   <>
                     <span>Saqlash va Boshlash</span>
-                    <Sparkles className="w-4 h-4" />
+                    <IconSparkles size={16} />
                   </>
                 )}
               </button>
@@ -525,7 +526,7 @@ export const AuthModal: React.FC = () => {
               }}
               className="inline-flex items-center gap-1.5 text-xs text-gray-500 hover:text-[#121212] mb-4 font-medium"
             >
-              <ArrowLeft className="w-3.5 h-3.5" />
+              <IconArrowLeft size={14} stroke={2} />
               <span>Ortga qaytish</span>
             </button>
 
@@ -604,7 +605,7 @@ export const AuthModal: React.FC = () => {
             ) : (
               <div className="py-6 flex flex-col items-center justify-center text-center">
                 <div className="w-14 h-14 rounded-full bg-[#e6f4ea] text-[#00872e] flex items-center justify-center mb-3">
-                  <CheckCircle2 className="w-8 h-8" />
+                  <IconCircleCheckFilled size={32} />
                 </div>
                 <h3 className="text-xl font-bold text-[#121212]">
                   Muvaffaqiyatli kirdingiz!
@@ -725,24 +726,28 @@ export const AuthModal: React.FC = () => {
 
               {/* PASSWORD (for Email or Register) */}
               {(tab === "email" || mode === "register") && (
-                <div className="relative">
+                <div className="relative flex items-center">
                   <input
                     type={showPassword ? "text" : "password"}
                     required
                     placeholder="Parol"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-4 pr-10 py-3 text-sm bg-white border border-gray-200 rounded-2xl focus:border-[#29CC57] focus:ring-2 focus:ring-[#29CC57]/20 outline-none transition-all placeholder:text-gray-400 font-mono"
+                    className="w-full pl-4 pr-11 py-3 text-sm bg-white border border-gray-200 rounded-2xl focus:border-[#29CC57] focus:ring-2 focus:ring-[#29CC57]/20 outline-none transition-all placeholder:text-gray-400 font-mono"
                   />
                   <button
                     type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setShowPassword((prev) => !prev);
+                    }}
+                    className="absolute right-2.5 p-1.5 text-gray-400 hover:text-gray-600 cursor-pointer z-10 select-none flex items-center justify-center"
                   >
                     {showPassword ? (
-                      <IconEyeOff size={16} stroke={1.75} />
+                      <IconEyeOff size={18} stroke={1.75} />
                     ) : (
-                      <IconEye size={16} stroke={1.75} />
+                      <IconEye size={18} stroke={1.75} />
                     )}
                   </button>
                 </div>
@@ -750,26 +755,28 @@ export const AuthModal: React.FC = () => {
 
               {/* CONFIRM PASSWORD (for Register) */}
               {mode === "register" && (
-                <div className="relative">
+                <div className="relative flex items-center">
                   <input
                     type={showConfirmPassword ? "text" : "password"}
                     required
                     placeholder="Parolni tasdiqlang"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="w-full pl-4 pr-10 py-3 text-sm bg-white border border-gray-200 rounded-2xl focus:border-[#29CC57] focus:ring-2 focus:ring-[#29CC57]/20 outline-none transition-all placeholder:text-gray-400 font-mono"
+                    className="w-full pl-4 pr-11 py-3 text-sm bg-white border border-gray-200 rounded-2xl focus:border-[#29CC57] focus:ring-2 focus:ring-[#29CC57]/20 outline-none transition-all placeholder:text-gray-400 font-mono"
                   />
                   <button
                     type="button"
-                    onClick={() =>
-                      setShowConfirmPassword(!showConfirmPassword)
-                    }
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setShowConfirmPassword((prev) => !prev);
+                    }}
+                    className="absolute right-2.5 p-1.5 text-gray-400 hover:text-gray-600 cursor-pointer z-10 select-none flex items-center justify-center"
                   >
                     {showConfirmPassword ? (
-                      <IconEyeOff size={16} stroke={1.75} />
+                      <IconEyeOff size={18} stroke={1.75} />
                     ) : (
-                      <IconEye size={16} stroke={1.75} />
+                      <IconEye size={18} stroke={1.75} />
                     )}
                   </button>
                 </div>

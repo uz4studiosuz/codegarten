@@ -72,6 +72,12 @@ export const AuthCard: React.FC<AuthCardProps> = ({ initialMode = "login" }) => 
     }
   }, [user, router]);
 
+  // Keep mode in sync if initialMode prop changes
+  useEffect(() => {
+    setMode(initialMode);
+    setIsRegisteringFlow(initialMode === "register");
+  }, [initialMode]);
+
   // OTP timer countdown
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -294,14 +300,14 @@ export const AuthCard: React.FC<AuthCardProps> = ({ initialMode = "login" }) => 
               className="w-full h-full object-contain"
             />
           </div>
-          <span className="text-sm font-bold tracking-tight text-black dark:text-white">
+          <span className="text-sm font-bold tracking-tight text-black dark:text-white font-sans">
             Codegarten
           </span>
         </Link>
       </div>
 
       {/* Main Minimalist Auth Card */}
-      <div className="relative w-full max-w-[480px] bg-white dark:bg-[#1C1C1E] text-black dark:text-white rounded-[28px] sm:rounded-[32px] shadow-xl p-6 sm:p-9 border border-gray-200 dark:border-zinc-800 transition-colors">
+      <div className="relative w-full max-w-[480px] bg-white dark:bg-[#1C1C1E] text-black dark:text-white rounded-[28px] sm:rounded-[32px] shadow-xl p-6 sm:p-9 border border-gray-200 dark:border-zinc-800 transition-colors font-sans">
         {/* Brand Icon & Heading */}
         <div className="flex flex-col items-center justify-center mb-6">
           <div className="relative flex items-center justify-center mb-3">
@@ -318,7 +324,7 @@ export const AuthCard: React.FC<AuthCardProps> = ({ initialMode = "login" }) => 
             </div>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-black dark:text-white tracking-tight text-center">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-black dark:text-white tracking-tight text-center font-sans">
             {mode === "profile"
               ? "Profilingizni to'ldiring"
               : mode === "login"
@@ -327,14 +333,16 @@ export const AuthCard: React.FC<AuthCardProps> = ({ initialMode = "login" }) => 
               ? "Ro'yxatdan o'tish"
               : "Tasdiqlash"}
           </h1>
-          <p className="text-xs sm:text-sm text-gray-500 dark:text-zinc-400 text-center mt-1 max-w-sm">
+          <p className="text-xs sm:text-sm text-gray-500 dark:text-zinc-400 text-center mt-1 max-w-sm font-sans">
             {mode === "profile"
               ? "Codegarten imkoniyatlaridan to'liq foydalanish uchun ma'lumotlaringizni to'ldiring"
               : mode === "login"
               ? "Codegarten hisobingizga kiring va darslarni davom ettiring"
               : mode === "register"
               ? "Yangi hisob oching va amaliy ta'limni boshlang"
-              : "Telefoningizga yuborilgan 6 xonali kodni kiriting"}
+              : method === "telegram"
+              ? "Telegramingizga yuborilgan 6 xonali kodni kiriting"
+              : "Telefoningizga yuborilgan 6 xonali SMS kodni kiriting"}
           </p>
         </div>
 
@@ -351,19 +359,20 @@ export const AuthCard: React.FC<AuthCardProps> = ({ initialMode = "login" }) => 
                 <input
                   type="text"
                   required
-                  placeholder="Ali"
+                  placeholder="Ism"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 text-xs sm:text-sm text-black dark:text-white outline-none focus:border-[#22C55E] transition-colors"
                 />
               </div>
+
               <div>
                 <label className="block text-xs font-semibold text-gray-700 dark:text-zinc-300 mb-1">
                   Familiyangiz
                 </label>
                 <input
                   type="text"
-                  placeholder="Valiyev"
+                  placeholder="Familiya"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 text-xs sm:text-sm text-black dark:text-white outline-none focus:border-[#22C55E] transition-colors"
@@ -371,38 +380,32 @@ export const AuthCard: React.FC<AuthCardProps> = ({ initialMode = "login" }) => 
               </div>
             </div>
 
-            {/* Gender Selection */}
+            {/* Jinsi (Gender) */}
             <div>
               <label className="block text-xs font-semibold text-gray-700 dark:text-zinc-300 mb-1">
-                Jinsingiz *
+                Jinsi *
               </label>
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  type="button"
-                  onClick={() => setGender("male")}
-                  className={`py-2 px-3 rounded-xl border text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                    gender === "male"
-                      ? "border-[#22C55E] bg-[#22C55E]/10 text-[#22C55E]"
-                      : "border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 text-gray-600 dark:text-zinc-400"
-                  }`}
+              <div className="relative">
+                <select
+                  required
+                  value={gender}
+                  onChange={(e) => setGender(e.target.value as "male" | "female")}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 text-xs sm:text-sm text-black dark:text-white outline-none focus:border-[#22C55E] transition-colors appearance-none pr-10 cursor-pointer"
                 >
-                  <span>Erkak</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setGender("female")}
-                  className={`py-2 px-3 rounded-xl border text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                    gender === "female"
-                      ? "border-[#22C55E] bg-[#22C55E]/10 text-[#22C55E]"
-                      : "border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 text-gray-600 dark:text-zinc-400"
-                  }`}
-                >
-                  <span>Ayol</span>
-                </button>
+                  <option value="" disabled>
+                    Iltimos tanlang
+                  </option>
+                  <option value="male">Erkak</option>
+                  <option value="female">Ayol</option>
+                </select>
+                <IconChevronDown
+                  size={16}
+                  className="text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                />
               </div>
             </div>
 
-            {/* Birth date */}
+            {/* Tug'ilgan kun (Birth date) */}
             <div>
               <label className="block text-xs font-semibold text-gray-700 dark:text-zinc-300 mb-1">
                 Tug&apos;ilgan sana
@@ -415,46 +418,63 @@ export const AuthCard: React.FC<AuthCardProps> = ({ initialMode = "login" }) => 
               />
             </div>
 
-            {/* Region & District dropdowns */}
-            <div className="grid grid-cols-2 gap-2.5">
-              <div>
-                <label className="block text-xs font-semibold text-gray-700 dark:text-zinc-300 mb-1">
-                  Viloyat *
-                </label>
+            {/* Viloyat */}
+            <div>
+              <label className="block text-xs font-semibold text-gray-700 dark:text-zinc-300 mb-1">
+                Viloyat *
+              </label>
+              <div className="relative">
                 <select
+                  required
                   value={selectedRegionId}
                   onChange={(e) => {
                     setSelectedRegionId(e.target.value);
                     setSelectedDistrict("");
                   }}
-                  className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 text-xs text-black dark:text-white outline-none focus:border-[#22C55E]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 text-xs sm:text-sm text-black dark:text-white outline-none focus:border-[#22C55E] transition-colors appearance-none pr-10 cursor-pointer"
                 >
-                  <option value="">Tanlang</option>
-                  {UZBEKISTAN_REGIONS.map((reg) => (
-                    <option key={reg.id} value={reg.id}>
-                      {reg.name}
+                  <option value="" disabled>
+                    Viloyatni tanlang
+                  </option>
+                  {UZBEKISTAN_REGIONS.map((region) => (
+                    <option key={region.id} value={region.id}>
+                      {region.name}
                     </option>
                   ))}
                 </select>
+                <IconChevronDown
+                  size={16}
+                  className="text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                />
               </div>
+            </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-gray-700 dark:text-zinc-300 mb-1">
-                  Tuman / Shahar *
-                </label>
+            {/* Tuman / Shahar */}
+            <div>
+              <label className="block text-xs font-semibold text-gray-700 dark:text-zinc-300 mb-1">
+                Tuman / Shahar *
+              </label>
+              <div className="relative">
                 <select
+                  required
                   disabled={!selectedRegionId}
                   value={selectedDistrict}
                   onChange={(e) => setSelectedDistrict(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 text-xs text-black dark:text-white outline-none focus:border-[#22C55E] disabled:opacity-50"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 text-xs sm:text-sm text-black dark:text-white outline-none focus:border-[#22C55E] transition-colors appearance-none pr-10 cursor-pointer disabled:opacity-50"
                 >
-                  <option value="">Tanlang</option>
-                  {currentRegion?.districts.map((d) => (
-                    <option key={d} value={d}>
-                      {d}
+                  <option value="" disabled>
+                    {selectedRegionId ? "Tuman yoki shaharni tanlang" : "Avval viloyatni tanlang"}
+                  </option>
+                  {currentRegion?.districts.map((district, idx) => (
+                    <option key={idx} value={district}>
+                      {district}
                     </option>
                   ))}
                 </select>
+                <IconChevronDown
+                  size={16}
+                  className="text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                />
               </div>
             </div>
 
@@ -467,75 +487,89 @@ export const AuthCard: React.FC<AuthCardProps> = ({ initialMode = "login" }) => 
               disabled={isSubmitting}
               className="btn-primary-tactile w-full py-3 text-xs sm:text-sm font-bold mt-2"
             >
-              {isSubmitting ? "Saqlanmoqda..." : "Tamomlash & Boshlash"}
+              {isSubmitting ? "Saqlanmoqda..." : "Saqlash va Boshlash"}
             </button>
           </form>
         ) : mode === "verify" ? (
           /* ────────────────────────────────────────────────────────── */
           /* MODE 2: OTP VERIFICATION                                  */
           /* ────────────────────────────────────────────────────────── */
-          <div className="space-y-5 animate-fadeIn">
-            <div className="p-3 bg-gray-50 dark:bg-zinc-800/60 rounded-2xl border border-gray-200 dark:border-zinc-700/60 flex items-center justify-between text-xs">
-              <span className="font-mono font-bold text-black dark:text-white">
-                +998 {phone}
-              </span>
-              <button
-                type="button"
-                onClick={() => setMode("login")}
-                className="text-xs text-[#22C55E] hover:underline font-semibold cursor-pointer"
-              >
-                O&apos;zgartirish
-              </button>
+          <div className="space-y-4 animate-fadeIn">
+            {/* Back button */}
+            <button
+              type="button"
+              onClick={() => {
+                setMode(isRegisteringFlow ? "register" : "login");
+                setErrorMessage("");
+              }}
+              className="inline-flex items-center gap-1.5 text-xs text-gray-500 hover:text-black dark:hover:text-white transition-colors cursor-pointer"
+            >
+              <IconArrowLeft size={14} stroke={2} />
+              <span>Raqamni o&apos;zgartirish</span>
+            </button>
+
+            {/* Target Display */}
+            <div className="text-center py-2">
+              <span className="text-xs text-gray-400">Yuborilgan raqam:</span>
+              <p className="text-base sm:text-lg font-mono font-bold text-black dark:text-white">
+                +998 {phone || "90 123 45 67"}
+              </p>
             </div>
 
-            {/* 6 Digit OTP Inputs */}
-            <div>
-              <div
-                className="flex items-center justify-between gap-1.5 sm:gap-2"
-                onPaste={handleOtpPaste}
-              >
-                {otpDigits.map((digit, index) => (
-                  <input
-                    key={index}
-                    ref={(el) => {
-                      otpInputRefs.current[index] = el;
-                    }}
-                    type="text"
-                    inputMode="numeric"
-                    maxLength={1}
-                    value={digit}
-                    onChange={(e) => handleOtpChange(index, e.target.value)}
-                    onKeyDown={(e) => handleOtpKeyDown(index, e)}
-                    className="w-10 h-12 sm:w-12 sm:h-14 text-center text-lg sm:text-xl font-mono font-bold rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 text-black dark:text-white outline-none focus:border-[#22C55E] transition-all"
-                  />
-                ))}
-              </div>
+            {/* OTP Input Boxes */}
+            <div className="flex justify-center gap-2 sm:gap-2.5 my-4">
+              {otpDigits.map((digit, idx) => (
+                <input
+                  key={idx}
+                  ref={(el) => {
+                    otpInputRefs.current[idx] = el;
+                  }}
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={1}
+                  value={digit}
+                  onChange={(e) => handleOtpChange(idx, e.target.value)}
+                  onKeyDown={(e) => handleOtpKeyDown(idx, e)}
+                  onPaste={idx === 0 ? handleOtpPaste : undefined}
+                  className={`w-10 h-12 sm:w-12 sm:h-14 text-center font-mono font-bold text-lg rounded-2xl border bg-gray-50 dark:bg-zinc-800 text-black dark:text-white outline-none transition-all ${
+                    digit
+                      ? "border-[#22C55E] ring-2 ring-[#22C55E]/20"
+                      : "border-gray-200 dark:border-zinc-700 focus:border-[#22C55E]"
+                  }`}
+                />
+              ))}
             </div>
 
             {errorMessage && (
-              <p className="text-xs text-red-500 dark:text-red-400 font-medium text-center">
+              <p className="text-xs text-red-500 dark:text-red-400 text-center font-medium">
                 {errorMessage}
               </p>
             )}
 
+            {/* Verify CTA */}
             <button
               type="button"
               onClick={handleVerifyOtp}
-              disabled={isSubmitting}
-              className="btn-primary-tactile w-full py-3 text-xs sm:text-sm font-bold"
+              disabled={isSubmitting || otpDigits.join("").length < 6}
+              className="btn-primary-tactile w-full py-3 text-xs sm:text-sm font-bold disabled:opacity-50"
             >
               {isSubmitting ? "Tekshirilmoqda..." : "Tasdiqlash"}
             </button>
 
             {/* Timer & Resend */}
-            <div className="text-center text-xs text-gray-500 dark:text-zinc-400">
+            <div className="text-center pt-2">
               {timer > 0 ? (
-                <span>Qayta yuborish: {timer} soniya</span>
+                <p className="text-xs text-gray-400 font-mono">
+                  Kodni qayta yuborish:{" "}
+                  <span className="font-bold text-[#22C55E]">
+                    00:{timer < 10 ? `0${timer}` : timer}
+                  </span>
+                </p>
               ) : (
                 <button
                   type="button"
                   onClick={resendCode}
-                  className="text-[#22C55E] hover:underline font-semibold cursor-pointer"
+                  className="text-xs text-[#22C55E] hover:underline font-bold cursor-pointer"
                 >
                   Kodni qayta yuborish
                 </button>
@@ -546,16 +580,18 @@ export const AuthCard: React.FC<AuthCardProps> = ({ initialMode = "login" }) => 
           /* ────────────────────────────────────────────────────────── */
           /* MODE 3: LOGIN / REGISTER MAIN FORM                        */
           /* ────────────────────────────────────────────────────────── */
-          <div className="space-y-4">
+          <div className="space-y-4 animate-fadeIn">
             {/* Phone vs Email Switcher */}
-            <div className="p-1 rounded-2xl bg-gray-100 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 grid grid-cols-2 gap-1">
+            <div className="p-1 rounded-2xl bg-gray-100 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 grid grid-cols-2 gap-1 relative z-10">
               <button
                 type="button"
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
                   setTab("phone");
                   setErrorMessage("");
                 }}
-                className={`py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                className={`py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer select-none ${
                   tab === "phone"
                     ? "bg-white dark:bg-black text-black dark:text-white shadow-xs"
                     : "text-gray-500 dark:text-zinc-400 hover:text-black dark:hover:text-white"
@@ -567,11 +603,13 @@ export const AuthCard: React.FC<AuthCardProps> = ({ initialMode = "login" }) => 
 
               <button
                 type="button"
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
                   setTab("email");
                   setErrorMessage("");
                 }}
-                className={`py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                className={`py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer select-none ${
                   tab === "email"
                     ? "bg-white dark:bg-black text-black dark:text-white shadow-xs"
                     : "text-gray-500 dark:text-zinc-400 hover:text-black dark:hover:text-white"
@@ -585,21 +623,57 @@ export const AuthCard: React.FC<AuthCardProps> = ({ initialMode = "login" }) => 
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-3.5">
               {tab === "phone" ? (
-                <div>
-                  <label className="block text-xs font-semibold text-gray-700 dark:text-zinc-300 mb-1">
-                    Telefon raqamingiz
-                  </label>
-                  <div className="flex items-center rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 overflow-hidden focus-within:border-[#22C55E] transition-colors">
-                    <span className="px-3 py-2.5 text-xs sm:text-sm font-mono font-bold text-gray-500 dark:text-zinc-400 border-r border-gray-200 dark:border-zinc-700 bg-gray-100 dark:bg-zinc-800/80 select-none">
-                      +998
-                    </span>
-                    <input
-                      type="tel"
-                      placeholder="90 123 45 67"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      className="w-full px-3 py-2.5 text-xs sm:text-sm bg-transparent text-black dark:text-white font-mono outline-none"
-                    />
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 dark:text-zinc-300 mb-1">
+                      Telefon raqamingiz
+                    </label>
+                    <div className="flex items-center rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 overflow-hidden focus-within:border-[#22C55E] transition-colors">
+                      <span className="px-3 py-2.5 text-xs sm:text-sm font-mono font-bold text-gray-500 dark:text-zinc-400 border-r border-gray-200 dark:border-zinc-700 bg-gray-100 dark:bg-zinc-800/80 select-none">
+                        +998
+                      </span>
+                      <input
+                        type="tel"
+                        placeholder="90 123 45 67"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        className="w-full px-3 py-2.5 text-xs sm:text-sm bg-transparent text-black dark:text-white font-mono outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  {/* SMS vs Telegram SMS Delivery Method Choice */}
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 dark:text-zinc-300 mb-1">
+                      Tasdiqlash kodi turi
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setMethod("sms")}
+                        className={`py-2 px-3 rounded-xl border text-xs font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                          method === "sms"
+                            ? "bg-[#22C55E]/10 border-[#22C55E] text-[#22C55E] font-bold"
+                            : "bg-gray-50 dark:bg-zinc-800 border-gray-200 dark:border-zinc-700 text-gray-500 dark:text-zinc-400 hover:border-gray-300"
+                        }`}
+                      >
+                        <IconMessage size={15} stroke={2} />
+                        <span>SMS orqali</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setMethod("telegram")}
+                        className={`py-2 px-3 rounded-xl border text-xs font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                          method === "telegram"
+                            ? "bg-[#22C55E]/10 border-[#22C55E] text-[#22C55E] font-bold"
+                            : "bg-gray-50 dark:bg-zinc-800 border-gray-200 dark:border-zinc-700 text-gray-500 dark:text-zinc-400 hover:border-gray-300"
+                        }`}
+                      >
+                        <IconSend size={15} stroke={2} />
+                        <span>Telegram SMS</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
               ) : (
@@ -629,14 +703,18 @@ export const AuthCard: React.FC<AuthCardProps> = ({ initialMode = "login" }) => 
                       placeholder="••••••••"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 text-xs sm:text-sm text-black dark:text-white outline-none focus:border-[#22C55E] transition-colors pr-10"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 text-xs sm:text-sm text-black dark:text-white outline-none focus:border-[#22C55E] transition-colors pr-11"
                     />
                     <button
                       type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 text-gray-400 hover:text-gray-600 dark:hover:text-white cursor-pointer"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setShowPassword((prev) => !prev);
+                      }}
+                      className="absolute right-2 p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-white cursor-pointer z-10 select-none flex items-center justify-center"
                     >
-                      {showPassword ? <IconEyeOff size={16} stroke={1.75} /> : <IconEye size={16} stroke={1.75} />}
+                      {showPassword ? <IconEyeOff size={18} stroke={1.75} /> : <IconEye size={18} stroke={1.75} />}
                     </button>
                   </div>
                 </div>
@@ -653,17 +731,21 @@ export const AuthCard: React.FC<AuthCardProps> = ({ initialMode = "login" }) => 
                       placeholder="••••••••"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 text-xs sm:text-sm text-black dark:text-white outline-none focus:border-[#22C55E] transition-colors pr-10"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 text-xs sm:text-sm text-black dark:text-white outline-none focus:border-[#22C55E] transition-colors pr-11"
                     />
                     <button
                       type="button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-3 text-gray-400 hover:text-gray-600 dark:hover:text-white cursor-pointer"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setShowConfirmPassword((prev) => !prev);
+                      }}
+                      className="absolute right-2 p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-white cursor-pointer z-10 select-none flex items-center justify-center"
                     >
                       {showConfirmPassword ? (
-                        <IconEyeOff size={16} stroke={1.75} />
+                        <IconEyeOff size={18} stroke={1.75} />
                       ) : (
-                        <IconEye size={16} stroke={1.75} />
+                        <IconEye size={18} stroke={1.75} />
                       )}
                     </button>
                   </div>
@@ -703,55 +785,22 @@ export const AuthCard: React.FC<AuthCardProps> = ({ initialMode = "login" }) => 
               </button>
             </form>
 
-            {/* Social Logins */}
-            <div className="pt-2">
-              <div className="relative flex items-center justify-center mb-3">
-                <div className="border-t border-gray-200 dark:border-zinc-800 w-full" />
-                <span className="bg-white dark:bg-[#1C1C1E] px-3 text-[11px] font-bold text-gray-400 uppercase tracking-wider absolute">
-                  yoki
-                </span>
-              </div>
-
-              <div className="grid grid-cols-3 gap-2">
-                <button
-                  type="button"
-                  onClick={() => completeAuth("Google Foydalanuvchisi", "google_user@gmail.com")}
-                  className="py-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800/80 hover:bg-gray-50 dark:hover:bg-zinc-800 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-xs"
-                >
-                  <span className="font-bold">Google</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => completeAuth("Apple Foydalanuvchisi", "apple_user@icloud.com")}
-                  className="py-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800/80 hover:bg-gray-50 dark:hover:bg-zinc-800 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-xs"
-                >
-                  <span className="font-bold">Apple</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => completeAuth("GitHub Dasturchisi", "dev@github.com")}
-                  className="py-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800/80 hover:bg-gray-50 dark:hover:bg-zinc-800 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-xs"
-                >
-                  <span className="font-bold">GitHub</span>
-                </button>
-              </div>
-            </div>
-
             {/* Toggle Mode: Login <-> Register */}
-            <div className="pt-2 text-center text-xs text-gray-500 dark:text-zinc-400">
+            <div className="pt-4 border-t border-gray-100 dark:border-zinc-800 text-center text-xs text-gray-500 dark:text-zinc-400">
               {mode === "login" ? (
                 <p>
                   Hisobingiz yo&apos;qmi?{" "}
                   <button
                     type="button"
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
                       setMode("register");
                       setIsRegisteringFlow(true);
                       setErrorMessage("");
+                      router.replace("/register");
                     }}
-                    className="text-[#22C55E] hover:underline font-bold cursor-pointer"
+                    className="text-[#22C55E] hover:underline font-bold cursor-pointer inline-block ml-1"
                   >
                     Ro&apos;yxatdan o&apos;tish
                   </button>
@@ -761,12 +810,15 @@ export const AuthCard: React.FC<AuthCardProps> = ({ initialMode = "login" }) => 
                   Hisobingiz bormi?{" "}
                   <button
                     type="button"
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
                       setMode("login");
                       setIsRegisteringFlow(false);
                       setErrorMessage("");
+                      router.replace("/login");
                     }}
-                    className="text-[#22C55E] hover:underline font-bold cursor-pointer"
+                    className="text-[#22C55E] hover:underline font-bold cursor-pointer inline-block ml-1"
                   >
                     Kirish
                   </button>
