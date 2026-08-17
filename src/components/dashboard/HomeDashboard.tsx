@@ -4,8 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import {
   Zap,
-  Sparkles,
-  Trophy,
+  ArrowRight,
 } from "lucide-react";
 import {
   mockUserProfile,
@@ -51,7 +50,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
           </div>
 
           {/* 1. FAOLIK / STREAK CARD (2px stroke, 15px radius) */}
-          <div className="bg-white dark:bg-[#1b1c20] rounded-[15px] border-2 border-gray-200 dark:border-[#27272a] p-5 shadow-xs transition-colors">
+          <div className="rounded-[15px] border-2 border-gray-200 dark:border-[#27272a] p-5 shadow-xs transition-colors">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <Zap className="w-4 h-4 text-amber-500 fill-amber-500" />
@@ -69,30 +68,27 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
               {user.weeklyActivity.map((day, idx) => (
                 <div key={idx} className="flex flex-col items-center gap-1.5">
                   <div
-                    className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
-                      day.isCompleted
-                        ? "bg-[#22C55E] text-white shadow-xs"
-                        : day.isToday
+                    className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-xs font-bold transition-all ${day.isCompleted
+                      ? "bg-[#22C55E] text-white shadow-xs"
+                      : day.isToday
                         ? "bg-amber-100 dark:bg-amber-950/40 border-2 border-amber-400 text-amber-500"
                         : "bg-gray-100 dark:bg-[#24252a] text-gray-400 dark:text-zinc-600"
-                    }`}
+                      }`}
                   >
                     <Zap
-                      className={`w-3.5 h-3.5 ${
-                        day.isCompleted
-                          ? "fill-white text-white"
-                          : day.isToday
+                      className={`w-3.5 h-3.5 ${day.isCompleted
+                        ? "fill-white text-white"
+                        : day.isToday
                           ? "fill-amber-500 text-amber-500"
                           : "text-gray-300 dark:text-zinc-700"
-                      }`}
+                        }`}
                     />
                   </div>
                   <span
-                    className={`text-xs font-bold ${
-                      day.isCompleted || day.isToday
-                        ? "text-[#000000] dark:text-gray-200"
-                        : "text-gray-400 dark:text-zinc-500"
-                    }`}
+                    className={`text-xs font-bold ${day.isCompleted || day.isToday
+                      ? "text-[#000000] dark:text-gray-200"
+                      : "text-gray-400 dark:text-zinc-500"
+                      }`}
                   >
                     {day.dayName}
                   </span>
@@ -101,9 +97,9 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
             </div>
           </div>
 
-          {/* 2. YUTUQLARINGIZ / BADGES CARD (EMPTY STATE: 0 ta) */}
-          <div className="bg-white dark:bg-[#1b1c20] rounded-[15px] border-2 border-gray-200 dark:border-[#27272a] p-5 shadow-xs transition-colors">
-            <div className="flex items-center justify-between mb-4">
+          {/* 2. YUTUQLARINGIZ / BADGES CARD (No BG, No dashed stroke, No icon - Clean Text Only) */}
+          <div className="rounded-[15px] border-2 border-gray-200 dark:border-[#27272a] p-5 shadow-xs transition-colors">
+            <div className="flex items-center justify-between mb-3">
               <span className="text-xs font-extrabold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                 YUTUQLARINGIZ
               </span>
@@ -112,12 +108,9 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
               </span>
             </div>
 
-            {/* Empty State Container */}
-            <div className="py-5 px-4 bg-gray-50 dark:bg-[#222328]/60 rounded-xl border-2 border-dashed border-gray-200 dark:border-zinc-800 flex flex-col items-center justify-center text-center">
-              <div className="w-10 h-10 rounded-full bg-amber-50 dark:bg-amber-950/30 text-amber-500 flex items-center justify-center mb-2.5">
-                <Trophy className="w-5 h-5 opacity-80" />
-              </div>
-              <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-zinc-300 max-w-[240px] leading-relaxed">
+            {/* Clean Text Only Container */}
+            <div className="py-3 flex items-center justify-center text-center">
+              <p className="text-xs sm:text-sm font-medium text-gray-500 dark:text-zinc-400 leading-relaxed max-w-[260px]">
                 Hali yutuqlaringiz mavjud emas. Faollikni oshiring va yutuqlarga ega bo&apos;ling!
               </p>
             </div>
@@ -193,7 +186,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                   </div>
                 </div>
 
-                {/* PROGRESS RING & TOPIC PREVIEW STRIP (2px Stroke) */}
+                {/* PROGRESS RING & TOPIC PREVIEW STRIP (Restored original container style) */}
                 <div className="bg-gray-50 dark:bg-[#222328] rounded-[15px] p-4 border-2 border-gray-100 dark:border-zinc-800 mb-6 flex items-center gap-4 transition-colors">
                   {/* Circular Progress Ring */}
                   <div className="relative w-11 h-11 shrink-0 flex items-center justify-center">
@@ -231,7 +224,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                   </div>
                 </div>
 
-                {/* FIGMA 3D TACTILE PRIMARY GREEN CTA BUTTON (NO ARROW) */}
+                {/* FIGMA 3D TACTILE PRIMARY GREEN CTA BUTTON */}
                 <button
                   type="button"
                   onClick={() => onStartLesson(activeModule.id)}
@@ -251,11 +244,10 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                 <button
                   key={mod.id}
                   onClick={() => handleSelectModule(idx)}
-                  className={`aspect-square rounded-[15px] p-2 flex items-center justify-center transition-all duration-200 cursor-pointer ${
-                    isSelected
-                      ? "border-2 border-[#22C55E] bg-white dark:bg-[#1b1c20] shadow-xs scale-105"
-                      : "border-2 border-gray-200 dark:border-[#27272a] bg-white dark:bg-[#1b1c20] hover:border-gray-300 dark:hover:border-zinc-700 opacity-80 hover:opacity-100"
-                  }`}
+                  className={`aspect-square rounded-[15px] p-2 flex items-center justify-center transition-all duration-200 cursor-pointer ${isSelected
+                    ? "border-2 border-[#22C55E] shadow-xs scale-105 bg-[#22C55E]/20"
+                    : "border-2 border-gray-200 dark:border-[#27272a] bg-white dark:bg-[#1b1c20] hover:border-gray-300 dark:hover:border-zinc-700 opacity-80 hover:opacity-100"
+                    }`}
                   title={mod.title}
                 >
                   <div className="relative w-8 h-8 sm:w-11 sm:h-11 flex items-center justify-center">
