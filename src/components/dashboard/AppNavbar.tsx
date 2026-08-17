@@ -52,7 +52,7 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
   }, []);
 
   return (
-    <header className="sticky top-0 left-0 right-0 z-40 bg-white dark:bg-[#141414] border-b border-gray-100 dark:border-[#27272a] transition-colors duration-200 font-sans">
+    <header className="sticky top-0 left-0 right-0 z-40 bg-white dark:bg-[#1F1F1F] border-b border-gray-100 dark:border-[#27272a] transition-colors duration-200 font-sans">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* ========================================================= */}
@@ -85,11 +85,10 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
               <button
                 type="button"
                 onClick={() => setActiveTab("home")}
-                className={`relative py-5 text-sm font-semibold transition-colors flex items-center gap-2 cursor-pointer ${
-                  activeTab === "home"
+                className={`relative py-5 text-sm font-semibold transition-colors flex items-center gap-2 cursor-pointer ${activeTab === "home"
                     ? "text-[#000000] dark:text-white font-bold"
                     : "text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white"
-                }`}
+                  }`}
               >
                 <Home className="w-4 h-4" />
                 <span>Bosh sahifa</span>
@@ -101,11 +100,10 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
               <button
                 type="button"
                 onClick={() => setActiveTab("courses")}
-                className={`relative py-5 text-sm font-semibold transition-colors flex items-center gap-2 cursor-pointer ${
-                  activeTab === "courses"
+                className={`relative py-5 text-sm font-semibold transition-colors flex items-center gap-2 cursor-pointer ${activeTab === "courses"
                     ? "text-[#000000] dark:text-white font-bold"
                     : "text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white"
-                }`}
+                  }`}
               >
                 <BookOpen className="w-4 h-4" />
                 <span>Kurslar</span>

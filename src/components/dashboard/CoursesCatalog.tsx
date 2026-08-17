@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import {
   foundationalLearningPath,
-  secondaryLearningPaths,
 } from "@/data/mockCourseData";
 
 interface CoursesCatalogProps {
@@ -21,7 +20,6 @@ export const CoursesCatalog: React.FC<CoursesCatalogProps> = ({
   onSelectModule,
 }) => {
   const mainPath = foundationalLearningPath;
-  const secondaryPaths = secondaryLearningPaths;
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -38,9 +36,8 @@ export const CoursesCatalog: React.FC<CoursesCatalogProps> = ({
     const el = scrollContainerRef.current;
     if (!el) return;
     const { scrollLeft, scrollWidth, clientWidth } = el;
-    // Allow 2px threshold for floating point calculations
-    setCanScrollLeft(scrollLeft > 2);
-    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 2);
+    setCanScrollLeft(scrollLeft > 4);
+    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 4);
   }, []);
 
   useEffect(() => {
@@ -76,7 +73,7 @@ export const CoursesCatalog: React.FC<CoursesCatalogProps> = ({
     const el = scrollContainerRef.current;
     if (!el) return;
     const x = e.pageX - el.offsetLeft;
-    const walk = (x - startXRef.current) * 1.2; // scroll speed multiplier
+    const walk = (x - startXRef.current) * 1.2;
     if (Math.abs(walk) > 4) {
       hasDraggedRef.current = true;
     }
@@ -116,16 +113,13 @@ export const CoursesCatalog: React.FC<CoursesCatalogProps> = ({
       </div>
 
       {/* ========================================================= */}
-      {/* 1. ASOSIY BOSQICH: Dasturiy Tafakkur & Algoritmlar        */}
+      {/* 1. DASTURIY TAFAKKUR & ALGORITMLAR (matching Figma 1:1)   */}
       {/* ========================================================= */}
       <section className="mb-6">
         <div className="bg-white dark:bg-[#1F1F1F] rounded-[15px] border-2 border-gray-200 dark:border-[#27272a] p-6 sm:p-8 shadow-xs transition-colors">
-          {/* Header Info */}
+          {/* Header Info: Title & Progress Pill */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <div>
-              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-gray-400 dark:text-zinc-500 block mb-1">
-                ASOSIY BOSQICH
-              </span>
               <h2 className="text-xl sm:text-2xl font-extrabold text-[#000000] dark:text-white tracking-tight">
                 {mainPath.title}
               </h2>
@@ -163,7 +157,7 @@ export const CoursesCatalog: React.FC<CoursesCatalogProps> = ({
           </div>
 
           {/* INNER CONTAINER WITH MODULE CARDS, DRAG-TO-SCROLL & CONDITIONAL BUTTONS */}
-          <div className="relative bg-gray-50/70 dark:bg-[#18181b] p-4 sm:p-5 rounded-[15px] border border-gray-100 dark:border-zinc-800/60">
+          <div className="relative bg-[#F8F8FA] dark:bg-[#18181b] p-4 sm:p-5 rounded-[15px] border border-gray-100 dark:border-zinc-800/60">
             {/* Conditional Left Button */}
             {canScrollLeft && (
               <button
@@ -181,7 +175,7 @@ export const CoursesCatalog: React.FC<CoursesCatalogProps> = ({
               <button
                 type="button"
                 onClick={() => handleScroll("right")}
-                className="w-8 h-8 rounded-full bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 shadow-md flex items-center justify-center text-gray-600 dark:text-gray-200 hover:scale-110 active:scale-95 transition-all absolute -right-4 top-1/2 -translate-y-1/2 z-20 cursor-pointer animate-fadeIn"
+                className="w-8 h-8 rounded-full bg-gray-200/90 dark:bg-zinc-700 shadow-sm flex items-center justify-center text-gray-700 dark:text-gray-200 hover:scale-110 active:scale-95 transition-all absolute -right-3.5 top-1/2 -translate-y-1/2 z-20 cursor-pointer animate-fadeIn"
                 title="Keyingi modullar"
               >
                 <ChevronRight className="w-4 h-4" />
