@@ -131,13 +131,13 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
           {/* LAYERED CARD STACK CONTAINER WITH 3D CARD SILHOUETTES */}
           <div className="relative">
             {/* Background Layer 2 (Outer Right Deck Silhouette) */}
-            <div className="absolute -right-3 top-3 bottom-3 w-full rounded-[15px] border-2 border-gray-200/50 dark:border-[#27272a]/60 bg-white/40 dark:bg-[#1b1c20]/40 z-0 pointer-events-none" />
+            <div className="absolute -right-3 top-3 bottom-3 w-full rounded-[15px] border-2 border-gray-200/50 dark:border-[#27272a]/60 bg-white/40 dark:bg-[#1F1F1F]/40 z-0 pointer-events-none" />
 
             {/* Background Layer 1 (Inner Right Deck Silhouette) */}
-            <div className="absolute -right-1.5 top-1.5 bottom-1.5 w-full rounded-[15px] border-2 border-gray-200/80 dark:border-[#27272a]/80 bg-white/70 dark:bg-[#1b1c20]/70 z-0 pointer-events-none" />
+            <div className="absolute -right-1.5 top-1.5 bottom-1.5 w-full rounded-[15px] border-2 border-gray-200/80 dark:border-[#27272a]/80 bg-white/70 dark:bg-[#1F1F1F]/70 z-0 pointer-events-none" />
 
             {/* MAIN FOREGROUND CARD (2px Stroke & 15px Radius) */}
-            <div className="relative z-10 bg-white dark:bg-[#1b1c20] rounded-[15px] border-2 border-gray-200 dark:border-[#27272a] p-6 sm:p-8 shadow-sm transition-all duration-300">
+            <div className="relative z-10 bg-white dark:bg-[#1F1F1F] rounded-[15px] border-2 border-gray-200 dark:border-[#27272a] p-6 sm:p-8 shadow-sm transition-all duration-300">
               {/* Swipe Animated Content Container */}
               <div
                 key={swipeKey}
@@ -245,7 +245,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                   key={mod.id}
                   onClick={() => handleSelectModule(idx)}
                   className={`aspect-square rounded-[15px] p-2 flex items-center justify-center transition-all duration-200 cursor-pointer ${isSelected
-                    ? "border-2 border-[#22C55E] shadow-xs scale-105 bg-[#22C55E]/10"
+                    ? "border-2 border-[#22C55E] shadow-xs scale-105 bg-[#22C55E]/20"
                     : "border-2 border-gray-200 dark:border-[#27272a] hover:border-gray-300 dark:hover:border-zinc-700 opacity-80 hover:opacity-100"
                     }`}
                   title={mod.title}

@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import { lightColors, darkColors } from "./src/design-system/tokens/colors";
 
 const config: Config = {
   darkMode: "class",
@@ -11,16 +12,16 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        canvas: "#ffffff",
-        darkCanvas: "#141414",
-        darkSurface: "#1c1c1e",
-        darkSurfaceSubtle: "#242426",
-        darkBorder: "#27272a",
+        canvas: lightColors.canvas,
+        darkCanvas: darkColors.canvas,
+        darkSurface: darkColors.surfacePrimary, // #1F1F1F
+        darkSurfaceSubtle: darkColors.surfaceSecondary, // #242426
+        darkBorder: darkColors.borderLight, // #27272a
         brandGreen: {
-          DEFAULT: "#22C55E",
-          hover: "#16a34a",
-          dark: "#15803d",
-          light: "#eaf6ed",
+          DEFAULT: lightColors.brandGreenAccent,
+          hover: darkColors.brandGreenHover,
+          dark: darkColors.brandGreenLight,
+          light: lightColors.brandGreenLight,
         },
         primary: {
           DEFAULT: "#ff8d23",

@@ -1,10 +1,9 @@
 /**
  * Codegarten Design System - Color Tokens
- * Clean, minimalist, editorial palette matching Brilliant.org
- * ZERO gradients, solid crisp colors, soft pastel surfaces.
+ * Supports both Light Mode and Dark Mode palettes (matching Brilliant.org)
  */
 
-export const colors = {
+export const lightColors = {
   // Primary Canvases & Backgrounds
   canvas: "#ffffff",
   surfacePrimary: "#ffffff",
@@ -12,39 +11,67 @@ export const colors = {
   surfaceTertiary: "#ebebea",
   surfaceCard: "#ffffff",
 
-  // Soft Pastel Tint Surfaces (for feature cards)
+  // Soft Pastel Tints
   tintPeach: "#fbf3ea",
   tintMint: "#eaf6ed",
   tintSky: "#edf4fb",
   tintLavender: "#f4f1fb",
 
-  // Brand Primaries (Solid & Clean)
-  brandGreen: "#00872e", // Brilliant's signature solid green
+  // Brand Colors
+  brandGreen: "#00872e",
   brandGreenHover: "#007327",
   brandGreenLight: "#e6f4ea",
+  brandGreenAccent: "#22C55E",
 
-  brandBlue: "#213c9e",
-  brandBlueHover: "#192f7e",
-
-  // Text Roles (Crisp, High Contrast)
+  // Text Roles
   textPrimary: "#121212",
   textSecondary: "#4b5563",
   textMuted: "#6b7280",
   textLight: "#ffffff",
 
-  // Clean Borders & Dividers
+  // Borders & Dividers
   borderLight: "#e5e7eb",
   borderMedium: "#d1d5db",
-  borderDark: "#434343",
-
-  // Status Colors
-  success: "#00872e",
-  error: "#dc2626",
-  warning: "#d97706",
-
-  // Footer Dark
-  footerBg: "#0c0d0e",
-  footerText: "#9ca3af",
+  borderSubtle: "#f5efff",
 } as const;
 
-export type ColorToken = keyof typeof colors;
+export const darkColors = {
+  // Primary Canvases & Backgrounds
+  canvas: "#141414",
+  surfacePrimary: "#1F1F1F",
+  surfaceSecondary: "#242426",
+  surfaceTertiary: "#2a2a2d",
+  surfaceCard: "#1c1c1e",
+
+  // Soft Tint Surfaces for Dark Mode
+  tintPeach: "#2a221a",
+  tintMint: "#1a2a20",
+  tintSky: "#1a2430",
+  tintLavender: "#241f30",
+
+  // Brand Colors
+  brandGreen: "#22C55E",
+  brandGreenHover: "#16a34a",
+  brandGreenLight: "#15803d",
+  brandGreenAccent: "#22C55E",
+
+  // Text Roles
+  textPrimary: "#ffffff",
+  textSecondary: "#a1a1aa",
+  textMuted: "#71717a",
+  textLight: "#ffffff",
+
+  // Borders & Dividers
+  borderLight: "#27272a",
+  borderMedium: "#3f3f46",
+  borderSubtle: "#242426",
+} as const;
+
+export const colors = {
+  light: lightColors,
+  dark: darkColors,
+  // Base fallbacks for shared utility tokens
+  ...lightColors,
+} as const;
+
+export type ColorToken = keyof typeof lightColors;
