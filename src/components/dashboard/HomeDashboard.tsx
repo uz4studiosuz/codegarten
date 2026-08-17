@@ -4,8 +4,8 @@ import React, { useState } from "react";
 import Image from "next/image";
 import {
   Zap,
-  ArrowRight,
   Sparkles,
+  Trophy,
 } from "lucide-react";
 import {
   mockUserProfile,
@@ -26,7 +26,15 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
 
   // Selected module in Tezkor qaytish (default: Module 1 "Sikllar")
   const [selectedModuleIndex, setSelectedModuleIndex] = useState(1);
+  const [swipeKey, setSwipeKey] = useState(0);
+
   const activeModule = path.modules[selectedModuleIndex] || path.modules[0];
+
+  const handleSelectModule = (index: number) => {
+    if (index === selectedModuleIndex) return;
+    setSelectedModuleIndex(index);
+    setSwipeKey((prev) => prev + 1); // Trigger card swipe animation
+  };
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 font-sans transition-colors duration-200">
@@ -93,39 +101,25 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
             </div>
           </div>
 
-          {/* 2. YUTUQLARINGIZ / BADGES CARD (2px stroke, 15px radius) */}
+          {/* 2. YUTUQLARINGIZ / BADGES CARD (EMPTY STATE: 0 ta) */}
           <div className="bg-white dark:bg-[#1b1c20] rounded-[15px] border-2 border-gray-200 dark:border-[#27272a] p-5 shadow-xs transition-colors">
             <div className="flex items-center justify-between mb-4">
               <span className="text-xs font-extrabold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                 YUTUQLARINGIZ
               </span>
               <span className="text-xs sm:text-sm font-bold text-gray-400 dark:text-zinc-400">
-                3 ta
+                0 ta
               </span>
             </div>
 
-            {/* 3 Golden Trophy Pedestals */}
-            <div className="grid grid-cols-3 gap-2.5">
-              {[1, 2, 3].map((item) => (
-                <div
-                  key={item}
-                  className="py-3 px-2 bg-gray-50 dark:bg-[#222328]/60 rounded-xl border-2 border-gray-100 dark:border-zinc-800 flex flex-col items-center justify-center hover:scale-105 transition-transform cursor-pointer group"
-                >
-                  <div className="relative w-12 h-14 flex flex-col items-center justify-center">
-                    {/* Golden Trophy Cup */}
-                    <div className="w-9 h-8 bg-gradient-to-b from-[#FCD34D] via-[#F59E0B] to-[#D97706] rounded-t-xl rounded-b-lg shadow-sm flex items-center justify-center relative border border-amber-300/40">
-                      <Sparkles className="w-3.5 h-3.5 text-white animate-pulse" />
-                      {/* Handles */}
-                      <div className="absolute -left-1.5 top-1.5 w-2 h-3.5 border-2 border-[#F59E0B] rounded-l-full" />
-                      <div className="absolute -right-1.5 top-1.5 w-2 h-3.5 border-2 border-[#F59E0B] rounded-r-full" />
-                    </div>
-                    {/* Stem */}
-                    <div className="w-2.5 h-2 bg-[#B45309]" />
-                    {/* Pedestal Base */}
-                    <div className="w-8 h-2.5 bg-gray-200 dark:bg-zinc-700 rounded-sm shadow-xs border-t border-white/40" />
-                  </div>
-                </div>
-              ))}
+            {/* Empty State Container */}
+            <div className="py-5 px-4 bg-gray-50 dark:bg-[#222328]/60 rounded-xl border-2 border-dashed border-gray-200 dark:border-zinc-800 flex flex-col items-center justify-center text-center">
+              <div className="w-10 h-10 rounded-full bg-amber-50 dark:bg-amber-950/30 text-amber-500 flex items-center justify-center mb-2.5">
+                <Trophy className="w-5 h-5 opacity-80" />
+              </div>
+              <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-zinc-300 max-w-[240px] leading-relaxed">
+                Hali yutuqlaringiz mavjud emas. Faollikni oshiring va yutuqlarga ega bo&apos;ling!
+              </p>
             </div>
           </div>
         </div>
@@ -151,8 +145,30 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
 
             {/* MAIN FOREGROUND CARD (2px Stroke & 15px Radius) */}
             <div className="relative z-10 bg-white dark:bg-[#1b1c20] rounded-[15px] border-2 border-gray-200 dark:border-[#27272a] p-6 sm:p-8 shadow-sm transition-all duration-300">
-              {/* Animated Content Container */}
-              <div key={activeModule.id} className="animate-fadeIn">
+              {/* Swipe Animated Content Container */}
+              <div
+                key={swipeKey}
+                className="transition-all duration-300 animate-fadeIn"
+                style={{
+                  animationName: "swipeInCard",
+                  animationDuration: "350ms",
+                  animationTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
+                }}
+              >
+                {/* Inline CSS animation style */}
+                <style jsx>{`
+                  @keyframes swipeInCard {
+                    0% {
+                      opacity: 0;
+                      transform: translateX(40px) scale(0.97);
+                    }
+                    100% {
+                      opacity: 1;
+                      transform: translateX(0) scale(1);
+                    }
+                  }
+                `}</style>
+
                 {/* Header: Title & Green Module Tag */}
                 <div className="text-center mb-4">
                   <h2 className="text-2xl sm:text-3xl font-extrabold text-[#000000] dark:text-white tracking-tight">
@@ -215,14 +231,13 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                   </div>
                 </div>
 
-                {/* FIGMA 3D TACTILE PRIMARY GREEN CTA BUTTON */}
+                {/* FIGMA 3D TACTILE PRIMARY GREEN CTA BUTTON (NO ARROW) */}
                 <button
                   type="button"
                   onClick={() => onStartLesson(activeModule.id)}
-                  className="btn-primary-tactile w-full flex items-center justify-center gap-2.5"
+                  className="btn-primary-tactile w-full flex items-center justify-center"
                 >
                   <span>Davom ettirish</span>
-                  <ArrowRight className="w-5 h-5" />
                 </button>
               </div>
             </div>
@@ -235,8 +250,8 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
               return (
                 <button
                   key={mod.id}
-                  onClick={() => setSelectedModuleIndex(idx)}
-                  className={`aspect-square rounded-[15px] p-2 flex items-center justify-center transition-all cursor-pointer ${
+                  onClick={() => handleSelectModule(idx)}
+                  className={`aspect-square rounded-[15px] p-2 flex items-center justify-center transition-all duration-200 cursor-pointer ${
                     isSelected
                       ? "border-2 border-[#22C55E] bg-white dark:bg-[#1b1c20] shadow-xs scale-105"
                       : "border-2 border-gray-200 dark:border-[#27272a] bg-white dark:bg-[#1b1c20] hover:border-gray-300 dark:hover:border-zinc-700 opacity-80 hover:opacity-100"
