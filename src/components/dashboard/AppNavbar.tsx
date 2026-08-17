@@ -129,15 +129,15 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
               <span className="font-mono text-sm">{user.streakDays}</span>
             </button>
 
-            {/* Menu Hamburger Button */}
+            {/* Menu Hamburger Button (Rounded full border matching Figma) */}
             <div className="relative" ref={menuRef}>
               <button
                 type="button"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-[#27272a] text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-zinc-700 flex items-center justify-center transition-colors cursor-pointer"
+                className="w-9 h-9 rounded-full border border-gray-200 dark:border-zinc-700 bg-white dark:bg-[#1F1F1F] text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-zinc-800 flex items-center justify-center transition-colors cursor-pointer shadow-xs"
                 aria-label="Menu"
               >
-                <Menu className="w-5 h-5" />
+                <Menu className="w-4 h-4" />
               </button>
 
               {/* Exact Dropdown Menu (Screenshot 3 Style) */}
