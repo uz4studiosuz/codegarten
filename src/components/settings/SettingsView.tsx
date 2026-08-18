@@ -35,7 +35,7 @@ export const SettingsView: React.FC = () => {
 
   // Account State
   const [firstName, setFirstName] = useState(
-    authUser?.name?.split(" ")[0] || "Abdulloh"
+    authUser?.name?.split(" ")[0] || "Ziyodulloh"
   );
   const [lastName, setLastName] = useState(
     authUser?.name?.split(" ")[1] || "Alimov"
@@ -124,11 +124,10 @@ export const SettingsView: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setActiveTab("account")}
-                className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer text-left ${
-                  activeTab === "account"
+                className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer text-left ${activeTab === "account"
                     ? "bg-gray-100 dark:bg-zinc-800 text-black dark:text-white shadow-xs font-bold"
                     : "text-gray-600 dark:text-zinc-400 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-zinc-800/50"
-                }`}
+                  }`}
               >
                 <span>Account</span>
               </button>
@@ -136,11 +135,10 @@ export const SettingsView: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setActiveTab("premium")}
-                className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer text-left ${
-                  activeTab === "premium"
+                className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer text-left ${activeTab === "premium"
                     ? "bg-gray-100 dark:bg-zinc-800 text-black dark:text-white shadow-xs font-bold"
                     : "text-gray-600 dark:text-zinc-400 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-zinc-800/50"
-                }`}
+                  }`}
               >
                 <span>Premium</span>
               </button>
@@ -148,11 +146,10 @@ export const SettingsView: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setActiveTab("preferences")}
-                className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer text-left ${
-                  activeTab === "preferences"
+                className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer text-left ${activeTab === "preferences"
                     ? "bg-gray-100 dark:bg-zinc-800 text-black dark:text-white shadow-xs font-bold"
                     : "text-gray-600 dark:text-zinc-400 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-zinc-800/50"
-                }`}
+                  }`}
               >
                 <span>Preferences</span>
               </button>
@@ -415,11 +412,10 @@ export const SettingsView: React.FC = () => {
                           key={m}
                           type="button"
                           onClick={() => handleColorModeChange(m)}
-                          className={`px-4 py-1.5 rounded-lg text-xs font-bold capitalize transition-all cursor-pointer ${
-                            colorMode === m
+                          className={`px-4 py-1.5 rounded-lg text-xs font-bold capitalize transition-all cursor-pointer ${colorMode === m
                               ? "bg-white dark:bg-black text-black dark:text-white shadow-xs"
                               : "text-gray-500 dark:text-zinc-400 hover:text-black dark:hover:text-white"
-                          }`}
+                            }`}
                         >
                           {m}
                         </button>
@@ -439,11 +435,10 @@ export const SettingsView: React.FC = () => {
                           key={rm}
                           type="button"
                           onClick={() => setReduceMotion(rm)}
-                          className={`px-4 py-1.5 rounded-lg text-xs font-bold capitalize transition-all cursor-pointer ${
-                            reduceMotion === rm
+                          className={`px-4 py-1.5 rounded-lg text-xs font-bold capitalize transition-all cursor-pointer ${reduceMotion === rm
                               ? "bg-white dark:bg-black text-black dark:text-white shadow-xs"
                               : "text-gray-500 dark:text-zinc-400 hover:text-black dark:hover:text-white"
-                          }`}
+                            }`}
                         >
                           {rm}
                         </button>
@@ -468,16 +463,14 @@ export const SettingsView: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setEnableNarration(!enableNarration)}
-                      className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ${
-                        enableNarration
+                      className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ${enableNarration
                           ? "bg-[#22C55E]"
                           : "bg-gray-300 dark:bg-zinc-700"
-                      }`}
+                        }`}
                     >
                       <div
-                        className={`w-4 h-4 rounded-full bg-white transition-transform absolute top-1 ${
-                          enableNarration ? "left-6" : "left-1"
-                        }`}
+                        className={`w-4 h-4 rounded-full bg-white transition-transform absolute top-1 ${enableNarration ? "left-6" : "left-1"
+                          }`}
                       />
                     </button>
                   </div>
@@ -492,9 +485,8 @@ export const SettingsView: React.FC = () => {
                       <button
                         type="button"
                         onClick={handlePlayVoicePreview}
-                        className={`w-8 h-8 rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 flex items-center justify-center text-black dark:text-white hover:scale-105 transition-transform cursor-pointer ${
-                          isPlayingVoice ? "animate-pulse border-[#22C55E]" : ""
-                        }`}
+                        className={`w-8 h-8 rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 flex items-center justify-center text-black dark:text-white hover:scale-105 transition-transform cursor-pointer ${isPlayingVoice ? "animate-pulse border-[#22C55E]" : ""
+                          }`}
                         title="Ovozni eshitib ko'rish"
                       >
                         <IconPlayerPlay size={15} className="fill-current" />
@@ -504,22 +496,20 @@ export const SettingsView: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => setVoiceType("melodic")}
-                          className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                            voiceType === "melodic"
+                          className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${voiceType === "melodic"
                               ? "bg-white dark:bg-black text-black dark:text-white shadow-xs"
                               : "text-gray-500 dark:text-zinc-400 hover:text-black dark:hover:text-white"
-                          }`}
+                            }`}
                         >
                           Melodic
                         </button>
                         <button
                           type="button"
                           onClick={() => setVoiceType("deep")}
-                          className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                            voiceType === "deep"
+                          className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${voiceType === "deep"
                               ? "bg-white dark:bg-black text-black dark:text-white shadow-xs"
                               : "text-gray-500 dark:text-zinc-400 hover:text-black dark:hover:text-white"
-                          }`}
+                            }`}
                         >
                           Deep
                         </button>
@@ -535,16 +525,14 @@ export const SettingsView: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setSoundEffects(!soundEffects)}
-                      className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ${
-                        soundEffects
+                      className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ${soundEffects
                           ? "bg-[#22C55E]"
                           : "bg-gray-300 dark:bg-zinc-700"
-                      }`}
+                        }`}
                     >
                       <div
-                        className={`w-4 h-4 rounded-full bg-white transition-transform absolute top-1 ${
-                          soundEffects ? "left-6" : "left-1"
-                        }`}
+                        className={`w-4 h-4 rounded-full bg-white transition-transform absolute top-1 ${soundEffects ? "left-6" : "left-1"
+                          }`}
                       />
                     </button>
                   </div>
@@ -569,16 +557,14 @@ export const SettingsView: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setStreakReminders(!streakReminders)}
-                      className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ${
-                        streakReminders && !globalMute
+                      className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ${streakReminders && !globalMute
                           ? "bg-[#22C55E]"
                           : "bg-gray-300 dark:bg-zinc-700"
-                      }`}
+                        }`}
                     >
                       <div
-                        className={`w-4 h-4 rounded-full bg-white transition-transform absolute top-1 ${
-                          streakReminders && !globalMute ? "left-6" : "left-1"
-                        }`}
+                        className={`w-4 h-4 rounded-full bg-white transition-transform absolute top-1 ${streakReminders && !globalMute ? "left-6" : "left-1"
+                          }`}
                       />
                     </button>
                   </div>
@@ -590,16 +576,14 @@ export const SettingsView: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setStreakAlerts(!streakAlerts)}
-                      className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ${
-                        streakAlerts && !globalMute
+                      className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ${streakAlerts && !globalMute
                           ? "bg-[#22C55E]"
                           : "bg-gray-300 dark:bg-zinc-700"
-                      }`}
+                        }`}
                     >
                       <div
-                        className={`w-4 h-4 rounded-full bg-white transition-transform absolute top-1 ${
-                          streakAlerts && !globalMute ? "left-6" : "left-1"
-                        }`}
+                        className={`w-4 h-4 rounded-full bg-white transition-transform absolute top-1 ${streakAlerts && !globalMute ? "left-6" : "left-1"
+                          }`}
                       />
                     </button>
                   </div>
@@ -617,16 +601,14 @@ export const SettingsView: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setLeagueReminders(!leagueReminders)}
-                      className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ${
-                        leagueReminders && !globalMute
+                      className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ${leagueReminders && !globalMute
                           ? "bg-[#22C55E]"
                           : "bg-gray-300 dark:bg-zinc-700"
-                      }`}
+                        }`}
                     >
                       <div
-                        className={`w-4 h-4 rounded-full bg-white transition-transform absolute top-1 ${
-                          leagueReminders && !globalMute ? "left-6" : "left-1"
-                        }`}
+                        className={`w-4 h-4 rounded-full bg-white transition-transform absolute top-1 ${leagueReminders && !globalMute ? "left-6" : "left-1"
+                          }`}
                       />
                     </button>
                   </div>
@@ -638,16 +620,14 @@ export const SettingsView: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setLeagueAlerts(!leagueAlerts)}
-                      className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ${
-                        leagueAlerts && !globalMute
+                      className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ${leagueAlerts && !globalMute
                           ? "bg-[#22C55E]"
                           : "bg-gray-300 dark:bg-zinc-700"
-                      }`}
+                        }`}
                     >
                       <div
-                        className={`w-4 h-4 rounded-full bg-white transition-transform absolute top-1 ${
-                          leagueAlerts && !globalMute ? "left-6" : "left-1"
-                        }`}
+                        className={`w-4 h-4 rounded-full bg-white transition-transform absolute top-1 ${leagueAlerts && !globalMute ? "left-6" : "left-1"
+                          }`}
                       />
                     </button>
                   </div>
@@ -665,16 +645,14 @@ export const SettingsView: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setDailyPractice(!dailyPractice)}
-                      className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ${
-                        dailyPractice && !globalMute
+                      className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ${dailyPractice && !globalMute
                           ? "bg-[#22C55E]"
                           : "bg-gray-300 dark:bg-zinc-700"
-                      }`}
+                        }`}
                     >
                       <div
-                        className={`w-4 h-4 rounded-full bg-white transition-transform absolute top-1 ${
-                          dailyPractice && !globalMute ? "left-6" : "left-1"
-                        }`}
+                        className={`w-4 h-4 rounded-full bg-white transition-transform absolute top-1 ${dailyPractice && !globalMute ? "left-6" : "left-1"
+                          }`}
                       />
                     </button>
                   </div>
@@ -686,16 +664,14 @@ export const SettingsView: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setCourseRecommendations(!courseRecommendations)}
-                      className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ${
-                        courseRecommendations && !globalMute
+                      className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ${courseRecommendations && !globalMute
                           ? "bg-[#22C55E]"
                           : "bg-gray-300 dark:bg-zinc-700"
-                      }`}
+                        }`}
                     >
                       <div
-                        className={`w-4 h-4 rounded-full bg-white transition-transform absolute top-1 ${
-                          courseRecommendations && !globalMute ? "left-6" : "left-1"
-                        }`}
+                        className={`w-4 h-4 rounded-full bg-white transition-transform absolute top-1 ${courseRecommendations && !globalMute ? "left-6" : "left-1"
+                          }`}
                       />
                     </button>
                   </div>
@@ -713,16 +689,14 @@ export const SettingsView: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setMonthlyNewsletters(!monthlyNewsletters)}
-                      className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ${
-                        monthlyNewsletters && !globalMute
+                      className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ${monthlyNewsletters && !globalMute
                           ? "bg-[#22C55E]"
                           : "bg-gray-300 dark:bg-zinc-700"
-                      }`}
+                        }`}
                     >
                       <div
-                        className={`w-4 h-4 rounded-full bg-white transition-transform absolute top-1 ${
-                          monthlyNewsletters && !globalMute ? "left-6" : "left-1"
-                        }`}
+                        className={`w-4 h-4 rounded-full bg-white transition-transform absolute top-1 ${monthlyNewsletters && !globalMute ? "left-6" : "left-1"
+                          }`}
                       />
                     </button>
                   </div>
@@ -734,16 +708,14 @@ export const SettingsView: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setContentLaunches(!contentLaunches)}
-                      className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ${
-                        contentLaunches && !globalMute
+                      className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ${contentLaunches && !globalMute
                           ? "bg-[#22C55E]"
                           : "bg-gray-300 dark:bg-zinc-700"
-                      }`}
+                        }`}
                     >
                       <div
-                        className={`w-4 h-4 rounded-full bg-white transition-transform absolute top-1 ${
-                          contentLaunches && !globalMute ? "left-6" : "left-1"
-                        }`}
+                        className={`w-4 h-4 rounded-full bg-white transition-transform absolute top-1 ${contentLaunches && !globalMute ? "left-6" : "left-1"
+                          }`}
                       />
                     </button>
                   </div>
@@ -755,16 +727,14 @@ export const SettingsView: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setPromotions(!promotions)}
-                      className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ${
-                        promotions && !globalMute
+                      className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ${promotions && !globalMute
                           ? "bg-[#22C55E]"
                           : "bg-gray-300 dark:bg-zinc-700"
-                      }`}
+                        }`}
                     >
                       <div
-                        className={`w-4 h-4 rounded-full bg-white transition-transform absolute top-1 ${
-                          promotions && !globalMute ? "left-6" : "left-1"
-                        }`}
+                        className={`w-4 h-4 rounded-full bg-white transition-transform absolute top-1 ${promotions && !globalMute ? "left-6" : "left-1"
+                          }`}
                       />
                     </button>
                   </div>
@@ -782,16 +752,14 @@ export const SettingsView: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setGlobalMute(!globalMute)}
-                      className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 mt-0.5 ${
-                        globalMute
+                      className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 mt-0.5 ${globalMute
                           ? "bg-[#22C55E]"
                           : "bg-gray-300 dark:bg-zinc-700"
-                      }`}
+                        }`}
                     >
                       <div
-                        className={`w-4 h-4 rounded-full bg-white transition-transform absolute top-1 ${
-                          globalMute ? "left-6" : "left-1"
-                        }`}
+                        className={`w-4 h-4 rounded-full bg-white transition-transform absolute top-1 ${globalMute ? "left-6" : "left-1"
+                          }`}
                       />
                     </button>
                   </div>

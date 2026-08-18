@@ -1,260 +1,249 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import {
   IconArrowLeft,
-  IconCircleCheckFilled,
   IconBook,
-  IconCode,
-  IconSparkles,
-  IconPlayerPlay,
-  IconLock,
-  IconBolt,
+  IconDumbbell,
+  IconCheck,
+  IconStarFilled,
+  IconLockFilled,
+  IconBarbell,
 } from "@tabler/icons-react";
 import { AppNavbar } from "@/components/dashboard/AppNavbar";
-import { AboutModal } from "@/components/dashboard/AboutModal";
 import { foundationalLearningPath, mockUserProfile } from "@/data/mockCourseData";
 
-export default function ModuleRoadmapPage() {
-  const router = useRouter();
-  const urlParams = useParams();
-  const [isAboutOpen, setIsAboutOpen] = useState(false);
+type NodeState = "completed" | "active" | "locked";
 
-  const moduleId = (urlParams?.moduleId as string) || "mod-2";
-  const path = foundationalLearningPath;
-  const currentModule =
-    path.modules.find((m) => m.id === moduleId) || path.modules[1] || path.modules[0];
+/** Vertical air above an item, and for nodes the offset from the column centre. */
+type PathItem =
+  | { kind: "level"; num: number; title: string; gapTop: number }
+  | { kind: "nextup"; title: string; lessonId: string; gapTop: number }
+  | {
+      kind: "node";
+      id: string;
+      title: string;
+      state: NodeState;
+      zig: number;
+      gapTop: number;
+      isReview?: boolean;
+    };
 
-  // Roadmap Nodes matching Screenshot 1 but themed with primary green
-  const nodes = [
-    {
-      id: "step-1",
-      title: "Writing Programs",
-      titleUz: "Dasturlar yozish",
-      description: "Dasturlash muhiti va dastlabki amallar",
-      status: "completed" as const,
-    },
-    {
-      id: "step-2",
-      title: "Using Variables",
-      titleUz: "O'zgaruvchilardan foydalanish",
-      description: "Shakllar va ranglarni dinamik boshqarish",
-      status: "active" as const,
-    },
-    {
-      id: "step-3",
-      title: "Multiple Variables",
-      titleUz: "Ko'p o'zgaruvchilar bilan ishlash",
-      description: "Murakkab geometrik hisob-kitoblar",
-      status: "upcoming" as const,
-    },
-    {
-      id: "step-4",
-      title: "Logical Conditions",
-      titleUz: "Mantiqiy shartlar",
-      description: "Qarorlar qabul qilish algoritmi",
-      status: "locked" as const,
-    },
-  ];
+/**
+ * The trail is hand-authored as a flat ribbon: banners, the "Next up" card and
+ * the snaking nodes appear in exactly this order, with the horizontal offsets
+ * and vertical gaps that give the path its wandering shape.
+ */
+const PATH_ITEMS: PathItem[] = [
+  { kind: "level", num: 1, title: "Variables", gapTop: 0 },
+  { kind: "node", id: "step-1", title: "Multiple Variables", state: "completed", zig: 17, gapTop: 31 },
+  { kind: "node", id: "step-2", title: "Using Variables", state: "active", zig: -79, gapTop: 30 },
+  { kind: "node", id: "step-3", title: "Setting Variables", state: "locked", zig: -117, gapTop: 32 },
+  { kind: "node", id: "step-4", title: "Level Review", state: "locked", zig: -64, gapTop: 33, isReview: true },
+  { kind: "nextup", title: "Using Variables", lessonId: "step-2", gapTop: 28 },
+  { kind: "node", id: "step-5", title: "Setting Variables", state: "locked", zig: 3, gapTop: 31 },
+  { kind: "node", id: "step-6", title: "Setting Variables", state: "locked", zig: -43, gapTop: 41 },
+  { kind: "node", id: "step-7", title: "Setting Variables", state: "locked", zig: -113, gapTop: 42 },
+  { kind: "node", id: "step-8", title: "Setting Variables", state: "locked", zig: -159, gapTop: 42 },
+  { kind: "node", id: "step-9", title: "Setting Variables", state: "locked", zig: -123, gapTop: 41 },
+  { kind: "node", id: "step-10", title: "Level Review", state: "locked", zig: -43, gapTop: 41, isReview: true },
+];
 
-  const handleStartLesson = (stepId: string = "step-2") => {
-    router.push(`/learn/${moduleId}/${stepId}`);
-  };
+const DISC_SIZE = { completed: 76, active: 76, locked: 72 } as const;
+
+// ── Node disc ───────────────────────────────────────────────────────────────
+function NodeDisc({
+  state,
+  size,
+  isReview,
+}: {
+  state: NodeState;
+  size: number;
+  isReview?: boolean;
+}) {
+  const box = { width: size, height: size };
+  const lift = "shadow-[0_5px_12px_rgba(0,0,0,0.45)]";
+
+  if (state === "completed") {
+    return (
+      <div
+        style={box}
+        className={`shrink-0 rounded-full bg-gradient-to-b from-[#6BC95F] to-[#55AE4A] ${lift} flex items-center justify-center`}
+      >
+        <IconCheck size={30} stroke={3.2} className="text-white" />
+      </div>
+    );
+  }
+
+  if (state === "active") {
+    return (
+      <div
+        style={box}
+        className={`shrink-0 rounded-full bg-gradient-to-b from-[#F5BB4D] to-[#E09E2A] ${lift} flex items-center justify-center`}
+      >
+        <IconStarFilled size={26} className="text-white" />
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0F0F10] text-black dark:text-white flex flex-col font-sans transition-colors duration-200 selection:bg-[#22C55E]/20 selection:text-[#22C55E]">
-      {/* About Modal */}
-      <AboutModal
-        isOpen={isAboutOpen}
-        onClose={() => setIsAboutOpen(false)}
-      />
+    <div
+      style={box}
+      className={`shrink-0 rounded-full bg-gradient-to-b from-[#F1F1F1] to-[#DCDCDC] ${lift} flex items-center justify-center`}
+    >
+      {isReview ? (
+        <IconBarbell size={26} stroke={2} className="text-[#9A9AA1]" />
+      ) : (
+        <IconLockFilled size={22} className="text-[#9A9AA1]" />
+      )}
+    </div>
+  );
+}
 
-      {/* App Top Navbar */}
-      <AppNavbar
-        activeTab="courses"
-        user={mockUserProfile}
-        onOpenStreakModal={() => handleStartLesson("step-2")}
-        onOpenAbout={() => setIsAboutOpen(true)}
-      />
+export default function ModulePathPage() {
+  const urlParams = useParams();
+  const moduleId = (urlParams?.moduleId as string) || "mod-2";
 
-      {/* Sub Header Navigation */}
-      <div className="border-b border-gray-200 dark:border-zinc-800/80 bg-gray-50 dark:bg-[#141416] transition-colors">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+  const path = foundationalLearningPath;
+  const mod =
+    path.modules.find((m) => m.id === moduleId) || path.modules[1] || path.modules[0];
+
+  return (
+    <div className="min-h-screen bg-[#0d0d0f] text-white flex flex-col font-sans">
+      <AppNavbar activeTab="courses" user={mockUserProfile} />
+
+      {/* ── Breadcrumb ── */}
+      <div className="border-b border-white/[0.06]">
+        <div className="max-w-[1118px] mx-auto px-6 py-5 flex items-center gap-2.5">
           <Link
             href="/courses"
-            className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white transition-colors cursor-pointer"
+            className="inline-flex items-center gap-2 text-[15px] text-[#8b8b93] hover:text-white transition-colors"
           >
-            <IconArrowLeft size={16} stroke={2} />
-            <span>Barcha kurslarga qaytish</span>
+            <IconArrowLeft size={18} />
+            Courses
           </Link>
-          <div className="flex items-center gap-2 text-xs font-mono text-gray-500 dark:text-gray-400">
-            <span className="text-[#22C55E] font-bold">{currentModule.level}</span>
-            <span>•</span>
-            <span>{currentModule.progressPercent}% yakunlandi</span>
-          </div>
+          <span className="text-[#3a3a41] text-[15px]">/</span>
+          <span className="text-[15px] text-[#c9c9d0]">{mod.title}</span>
         </div>
       </div>
 
-      {/* Main Roadmap Content matching Screenshot 1 with Primary Green Branding */}
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-start">
-          
-          {/* ========================================================= */}
-          {/* LEFT COLUMN: Module Summary Card (Theme-adaptive)        */}
-          {/* ========================================================= */}
-          <div className="lg:col-span-5 flex flex-col gap-6">
-            <div className="bg-white dark:bg-[#19191C] rounded-[15px] border-2 border-gray-200 dark:border-zinc-800 p-6 sm:p-7 shadow-sm relative overflow-hidden transition-colors">
-              {/* Subtle top background green glow */}
-              <div className="absolute top-0 right-0 w-36 h-36 bg-[#22C55E]/10 rounded-full blur-3xl pointer-events-none" />
+      <main className="flex-1 max-w-[1118px] w-full mx-auto px-6 py-[52px]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-11 lg:gap-[72px] items-start">
 
-              {/* 3D Module Icon / Printer Visual */}
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-[14px] bg-gray-50 dark:bg-[#24242A] border border-gray-200 dark:border-zinc-700/80 flex items-center justify-center p-3 mb-5 shadow-xs">
-                <Image
-                  src={currentModule.imageSrc || "/images/loops.png"}
-                  alt={currentModule.title}
-                  width={64}
-                  height={64}
-                  className="w-full h-full object-contain"
-                />
-              </div>
+          {/* ══ LEFT: module summary card ══ */}
+          <div className="rounded-[26px] border border-[#2b2b31] bg-[#101013] p-7">
+            <Image
+              src={mod.imageSrc || "/images/loops.png"}
+              alt={mod.title}
+              width={72}
+              height={72}
+              className="w-[72px] h-[72px] object-contain"
+            />
 
-              {/* Title & Description */}
-              <h1 className="text-xl sm:text-2xl font-extrabold text-black dark:text-white tracking-tight mb-2">
-                {currentModule.title}
-              </h1>
-              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-6">
-                {currentModule.description ||
-                  "Supercharge your programming skills with variables, sequences, and logic loops."}
-              </p>
+            <h1 className="mt-6 text-[26px] font-bold leading-tight text-white">
+              {mod.title}
+            </h1>
+            <p className="mt-2.5 text-[15px] leading-[1.65] text-[#8b8b93]">
+              {mod.description}
+            </p>
 
-              {/* Badges / Stats Row */}
-              <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-gray-100 dark:border-zinc-800 text-xs font-semibold text-gray-600 dark:text-gray-300">
-                <div className="flex items-center gap-1.5">
-                  <IconBook size={16} className="text-[#22C55E]" />
-                  <span>15 Darslar</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <IconCode size={16} className="text-[#22C55E]" />
-                  <span>150 Mashqlar</span>
-                </div>
-              </div>
+            <div className="mt-7 h-px bg-[#2b2b31]" />
+
+            <div className="mt-5 flex items-center gap-7 text-[15px] text-[#9a9aa2]">
+              <span className="inline-flex items-center gap-2">
+                <IconBook size={18} stroke={1.8} className="text-[#7a7a83]" />
+                15 Lessons
+              </span>
+              <span className="inline-flex items-center gap-2">
+                <IconDumbbell size={18} stroke={1.8} className="text-[#7a7a83]" />
+                150 Exercises
+              </span>
             </div>
           </div>
 
-          {/* ========================================================= */}
-          {/* RIGHT COLUMN: Interactive Nodes Roadmap (Green Primary)   */}
-          {/* ========================================================= */}
-          <div className="lg:col-span-7 flex flex-col items-center">
-            
-            {/* Level Banner Pill (Primary Green Theme) */}
-            <div className="w-full max-w-md bg-green-50/80 dark:bg-[#121c16] border-2 border-green-500/50 rounded-[15px] p-3 text-center mb-10 shadow-[0_0_20px_rgba(34,197,94,0.15)] transition-colors">
-              <span className="text-[11px] font-mono font-bold tracking-widest text-[#22C55E] uppercase block">
-                BOSQICH 1
-              </span>
-              <span className="text-sm font-bold text-black dark:text-white tracking-tight">
-                {currentModule.titleEn || "Variables & Logic"}
-              </span>
-            </div>
-
-            {/* Vertical Path of Interactive Nodes */}
-            <div className="flex flex-col items-center gap-12 w-full max-w-md relative my-2">
-              
-              {/* Connecting dashed line behind nodes */}
-              <div className="absolute left-1/2 top-8 bottom-8 -translate-x-1/2 w-0.5 border-l-2 border-dashed border-gray-300 dark:border-zinc-800 pointer-events-none z-0" />
-
-              {/* Node 1: Completed (Green checkmark pedestal) */}
-              <div
-                onClick={() => handleStartLesson("step-1")}
-                className="relative z-10 flex items-center justify-between w-full p-2 group cursor-pointer"
-              >
-                <div className="flex items-center gap-5 mx-auto">
-                  {/* 3D Circular Pedestal (Completed - Green) */}
-                  <div className="relative w-16 h-12 flex items-center justify-center">
-                    {/* Shadow disc */}
-                    <div className="absolute inset-0 rounded-full bg-green-900/40 blur-xs translate-y-2" />
-                    {/* Disc base */}
-                    <div className="relative w-14 h-10 rounded-full bg-gradient-to-b from-[#4ade80] to-[#15803d] border-2 border-green-300 flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
-                      <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center shadow-xs">
-                        <IconCircleCheckFilled size={18} className="text-[#15803d]" />
-                      </div>
+          {/* ══ RIGHT: snaking lesson path ══ */}
+          <div className="flex flex-col">
+            {PATH_ITEMS.map((item, idx) => {
+              if (item.kind === "level") {
+                return (
+                  <div
+                    key={`level-${item.num}`}
+                    style={{ marginTop: item.gapTop }}
+                    className="rounded-[16px] border-2 border-[#22C55E] px-5 py-4 text-center"
+                  >
+                    <div className="text-[11px] font-mono font-bold uppercase leading-none tracking-[0.22em] text-[#8b8b93]">
+                      Level {item.num}
+                    </div>
+                    <div className="mt-1.5 text-[16px] font-bold leading-none text-white">
+                      {item.title}
                     </div>
                   </div>
-                  <span className="text-sm font-bold text-gray-700 dark:text-gray-300 group-hover:text-[#22C55E] transition-colors">
-                    {nodes[0].title}
-                  </span>
-                </div>
-              </div>
+                );
+              }
 
-              {/* Node 2: Active (Screenshot 1 center with glowing pedestal and green cube mascot) */}
-              <div
-                onClick={() => handleStartLesson("step-2")}
-                className="relative z-10 flex items-center justify-between w-full p-2 group cursor-pointer"
-              >
-                <div className="flex items-center gap-5 mx-auto">
-                  {/* Glowing 3D Pedestal + Floating Mascot */}
-                  <div className="relative w-20 h-20 flex flex-col items-center justify-center">
-                    {/* Ambient Glow */}
-                    <div className="absolute inset-0 rounded-full bg-[#22C55E]/30 blur-md translate-y-3" />
-                    
-                    {/* Floating Green Cube / Diamond Mascot */}
-                    <div className="relative z-20 -mb-2 animate-bounce">
-                      <div className="w-8 h-8 rounded-[8px] bg-gradient-to-tr from-[#15803d] to-[#22C55E] border border-[#86efac] shadow-lg flex items-center justify-center rotate-45">
-                        <div className="w-3 h-3 bg-black rounded-[2px] -rotate-45" />
-                      </div>
+              if (item.kind === "nextup") {
+                return (
+                  <Link
+                    key={`nextup-${idx}`}
+                    href={`/learn/${moduleId}/${item.lessonId}`}
+                    style={{ marginTop: item.gapTop }}
+                    className="block rounded-[16px] border border-[#2b2b31] bg-[#16161a] px-6 py-4 hover:border-[#3d3d45] transition-colors"
+                  >
+                    <div className="text-[13px] text-[#8b8b93]">Next up</div>
+                    <div className="mt-0.5 text-[16px] font-bold text-white">
+                      {item.title}
                     </div>
+                  </Link>
+                );
+              }
 
-                    {/* Disc Pedestal Base (Green gradient) */}
-                    <div className="relative z-10 w-16 h-10 rounded-full bg-gradient-to-b from-[#22C55E] to-[#14532d] border-2 border-green-300/80 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
-                      <div className="w-10 h-6 rounded-full bg-white/90 shadow-inner flex items-center justify-center" />
-                    </div>
-                  </div>
+              const isLocked = item.state === "locked";
+              const size = DISC_SIZE[item.state];
 
-                  <span className="text-sm font-extrabold text-black dark:text-white group-hover:text-[#22C55E] transition-colors">
-                    {nodes[1].title}
-                  </span>
+              /*
+               * The disc — not the disc+label group — is what has to land on the
+               * trail, so it is absolutely placed at the column centre plus its
+               * offset. Narrow screens use a damped offset so nothing escapes.
+               */
+              const anchor = {
+                "--x": `calc(50% + ${item.zig}px - ${size / 2}px)`,
+                "--x-sm": `calc(50% + ${Math.round(item.zig * 0.45)}px - ${size / 2}px)`,
+                marginTop: item.gapTop,
+                height: size,
+              } as React.CSSProperties;
+
+              return (
+                <div key={item.id} className="relative w-full" style={anchor}>
+                  <Link
+                    href={isLocked ? "#" : `/learn/${moduleId}/${item.id}`}
+                    aria-disabled={isLocked}
+                    tabIndex={isLocked ? -1 : undefined}
+                    onClick={(e) => isLocked && e.preventDefault()}
+                    className={`absolute top-0 left-[var(--x-sm)] lg:left-[var(--x)] flex items-center gap-5 rounded-full ${
+                      isLocked
+                        ? "cursor-default"
+                        : "cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#22C55E]"
+                    }`}
+                  >
+                    <NodeDisc state={item.state} size={size} isReview={item.isReview} />
+                    <span
+                      className={`text-[15px] whitespace-nowrap ${
+                        item.state === "active"
+                          ? "font-bold text-white"
+                          : item.isReview
+                          ? "font-medium text-[#6d6d74]"
+                          : "font-medium text-[#c9c9d0]"
+                      }`}
+                    >
+                      {item.title}
+                    </span>
+                  </Link>
                 </div>
-              </div>
-
-              {/* Node 3: Upcoming (Screenshot 1 lower) */}
-              <div
-                onClick={() => handleStartLesson("step-3")}
-                className="relative z-10 flex items-center justify-between w-full p-2 group cursor-pointer"
-              >
-                <div className="flex items-center gap-5 mx-auto">
-                  {/* Gray Metallic Disc Base */}
-                  <div className="relative w-16 h-12 flex items-center justify-center">
-                    <div className="absolute inset-0 rounded-full bg-gray-400/30 dark:bg-zinc-900/60 blur-xs translate-y-2" />
-                    <div className="relative w-14 h-10 rounded-full bg-gradient-to-b from-gray-200 to-gray-400 dark:from-zinc-600 dark:to-zinc-800 border-2 border-gray-300 dark:border-zinc-500/80 flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
-                      <div className="w-8 h-5 rounded-full bg-gray-100 dark:bg-zinc-400/80 shadow-inner" />
-                    </div>
-                  </div>
-                  <span className="text-sm font-semibold text-gray-400 dark:text-zinc-500 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors">
-                    {nodes[2].title}
-                  </span>
-                </div>
-              </div>
-
-            </div>
-
-            {/* Bottom Action Card (Theme-adaptive + Green Primary Button) */}
-            <div className="w-full max-w-md bg-white dark:bg-[#19191C] rounded-[15px] border-2 border-gray-200 dark:border-zinc-800 p-5 mt-6 shadow-sm text-center space-y-4 transition-colors">
-              <h3 className="text-base font-extrabold text-black dark:text-white">
-                {nodes[1].title}
-              </h3>
-
-              <button
-                type="button"
-                onClick={() => handleStartLesson("step-2")}
-                className="w-full py-3.5 rounded-[15px] bg-[#22C55E] hover:bg-[#16a34a] text-white text-sm sm:text-base font-extrabold shadow-[0_4px_0_0_#15803d] active:shadow-none active:translate-y-1 transition-all cursor-pointer select-none flex items-center justify-center gap-2"
-              >
-                <IconPlayerPlay size={18} fill="white" />
-                <span>Boshlash (Start)</span>
-              </button>
-            </div>
-
+              );
+            })}
           </div>
 
         </div>

@@ -82,7 +82,7 @@ const config: Config = {
         ],
         sans: [
           "var(--font-sans)",
-          "Outfit",
+          "Plus Jakarta Sans",
           "Inter",
           "-apple-system",
           "BlinkMacSystemFont",

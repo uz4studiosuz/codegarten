@@ -235,7 +235,7 @@ export const AuthModal: React.FC = () => {
 
         setTimeout(() => {
           completeAuth(
-            firstName ? `${firstName} ${lastName}`.trim() : "Abdulloh",
+            firstName ? `${firstName} ${lastName}`.trim() : "Ziyodulloh",
             `+998 ${pendingPhone || phone}`
           );
         }, 1000);
@@ -282,7 +282,7 @@ export const AuthModal: React.FC = () => {
         birthDate,
         region: selectedRegionName,
         district: selectedDistrict,
-        phoneOrEmail: pendingPhone ? `+998 ${pendingPhone}` : email || "abdulloh@codegarten.uz",
+        phoneOrEmail: pendingPhone ? `+998 ${pendingPhone}` : email || "Ziyodulloh@codegarten.uz",
       });
 
       setTimeout(() => {
@@ -294,7 +294,7 @@ export const AuthModal: React.FC = () => {
 
   const completeAuth = (name: string, phoneOrEmail: string) => {
     login({
-      name: name || "Abdulloh",
+      name: name || "Ziyodulloh",
       phoneOrEmail,
     });
     closeAuthModal();
@@ -330,7 +330,7 @@ export const AuthModal: React.FC = () => {
         <div className="flex flex-col items-center justify-center mb-5">
           <div className="relative flex items-center justify-center mb-2">
             <div className="absolute w-20 h-20 bg-[#29CC57]/20 rounded-full blur-xl pointer-events-none" />
-            
+
             <div className="relative w-13 h-13 transform hover:scale-105 transition-transform duration-300">
               <Image
                 src="/Logo.svg"
@@ -348,19 +348,19 @@ export const AuthModal: React.FC = () => {
             {mode === "profile"
               ? "Profilingizni to'ldiring"
               : mode === "login"
-              ? "Kirish"
-              : mode === "register"
-              ? "Ro'yxatdan o'tish"
-              : "Tasdiqlash"}
+                ? "Kirish"
+                : mode === "register"
+                  ? "Ro'yxatdan o'tish"
+                  : "Tasdiqlash"}
           </h2>
           <p className="text-xs text-gray-500 text-center mt-1 max-w-sm">
             {mode === "profile"
               ? "Codegarten imkoniyatlaridan to'liq foydalanish uchun profilingiz ma'lumotlarini to'ldiring"
               : mode === "login"
-              ? "Codegarten hisobingizga kiring"
-              : mode === "register"
-              ? "Yangi hisob oching va ta'limni boshlang"
-              : "Telefoningizga yuborilgan kodni kiriting"}
+                ? "Codegarten hisobingizga kiring"
+                : mode === "register"
+                  ? "Yangi hisob oching va ta'limni boshlang"
+                  : "Telefoningizga yuborilgan kodni kiriting"}
           </p>
         </div>
 
@@ -447,7 +447,7 @@ export const AuthModal: React.FC = () => {
                 <IconMapPin size={14} className="text-gray-400" />
                 <span>Manzil (Viloyat va Tuman/Shahar)</span>
               </label>
-              
+
               <div className="space-y-2">
                 {/* 1. Viloyat Tanlash */}
                 <div className="relative">
@@ -629,11 +629,10 @@ export const AuthModal: React.FC = () => {
                   setTab("phone");
                   setErrorMessage("");
                 }}
-                className={`flex-1 py-2 text-xs font-semibold rounded-full transition-all duration-150 flex items-center justify-center gap-1.5 cursor-pointer ${
-                  tab === "phone"
+                className={`flex-1 py-2 text-xs font-semibold rounded-full transition-all duration-150 flex items-center justify-center gap-1.5 cursor-pointer ${tab === "phone"
                     ? "bg-white text-[#121212] shadow-xs font-bold"
                     : "text-gray-500 hover:text-[#121212]"
-                }`}
+                  }`}
               >
                 <IconPhone size={15} stroke={2} />
                 <span>Telefon</span>
@@ -644,11 +643,10 @@ export const AuthModal: React.FC = () => {
                   setTab("email");
                   setErrorMessage("");
                 }}
-                className={`flex-1 py-2 text-xs font-semibold rounded-full transition-all duration-150 flex items-center justify-center gap-1.5 cursor-pointer ${
-                  tab === "email"
+                className={`flex-1 py-2 text-xs font-semibold rounded-full transition-all duration-150 flex items-center justify-center gap-1.5 cursor-pointer ${tab === "email"
                     ? "bg-white text-[#121212] shadow-xs font-bold"
                     : "text-gray-500 hover:text-[#121212]"
-                }`}
+                  }`}
               >
                 <IconMail size={15} stroke={2} />
                 <span>Email</span>
@@ -687,11 +685,10 @@ export const AuthModal: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setMethod("sms")}
-                      className={`py-2.5 px-3 rounded-2xl border text-xs font-semibold transition-all duration-150 flex items-center justify-center gap-2 cursor-pointer ${
-                        method === "sms"
+                      className={`py-2.5 px-3 rounded-2xl border text-xs font-semibold transition-all duration-150 flex items-center justify-center gap-2 cursor-pointer ${method === "sms"
                           ? "bg-[#e6f4ea] border-[#00872e] text-[#00872e]"
                           : "bg-white border-gray-200 text-gray-600 hover:border-gray-300"
-                      }`}
+                        }`}
                     >
                       <IconMessage size={15} stroke={2} />
                       <span>SMS orqali</span>
@@ -699,11 +696,10 @@ export const AuthModal: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setMethod("telegram")}
-                      className={`py-2.5 px-3 rounded-2xl border text-xs font-semibold transition-all duration-150 flex items-center justify-center gap-2 cursor-pointer ${
-                        method === "telegram"
+                      className={`py-2.5 px-3 rounded-2xl border text-xs font-semibold transition-all duration-150 flex items-center justify-center gap-2 cursor-pointer ${method === "telegram"
                           ? "bg-[#e6f4ea] border-[#00872e] text-[#00872e]"
                           : "bg-white border-gray-200 text-gray-600 hover:border-gray-300"
-                      }`}
+                        }`}
                     >
                       <IconSend size={15} stroke={2} />
                       <span>Telegram orqali</span>
@@ -814,10 +810,10 @@ export const AuthModal: React.FC = () => {
                   {isSubmitting
                     ? "Yuklanmoqda..."
                     : mode === "login"
-                    ? tab === "phone"
-                      ? "Kodni olish va Kirish"
-                      : "Kirish"
-                    : "Ro'yxatdan o'tish"}
+                      ? tab === "phone"
+                        ? "Kodni olish va Kirish"
+                        : "Kirish"
+                      : "Ro'yxatdan o'tish"}
                 </button>
               </div>
             </form>

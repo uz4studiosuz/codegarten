@@ -67,8 +67,8 @@ export interface LearningPath {
 // -------------------------------------------------------------
 
 export const mockUserProfile: UserProfileMock = {
-  name: "Abdulloh",
-  email: "abdulloh@codegarten.uz",
+  name: "Ziyodulloh",
+  email: "Ziyodulloh@codegarten.uz",
   streakDays: 2,
   xpPoints: 480,
   level: 1,

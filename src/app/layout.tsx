@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { Outfit, Lora, JetBrains_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans, Lora, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { AppProviders } from "@/components/providers/AppProviders";
 
-const outfit = Outfit({
+const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800"],
   variable: "--font-sans",
@@ -67,8 +67,25 @@ export default function RootLayout({
   return (
     <html
       lang="uz"
-      className={`${outfit.variable} ${lora.variable} ${jetbrainsMono.variable}`}
+      className={`dark ${plusJakartaSans.variable} ${lora.variable} ${jetbrainsMono.variable}`}
+      suppressHydrationWarning
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                const theme = localStorage.getItem('codegarten_theme') || 'dark';
+                if (theme === 'dark') {
+                  document.documentElement.classList.add('dark');
+                } else {
+                  document.documentElement.classList.remove('dark');
+                }
+              } catch (e) {}
+            `,
+          }}
+        />
+      </head>
       <body className="bg-white dark:bg-[#141414] text-black dark:text-white font-sans min-h-screen antialiased selection:bg-[#22C55E]/20 selection:text-[#22C55E] transition-colors duration-200">
         <AppProviders>
           {children}

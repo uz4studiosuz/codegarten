@@ -208,7 +208,7 @@ export const AuthCard: React.FC<AuthCardProps> = ({ initialMode = "login" }) => 
 
         setTimeout(() => {
           completeAuth(
-            firstName ? `${firstName} ${lastName}`.trim() : "Abdulloh",
+            firstName ? `${firstName} ${lastName}`.trim() : "Ziyodulloh",
             `+998 ${phone}`
           );
         }, 800);
@@ -255,7 +255,7 @@ export const AuthCard: React.FC<AuthCardProps> = ({ initialMode = "login" }) => 
         birthDate,
         region: selectedRegionName,
         district: selectedDistrict,
-        phoneOrEmail: phone ? `+998 ${phone}` : email || "abdulloh@codegarten.uz",
+        phoneOrEmail: phone ? `+998 ${phone}` : email || "Ziyodulloh@codegarten.uz",
       });
 
       setTimeout(() => {
@@ -266,7 +266,7 @@ export const AuthCard: React.FC<AuthCardProps> = ({ initialMode = "login" }) => 
 
   const completeAuth = (name: string, phoneOrEmail: string) => {
     login({
-      name: name || "Abdulloh",
+      name: name || "Ziyodulloh",
       phoneOrEmail,
     });
     router.push("/home");
@@ -328,21 +328,21 @@ export const AuthCard: React.FC<AuthCardProps> = ({ initialMode = "login" }) => 
             {mode === "profile"
               ? "Profilingizni to'ldiring"
               : mode === "login"
-              ? "Xush kelibsiz!"
-              : mode === "register"
-              ? "Ro'yxatdan o'tish"
-              : "Tasdiqlash"}
+                ? "Xush kelibsiz!"
+                : mode === "register"
+                  ? "Ro'yxatdan o'tish"
+                  : "Tasdiqlash"}
           </h1>
           <p className="text-xs sm:text-sm text-gray-500 dark:text-zinc-400 text-center mt-1 max-w-sm font-sans">
             {mode === "profile"
               ? "Codegarten imkoniyatlaridan to'liq foydalanish uchun ma'lumotlaringizni to'ldiring"
               : mode === "login"
-              ? "Codegarten hisobingizga kiring va darslarni davom ettiring"
-              : mode === "register"
-              ? "Yangi hisob oching va amaliy ta'limni boshlang"
-              : method === "telegram"
-              ? "Telegramingizga yuborilgan 6 xonali kodni kiriting"
-              : "Telefoningizga yuborilgan 6 xonali SMS kodni kiriting"}
+                ? "Codegarten hisobingizga kiring va darslarni davom ettiring"
+                : mode === "register"
+                  ? "Yangi hisob oching va amaliy ta'limni boshlang"
+                  : method === "telegram"
+                    ? "Telegramingizga yuborilgan 6 xonali kodni kiriting"
+                    : "Telefoningizga yuborilgan 6 xonali SMS kodni kiriting"}
           </p>
         </div>
 
@@ -531,11 +531,10 @@ export const AuthCard: React.FC<AuthCardProps> = ({ initialMode = "login" }) => 
                   onChange={(e) => handleOtpChange(idx, e.target.value)}
                   onKeyDown={(e) => handleOtpKeyDown(idx, e)}
                   onPaste={idx === 0 ? handleOtpPaste : undefined}
-                  className={`w-10 h-12 sm:w-12 sm:h-14 text-center font-mono font-bold text-lg rounded-2xl border bg-gray-50 dark:bg-zinc-800 text-black dark:text-white outline-none transition-all ${
-                    digit
+                  className={`w-10 h-12 sm:w-12 sm:h-14 text-center font-mono font-bold text-lg rounded-2xl border bg-gray-50 dark:bg-zinc-800 text-black dark:text-white outline-none transition-all ${digit
                       ? "border-[#22C55E] ring-2 ring-[#22C55E]/20"
                       : "border-gray-200 dark:border-zinc-700 focus:border-[#22C55E]"
-                  }`}
+                    }`}
                 />
               ))}
             </div>
@@ -591,11 +590,10 @@ export const AuthCard: React.FC<AuthCardProps> = ({ initialMode = "login" }) => 
                   setTab("phone");
                   setErrorMessage("");
                 }}
-                className={`py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer select-none ${
-                  tab === "phone"
+                className={`py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer select-none ${tab === "phone"
                     ? "bg-white dark:bg-black text-black dark:text-white shadow-xs"
                     : "text-gray-500 dark:text-zinc-400 hover:text-black dark:hover:text-white"
-                }`}
+                  }`}
               >
                 <IconPhone size={15} stroke={2} />
                 <span>Telefon</span>
@@ -609,11 +607,10 @@ export const AuthCard: React.FC<AuthCardProps> = ({ initialMode = "login" }) => 
                   setTab("email");
                   setErrorMessage("");
                 }}
-                className={`py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer select-none ${
-                  tab === "email"
+                className={`py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer select-none ${tab === "email"
                     ? "bg-white dark:bg-black text-black dark:text-white shadow-xs"
                     : "text-gray-500 dark:text-zinc-400 hover:text-black dark:hover:text-white"
-                }`}
+                  }`}
               >
                 <IconMail size={15} stroke={2} />
                 <span>Email</span>
@@ -651,11 +648,10 @@ export const AuthCard: React.FC<AuthCardProps> = ({ initialMode = "login" }) => 
                       <button
                         type="button"
                         onClick={() => setMethod("sms")}
-                        className={`py-2 px-3 rounded-xl border text-xs font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-                          method === "sms"
+                        className={`py-2 px-3 rounded-xl border text-xs font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${method === "sms"
                             ? "bg-[#22C55E]/10 border-[#22C55E] text-[#22C55E] font-bold"
                             : "bg-gray-50 dark:bg-zinc-800 border-gray-200 dark:border-zinc-700 text-gray-500 dark:text-zinc-400 hover:border-gray-300"
-                        }`}
+                          }`}
                       >
                         <IconMessage size={15} stroke={2} />
                         <span>SMS orqali</span>
@@ -664,11 +660,10 @@ export const AuthCard: React.FC<AuthCardProps> = ({ initialMode = "login" }) => 
                       <button
                         type="button"
                         onClick={() => setMethod("telegram")}
-                        className={`py-2 px-3 rounded-xl border text-xs font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-                          method === "telegram"
+                        className={`py-2 px-3 rounded-xl border text-xs font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${method === "telegram"
                             ? "bg-[#22C55E]/10 border-[#22C55E] text-[#22C55E] font-bold"
                             : "bg-gray-50 dark:bg-zinc-800 border-gray-200 dark:border-zinc-700 text-gray-500 dark:text-zinc-400 hover:border-gray-300"
-                        }`}
+                          }`}
                       >
                         <IconSend size={15} stroke={2} />
                         <span>Telegram SMS</span>
@@ -780,8 +775,8 @@ export const AuthCard: React.FC<AuthCardProps> = ({ initialMode = "login" }) => 
                 {isSubmitting
                   ? "Yuklanmoqda..."
                   : mode === "login"
-                  ? "Kirish"
-                  : "Davom etish"}
+                    ? "Kirish"
+                    : "Davom etish"}
               </button>
             </form>
 
