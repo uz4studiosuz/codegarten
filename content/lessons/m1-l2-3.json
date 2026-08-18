@@ -1,0 +1,60 @@
+{
+  "goal": "Kodni qisqartirib, ortiqcha qadamlarni olib tashlashni o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Ortiqcha qadam nima",
+      "body": [
+        "Ba'zi buyruqlar natijaga hech qanday ta'sir qilmaydi. Masalan to'rt marta ketma-ket burilish robotni boshlang'ich yo'nalishga qaytaradi — ya'ni hech narsa o'zgarmaydi.",
+        "Bunday buyruqlarni olib tashlash optimization (optimallashtirish) deb ataladi."
+      ],
+      "code": {
+        "caption": "Ortiqcha burilishlar",
+        "lines": [
+          "// Ortiqcha:",
+          "o'ngga_buril()",
+          "o'ngga_buril()",
+          "o'ngga_buril()",
+          "o'ngga_buril()   // 360 daraja — hech narsa o'zgarmadi",
+          "",
+          "// Bu 4 qator umuman kerak emas"
+        ]
+      }
+    },
+    {
+      "heading": "Qisqa kod — yaxshi kod",
+      "body": [
+        "Qisqa kodni o'qish, tushunish va tuzatish osonroq. Lekin qisqartirish natijani o'zgartirmasligi shart — aks holda bu xato bo'ladi."
+      ],
+      "callout": "Qisqartirish natijani o'zgartirsa — bu optimallashtirish emas, buzilish."
+    }
+  ],
+  "terms": [
+    {
+      "en": "optimization",
+      "uz": "optimallashtirish",
+      "note": "Natijani saqlab, kodni qisqartirish yoki tezlashtirish."
+    },
+    {
+      "en": "redundant",
+      "uz": "ortiqcha",
+      "note": "Natijaga ta'sir qilmaydigan, keraksiz buyruq."
+    },
+    {
+      "en": "refactor",
+      "uz": "qayta tuzish",
+      "note": "Ishlashini o'zgartirmasdan kod tuzilishini yaxshilash."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Kodni qisqartirishda eng muhim shart nima?",
+      "options": [
+        "Qatorlar soni yarmiga kamayishi",
+        "Natija o'zgarmasligi",
+        "Barcha izohlarni o'chirish"
+      ],
+      "correctIndex": 1,
+      "explanation": "Optimallashtirish natijani saqlashi kerak. Natija o'zgarsa, bu qisqartirish emas."
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "goal": "Ko'p tarmoqli qaror daraxtini loyihalashtirasiz.",
+  "sections": [
+    {
+      "heading": "Qaror daraxti",
+      "body": [
+        "Decision tree (qaror daraxti) — bir necha ketma-ket shart orqali yakuniy natijaga olib boruvchi tuzilma.",
+        "Har shart daraxtni ikkiga bo'ladi. Uchta ketma-ket shart 8 tagacha turli natija berishi mumkin."
+      ],
+      "code": {
+        "caption": "Qaror daraxti",
+        "lines": [
+          "agar (ball >= 90) {",
+          "  baho = \"A\"",
+          "} aks holda agar (ball >= 75) {",
+          "  baho = \"B\"",
+          "} aks holda agar (ball >= 60) {",
+          "  baho = \"C\"",
+          "} aks holda {",
+          "  baho = \"F\"",
+          "}"
+        ]
+      }
+    },
+    {
+      "heading": "Tartib muhim",
+      "body": [
+        "else if zanjirida shartlar tartibi muhim: birinchi rost topilgan blok bajariladi va qolganlar tekshirilmaydi. Shuning uchun eng qat'iy shartni yuqoriga qo'yish kerak."
+      ],
+      "callout": "else if zanjirida birinchi rost shart g'olib chiqadi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "decision tree",
+      "uz": "qaror daraxti",
+      "note": "Ketma-ket shartlar orqali natijaga olib boruvchi tuzilma."
+    },
+    {
+      "en": "short-circuit",
+      "uz": "qisqa tutashuv",
+      "note": "Natija aniq bo'lgach qolgan shartlarni tekshirmaslik."
+    },
+    {
+      "en": "branch",
+      "uz": "tarmoq",
+      "note": "Qaror daraxtining bir yo'li."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "else if zanjirida ball = 95 bo'lsa qaysi blok bajariladi?",
+      "options": [
+        "Barcha rost shartlar",
+        "Faqat birinchi rost topilgan blok",
+        "Oxirgi blok"
+      ],
+      "correctIndex": 1,
+      "explanation": "Birinchi rost shart bajariladi, qolganlari umuman tekshirilmaydi."
+    }
+  ]
+}

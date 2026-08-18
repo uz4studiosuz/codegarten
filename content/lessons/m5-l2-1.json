@@ -1,0 +1,58 @@
+{
+  "goal": "Ma'lumot turlari va ular orasidagi farqni o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Har qiymatning turi bor",
+      "body": [
+        "Data type (ma'lumot turi) qiymat qanday saqlanishini va u bilan qanday amallar mumkinligini belgilaydi.",
+        "Asosiy turlar: number (son), string (matn), boolean (mantiqiy qiymat)."
+      ],
+      "code": {
+        "caption": "Uch asosiy tur",
+        "lines": [
+          "son = 42              // number (son)",
+          "matn = \"42\"           // string (matn)",
+          "mantiqiy = true       // boolean (mantiqiy)",
+          "",
+          "// Diqqat: 42 va \"42\" bir xil emas!"
+        ]
+      }
+    },
+    {
+      "heading": "Tur amalni o'zgartiradi",
+      "body": [
+        "+ amali sonlar uchun qo'shish, matnlar uchun ulash (concatenation — birlashtirish) ma'nosini bildiradi. Shu sababli 2 + 3 = 5, lekin \"2\" + \"3\" = \"23\"."
+      ],
+      "callout": "Bir xil amal turli turlarda turli ish bajaradi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "data type",
+      "uz": "ma'lumot turi",
+      "note": "Qiymatning turi — son, matn yoki mantiqiy."
+    },
+    {
+      "en": "string",
+      "uz": "matn",
+      "note": "Belgilar ketma-ketligi, qo'shtirnoq ichida yoziladi."
+    },
+    {
+      "en": "concatenation",
+      "uz": "birlashtirish",
+      "note": "Ikki matnni ulab bitta matn hosil qilish."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "\"2\" + \"3\" ifodasining natijasi qanday?",
+      "options": [
+        "5",
+        "\"23\"",
+        "Xato"
+      ],
+      "correctIndex": 1,
+      "explanation": "Bular matn, shuning uchun + ularni ulaydi: \"23\". Sonlar bo'lsa natija 5 bo'lardi."
+    }
+  ]
+}

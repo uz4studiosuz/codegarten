@@ -1,0 +1,61 @@
+{
+  "goal": "O(1) va O(N) murakkabliklarini solishtirishni o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Big-O yozuvi",
+      "body": [
+        "Big-O notation (Big-O yozuvi) algoritmning o'sish shaklini ifodalaydi. U eng yomon holatdagi qadamlar sonini bildiradi.",
+        "O(1) — constant time (doimiy vaqt): qadamlar soni ma'lumot hajmiga bog'liq emas.",
+        "O(n) — linear time (chiziqli vaqt): qadamlar soni ma'lumot hajmiga proporsional o'sadi."
+      ],
+      "code": {
+        "caption": "O(1) va O(n)",
+        "lines": [
+          "// O(1) — ro'yxat qanchalik katta bo'lsa ham 1 qadam",
+          "birinchi = ballar[0]",
+          "",
+          "// O(n) — har elementni ko'rish kerak",
+          "for (i = 0; i < n; i++) {",
+          "  agar (ballar[i] == izlanayotgan) return i",
+          "}"
+        ]
+      }
+    },
+    {
+      "heading": "Amaliy farq",
+      "body": [
+        "Ro'yxat 1000 barobar kattalashsa: O(1) algoritm bir xil tezlikda ishlaydi, O(n) algoritm esa 1000 barobar sekinlashadi."
+      ],
+      "callout": "O(1) hajmga bog'liq emas, O(n) hajm bilan proporsional o'sadi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "Big-O notation",
+      "uz": "Big-O yozuvi",
+      "note": "Algoritmning o'sish shaklini ifodalovchi yozuv."
+    },
+    {
+      "en": "constant time",
+      "uz": "doimiy vaqt",
+      "note": "O(1) — hajmga bog'liq bo'lmagan tezlik."
+    },
+    {
+      "en": "linear time",
+      "uz": "chiziqli vaqt",
+      "note": "O(n) — hajmga proporsional tezlik."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Ro'yxatning birinchi elementini olish qanday murakkablikka ega?",
+      "options": [
+        "O(n)",
+        "O(1)",
+        "O(n kvadrat)"
+      ],
+      "correctIndex": 1,
+      "explanation": "Indeks orqali murojaat bir qadamda bajariladi va ro'yxat hajmiga bog'liq emas."
+    }
+  ]
+}

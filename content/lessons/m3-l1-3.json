@@ -1,0 +1,62 @@
+{
+  "goal": "Bir funksiyani bir necha marta chaqirib, kodni qisqartirasiz.",
+  "sections": [
+    {
+      "heading": "Qayta ishlatish",
+      "body": [
+        "Funksiyaning asosiy foydasi — reusability (qayta ishlatiluvchanlik). Bir marta yozilgan mantiq cheksiz marta ishlatilishi mumkin.",
+        "Agar funksiya ichidagi kodni o'zgartirsangiz, uni chaqirgan barcha joylarda o'zgarish avtomatik aks etadi."
+      ],
+      "code": {
+        "caption": "Bir e'lon, uch chaqiruv",
+        "lines": [
+          "funksiya kvadrat_chiz() {",
+          "  repeat (4) { oldinga(50) o'ngga(90) }",
+          "}",
+          "",
+          "kvadrat_chiz()",
+          "oldinga(60)",
+          "kvadrat_chiz()",
+          "oldinga(60)",
+          "kvadrat_chiz()"
+        ]
+      }
+    },
+    {
+      "heading": "Bir joyda o'zgartirish",
+      "body": [
+        "Yuqoridagi misolda kvadrat o'lchamini o'zgartirish uchun faqat funksiya ichidagi bitta sonni o'zgartirish kifoya. Uchta joyni qidirib yurish kerak emas."
+      ],
+      "callout": "Funksiya — o'zgartirish nuqtasini bittaga kamaytiradi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "reusability",
+      "uz": "qayta ishlatiluvchanlik",
+      "note": "Bir kodni turli joylarda qayta ishlatish imkoni."
+    },
+    {
+      "en": "single point of change",
+      "uz": "yagona o'zgartirish nuqtasi",
+      "note": "Mantiqni faqat bir joyda o'zgartirish yetarliligi."
+    },
+    {
+      "en": "modularity",
+      "uz": "modullik",
+      "note": "Kodni mustaqil, almashtiriladigan bo'laklarga ajratish."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Funksiya ichidagi kodni o'zgartirsak, uni chaqirgan joylarda nima bo'ladi?",
+      "options": [
+        "Hech narsa o'zgarmaydi",
+        "Barcha chaqiruvlarda o'zgarish aks etadi",
+        "Xato yuzaga keladi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Mantiq bitta joyda saqlanadi, shuning uchun o'zgarish barcha chaqiruvlarga tarqaladi."
+    }
+  ]
+}

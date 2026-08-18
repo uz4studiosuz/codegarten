@@ -1,0 +1,61 @@
+{
+  "goal": "Chiziqli qidiruv qanday ishlashini va uning cheklovini o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Boshdan oxirigacha",
+      "body": [
+        "Linear search (chiziqli qidiruv) — eng oddiy qidirish usuli: elementlarni birinchisidan boshlab birma-bir tekshirib borish.",
+        "Uning katta afzalligi bor: ro'yxat tartiblangan bo'lishi shart emas. Kamchiligi — sekin."
+      ],
+      "code": {
+        "caption": "Chiziqli qidiruv",
+        "lines": [
+          "funksiya chiziqli_qidiruv(ro'yxat, maqsad) {",
+          "  for (i = 0; i < ro'yxat.uzunlik; i++) {",
+          "    agar (ro'yxat[i] == maqsad) {",
+          "      return i",
+          "    }",
+          "  }",
+          "  return -1     // topilmadi",
+          "}"
+        ]
+      }
+    },
+    {
+      "heading": "Eng yomon holat",
+      "body": [
+        "Izlanayotgan element oxirida bo'lsa yoki umuman bo'lmasa, barcha n elementni ko'rishga to'g'ri keladi. Shuning uchun murakkablik O(n)."
+      ],
+      "callout": "Chiziqli qidiruv: O(n), lekin tartiblash talab qilmaydi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "linear search",
+      "uz": "chiziqli qidiruv",
+      "note": "Elementlarni birma-bir tekshirib qidirish usuli."
+    },
+    {
+      "en": "worst case",
+      "uz": "eng yomon holat",
+      "note": "Algoritm eng ko'p qadam bajaradigan vaziyat."
+    },
+    {
+      "en": "unsorted",
+      "uz": "tartiblanmagan",
+      "note": "Elementlari tartibga solinmagan ro'yxat."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Chiziqli qidiruvning afzalligi nima?",
+      "options": [
+        "Juda tez ishlaydi",
+        "Ro'yxat tartiblangan bo'lishi shart emas",
+        "Xotira sarflamaydi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Chiziqli qidiruv har qanday ro'yxatda ishlaydi, lekin O(n) — sekin."
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "goal": "4-modul: shartlar va mantiq bo'yicha yakuniy takrorlash.",
+  "sections": [
+    {
+      "heading": "Modul xulosasi",
+      "body": [
+        "Boolean (mantiqiy tur) — true va false; taqqoslash amallari shu qiymatlarni hosil qiladi.",
+        "Tarmoqlanish (branching) boshqaruv oqimini (control flow) boshqaradi.",
+        "if / else dan aynan bittasi bajariladi; else if ko'p variant beradi.",
+        "AND (VA), OR (YOKI), NOT (EMAS) shartlarni birlashtiradi; qavs tartibni aniqlaydi.",
+        "Qaror daraxtida (decision tree) birinchi rost shart g'olib chiqadi."
+      ],
+      "callout": "Endi ma'lumotni xotirada saqlashga — o'zgaruvchilarga o'tamiz."
+    }
+  ],
+  "terms": [
+    {
+      "en": "boolean",
+      "uz": "mantiqiy tur",
+      "note": "true / false qiymati."
+    },
+    {
+      "en": "branching",
+      "uz": "tarmoqlanish",
+      "note": "Yo'l tanlash."
+    },
+    {
+      "en": "logical operator",
+      "uz": "mantiqiy amal",
+      "note": "Shartlarni birlashtirish."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "false YOKI true ifodasining natijasi qanday?",
+      "options": [
+        "false",
+        "true",
+        "Xato"
+      ],
+      "correctIndex": 1,
+      "explanation": "OR uchun kamida bitta shart rost bo'lishi yetarli."
+    },
+    {
+      "question": "Control flow nima?",
+      "options": [
+        "Kod hajmi",
+        "Kodning bajarilish yo'li",
+        "Xotira miqdori"
+      ],
+      "correctIndex": 1,
+      "explanation": "Control flow — qaysi qatorlar qanday tartibda bajarilishini bildiradi."
+    },
+    {
+      "question": "AND amali qachon rost qiymat beradi?",
+      "options": [
+        "Kamida bittasi rost bo'lsa",
+        "Barcha shartlar rost bo'lsa",
+        "Hech biri rost bo'lmasa"
+      ],
+      "correctIndex": 1,
+      "explanation": "AND barcha shartlar rost bo'lishini talab qiladi."
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "goal": "Algoritm bajaradigan qadamlar sonini sanashni o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Qadamlarni sanash",
+      "body": [
+        "Qadam sanashda ma'lumot hajmini n deb belgilaymiz va algoritm nechta amal bajarishini n orqali ifodalaymiz.",
+        "Oddiy sikl n element bo'ylab bir marta yursa, u n qadam bajaradi. Ichma-ich sikl esa n * n = n kvadrat qadam bajaradi."
+      ],
+      "code": {
+        "caption": "Qadamlarni sanash",
+        "lines": [
+          "// n qadam — bir sikl",
+          "for (i = 0; i < n; i++) { ish() }",
+          "",
+          "// n * n qadam — ichma-ich sikl",
+          "for (i = 0; i < n; i++) {",
+          "  for (j = 0; j < n; j++) { ish() }",
+          "}"
+        ]
+      }
+    },
+    {
+      "heading": "Doimiylar hisobga olinmaydi",
+      "body": [
+        "2n va 100n — ikkisi ham \"n ga proporsional\" hisoblanadi. Katta masshtabda muhimi o'sish shakli, aniq koeffitsiyent emas."
+      ],
+      "callout": "Muhimi — o'sish shakli, aniq son emas."
+    }
+  ],
+  "terms": [
+    {
+      "en": "n",
+      "uz": "n",
+      "note": "Ma'lumot hajmini bildiruvchi belgi."
+    },
+    {
+      "en": "step count",
+      "uz": "qadamlar soni",
+      "note": "Algoritm bajaradigan amallar miqdori."
+    },
+    {
+      "en": "growth rate",
+      "uz": "o'sish tezligi",
+      "note": "n oshganda qadamlar sonining o'sish shakli."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Ichma-ich ikki sikl (ikkisi ham n marta) jami necha qadam bajaradi?",
+      "options": [
+        "2n",
+        "n * n",
+        "n"
+      ],
+      "correctIndex": 1,
+      "explanation": "Tashqi siklning har aylanishida ichki sikl to'liq n marta aylanadi: n * n."
+    }
+  ]
+}

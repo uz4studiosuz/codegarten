@@ -1,0 +1,59 @@
+{
+  "goal": "O'zgaruvchiga qiymat berish amalini o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Qiymat berish",
+      "body": [
+        "Assignment (qiymat berish) — o'zgaruvchiga qiymat yozish amali. Ko'p tillarda = belgisi bilan yoziladi.",
+        "Muhim nuqta: = matematikadagi tenglik emas. U \"o'ngdagi qiymatni chapdagi qutiga sol\" degan buyruq."
+      ],
+      "code": {
+        "caption": "= matematik tenglik emas",
+        "lines": [
+          "son = 5",
+          "son = son + 1     // matematikada bu mumkin emas",
+          "",
+          "// Bu quyidagini bildiradi:",
+          "// 1. son + 1 hisoblanadi -> 6",
+          "// 2. natija son ga yoziladi -> son = 6"
+        ]
+      }
+    },
+    {
+      "heading": "O'ng tomon avval hisoblanadi",
+      "body": [
+        "Qiymat berishda har doim o'ng tomon to'liq hisoblanib, keyin natija chap tomondagi o'zgaruvchiga yoziladi. Bu tartibni bilish o'zgaruvchini o'zgartirishni tushunish uchun kalit."
+      ],
+      "callout": "= o'ngdagi natijani chapdagi o'zgaruvchiga yozadi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "assignment",
+      "uz": "qiymat berish",
+      "note": "O'zgaruvchiga qiymat yozish amali."
+    },
+    {
+      "en": "declaration",
+      "uz": "e'lon",
+      "note": "O'zgaruvchini birinchi marta yaratish."
+    },
+    {
+      "en": "evaluation",
+      "uz": "hisoblanish",
+      "note": "Ifodaning qiymatga aylanishi jarayoni."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "son = 5 dan keyin son = son + 3 bajarilsa, son qanday bo'ladi?",
+      "options": [
+        "5",
+        "8",
+        "3"
+      ],
+      "correctIndex": 1,
+      "explanation": "Avval o'ng tomon hisoblanadi: 5 + 3 = 8. Keyin 8 son ga yoziladi."
+    }
+  ]
+}

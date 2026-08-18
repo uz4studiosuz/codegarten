@@ -1,0 +1,49 @@
+{
+  "goal": "2-bosqich: if, else va tarmoqlanish bo'yicha takrorlash.",
+  "sections": [
+    {
+      "heading": "Bosqich xulosasi",
+      "body": [
+        "Tarmoqlanish (branching) dasturga yo'l tanlash imkonini beradi.",
+        "if bloki faqat shart rost bo'lganda bajariladi; qavsdan tashqaridagi kod har doim bajariladi.",
+        "if / else dan aynan bittasi bajariladi; else if ko'p variant uchun.",
+        "Sikl va shart birgalikda vaziyatga moslashuvchi dastur hosil qiladi."
+      ],
+      "callout": "Keyingi bosqichda bir necha shartni birlashtirishni o'rganamiz."
+    }
+  ],
+  "terms": [
+    {
+      "en": "branching",
+      "uz": "tarmoqlanish",
+      "note": "Shartga qarab yo'l tanlash."
+    },
+    {
+      "en": "if statement",
+      "uz": "if bloki",
+      "note": "Shartli bajarilish."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "if blokidan tashqarida joylashgan kod qachon bajariladi?",
+      "options": [
+        "Faqat shart rost bo'lganda",
+        "Har doim",
+        "Hech qachon"
+      ],
+      "correctIndex": 1,
+      "explanation": "Shart faqat qavs ichidagi kodga ta'sir qiladi."
+    },
+    {
+      "question": "else bloki qachon bajariladi?",
+      "options": [
+        "Shart rost bo'lganda",
+        "Shart yolg'on bo'lganda",
+        "Har doim"
+      ],
+      "correctIndex": 1,
+      "explanation": "else — shart bajarilmagan holat uchun ikkinchi yo'l."
+    }
+  ]
+}

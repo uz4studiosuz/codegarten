@@ -1,0 +1,60 @@
+{
+  "goal": "Ikki algoritmni solishtirib, vaziyatga mosini tanlashni o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Tanlov vaziyatga bog'liq",
+      "body": [
+        "Binary search tezroq, lekin tartiblash talab qiladi. Tartiblash esa o'zi vaqt oladi.",
+        "Agar bir marta qidirish kerak bo'lsa, chiziqli qidiruv yaxshiroq: tartiblashga sarflangan vaqt o'zini oqlamaydi. Ko'p marta qidirish kerak bo'lsa — bir marta tartiblab, keyin binary search ishlatish maqsadga muvofiq."
+      ],
+      "code": {
+        "caption": "Qaysi biri arzon?",
+        "lines": [
+          "// 1 marta qidirish:",
+          "// chiziqli:  n qadam",
+          "// tartiblash + binary: n*log n + log n  -> qimmatroq",
+          "",
+          "// 1000 marta qidirish:",
+          "// chiziqli:  1000 * n",
+          "// tartiblash + binary: n*log n + 1000*log n  -> ancha arzon"
+        ]
+      }
+    },
+    {
+      "heading": "Muhandislik qarori",
+      "body": [
+        "Eng tez algoritm har doim to'g'ri tanlov emas. Ma'lumot hajmi, qidirish chastotasi va kodning murakkabligi birgalikda hisobga olinadi."
+      ],
+      "callout": "Eng tez algoritm har doim eng mos algoritm emas."
+    }
+  ],
+  "terms": [
+    {
+      "en": "trade-off",
+      "uz": "murosaviy tanlov",
+      "note": "Bir afzallik uchun boshqasidan voz kechish."
+    },
+    {
+      "en": "amortized cost",
+      "uz": "taqsimlangan narx",
+      "note": "Bir marta sarflangan vaqtning ko'p amalga bo'linishi."
+    },
+    {
+      "en": "engineering decision",
+      "uz": "muhandislik qarori",
+      "note": "Amaliy shartlarni hisobga olib tanlov qilish."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Ro'yxatda faqat bir marta qidirish kerak bo'lsa, qaysi usul afzal?",
+      "options": [
+        "Tartiblab, keyin binary search",
+        "Chiziqli qidiruv",
+        "Ikkisi bir xil"
+      ],
+      "correctIndex": 1,
+      "explanation": "Bir marta qidirish uchun tartiblashga sarflangan vaqt o'zini oqlamaydi."
+    }
+  ]
+}

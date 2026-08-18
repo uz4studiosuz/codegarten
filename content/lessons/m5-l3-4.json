@@ -1,0 +1,55 @@
+{
+  "goal": "5-modul: o'zgaruvchilar va ro'yxatlar bo'yicha yakuniy takrorlash.",
+  "sections": [
+    {
+      "heading": "Modul xulosasi",
+      "body": [
+        "O'zgaruvchi (variable) — nomlangan xotira joyi; qiymat berish (assignment) o'ngdagi natijani chapga yozadi.",
+        "Ma'lumot turi (data type) mumkin bo'lgan amallarni belgilaydi.",
+        "Ikki qiymatni almashtirish uchun vaqtinchalik o'zgaruvchi kerak.",
+        "Ro'yxat (array) bitta nom ostida ko'p qiymat saqlaydi; indeks (index) 0 dan boshlanadi.",
+        "Sikl bilan ro'yxatni aylanib chiqish (iteration) ma'lumot bilan ishlashning asosi."
+      ],
+      "callout": "Endi algoritmlarning tezligini o'lchashga o'tamiz."
+    }
+  ],
+  "terms": [
+    {
+      "en": "variable",
+      "uz": "o'zgaruvchi",
+      "note": "Nomlangan xotira joyi."
+    },
+    {
+      "en": "array",
+      "uz": "massiv",
+      "note": "Tartiblangan qiymatlar to'plami."
+    },
+    {
+      "en": "index",
+      "uz": "indeks",
+      "note": "Element o'rni, 0 dan boshlanadi."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "10 elementli ro'yxatda to'g'ri indekslar oralig'i qanday?",
+      "options": [
+        "1 dan 10 gacha",
+        "0 dan 9 gacha",
+        "0 dan 10 gacha"
+      ],
+      "correctIndex": 1,
+      "explanation": "Indeks 0 dan boshlanadi, shuning uchun oxirgisi uzunlik - 1 = 9."
+    },
+    {
+      "question": "Ma'lumot turi (data type) nimani belgilaydi?",
+      "options": [
+        "Faqat xotira hajmini",
+        "Qiymat bilan qanday amallar mumkinligini",
+        "O'zgaruvchi nomini"
+      ],
+      "correctIndex": 1,
+      "explanation": "Tur amallarning ma'nosini belgilaydi — masalan + sonlarda qo'shadi, matnlarda ulaydi."
+    }
+  ]
+}

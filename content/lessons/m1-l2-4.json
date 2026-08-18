@@ -1,0 +1,57 @@
+{
+  "goal": "Labirintdan chiqish uchun to'liq algoritm tuzasiz.",
+  "sections": [
+    {
+      "heading": "Yo'lni oldin rejalashtiring",
+      "body": [
+        "Labirintda darhol kod yozishga shoshilmang. Avval yo'lni ko'z bilan kuzatib, burilish nuqtalarini belgilab oling.",
+        "Keyin har bir bo'lakni buyruqqa aylantiring: qancha yurish, qayerda burilish."
+      ],
+      "code": {
+        "caption": "Reja — keyin kod",
+        "lines": [
+          "// Reja: 2 katak o'ngga, keyin 1 katak pastga",
+          "oldinga(2)",
+          "o'ngga_buril()",
+          "oldinga(1)"
+        ]
+      }
+    },
+    {
+      "heading": "To'siqlarni hisobga olish",
+      "body": [
+        "Devor bor joyga yurish buyrug'i xatoga olib keladi. Har bir qadamdan keyin robot qayerda turganini tekshirib boring."
+      ],
+      "callout": "Reja qog'ozda ishlamasa, kodda ham ishlamaydi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "algorithm",
+      "uz": "algoritm",
+      "note": "Maqsadga olib boruvchi aniq qadamlar ketma-ketligi."
+    },
+    {
+      "en": "path",
+      "uz": "yo'l",
+      "note": "Boshlang'ich nuqtadan mo'ljalga qadar bo'lgan harakat izi."
+    },
+    {
+      "en": "obstacle",
+      "uz": "to'siq",
+      "note": "Harakatni to'xtatuvchi element — devor yoki chegara."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Labirint masalasini yechishda birinchi qadam nima?",
+      "options": [
+        "Darhol kod yozishni boshlash",
+        "Yo'lni rejalashtirib, burilish nuqtalarini belgilash",
+        "Barcha yo'nalishlarni tasodifiy sinash"
+      ],
+      "correctIndex": 1,
+      "explanation": "Reja tuzmasdan yozilgan kod ko'p urinish talab qiladi. Avval yo'lni aniqlang."
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "goal": "else bilan ikki yo'lli tanlov qurishni o'rganasiz.",
+  "sections": [
+    {
+      "heading": "else — ikkinchi yo'l",
+      "body": [
+        "else (aks holda) bloki shart yolg'on bo'lganda bajariladi. if va else birgalikda ikki yo'lli tanlov hosil qiladi.",
+        "Muhim xususiyat: ikkisidan aynan bittasi bajariladi — hech qachon ikkisi birga yoki hech biri emas."
+      ],
+      "code": {
+        "caption": "Ikki yo'lli tanlov",
+        "lines": [
+          "agar (ball >= 60) {",
+          "  chiqar(\"O'tdi\")",
+          "} aks holda {",
+          "  chiqar(\"O'tmadi\")",
+          "}",
+          "",
+          "// Aynan bittasi chiqadi"
+        ]
+      }
+    },
+    {
+      "heading": "else if bilan ko'p yo'l",
+      "body": [
+        "Ikkidan ko'p variant kerak bo'lsa, else if (aks holda agar) ishlatiladi. Shartlar yuqoridan pastga tekshiriladi va birinchi rost topilgan bloki bajariladi."
+      ],
+      "callout": "if / else dan aynan bittasi bajariladi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "else",
+      "uz": "aks holda",
+      "note": "Shart yolg'on bo'lganda bajariladigan blok."
+    },
+    {
+      "en": "else if",
+      "uz": "aks holda agar",
+      "note": "Ikkidan ko'p variant uchun qo'shimcha shart."
+    },
+    {
+      "en": "mutually exclusive",
+      "uz": "o'zaro istisno",
+      "note": "Faqat bittasi bajarilishi mumkin bo'lgan holatlar."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "if / else tuzilmasida nechta blok bajariladi?",
+      "options": [
+        "Ikkisi ham",
+        "Aynan bittasi",
+        "Hech biri"
+      ],
+      "correctIndex": 1,
+      "explanation": "Shart rost bo'lsa if bloki, yolg'on bo'lsa else bloki — aynan bittasi bajariladi."
+    }
+  ]
+}

@@ -1,33 +1,22 @@
-"use client";
-
-import React, { useCallback, useEffect } from "react";
+import React from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { LessonRunner } from "@/components/lesson/LessonRunner";
-import { getChallenge } from "@/components/engine/sampleChallenges";
+import { LessonScreen } from "@/components/lesson/LessonScreen";
 import { challengeIdFor, findLesson, nextLessonAfter } from "@/data/curriculum";
-import { getLessonContent } from "@/data/lessonContent";
-import { useProgress } from "@/context/ProgressContext";
+import { getLessonContent } from "@/lib/lessonContent.server";
 
-export default function LearnLessonPage() {
-  const urlParams = useParams();
-  const moduleId = (urlParams?.moduleId as string) || "mod-1";
-  const lessonId = (urlParams?.lessonId as string) || "";
+interface PageProps {
+  params: { moduleId: string; lessonId: string };
+}
 
-  const { completeLesson, visitLesson, hydrated } = useProgress();
+/**
+ * Server half of a lesson: resolves the curriculum entry and reads the lesson's
+ * JSON, so the client only ever receives the one lesson it is about to render.
+ */
+export default async function LearnLessonPage({ params }: PageProps) {
+  const { moduleId, lessonId } = params;
 
   const location = findLesson(moduleId, lessonId);
-  const content = location ? getLessonContent(lessonId) : undefined;
-
-  // Record the visit so the lesson shows up in "Tezkor qaytish". Waiting for
-  // hydration keeps this from racing the provider's read of stored progress.
-  useEffect(() => {
-    if (hydrated && location) visitLesson(moduleId, lessonId);
-  }, [hydrated, location, moduleId, lessonId, visitLesson]);
-
-  const handleFinished = useCallback(() => {
-    completeLesson(moduleId, lessonId);
-  }, [completeLesson, moduleId, lessonId]);
+  const content = location ? await getLessonContent(lessonId) : null;
 
   if (!location || !content) {
     return (
@@ -46,26 +35,23 @@ export default function LearnLessonPage() {
   const { lesson, level, moduleIndex } = location;
   const following = nextLessonAfter(moduleId, lessonId);
 
-  // Concept and review lessons teach and quiz; the rest end with a hands-on block.
+  // Concept and review lessons teach and quiz; the rest end hands-on.
   const wantsChallenge = lesson.kind === "exercise" || lesson.kind === "challenge";
-  const challenge = wantsChallenge
-    ? getChallenge(challengeIdFor(lesson, moduleIndex))
-    : undefined;
 
   return (
-    <LessonRunner
-      key={lessonId}
+    <LessonScreen
+      moduleId={moduleId}
+      lessonId={lessonId}
       lessonTitle={lesson.title}
-      levelTitle={`Level ${level.num} · ${level.title}`}
-      content={content}
-      challenge={challenge}
+      lessonKind={lesson.kind}
+      levelTitle={`Level ${level.num} - ${level.title}`}
       xpReward={lesson.xp}
-      exitHref={`/courses/${moduleId}`}
+      content={content}
+      challengeId={wantsChallenge ? challengeIdFor(lesson, moduleIndex) : undefined}
       nextHref={
         following ? `/learn/${moduleId}/${following.lesson.id}` : `/courses/${moduleId}`
       }
       nextLabel={following ? "Keyingi dars" : "Modulga qaytish"}
-      onFinished={handleFinished}
     />
   );
 }

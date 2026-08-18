@@ -1,0 +1,65 @@
+{
+  "goal": "1-modul: buyruq, ketma-ketlik va algoritm bo'yicha yakuniy takrorlash.",
+  "sections": [
+    {
+      "heading": "Modul xulosasi",
+      "body": [
+        "Kompyuter so'zma-so'z ijrochi — har bir qadam aniq aytilishi kerak.",
+        "Buyruq (command) nomdan va parametr (parameter) dan iborat; ketma-ketlik (sequence) natijani belgilaydi.",
+        "Katta vazifa bo'laklanadi (decomposition), ortiqcha qadamlar olib tashlanadi (optimization).",
+        "Algoritm (algorithm) aniq, chekli va natijaviy bo'lishi shart.",
+        "Bir masalaning ko'p yechimi bor — samaradorlik (efficiency) va o'qilishlilik orasida muvozanat tanlanadi."
+      ],
+      "callout": "Endi takrorlanuvchi naqshlarni avtomatlashtirishga — sikllarga o'tamiz."
+    }
+  ],
+  "terms": [
+    {
+      "en": "algorithm",
+      "uz": "algoritm",
+      "note": "Modulning markaziy tushunchasi."
+    },
+    {
+      "en": "sequence",
+      "uz": "ketma-ketlik",
+      "note": "Bajarilish tartibi."
+    },
+    {
+      "en": "efficiency",
+      "uz": "samaradorlik",
+      "note": "Kamroq qadam bilan bir xil natija."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Algoritm bo'lish uchun majburiy shart qaysi?",
+      "options": [
+        "Kamida 10 qadamdan iborat bo'lishi",
+        "Chekli — albatta tugashi",
+        "Ingliz tilida yozilishi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Chekli bo'lish majburiy shart. Tugamaydigan jarayon algoritm hisoblanmaydi."
+    },
+    {
+      "question": "Bo'laklash (decomposition) nima uchun kerak?",
+      "options": [
+        "Kodni uzunroq qilish uchun",
+        "Katta vazifani bajariladigan qadamlarga ajratish uchun",
+        "Xatolarni yashirish uchun"
+      ],
+      "correctIndex": 1,
+      "explanation": "Bo'laklash katta, tushunarsiz vazifani aniq va bajariladigan qadamlarga aylantiradi."
+    },
+    {
+      "question": "Kompyuter noaniq buyruqni qanday bajaradi?",
+      "options": [
+        "Taxmin qilib to'ldiradi",
+        "Bajarmaydi yoki kutilmagan natija beradi",
+        "Dasturchidan so'raydi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kompyuter taxmin qilmaydi. Aniqlik dasturchining vazifasi."
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "goal": "Parametr nima va u funksiyani qanday moslashuvchan qilishini o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Parametr — funksiyaning kirishi",
+      "body": [
+        "Parameter (parametr) — funksiyaga tashqaridan uzatiladigan qiymat. U funksiyani har chaqiruvda boshqacha ishlashga majbur qiladi.",
+        "Parametrsiz funksiya har doim bir xil ishni bajaradi. Parametrli funksiya esa bir mantiq bilan turli natija beradi."
+      ],
+      "code": {
+        "caption": "Parametrsiz va parametrli",
+        "lines": [
+          "// Parametrsiz — har doim 50",
+          "funksiya kvadrat_chiz() {",
+          "  repeat (4) { oldinga(50) o'ngga(90) }",
+          "}",
+          "",
+          "// Parametrli — istalgan o'lcham",
+          "funksiya kvadrat_chiz(o'lcham) {",
+          "  repeat (4) { oldinga(o'lcham) o'ngga(90) }",
+          "}",
+          "",
+          "kvadrat_chiz(30)",
+          "kvadrat_chiz(120)"
+        ]
+      }
+    },
+    {
+      "heading": "Parametr va argument",
+      "body": [
+        "E'londa yozilgan nom — parameter (parametr). Chaqiruvda uzatilgan haqiqiy qiymat — argument (argument). Ko'pincha ikkisini almashtirib ishlatadilar, lekin farqi shu."
+      ],
+      "callout": "Parametr — bo'sh joy. Argument — unga qo'yilgan qiymat."
+    }
+  ],
+  "terms": [
+    {
+      "en": "parameter",
+      "uz": "parametr",
+      "note": "Funksiya e'lonida ko'rsatilgan kirish nomi."
+    },
+    {
+      "en": "argument",
+      "uz": "argument",
+      "note": "Chaqiruvda parametr o'rniga uzatilgan haqiqiy qiymat."
+    },
+    {
+      "en": "flexibility",
+      "uz": "moslashuvchanlik",
+      "note": "Bir kodning turli holatlarda ishlash qobiliyati."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "kvadrat_chiz(120) chaqirig'ida 120 nima hisoblanadi?",
+      "options": [
+        "Parametr",
+        "Argument",
+        "Funksiya nomi"
+      ],
+      "correctIndex": 1,
+      "explanation": "120 — chaqiruvda uzatilgan haqiqiy qiymat, ya'ni argument. Parametr esa e'londagi nom."
+    }
+  ]
+}

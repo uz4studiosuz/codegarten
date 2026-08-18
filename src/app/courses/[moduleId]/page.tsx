@@ -254,15 +254,21 @@ export default function ModulePathPage() {
                       const locked = state === "locked";
                       const isReview = lesson.kind === "review";
 
+                      /*
+                       * The wandering trail only reads well when there is room
+                       * for it. Below lg the disc pins to the left edge so the
+                       * title gets the full width and can wrap instead of being
+                       * clipped.
+                       */
                       const anchor = {
                         "--x": `calc(50% + ${zig}px - 32px)`,
-                        "--x-sm": `calc(50% + ${Math.round(zig * 0.45)}px - 32px)`,
+                        "--x-sm": "4px",
                       } as React.CSSProperties;
 
                       return (
                         <div
                           key={lesson.id}
-                          className="relative w-full h-[61px] mb-[38px]"
+                          className="relative w-full min-h-[76px] lg:h-[61px] mb-6 lg:mb-[38px]"
                           style={anchor}
                         >
                           <Link
@@ -278,9 +284,9 @@ export default function ModulePathPage() {
                             }`}
                           >
                             <LessonDisc state={state} isReview={isReview} />
-                            <div className="min-w-0">
+                            <div className="min-w-0 max-w-[calc(100vw-150px)] sm:max-w-[280px] lg:max-w-none">
                               <div
-                                className={`text-[15px] whitespace-nowrap ${
+                                className={`text-[14px] sm:text-[15px] leading-snug lg:whitespace-nowrap ${
                                   state === "active"
                                     ? "font-bold text-white"
                                     : locked

@@ -1,0 +1,64 @@
+{
+  "goal": "Parametrlar bilan universal shakl chizuvchi funksiya yasaysiz.",
+  "sections": [
+    {
+      "heading": "Universal funksiya",
+      "body": [
+        "Parametrlarni birlashtirib, bitta funksiya bilan ko'p turli shakl chizish mumkin: qirralar soni, o'lcham va rang parametr bo'lsa, imkoniyatlar soni ko'payadi.",
+        "Bu generalization (umumlashtirish) deb ataladi — maxsus holatlardan umumiy yechimga o'tish."
+      ],
+      "code": {
+        "caption": "Uch parametrli universal funksiya",
+        "lines": [
+          "funksiya shakl(qirralar, o'lcham, rang) {",
+          "  rangni_tanla(rang)",
+          "  burchak = 360 / qirralar",
+          "  repeat (qirralar) {",
+          "    oldinga(o'lcham)",
+          "    o'ngga(burchak)",
+          "  }",
+          "}",
+          "",
+          "shakl(3, 80, \"qizil\")",
+          "shakl(8, 40, \"ko'k\")"
+        ]
+      }
+    },
+    {
+      "heading": "Umumlashtirish chegarasi",
+      "body": [
+        "Har narsani parametr qilish ham yaxshi emas. Agar funksiya juda ko'p narsani boshqarsa, u tushunarsiz bo'lib qoladi. Muvozanat kerak."
+      ],
+      "callout": "Umumlashtirish foydali, lekin haddan oshsa kod tushunarsiz bo'ladi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "generalization",
+      "uz": "umumlashtirish",
+      "note": "Maxsus holatdan umumiy yechimga o'tish."
+    },
+    {
+      "en": "configurable",
+      "uz": "sozlanuvchi",
+      "note": "Parametrlar orqali xatti-harakatini o'zgartirish mumkin bo'lgan."
+    },
+    {
+      "en": "over-engineering",
+      "uz": "haddan oshirish",
+      "note": "Keragidan ortiq murakkab yechim yasash."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Funksiyaga juda ko'p parametr qo'shishning kamchiligi nima?",
+      "options": [
+        "Sekin ishlaydi",
+        "Funksiyani ishlatish va tushunish qiyinlashadi",
+        "Xotira to'lib qoladi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ko'p parametr chaqiruvni murakkablashtiradi va xato ehtimolini oshiradi."
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "goal": "VA / YOKI mantiqiy amallari bilan shartlarni birlashtirasiz.",
+  "sections": [
+    {
+      "heading": "Mantiqiy amallar",
+      "body": [
+        "Bir nechta shartni birlashtirish uchun logical operator (mantiqiy amal) ishlatiladi.",
+        "AND (VA) — ikki shart ham rost bo'lsa rost beradi. OR (YOKI) — kamida bittasi rost bo'lsa rost beradi. NOT (EMAS) — qiymatni teskarisiga o'zgartiradi."
+      ],
+      "code": {
+        "caption": "Uch mantiqiy amal",
+        "lines": [
+          "// AND (VA): ikkisi ham kerak",
+          "agar (yosh >= 18 VA hujjat_bor) { kirish_ruxsat() }",
+          "",
+          "// OR (YOKI): bittasi yetarli",
+          "agar (chipta_bor YOKI taklif_bor) { kirish_ruxsat() }",
+          "",
+          "// NOT (EMAS): teskari",
+          "agar (EMAS bo'sh) { ishlatish() }"
+        ]
+      }
+    },
+    {
+      "heading": "Rostlik jadvali",
+      "body": [
+        "AND: rost + rost = rost; boshqa barcha holatlarda yolg'on.",
+        "OR: yolg'on + yolg'on = yolg'on; boshqa barcha holatlarda rost."
+      ],
+      "callout": "AND — hammasi kerak. OR — bittasi yetarli."
+    }
+  ],
+  "terms": [
+    {
+      "en": "AND",
+      "uz": "VA",
+      "note": "Barcha shartlar rost bo'lganda rost beruvchi amal."
+    },
+    {
+      "en": "OR",
+      "uz": "YOKI",
+      "note": "Kamida bitta shart rost bo'lganda rost beruvchi amal."
+    },
+    {
+      "en": "NOT",
+      "uz": "EMAS",
+      "note": "Mantiqiy qiymatni teskarisiga o'zgartiruvchi amal."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "true VA false ifodasining natijasi qanday?",
+      "options": [
+        "true",
+        "false",
+        "Xato"
+      ],
+      "correctIndex": 1,
+      "explanation": "AND uchun ikki shart ham rost bo'lishi kerak. Bittasi yolg'on bo'lsa natija yolg'on."
+    }
+  ]
+}

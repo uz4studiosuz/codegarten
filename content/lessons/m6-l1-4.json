@@ -1,0 +1,49 @@
+{
+  "goal": "1-bosqich: vaqt murakkabligi va Big-O bo'yicha takrorlash.",
+  "sections": [
+    {
+      "heading": "Bosqich xulosasi",
+      "body": [
+        "Algoritm tezligi qadamlar sonida o'lchanadi (time complexity), sekundda emas.",
+        "n — ma'lumot hajmi; bir sikl n qadam, ichma-ich sikl n kvadrat qadam bajaradi.",
+        "O(1) — doimiy vaqt (constant time); O(n) — chiziqli vaqt (linear time).",
+        "Doimiy koeffitsiyentlar hisobga olinmaydi — muhimi o'sish shakli."
+      ],
+      "callout": "Keyingi bosqichda qidirish algoritmlarini solishtiramiz."
+    }
+  ],
+  "terms": [
+    {
+      "en": "Big-O notation",
+      "uz": "Big-O yozuvi",
+      "note": "O'sish shaklini ifodalash."
+    },
+    {
+      "en": "time complexity",
+      "uz": "vaqt murakkabligi",
+      "note": "Qadamlar sonining hajmga bog'liqligi."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "O(1) murakkablik nimani bildiradi?",
+      "options": [
+        "Bir sekundda ishlaydi",
+        "Qadamlar soni ma'lumot hajmiga bog'liq emas",
+        "Faqat bitta element bilan ishlaydi"
+      ],
+      "correctIndex": 1,
+      "explanation": "O(1) — ma'lumot qanchalik katta bo'lsa ham qadamlar soni o'zgarmaydi."
+    },
+    {
+      "question": "Ichma-ich ikki sikl murakkabligi qanday?",
+      "options": [
+        "O(n)",
+        "O(n kvadrat)",
+        "O(1)"
+      ],
+      "correctIndex": 1,
+      "explanation": "n * n qadam bajariladi, ya'ni O(n kvadrat)."
+    }
+  ]
+}

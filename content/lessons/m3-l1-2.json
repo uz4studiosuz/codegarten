@@ -1,0 +1,60 @@
+{
+  "goal": "Birinchi funksiyani e'lon qilib, uni chaqirasiz.",
+  "sections": [
+    {
+      "heading": "E'lon va chaqirish farqi",
+      "body": [
+        "Funksiyani e'lon qilish — uni faqat yozib qo'yish. E'lon qilishning o'zi hech narsa bajarmaydi.",
+        "Kod ishga tushishi uchun funksiyani chaqirish (function call — funksiya chaqirig'i) kerak. Bu eng ko'p uchraydigan boshlang'ich xato: funksiya yozilgan, lekin chaqirilmagan."
+      ],
+      "code": {
+        "caption": "E'lon ishlamaydi, chaqiruv ishlaydi",
+        "lines": [
+          "funksiya salom() {",
+          "  chiqar(\"Salom!\")",
+          "}",
+          "",
+          "// Bu yerda hech narsa chiqmaydi.",
+          "",
+          "salom()   // Endi \"Salom!\" chiqadi"
+        ]
+      }
+    },
+    {
+      "heading": "Nom berish qoidalari",
+      "body": [
+        "Funksiya nomi u nima qilishini aytishi kerak. kvadrat_chiz() yaxshi nom, f1() yomon nom. Yaxshi nom izohsiz ham tushunarli bo'ladi."
+      ],
+      "callout": "E'lon = retsept yozish. Chaqirish = ovqat tayyorlash."
+    }
+  ],
+  "terms": [
+    {
+      "en": "function call",
+      "uz": "funksiya chaqirig'i",
+      "note": "Funksiyani ishga tushirish amali."
+    },
+    {
+      "en": "naming",
+      "uz": "nom berish",
+      "note": "Funksiyaga mazmunli nom tanlash."
+    },
+    {
+      "en": "declaration",
+      "uz": "e'lon",
+      "note": "Funksiyaning tanasini yozib qo'yish."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Funksiya yozilgan, lekin natija ko'rinmayapti. Eng ehtimoliy sabab?",
+      "options": [
+        "Funksiya nomi noto'g'ri",
+        "Funksiya chaqirilmagan",
+        "Kompyuter sekin"
+      ],
+      "correctIndex": 1,
+      "explanation": "E'lon qilishning o'zi kodni ishga tushirmaydi — funksiyani chaqirish kerak."
+    }
+  ]
+}

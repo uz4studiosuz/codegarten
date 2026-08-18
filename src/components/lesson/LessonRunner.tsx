@@ -11,22 +11,29 @@ import {
   IconBulb,
   IconLanguage,
   IconTargetArrow,
+  IconBookmark,
+  IconBookmarkFilled,
 } from "@tabler/icons-react";
 import { ExerciseChallenge } from "@/components/engine/types";
 import { ChallengeStep } from "./ChallengeStep";
+import { RobotPuzzle } from "./RobotPuzzle";
+import { useVocabulary } from "@/context/VocabularyContext";
 import {
   ContentSection,
   KeyTerm,
   LessonContent,
   QuizQuestion,
-} from "@/data/lessonContent";
+} from "@/types/lessonContent";
 
 interface LessonRunnerProps {
+  lessonId: string;
   lessonTitle: string;
   levelTitle: string;
   content: LessonContent;
-  /** Present for exercise/challenge lessons; appended as the final step. */
+  /** Block-editor challenge, appended as the final step of an exercise lesson. */
   challenge?: ExerciseChallenge<unknown>;
+  /** Set instead of `challenge` to finish with the drag-and-drop robot puzzle. */
+  robotPuzzle?: boolean;
   xpReward: number;
   /** Where the exit dialog sends the learner. */
   exitHref: string;
@@ -44,11 +51,40 @@ type Step =
   | { kind: "quiz"; question: QuizQuestion; index: number }
   | { kind: "challenge" };
 
+/**
+ * Authored content tends to park the right answer in the same slot, which
+ * teaches position instead of the concept. Options are reordered with a hash of
+ * the question text as the seed: varied across questions, stable for any given
+ * one, so a reload never moves the answer under the learner.
+ */
+function shuffleQuestion(question: QuizQuestion): QuizQuestion {
+  let seed = 2166136261;
+  for (let i = 0; i < question.question.length; i++) {
+    seed = ((seed ^ question.question.charCodeAt(i)) * 16777619) >>> 0;
+  }
+
+  const order = question.options.map((_, i) => i);
+  for (let i = order.length - 1; i > 0; i--) {
+    seed = (seed * 1103515245 + 12345) >>> 0;
+    // High bits: an LCG's low bits cycle badly and skew short shuffles.
+    const j = (seed >>> 16) % (i + 1);
+    [order[i], order[j]] = [order[j], order[i]];
+  }
+
+  return {
+    ...question,
+    options: order.map((i) => question.options[i]),
+    correctIndex: order.indexOf(question.correctIndex),
+  };
+}
+
 export function LessonRunner({
+  lessonId,
   lessonTitle,
   levelTitle,
   content,
   challenge,
+  robotPuzzle = false,
   xpReward,
   exitHref,
   nextHref,
@@ -56,17 +92,18 @@ export function LessonRunner({
   onFinished,
 }: LessonRunnerProps) {
   const router = useRouter();
+  const { isSaved, toggleTerm } = useVocabulary();
 
   const steps = useMemo<Step[]>(() => {
     const list: Step[] = [{ kind: "goal" }];
     content.sections.forEach((section) => list.push({ kind: "section", section }));
     if (content.terms.length > 0) list.push({ kind: "terms", terms: content.terms });
     content.quiz.forEach((question, index) =>
-      list.push({ kind: "quiz", question, index })
+      list.push({ kind: "quiz", question: shuffleQuestion(question), index })
     );
-    if (challenge) list.push({ kind: "challenge" });
+    if (challenge || robotPuzzle) list.push({ kind: "challenge" });
     return list;
-  }, [content, challenge]);
+  }, [content, challenge, robotPuzzle]);
 
   const [stepIndex, setStepIndex] = useState(0);
   const [showExitDialog, setShowExitDialog] = useState(false);
@@ -98,7 +135,7 @@ export function LessonRunner({
   const goNext = () => {
     if (isLastStep) {
       // Non-challenge lessons award their XP on completion.
-      if (!challenge) setEarnedXp(xpReward);
+      if (!challenge && !robotPuzzle) setEarnedXp(xpReward);
       setIsFinished(true);
       onFinished();
       return;
@@ -266,25 +303,61 @@ export function LessonRunner({
                 </p>
 
                 <div className="flex flex-col gap-3">
-                  {step.terms.map((term) => (
-                    <div
-                      key={term.en}
-                      className="rounded-[16px] border border-[#26262a] bg-[#141416] px-4 py-3.5"
-                    >
-                      <div className="flex flex-wrap items-baseline gap-2">
-                        <span className="font-mono text-[15px] font-bold text-[#A78BFA]">
-                          {term.en}
-                        </span>
-                        <span className="text-[15px] font-semibold text-white">
-                          ({term.uz})
-                        </span>
+                  {step.terms.map((term) => {
+                    const saved = isSaved(term.en);
+                    return (
+                      <div
+                        key={term.en}
+                        className="rounded-[16px] border border-[#26262a] bg-[#141416] px-4 py-3.5 flex items-start gap-3"
+                      >
+                        <div className="min-w-0 flex-1">
+                          <div className="flex flex-wrap items-baseline gap-2">
+                            <span className="font-mono text-[15px] font-bold text-[#A78BFA]">
+                              {term.en}
+                            </span>
+                            <span className="text-[15px] font-semibold text-white">
+                              ({term.uz})
+                            </span>
+                          </div>
+                          <p className="mt-1.5 text-[14px] leading-relaxed text-[#9a9aa2]">
+                            {term.note}
+                          </p>
+                        </div>
+
+                        {/* One tap files the term away in the learner's Lug'at */}
+                        <button
+                          type="button"
+                          onClick={() =>
+                            toggleTerm({
+                              en: term.en,
+                              uz: term.uz,
+                              note: term.note,
+                              sourceLessonId: lessonId,
+                              sourceLessonTitle: lessonTitle,
+                            })
+                          }
+                          aria-pressed={saved}
+                          title={saved ? "Lug'atdan olib tashlash" : "Lug'atga saqlash"}
+                          className={`shrink-0 w-9 h-9 rounded-full flex items-center justify-center border transition-colors cursor-pointer ${
+                            saved
+                              ? "border-[#26B54F] bg-[#26B54F]/15 text-[#4ADE80]"
+                              : "border-[#3a3a41] text-[#8b8b93] hover:text-white hover:border-[#55555f]"
+                          }`}
+                        >
+                          {saved ? (
+                            <IconBookmarkFilled size={17} />
+                          ) : (
+                            <IconBookmark size={17} />
+                          )}
+                        </button>
                       </div>
-                      <p className="mt-1.5 text-[14px] leading-relaxed text-[#9a9aa2]">
-                        {term.note}
-                      </p>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
+
+                <p className="text-[13px] text-[#6d6d74]">
+                  Saqlangan atamalar <span className="text-[#8b8b93] font-semibold">Lug&apos;at</span> bo&apos;limida to&apos;planadi.
+                </p>
               </div>
             ) : step?.kind === "quiz" ? (
               /* ── Quiz ── */
@@ -357,6 +430,13 @@ export function LessonRunner({
                   </div>
                 )}
               </div>
+            ) : step?.kind === "challenge" && robotPuzzle ? (
+              /* ── Drag-and-drop robot programming ── */
+              <RobotPuzzle
+                onSolved={handleChallengeSolved}
+                onReadyChange={setChallengeReady}
+                registerCheck={registerCheck}
+              />
             ) : step?.kind === "challenge" && challenge ? (
               /* ── Interactive block challenge ── */
               <ChallengeStep

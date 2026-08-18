@@ -1,0 +1,65 @@
+{
+  "goal": "2-modul: sikllar bo'yicha yakuniy takrorlash.",
+  "sections": [
+    {
+      "heading": "Modul xulosasi",
+      "body": [
+        "Takrorlanuvchi naqsh (pattern) sikl bilan qisqartiriladi — DRY tamoyili.",
+        "repeat(n) sikl tanasini n marta bajaradi; hisoblagich (counter) aylanishlarni farqlaydi.",
+        "Chegara xatolari (off-by-one error) eng ko'p uchraydigan xato turi.",
+        "Ichma-ich sikl (nested loop) ikki o'lchovli tuzilmalar uchun ishlatiladi; jami aylanish — ko'paytma.",
+        "Cheksiz sikl (infinite loop) dan qochish uchun hisoblagich har aylanishda shartga yaqinlashishi kerak."
+      ],
+      "callout": "Endi kodni nomlangan bo'laklarga ajratishga — funksiyalarga o'tamiz."
+    }
+  ],
+  "terms": [
+    {
+      "en": "loop",
+      "uz": "sikl",
+      "note": "Modulning markaziy tushunchasi."
+    },
+    {
+      "en": "nested loop",
+      "uz": "ichma-ich sikl",
+      "note": "Sikl ichidagi sikl."
+    },
+    {
+      "en": "infinite loop",
+      "uz": "cheksiz sikl",
+      "note": "To'xtamaydigan sikl."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "3x3 ichma-ich sikl ichki tanasi necha marta bajariladi?",
+      "options": [
+        "6",
+        "9",
+        "3"
+      ],
+      "correctIndex": 1,
+      "explanation": "3 x 3 = 9 marta."
+    },
+    {
+      "question": "DRY tamoyili nimani talab qiladi?",
+      "options": [
+        "Kodni qisqa yozishni",
+        "Bir xil kodni ko'chirib yozmaslikni",
+        "Izohlar yozmaslikni"
+      ],
+      "correctIndex": 1,
+      "explanation": "DRY (Don't Repeat Yourself) — mantiq bir joyda saqlanishi kerakligini bildiradi."
+    },
+    {
+      "question": "Sikl cheksiz bo'lib qolmasligi uchun nima shart?",
+      "options": [
+        "Sikl tanasi qisqa bo'lishi",
+        "Hisoblagich har aylanishda tugash shartiga yaqinlashishi",
+        "Sikl 10 martadan oshmasligi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Hisoblagich o'zgarmasa yoki shartdan uzoqlashsa, sikl hech qachon to'xtamaydi."
+    }
+  ]
+}

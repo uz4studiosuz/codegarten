@@ -1,0 +1,58 @@
+{
+  "goal": "Sikl ichida qiymatlarni almashtirib, har aylanishda boshqa natija olasiz.",
+  "sections": [
+    {
+      "heading": "Har aylanish — boshqa qiymat",
+      "body": [
+        "Sikl faqat bir xil ishni takrorlash uchun emas. Hisoblagich yoki ro'yxatdan olingan qiymat bilan har aylanishda boshqa natija olish mumkin.",
+        "Masalan ranglar ro'yxatini aylanib chiqib, har shaklga boshqa rang berish mumkin."
+      ],
+      "code": {
+        "caption": "Har aylanishda boshqa rang",
+        "lines": [
+          "ranglar = [\"qizil\", \"yashil\", \"ko'k\"]",
+          "",
+          "for (i = 0; i < 3; i++) {",
+          "  chiz(shakl[i], ranglar[i])",
+          "}"
+        ]
+      }
+    },
+    {
+      "heading": "Indeks bilan ishlash",
+      "body": [
+        "Ro'yxatdagi element o'rni index (indeks) deb ataladi va ko'p tillarda 0 dan boshlanadi. Shuning uchun 3 elementli ro'yxatning indekslari 0, 1, 2 bo'ladi."
+      ],
+      "callout": "Ko'p dasturlash tillarida indeks 0 dan boshlanadi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "index",
+      "uz": "indeks",
+      "note": "Ro'yxatdagi elementning tartib raqami, 0 dan boshlanadi."
+    },
+    {
+      "en": "array",
+      "uz": "massiv",
+      "note": "Bir nechta qiymatni tartib bilan saqlovchi tuzilma."
+    },
+    {
+      "en": "zero-based",
+      "uz": "noldan",
+      "note": "Sanoq 0 dan boshlanadigan indekslash usuli."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "3 elementli ro'yxatning oxirgi elementi indeksi qanday?",
+      "options": [
+        "3",
+        "2",
+        "1"
+      ],
+      "correctIndex": 1,
+      "explanation": "Indeks 0 dan boshlanadi: 0, 1, 2. Ya'ni oxirgi element indeksi — 2."
+    }
+  ]
+}

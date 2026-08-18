@@ -1,0 +1,59 @@
+{
+  "goal": "Tartiblash nima uchun kerakligini tushunib olasiz.",
+  "sections": [
+    {
+      "heading": "Tartib qiymat yaratadi",
+      "body": [
+        "Sorting (tartiblash) — elementlarni ma'lum tartibda joylashtirish. U ko'p amallarni keskin tezlashtiradi.",
+        "Tartiblangan ma'lumotda binary search ishlaydi, eng katta va eng kichik element bir qadamda topiladi, takrorlanuvchi elementlar yonma-yon turadi."
+      ],
+      "code": {
+        "caption": "Tartiblash nimani osonlashtiradi",
+        "lines": [
+          "// Tartiblanmagan: [85, 92, 78, 95]",
+          "// Eng kattasini topish -> n qadam",
+          "",
+          "// Tartiblangan: [78, 85, 92, 95]",
+          "// Eng kattasi -> oxirgi element, 1 qadam",
+          "// Qidirish -> binary search, O(log n)"
+        ]
+      }
+    },
+    {
+      "heading": "Tartiblashning narxi",
+      "body": [
+        "Tartiblash bepul emas — yaxshi algoritmlar O(n log n) qadam talab qiladi. Shuning uchun tartiblash faqat keyin ko'p marta ishlatilganda o'zini oqlaydi."
+      ],
+      "callout": "Tartiblash keyingi barcha amallarni tezlashtiradi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "sorting",
+      "uz": "tartiblash",
+      "note": "Elementlarni ma'lum tartibda joylashtirish."
+    },
+    {
+      "en": "ascending",
+      "uz": "o'sish tartibi",
+      "note": "Kichikdan kattaga qarab joylashtirish."
+    },
+    {
+      "en": "O(n log n)",
+      "uz": "n log n",
+      "note": "Samarali tartiblash algoritmlarining murakkabligi."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Tartiblangan ro'yxatda eng katta elementni topish necha qadam oladi?",
+      "options": [
+        "n qadam",
+        "1 qadam — oxirgi element",
+        "log n qadam"
+      ],
+      "correctIndex": 1,
+      "explanation": "O'sish tartibida tartiblangan bo'lsa, eng katta element oxirida turadi."
+    }
+  ]
+}

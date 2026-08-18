@@ -1,0 +1,63 @@
+{
+  "goal": "Parametrli funksiya yozib, turli qiymatlar bilan chaqirasiz.",
+  "sections": [
+    {
+      "heading": "Parametrni ishlatish",
+      "body": [
+        "Parametr funksiya tanasida oddiy qiymat kabi ishlatiladi. Chaqiruv vaqtida u argument qiymati bilan almashtiriladi.",
+        "Shu tarzda bitta funksiya cheksiz turli natija bera oladi."
+      ],
+      "code": {
+        "caption": "Bir funksiya, ko'p natija",
+        "lines": [
+          "funksiya ko'pburchak(qirralar) {",
+          "  burchak = 360 / qirralar",
+          "  repeat (qirralar) {",
+          "    oldinga(60)",
+          "    o'ngga(burchak)",
+          "  }",
+          "}",
+          "",
+          "ko'pburchak(3)   // uchburchak",
+          "ko'pburchak(6)   // oltiburchak"
+        ]
+      }
+    },
+    {
+      "heading": "Parametrni tekshirish",
+      "body": [
+        "Parametrga noto'g'ri qiymat kelsa nima bo'ladi? Masalan ko'pburchak(0) nolga bo'lishga olib keladi. Shuning uchun jiddiy kodda parametrlar tekshiriladi — bu validation (tekshirish) deb ataladi."
+      ],
+      "callout": "Parametr kelgan qiymatni tekshirish yaxshi funksiyaning belgisi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "validation",
+      "uz": "tekshirish",
+      "note": "Kelgan qiymatning to'g'riligini nazorat qilish."
+    },
+    {
+      "en": "edge case",
+      "uz": "chegaraviy holat",
+      "note": "Kutilmagan yoki chekka qiymat bilan yuzaga keladigan holat."
+    },
+    {
+      "en": "reuse",
+      "uz": "qayta ishlatish",
+      "note": "Bir mantiqni turli qiymatlar bilan ishlatish."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "ko'pburchak(qirralar) funksiyasiga 0 uzatilsa nima muammo yuzaga keladi?",
+      "options": [
+        "Hech qanday muammo yo'q",
+        "360 / 0 — nolga bo'lish xatosi",
+        "Funksiya tezroq ishlaydi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Nolga bo'lish aniqlanmagan amal. Shuning uchun parametrni tekshirish kerak."
+    }
+  ]
+}

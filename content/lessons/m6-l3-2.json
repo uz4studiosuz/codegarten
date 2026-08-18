@@ -1,0 +1,61 @@
+{
+  "goal": "Bubble Sort algoritmi qanday ishlashini o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Qo'shnilarni solishtirish",
+      "body": [
+        "Bubble sort (pufakchali tartiblash) — eng oddiy tartiblash algoritmi. Qo'shni elementlarni solishtirib, kerak bo'lsa o'rin almashtiradi.",
+        "Har o'tishda eng katta element ro'yxat oxiriga \"pufakcha kabi\" ko'tarilib boradi — nom shundan."
+      ],
+      "code": {
+        "caption": "Bubble sort",
+        "lines": [
+          "for (i = 0; i < n - 1; i++) {",
+          "  for (j = 0; j < n - 1 - i; j++) {",
+          "    agar (ro'yxat[j] > ro'yxat[j + 1]) {",
+          "      almashtir(ro'yxat[j], ro'yxat[j + 1])",
+          "    }",
+          "  }",
+          "}"
+        ]
+      }
+    },
+    {
+      "heading": "Nima uchun sekin",
+      "body": [
+        "Ichma-ich ikki sikl borligi uchun murakkablik O(n kvadrat). 1000 element uchun taxminan million amal kerak bo'ladi.",
+        "Shuning uchun bubble sort amalda deyarli ishlatilmaydi — u faqat o'quv maqsadida qulay."
+      ],
+      "callout": "Bubble sort: tushunarli, lekin O(n kvadrat) — sekin."
+    }
+  ],
+  "terms": [
+    {
+      "en": "bubble sort",
+      "uz": "pufakchali tartiblash",
+      "note": "Qo'shni elementlarni almashtirish orqali tartiblash."
+    },
+    {
+      "en": "swap",
+      "uz": "almashtirish",
+      "note": "Ikki elementning o'rnini o'zgartirish."
+    },
+    {
+      "en": "quadratic time",
+      "uz": "kvadratik vaqt",
+      "note": "O(n kvadrat) — hajm kvadratiga proporsional tezlik."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Bubble sort murakkabligi qanday?",
+      "options": [
+        "O(n)",
+        "O(n kvadrat)",
+        "O(log n)"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ichma-ich ikki sikl borligi uchun O(n kvadrat)."
+    }
+  ]
+}

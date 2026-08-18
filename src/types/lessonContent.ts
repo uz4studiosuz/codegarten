@@ -1,9 +1,8 @@
 /**
- * Lesson content model
- * --------------------
- * Teaching material for curriculum lessons. A lesson plays as a step sequence:
- * teaching sections → key terms → quiz → (for exercise lessons) the interactive
- * block challenge.
+ * Lesson content shape — the contract between the JSON files under
+ * content/lessons/ and the components that render them.
+ *
+ * Types only, no data: safe to import from client components.
  *
  * Convention: English technical keywords stay in English with the Uzbek
  * equivalent in parentheses, so learners recognise them in real code and docs.
@@ -33,6 +32,7 @@ export interface ContentSection {
 export interface QuizQuestion {
   question: string;
   options: string[];
+  /** Index into `options` as authored; the runner reshuffles for display. */
   correctIndex: number;
   explanation: string;
 }
@@ -44,27 +44,3 @@ export interface LessonContent {
   terms: KeyTerm[];
   quiz: QuizQuestion[];
 }
-
-// ── Authoring shorthands, kept terse so the content files stay readable ─────
-
-export const s = (
-  heading: string,
-  body: string[],
-  extra?: { code?: CodeBlock; callout?: string }
-): ContentSection => ({ heading, body, ...extra });
-
-export const t = (en: string, uz: string, note: string): KeyTerm => ({ en, uz, note });
-
-export const q = (
-  question: string,
-  options: string[],
-  correctIndex: number,
-  explanation: string
-): QuizQuestion => ({ question, options, correctIndex, explanation });
-
-export const L = (
-  goal: string,
-  sections: ContentSection[],
-  terms: KeyTerm[],
-  quiz: QuizQuestion[]
-): LessonContent => ({ goal, sections, terms, quiz });

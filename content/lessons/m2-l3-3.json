@@ -1,0 +1,62 @@
+{
+  "goal": "Cheksiz sikl nima va undan qanday qochish kerakligini o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Cheksiz sikl",
+      "body": [
+        "Agar siklning tugash sharti hech qachon bajarilmasa, u to'xtamaydi. Bu infinite loop (cheksiz sikl) deb ataladi va dastur muzlab qolishiga olib keladi.",
+        "Eng ko'p uchraydigan sabab — hisoblagichni oshirishni unutish."
+      ],
+      "code": {
+        "caption": "Xatoli va to'g'ri sikl",
+        "lines": [
+          "// XATO: i hech qachon o'zgarmaydi",
+          "for (i = 1; i <= 3; ) {",
+          "  chiz(i)",
+          "}",
+          "",
+          "// TO'G'RI:",
+          "for (i = 1; i <= 3; i = i + 1) {",
+          "  chiz(i)",
+          "}"
+        ]
+      }
+    },
+    {
+      "heading": "Qanday qochish kerak",
+      "body": [
+        "Har sikl yozganda uchta savolga javob bering: hisoblagich qayerdan boshlanadi, qachon to'xtaydi, va har aylanishda qanday o'zgaradi. Uchinchisiga javob bo'lmasa — sikl cheksiz."
+      ],
+      "callout": "Har aylanishda hisoblagich shartga yaqinlashishi shart."
+    }
+  ],
+  "terms": [
+    {
+      "en": "infinite loop",
+      "uz": "cheksiz sikl",
+      "note": "Tugash sharti bajarilmaydigan, to'xtamaydigan sikl."
+    },
+    {
+      "en": "termination",
+      "uz": "tugash",
+      "note": "Siklning to'xtash sharti bajarilishi."
+    },
+    {
+      "en": "freeze",
+      "uz": "muzlash",
+      "note": "Dasturning javob bermay qolishi."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Cheksiz siklning eng ko'p uchraydigan sababi nima?",
+      "options": [
+        "Sikl tanasi juda uzun",
+        "Hisoblagichni oshirish unutilgan",
+        "Shart juda murakkab"
+      ],
+      "correctIndex": 1,
+      "explanation": "Hisoblagich o'zgarmasa shart hech qachon bajarilmaydi va sikl to'xtamaydi."
+    }
+  ]
+}

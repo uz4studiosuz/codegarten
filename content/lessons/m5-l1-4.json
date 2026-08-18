@@ -1,0 +1,49 @@
+{
+  "goal": "1-bosqich: o'zgaruvchi, qiymat berish va holat bo'yicha takrorlash.",
+  "sections": [
+    {
+      "heading": "Bosqich xulosasi",
+      "body": [
+        "O'zgaruvchi (variable) — nom berilgan xotira joyi.",
+        "Qiymat berish (assignment) = belgisi bilan bajariladi va matematik tenglik emas.",
+        "O'ng tomon avval to'liq hisoblanadi, keyin natija chapga yoziladi.",
+        "Yangi qiymat eskisini butunlay o'chiradi; barcha qiymatlar birgalikda dastur holatini (program state) tashkil qiladi."
+      ],
+      "callout": "Keyingi bosqichda ma'lumot turlari bilan ishlaymiz."
+    }
+  ],
+  "terms": [
+    {
+      "en": "variable",
+      "uz": "o'zgaruvchi",
+      "note": "Nomlangan xotira joyi."
+    },
+    {
+      "en": "assignment",
+      "uz": "qiymat berish",
+      "note": "Qiymat yozish amali."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "x = 3 dan keyin x = x * 4 bajarilsa, x qanday bo'ladi?",
+      "options": [
+        "3",
+        "12",
+        "4"
+      ],
+      "correctIndex": 1,
+      "explanation": "O'ng tomon avval hisoblanadi: 3 * 4 = 12."
+    },
+    {
+      "question": "Dastur holati (program state) nima?",
+      "options": [
+        "Kod uzunligi",
+        "Barcha o'zgaruvchilarning ayni damdagi qiymatlari",
+        "Xotira hajmi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Holat — dasturning ayni damdagi barcha qiymatlari to'plami."
+    }
+  ]
+}

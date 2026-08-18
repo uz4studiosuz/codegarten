@@ -1,0 +1,58 @@
+{
+  "goal": "Kundalik hayotdagi algoritmlarni tanib, ularni qadamlarga ajratasiz.",
+  "sections": [
+    {
+      "heading": "Algoritmlar atrofimizda",
+      "body": [
+        "Retsept, yo'l ko'rsatmasi, dori ichish tartibi — bularning barchasi algoritm. Har birida aniq qadamlar va aniq tartib bor.",
+        "Kundalik algoritmlarni tanib olish dasturlash tafakkurini rivojlantiradi."
+      ],
+      "code": {
+        "caption": "Choy damlash algoritmi",
+        "lines": [
+          "1. Choynakni chayqash",
+          "2. Suvni qaynatish",
+          "3. Choy solish (2 choy qoshiq)",
+          "4. Qaynoq suv quyish",
+          "5. 5 daqiqa kutish"
+        ]
+      }
+    },
+    {
+      "heading": "Bog'liq qadamlar",
+      "body": [
+        "Ba'zi qadamlar joyini almashtirsa bo'ladi, ba'zilari yo'q. Suvni qaynatmasdan quyish mumkin emas — bu dependency (bog'liqlik) deb ataladi."
+      ],
+      "callout": "Bog'liq qadamlar tartibini o'zgartirish algoritmni buzadi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "dependency",
+      "uz": "bog'liqlik",
+      "note": "Bir qadamning boshqasidan keyin bajarilishi shartligi."
+    },
+    {
+      "en": "procedure",
+      "uz": "tartib-qoida",
+      "note": "Belgilangan tartibda bajariladigan qadamlar to'plami."
+    },
+    {
+      "en": "input",
+      "uz": "kirish",
+      "note": "Algoritm ishlashi uchun kerak bo'ladigan boshlang'ich ma'lumot."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Choy damlashda qaysi ikki qadam o'rnini almashtirish mumkin emas?",
+      "options": [
+        "Choynakni chayqash va choy solish",
+        "Suvni qaynatish va qaynoq suv quyish",
+        "Kutish va ichish"
+      ],
+      "correctIndex": 1,
+      "explanation": "Suv qaynamasa, qaynoq suv quyish mumkin emas — bu bog'liq qadamlar."
+    }
+  ]
+}

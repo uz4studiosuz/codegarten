@@ -1,0 +1,58 @@
+{
+  "goal": "Dastur qanday qilib yo'lni tanlashini — tarmoqlanishni tushunib olasiz.",
+  "sections": [
+    {
+      "heading": "Yo'l ikkiga ajraladi",
+      "body": [
+        "Shu paytgacha kod har doim bir yo'ldan bordi. Branching (tarmoqlanish) esa dasturga vaziyatga qarab yo'l tanlash imkonini beradi.",
+        "Bu temir yo'l strelkasiga o'xshaydi: shart rost bo'lsa bir tomonga, yolg'on bo'lsa boshqa tomonga."
+      ],
+      "code": {
+        "caption": "Tarmoqlanish tuzilishi",
+        "lines": [
+          "agar (shart) {",
+          "  // shart rost bo'lsa bu bajariladi",
+          "} aks holda {",
+          "  // shart yolg'on bo'lsa bu bajariladi",
+          "}"
+        ]
+      }
+    },
+    {
+      "heading": "Control flow",
+      "body": [
+        "Kodning bajarilish yo'li control flow (boshqaruv oqimi) deb ataladi. Shartlar shu oqimni boshqaradi — qaysi qatorlar bajarilib, qaysilari o'tkazib yuborilishini belgilaydi."
+      ],
+      "callout": "Shart — dasturning yo'l tanlash strelkasi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "branching",
+      "uz": "tarmoqlanish",
+      "note": "Shartga qarab turli kod yo'llarini tanlash."
+    },
+    {
+      "en": "control flow",
+      "uz": "boshqaruv oqimi",
+      "note": "Kodning bajarilish yo'li va tartibi."
+    },
+    {
+      "en": "block",
+      "uz": "blok",
+      "note": "Qavs ichidagi, birga bajariladigan kod guruhi."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Boshqaruv oqimi (control flow) nimani bildiradi?",
+      "options": [
+        "Kodning uzunligini",
+        "Kodning bajarilish yo'li va tartibini",
+        "Xotira hajmini"
+      ],
+      "correctIndex": 1,
+      "explanation": "Control flow — qaysi qatorlar bajarilib, qaysilari o'tkazib yuborilishini belgilaydi."
+    }
+  ]
+}

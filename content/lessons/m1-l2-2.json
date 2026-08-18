@@ -1,0 +1,57 @@
+{
+  "goal": "Robotni buyruqlar bilan boshqarib, mo'ljalga olib borasiz.",
+  "sections": [
+    {
+      "heading": "Holat va harakat",
+      "body": [
+        "Robotning ikki xususiyati bor: qayerda turgani (position — pozitsiya) va qayoqqa qaragani (direction — yo'nalish).",
+        "Har bir buyruq shu ikkisidan birini o'zgartiradi. \"oldinga\" pozitsiyani, \"burilish\" yo'nalishni o'zgartiradi."
+      ],
+      "code": {
+        "caption": "Pozitsiya va yo'nalish",
+        "lines": [
+          "// Boshlanish: (0,0), o'ngga qaragan",
+          "oldinga(2)      // (2,0) — yo'nalish o'zgarmadi",
+          "o'ngga_buril()  // (2,0) — pozitsiya o'zgarmadi",
+          "oldinga(1)      // (2,1)"
+        ]
+      }
+    },
+    {
+      "heading": "Yo'nalishni hisobga olish",
+      "body": [
+        "Eng ko'p uchraydigan xato — yo'nalishni unutish. \"oldinga\" har doim bir tomonga emas, robot qaragan tomonga harakat qiladi."
+      ],
+      "callout": "Burilishdan keyin \"oldinga\" boshqa tomonni bildiradi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "position",
+      "uz": "pozitsiya",
+      "note": "Robotning maydondagi joyi, koordinatalar bilan beriladi."
+    },
+    {
+      "en": "direction",
+      "uz": "yo'nalish",
+      "note": "Robot hozir qaysi tomonga qaragani."
+    },
+    {
+      "en": "state",
+      "uz": "holat",
+      "note": "Pozitsiya va yo'nalishning birgalikdagi hozirgi qiymati."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Robot o'ngga qaragan, keyin bir marta buriladi. \"oldinga\" endi qayoqqa harakat qiladi?",
+      "options": [
+        "Yana o'ngga",
+        "Burilgandan keyingi yangi yo'nalishga",
+        "Boshlang'ich yo'nalishga"
+      ],
+      "correctIndex": 1,
+      "explanation": "\"oldinga\" har doim robot ayni damda qaragan yo'nalishga harakat qiladi."
+    }
+  ]
+}

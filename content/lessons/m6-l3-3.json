@@ -1,0 +1,61 @@
+{
+  "goal": "Vaziyatga mos tartiblash algoritmini tanlashni o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Algoritmlarni solishtirish",
+      "body": [
+        "Bubble sort — O(n kvadrat), tushunarli, kichik ro'yxatlar uchun.",
+        "Merge sort va Quick sort — O(n log n), amalda ishlatiladigan algoritmlar.",
+        "1000 element uchun farq: O(n kvadrat) taxminan 1 000 000 amal, O(n log n) esa taxminan 10 000 amal — 100 barobar tezroq."
+      ],
+      "code": {
+        "caption": "Masshtab farqi",
+        "lines": [
+          "// n = 1 000",
+          "// O(n kvadrat):  1 000 000 amal",
+          "// O(n log n):       10 000 amal",
+          "",
+          "// n = 1 000 000",
+          "// O(n kvadrat):  1 000 000 000 000 amal  (soatlar)",
+          "// O(n log n):       20 000 000 amal      (sekundlar)"
+        ]
+      }
+    },
+    {
+      "heading": "Amaliy maslahat",
+      "body": [
+        "Amalda tartiblashni o'zingiz yozmaysiz — har bir tilda tayyor, optimallashtirilgan tartiblash funksiyasi bor. Lekin murakkablikni bilish qaysi yechim ishlashini oldindan aytish imkonini beradi."
+      ],
+      "callout": "Murakkablikni bilish — yechim ishlashini oldindan bilish."
+    }
+  ],
+  "terms": [
+    {
+      "en": "merge sort",
+      "uz": "birlashtirib tartiblash",
+      "note": "O(n log n) murakkablikdagi barqaror tartiblash algoritmi."
+    },
+    {
+      "en": "quick sort",
+      "uz": "tez tartiblash",
+      "note": "Amalda eng ko'p ishlatiladigan O(n log n) algoritm."
+    },
+    {
+      "en": "built-in",
+      "uz": "tayyor",
+      "note": "Tilning o'zida mavjud, optimallashtirilgan funksiya."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "1 000 000 element uchun O(n kvadrat) va O(n log n) orasidagi farq qanday?",
+      "options": [
+        "Sezilmaydi",
+        "Soatlar va sekundlar farqi",
+        "Ikki barobar"
+      ],
+      "correctIndex": 1,
+      "explanation": "O(n kvadrat) trillion amal, O(n log n) esa 20 million amal talab qiladi — bu amalda ishlaydi va ishlamaydi degani."
+    }
+  ]
+}

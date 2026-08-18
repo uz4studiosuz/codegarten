@@ -1,0 +1,61 @@
+{
+  "goal": "Kompyuter buyruqni qanday tushunishini va nega aniqlik muhimligini bilib olasiz.",
+  "sections": [
+    {
+      "heading": "Kompyuter o'ylamaydi, bajaradi",
+      "body": [
+        "Odam bilan gaplashganda ko'p narsa aytilmasa ham tushuniladi. \"Choy damlab qo'y\" desangiz, suvni qaynatish va choyni solish kerakligini odam o'zi biladi.",
+        "Kompyuter esa taxmin qilmaydi. U faqat berilgan instruction (buyruq) ni, aynan aytilgan tartibda bajaradi. Bir qadamni aytishni unutsangiz, u shu qadamni tashlab ketadi va ogohlantirmaydi ham."
+      ]
+    },
+    {
+      "heading": "Aniqlik — birinchi ko'nikma",
+      "body": [
+        "Shuning uchun dasturlashdagi eng muhim ko'nikma — fikrni aniq qadamlarga aylantirish."
+      ],
+      "code": {
+        "caption": "Noaniq va aniq buyruq",
+        "lines": [
+          "// Kompyuter tushunmaydi:",
+          "kvadrat chiz",
+          "",
+          "// Kompyuter tushunadi:",
+          "oldinga(100)",
+          "o'ngga(90)",
+          "oldinga(100)",
+          "o'ngga(90)"
+        ]
+      },
+      "callout": "Kompyuter — juda tez, lekin juda ham so'zma-so'z ijrochi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "instruction",
+      "uz": "buyruq",
+      "note": "Kompyuterga beriladigan bitta aniq ko'rsatma."
+    },
+    {
+      "en": "execute",
+      "uz": "bajarish",
+      "note": "Buyruqni amalda ishga tushirish jarayoni."
+    },
+    {
+      "en": "literal",
+      "uz": "so'zma-so'z",
+      "note": "Aytilganidan ortiq ham, kam ham emas — aynan shundayligicha."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Kompyuterga \"xonani tozala\" deb buyruq bersak nima bo'ladi?",
+      "options": [
+        "O'zi tushunib, kerakli ishlarni bajaradi",
+        "Tushunmaydi — buyruq juda noaniq",
+        "Xatoni tuzatib, so'ng bajaradi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kompyuter noaniq buyruqni to'ldirib qo'ymaydi. Har bir qadam alohida va aniq aytilishi kerak."
+    }
+  ]
+}

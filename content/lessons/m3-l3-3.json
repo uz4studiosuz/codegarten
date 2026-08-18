@@ -1,0 +1,58 @@
+{
+  "goal": "Bir funksiya natijasini boshqasiga uzatib, ularni birlashtirasiz.",
+  "sections": [
+    {
+      "heading": "Funksiyalarni ulash",
+      "body": [
+        "Bir funksiyaning qaytargan qiymatini boshqa funksiyaga argument sifatida uzatish mumkin. Bu composition (kompozitsiya) deb ataladi.",
+        "Shu tarzda oddiy funksiyalardan murakkab mantiq yasaladi — xuddi konstruktordagi bloklardan bino qurilgani kabi."
+      ],
+      "code": {
+        "caption": "Kompozitsiya",
+        "lines": [
+          "funksiya kvadrat(x) { return x * x }",
+          "funksiya yarim(x)   { return x / 2 }",
+          "",
+          "// Ichkaridan tashqariga hisoblanadi",
+          "natija = yarim(kvadrat(6))   // kvadrat(6)=36, yarim(36)=18"
+        ]
+      }
+    },
+    {
+      "heading": "Hisoblanish tartibi",
+      "body": [
+        "Ichma-ich chaqiruvda eng ichkaridagi funksiya birinchi bajariladi. Uning natijasi tashqi funksiyaga argument bo'lib kiradi."
+      ],
+      "callout": "Kompozitsiya: kichik funksiyalardan katta mantiq yasash."
+    }
+  ],
+  "terms": [
+    {
+      "en": "composition",
+      "uz": "kompozitsiya",
+      "note": "Funksiyalarni bir-biriga ulab, murakkab mantiq yasash."
+    },
+    {
+      "en": "nested call",
+      "uz": "ichma-ich chaqiruv",
+      "note": "Bir funksiya chaqirig'i ichida boshqasini chaqirish."
+    },
+    {
+      "en": "evaluation order",
+      "uz": "hisoblanish tartibi",
+      "note": "Ichkaridan tashqariga qarab bajarilish tartibi."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "yarim(kvadrat(4)) qanday hisoblanadi?",
+      "options": [
+        "Avval yarim, keyin kvadrat",
+        "Avval kvadrat(4)=16, keyin yarim(16)=8",
+        "Ikkisi bir vaqtda"
+      ],
+      "correctIndex": 1,
+      "explanation": "Eng ichkaridagi chaqiruv birinchi bajariladi, natijasi tashqi funksiyaga uzatiladi."
+    }
+  ]
+}

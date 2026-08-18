@@ -1,0 +1,59 @@
+{
+  "goal": "return nima qiladi va nima uchun kerakligini tushunib olasiz.",
+  "sections": [
+    {
+      "heading": "Funksiya javob qaytaradi",
+      "body": [
+        "Ba'zi funksiyalar ish bajaradi (chizadi, saqlaydi). Boshqalari esa hisoblab, natijani qaytaradi. Buning uchun return (qaytarish) ishlatiladi.",
+        "return qiymatni funksiyadan tashqariga chiqaradi va shu bilan funksiya ishini darhol tugatadi."
+      ],
+      "code": {
+        "caption": "Qaytaruvchi funksiya",
+        "lines": [
+          "funksiya kvadrat_yuzasi(tomon) {",
+          "  return tomon * tomon",
+          "}",
+          "",
+          "yuza = kvadrat_yuzasi(5)   // yuza = 25",
+          "chiqar(yuza)"
+        ]
+      }
+    },
+    {
+      "heading": "return dan keyin kod bajarilmaydi",
+      "body": [
+        "return bajarilgach funksiya darhol to'xtaydi. Undan keyingi qatorlar hech qachon ishlamaydi — bu unreachable code (yetib bo'lmaydigan kod) deb ataladi."
+      ],
+      "callout": "return — javobni chiqaradi va funksiyani tugatadi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "return",
+      "uz": "qaytarish",
+      "note": "Funksiyadan natijani tashqariga chiqarish."
+    },
+    {
+      "en": "return value",
+      "uz": "qaytarilgan qiymat",
+      "note": "Funksiya chaqirig'i natijasida olinadigan qiymat."
+    },
+    {
+      "en": "unreachable code",
+      "uz": "yetib bo'lmaydigan kod",
+      "note": "return dan keyin joylashgan, hech qachon bajarilmaydigan kod."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "return bajarilgandan keyin funksiyadagi qolgan qatorlar nima bo'ladi?",
+      "options": [
+        "Ular ham bajariladi",
+        "Ular hech qachon bajarilmaydi",
+        "Xato yuzaga keladi"
+      ],
+      "correctIndex": 1,
+      "explanation": "return funksiyani darhol tugatadi, shuning uchun undan keyingi kod yetib bo'lmaydigan kod bo'lib qoladi."
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "goal": "Sikl yordamida kvadrat chizib, takrorlanish sonini to'g'ri hisoblashni o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Kvadratning tuzilishi",
+      "body": [
+        "Kvadratning 4 ta teng qirrasi va 4 ta burchagi bor. Har bir burchakda 90 daraja burilish kerak.",
+        "Ya'ni takrorlanuvchi naqsh — \"bir qirra chiz, keyin burilish\" — va u aynan 4 marta bajariladi."
+      ],
+      "code": {
+        "caption": "Kvadrat — 4 marta bir xil ish",
+        "lines": [
+          "repeat (4) {",
+          "  oldinga(100)   // qirra",
+          "  o'ngga(90)     // burchak",
+          "}"
+        ]
+      }
+    },
+    {
+      "heading": "Umumiy formula",
+      "body": [
+        "Har qanday muntazam ko'pburchak uchun: burilish burchagi = 360 / qirralar soni. Uchburchak uchun 120, beshburchak uchun 72 daraja."
+      ],
+      "callout": "Burilish burchagi = 360 / qirralar soni."
+    }
+  ],
+  "terms": [
+    {
+      "en": "polygon",
+      "uz": "ko'pburchak",
+      "note": "Bir necha to'g'ri chiziqdan tashkil topgan yopiq shakl."
+    },
+    {
+      "en": "loop count",
+      "uz": "takrorlanish soni",
+      "note": "Sikl tanasi necha marta bajarilishi."
+    },
+    {
+      "en": "angle",
+      "uz": "burchak",
+      "note": "Burilish kattaligi, darajada o'lchanadi."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Muntazam beshburchak chizish uchun burilish burchagi qancha bo'ladi?",
+      "options": [
+        "90 daraja",
+        "72 daraja",
+        "60 daraja"
+      ],
+      "correctIndex": 1,
+      "explanation": "360 / 5 = 72 daraja. Formula har qanday muntazam ko'pburchak uchun ishlaydi."
+    }
+  ]
+}

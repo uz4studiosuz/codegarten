@@ -354,7 +354,8 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const resetProgress = useCallback(() => persist(EMPTY), [persist]);
 
-  const value: ProgressContextValue = {
+  // Memoised so consumers only re-render when progress actually changes.
+  const value = useMemo<ProgressContextValue>(() => ({
     hydrated,
     xp: data.xp,
     streak,
@@ -372,7 +373,25 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({
     isFreshStart,
     recommendedLesson,
     resetProgress,
-  };
+  }), [
+    hydrated,
+    data.xp,
+    streak,
+    weeklyActivity,
+    completedCount,
+    isCompleted,
+    isUnlocked,
+    completeLesson,
+    visitLesson,
+    moduleProgress,
+    levelProgress,
+    trackPercent,
+    nextLessonIn,
+    recentLessons,
+    isFreshStart,
+    recommendedLesson,
+    resetProgress,
+  ]);
 
   return <ProgressContext.Provider value={value}>{children}</ProgressContext.Provider>;
 };

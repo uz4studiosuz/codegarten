@@ -1,0 +1,58 @@
+{
+  "goal": "Ma'noli shartlar tuzishni va ularni tekshirishni o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Shart tuzish",
+      "body": [
+        "Condition (shart) — true yoki false ga aylanadigan ifoda. Yaxshi shart aniq va bir ma'noli bo'ladi.",
+        "Shart tuzishda savolni aniq shakllantiring: \"foydalanuvchi 18 dan katta-mi?\" -> yosh >= 18."
+      ],
+      "code": {
+        "caption": "Savoldan shartga",
+        "lines": [
+          "// Savol: ball o'tish balidan yuqorimi?",
+          "o'tdi = ball >= 60",
+          "",
+          "// Savol: parol bo'sh-mi?",
+          "bo'sh = parol == \"\""
+        ]
+      }
+    },
+    {
+      "heading": "Chegaraviy holatlar",
+      "body": [
+        "Shartni tekshirishda chegara qiymatlarini alohida sinash kerak. ball = 60 bo'lsa nima bo'ladi? >= va > farqi aynan shu yerda ko'rinadi."
+      ],
+      "callout": "Shartni har doim chegara qiymatida sinab ko'ring."
+    }
+  ],
+  "terms": [
+    {
+      "en": "condition",
+      "uz": "shart",
+      "note": "Mantiqiy natija beruvchi tekshiruv ifodasi."
+    },
+    {
+      "en": "expression",
+      "uz": "ifoda",
+      "note": "Hisoblanib qiymat beruvchi kod bo'lagi."
+    },
+    {
+      "en": "edge case",
+      "uz": "chegaraviy holat",
+      "note": "Chegara qiymatida yuzaga keladigan maxsus holat."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "O'tish bali 60. ball >= 60 va ball > 60 shartlari qachon farq qiladi?",
+      "options": [
+        "Hech qachon",
+        "ball aynan 60 bo'lganda",
+        "ball 100 bo'lganda"
+      ],
+      "correctIndex": 1,
+      "explanation": "ball = 60 da birinchisi true, ikkinchisi false beradi. Chegara qiymati muhim."
+    }
+  ]
+}

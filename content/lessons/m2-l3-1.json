@@ -1,0 +1,59 @@
+{
+  "goal": "Sikl ichida sikl qanday ishlashini va jami aylanish sonini hisoblashni o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Ichma-ich sikl",
+      "body": [
+        "Sikl tanasiga yana bir sikl joylashtirish mumkin. Bu nested loop (ichma-ich sikl) deb ataladi.",
+        "Tashqi sikl bir marta aylanganda, ichki sikl to'liq aylanib chiqadi. Shuning uchun jami aylanish soni ikkisining ko'paytmasi bo'ladi."
+      ],
+      "code": {
+        "caption": "3 x 4 = 12 aylanish",
+        "lines": [
+          "for (qator = 1; qator <= 3; qator++) {",
+          "  for (ustun = 1; ustun <= 4; ustun++) {",
+          "    chiz_katak(qator, ustun)",
+          "  }",
+          "}",
+          "// chiz_katak 12 marta chaqiriladi"
+        ]
+      }
+    },
+    {
+      "heading": "Qayerda kerak bo'ladi",
+      "body": [
+        "Ichma-ich sikl ikki o'lchovli tuzilmalar bilan ishlashda kerak: jadval, shaxmat taxtasi, piksel maydoni, matritsa."
+      ],
+      "callout": "Jami aylanish = tashqi sikl x ichki sikl."
+    }
+  ],
+  "terms": [
+    {
+      "en": "nested loop",
+      "uz": "ichma-ich sikl",
+      "note": "Sikl tanasi ichida joylashgan boshqa sikl."
+    },
+    {
+      "en": "outer loop",
+      "uz": "tashqi sikl",
+      "note": "Ichida boshqa sikl saqlovchi sikl."
+    },
+    {
+      "en": "inner loop",
+      "uz": "ichki sikl",
+      "note": "Tashqi sikl tanasida joylashgan sikl."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Tashqi sikl 5 marta, ichki sikl 3 marta aylansa, ichki tana necha marta bajariladi?",
+      "options": [
+        "8 marta",
+        "15 marta",
+        "5 marta"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 x 3 = 15. Tashqi siklning har aylanishida ichki sikl to'liq 3 marta aylanadi."
+    }
+  ]
+}

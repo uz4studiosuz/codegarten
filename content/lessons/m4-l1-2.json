@@ -1,0 +1,58 @@
+{
+  "goal": "Taqqoslash amallari bilan mantiqiy qiymat hosil qilasiz.",
+  "sections": [
+    {
+      "heading": "Taqqoslash amallari",
+      "body": [
+        "Comparison operator (taqqoslash amali) ikki qiymatni solishtiradi va natijada true yoki false qaytaradi.",
+        "Asosiy amallar: == (teng), != (teng emas), > (katta), < (kichik), >= (katta yoki teng), <= (kichik yoki teng)."
+      ],
+      "code": {
+        "caption": "Taqqoslash natijalari",
+        "lines": [
+          "5 > 3      // true",
+          "5 == 3     // false",
+          "5 != 3     // true",
+          "5 >= 5     // true",
+          "\"a\" == \"a\"  // true"
+        ]
+      }
+    },
+    {
+      "heading": "Eng ko'p uchraydigan xato",
+      "body": [
+        "Ko'p tillarda = (bitta teng) qiymat berish, == (ikki teng) esa taqqoslash uchun ishlatiladi. Ularni almashtirish klassik xato."
+      ],
+      "callout": "= qiymat beradi, == taqqoslaydi. Bu ikkisini adashtirmang."
+    }
+  ],
+  "terms": [
+    {
+      "en": "comparison operator",
+      "uz": "taqqoslash amali",
+      "note": "Ikki qiymatni solishtirib mantiqiy natija beruvchi amal."
+    },
+    {
+      "en": "assignment",
+      "uz": "qiymat berish",
+      "note": "O'zgaruvchiga qiymat yozish amali (=)."
+    },
+    {
+      "en": "equality",
+      "uz": "tenglik",
+      "note": "Ikki qiymatning bir xilligini tekshirish (==)."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "5 >= 5 ifodasining natijasi qanday?",
+      "options": [
+        "false",
+        "true",
+        "Xato"
+      ],
+      "correctIndex": 1,
+      "explanation": ">= \"katta yoki teng\" degani. 5 5 ga teng, shuning uchun natija true."
+    }
+  ]
+}

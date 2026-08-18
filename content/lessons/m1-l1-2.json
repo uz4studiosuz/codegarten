@@ -1,0 +1,57 @@
+{
+  "goal": "Birinchi ishlaydigan buyruqni yozib, natijasini ekranda ko'rasiz.",
+  "sections": [
+    {
+      "heading": "Buyruq qanday ko'rinadi",
+      "body": [
+        "Har bir buyruq ikki qismdan iborat: nima qilish kerak (command — buyruq nomi) va qanday qilish kerak (parameter — parametr).",
+        "Masalan oldinga(100) da \"oldinga\" — buyruq, 100 esa parametr: qancha masofaga yurish kerakligini bildiradi."
+      ],
+      "code": {
+        "caption": "Buyruq tuzilishi",
+        "lines": [
+          "oldinga(100)",
+          "//  ^      ^",
+          "//  |      parameter (parametr)",
+          "//  command (buyruq)"
+        ]
+      }
+    },
+    {
+      "heading": "Parametrni o'zgartirish",
+      "body": [
+        "Parametrni o'zgartirsangiz natija ham o'zgaradi. Ya'ni bitta buyruq bilan turli ishlarni bajarish mumkin."
+      ],
+      "callout": "Bitta buyruq + turli parametr = turli natija."
+    }
+  ],
+  "terms": [
+    {
+      "en": "command",
+      "uz": "buyruq",
+      "note": "Bajarilishi kerak bo'lgan amalning nomi."
+    },
+    {
+      "en": "parameter",
+      "uz": "parametr",
+      "note": "Buyruqqa uzatiladigan qiymat — qanday bajarilishini belgilaydi."
+    },
+    {
+      "en": "output",
+      "uz": "natija",
+      "note": "Buyruq bajarilgandan keyin ko'rinadigan holat."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "oldinga(50) buyrug'ida 50 nima vazifasini bajaradi?",
+      "options": [
+        "Buyruq nomi",
+        "Parametr — masofani belgilaydi",
+        "Xato kodi"
+      ],
+      "correctIndex": 1,
+      "explanation": "50 — parametr. U buyruqqa \"qancha?\" degan savolga javob beradi."
+    }
+  ]
+}

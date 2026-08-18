@@ -1,0 +1,61 @@
+{
+  "goal": "Bir necha yechim orasidan eng qisqasini tanlashni o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Bitta masala, ko'p yechim",
+      "body": [
+        "Bir masalani turli algoritmlar bilan yechish mumkin. Ularning barchasi to'g'ri natija beradi, lekin qadamlar soni farq qiladi.",
+        "Kamroq qadam — kamroq vaqt va kamroq xato ehtimoli. Shuning uchun efficiency (samaradorlik) muhim."
+      ],
+      "code": {
+        "caption": "Bir xil natija, turli yo'l",
+        "lines": [
+          "// A yechimi: 6 qadam",
+          "oldinga(1) oldinga(1) oldinga(1)",
+          "o'ngga_buril() oldinga(1) oldinga(1)",
+          "",
+          "// B yechimi: 3 qadam",
+          "oldinga(3)",
+          "o'ngga_buril()",
+          "oldinga(2)"
+        ]
+      }
+    },
+    {
+      "heading": "Qanday tanlaymiz",
+      "body": [
+        "Yechimni tanlashda ikki narsani solishtiramiz: qadamlar soni va kodning tushunarliligi. Ba'zan bir oz uzunroq, lekin ancha tushunarli kod yaxshiroq tanlov bo'ladi."
+      ],
+      "callout": "Eng qisqa kod har doim eng yaxshi kod emas — o'qilishlilik ham muhim."
+    }
+  ],
+  "terms": [
+    {
+      "en": "efficiency",
+      "uz": "samaradorlik",
+      "note": "Masalani kamroq qadam va resurs bilan yechish darajasi."
+    },
+    {
+      "en": "solution",
+      "uz": "yechim",
+      "note": "Masalani hal qiluvchi aniq algoritm."
+    },
+    {
+      "en": "readability",
+      "uz": "o'qilishlilik",
+      "note": "Kodni boshqa odam tushunishining osonligi."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Ikki algoritm bir xil natija beradi: biri 3, ikkinchisi 8 qadam. Qaysi biri samaraliroq?",
+      "options": [
+        "8 qadamli — batafsilroq",
+        "3 qadamli",
+        "Ikkisi ham bir xil"
+      ],
+      "correctIndex": 1,
+      "explanation": "Samaradorlik kamroq qadam bilan bir xil natijaga erishishni bildiradi."
+    }
+  ]
+}

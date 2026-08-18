@@ -1,0 +1,49 @@
+{
+  "goal": "2-bosqich: bo'laklash, holat va optimallashtirish tushunchalarini mustahkamlaysiz.",
+  "sections": [
+    {
+      "heading": "Bosqich xulosasi",
+      "body": [
+        "Katta vazifani bo'laklash (decomposition) — har bir qadam \"qanday?\" savolini tug'dirmasligi kerak.",
+        "Robotning holati (state) pozitsiya va yo'nalishdan iborat; har bir buyruq shulardan birini o'zgartiradi.",
+        "Optimallashtirish (optimization) — natijani saqlab, ortiqcha qadamlarni olib tashlash.",
+        "Algoritm avval rejada, keyin kodda tug'iladi."
+      ],
+      "callout": "Keyingi bosqichda algoritm tushunchasini rasmiy ta'riflaymiz."
+    }
+  ],
+  "terms": [
+    {
+      "en": "decomposition",
+      "uz": "bo'laklash",
+      "note": "Vazifani mayda qadamlarga ajratish."
+    },
+    {
+      "en": "state",
+      "uz": "holat",
+      "note": "Dasturning ayni damdagi barcha qiymatlari."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "\"oldinga\" buyrug'i nimaga bog'liq holda ishlaydi?",
+      "options": [
+        "Har doim bir xil tomonga",
+        "Robotning hozirgi yo'nalishiga",
+        "Buyruq nechanchi qatorda turganiga"
+      ],
+      "correctIndex": 1,
+      "explanation": "Harakat robot qaragan yo'nalishga bo'ladi, shuning uchun burilishlarni kuzatib borish kerak."
+    },
+    {
+      "question": "4 marta ketma-ket o'ngga burilish nimaga olib keladi?",
+      "options": [
+        "Robot boshlang'ich yo'nalishga qaytadi",
+        "Robot orqaga qaraydi",
+        "Xato yuz beradi"
+      ],
+      "correctIndex": 0,
+      "explanation": "4 x 90 = 360 daraja, ya'ni to'liq aylanish. Yo'nalish o'zgarmaydi — bu ortiqcha kod."
+    }
+  ]
+}

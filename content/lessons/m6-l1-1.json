@@ -1,0 +1,59 @@
+{
+  "goal": "Algoritm tezligi nima uchun muhimligini va u qanday o'lchanishini tushunib olasiz.",
+  "sections": [
+    {
+      "heading": "Tezlik masshtabda ko'rinadi",
+      "body": [
+        "10 element bilan har qanday algoritm tez ishlaydi. Farq million element bilan ishlaganda ko'rinadi.",
+        "Sekin algoritm kichik ma'lumotda muammo tug'dirmaydi, lekin ma'lumot o'sgach dastur ishlamay qoladi."
+      ],
+      "code": {
+        "caption": "Masshtab farqi",
+        "lines": [
+          "// 1 000 000 element uchun taxminiy vaqt:",
+          "// Tez algoritm:   0.02 sekund",
+          "// Sekin algoritm: 3 soat",
+          "",
+          "// 10 element uchun ikkisi ham bir zumda ishlaydi"
+        ]
+      }
+    },
+    {
+      "heading": "Vaqtni sekundda o'lchamaymiz",
+      "body": [
+        "Sekund kompyuterga bog'liq: kuchli kompyuterda tezroq. Shuning uchun algoritm tezligini qadamlar soni bilan o'lchaymiz.",
+        "Bu o'lchov time complexity (vaqt murakkabligi) deb ataladi va kompyuterdan mustaqil."
+      ],
+      "callout": "Algoritm tezligi sekundda emas, qadamlar sonida o'lchanadi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "time complexity",
+      "uz": "vaqt murakkabligi",
+      "note": "Algoritm qadamlari sonining ma'lumot hajmiga bog'liqligi."
+    },
+    {
+      "en": "scalability",
+      "uz": "masshtablanuvchanlik",
+      "note": "Ma'lumot o'sganda algoritmning ishlashda davom etishi."
+    },
+    {
+      "en": "performance",
+      "uz": "unumdorlik",
+      "note": "Algoritmning tezlik va resurs bo'yicha ko'rsatkichi."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Algoritm tezligini nima uchun sekundda o'lchamaymiz?",
+      "options": [
+        "Sekund juda katta o'lchov",
+        "Sekund kompyuter kuchiga bog'liq",
+        "Sekundni o'lchash qiyin"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kuchli kompyuterda bir xil algoritm tezroq ishlaydi. Qadamlar soni esa kompyuterdan mustaqil."
+    }
+  ]
+}

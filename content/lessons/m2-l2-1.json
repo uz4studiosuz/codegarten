@@ -1,0 +1,58 @@
+{
+  "goal": "Sikl hisoblagichi nima va u qanday o'zgarishini tushunib olasiz.",
+  "sections": [
+    {
+      "heading": "Hisoblagich — siklning xotirasi",
+      "body": [
+        "Ko'p sikllarda counter (hisoblagich) bo'ladi — hozir nechanchi aylanish bajarilayotganini saqlaydigan qiymat.",
+        "Hisoblagich odatda 0 yoki 1 dan boshlanadi va har aylanishda bittaga oshadi. Bu increment (oshirish) deb ataladi."
+      ],
+      "code": {
+        "caption": "Hisoblagichli sikl",
+        "lines": [
+          "for (i = 1; i <= 3; i = i + 1) {",
+          "  chiz(i)      // i = 1, keyin 2, keyin 3",
+          "}",
+          "",
+          "// i — counter (hisoblagich)"
+        ]
+      }
+    },
+    {
+      "heading": "Hisoblagichdan foydalanish",
+      "body": [
+        "Hisoblagich qiymatini sikl tanasida ishlatish mumkin. Shunda har aylanish bir oz boshqacha natija beradi — masalan har safar uzunroq chiziq chiziladi."
+      ],
+      "callout": "Hisoblagich sikl aylanishlarini bir-biridan farqlash imkonini beradi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "counter",
+      "uz": "hisoblagich",
+      "note": "Sikl nechanchi aylanishda turganini saqlovchi qiymat."
+    },
+    {
+      "en": "increment",
+      "uz": "oshirish",
+      "note": "Qiymatni odatda bittaga oshirish amali."
+    },
+    {
+      "en": "for loop",
+      "uz": "for sikli",
+      "note": "Hisoblagichi ochiq ko'rsatilgan sikl turi."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "for (i = 1; i <= 3; i = i + 1) siklida i qanday qiymatlarni oladi?",
+      "options": [
+        "1, 2, 3",
+        "0, 1, 2",
+        "1, 3"
+      ],
+      "correctIndex": 0,
+      "explanation": "i 1 dan boshlanadi va 3 dan oshmaguncha bittaga oshib boradi: 1, 2, 3."
+    }
+  ]
+}

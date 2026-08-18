@@ -1,0 +1,49 @@
+{
+  "goal": "2-bosqich: hisoblagich, chegara va indeks bo'yicha takrorlash.",
+  "sections": [
+    {
+      "heading": "Bosqich xulosasi",
+      "body": [
+        "Hisoblagich (counter) sikl nechanchi aylanishda turganini saqlaydi.",
+        "Chegarani (boundary) bir birlikka xato qo'yish off-by-one error ga olib keladi.",
+        "Indeks (index) ko'p tillarda 0 dan boshlanadi.",
+        "Hisoblagichni sikl tanasida ishlatib, o'sib boruvchi naqshlar yasash mumkin."
+      ],
+      "callout": "Keyingi bosqichda sikl ichidagi siklga o'tamiz."
+    }
+  ],
+  "terms": [
+    {
+      "en": "counter",
+      "uz": "hisoblagich",
+      "note": "Aylanish raqamini saqlovchi qiymat."
+    },
+    {
+      "en": "off-by-one",
+      "uz": "bir birlik xatosi",
+      "note": "Chegara xatosining eng keng tarqalgan turi."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "i < 3 va i <= 3 shartlari orasidagi farq nima?",
+      "options": [
+        "Farq yo'q",
+        "Bitta aylanish farqi",
+        "Uch aylanish farqi"
+      ],
+      "correctIndex": 1,
+      "explanation": "i <= 3 bir marta ko'proq aylanadi, chunki 3 ning o'zi ham shartga kiradi."
+    },
+    {
+      "question": "Off-by-one error qanday xato?",
+      "options": [
+        "Sintaksis xatosi",
+        "Sikl bir marta ko'p yoki kam aylanishi",
+        "Kompyuter xatosi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Bu chegara xatosi: sikl kutilganidan bir marta ortiq yoki kam bajariladi."
+    }
+  ]
+}

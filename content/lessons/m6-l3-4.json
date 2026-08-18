@@ -1,0 +1,65 @@
+{
+  "goal": "6-modul: algoritmik murakkablik bo'yicha yakuniy takrorlash.",
+  "sections": [
+    {
+      "heading": "Modul xulosasi",
+      "body": [
+        "Algoritm tezligi qadamlar sonida o'lchanadi (time complexity), kompyuterdan mustaqil.",
+        "O(1) doimiy, O(log n) logarifmik, O(n) chiziqli, O(n log n) va O(n kvadrat) — asosiy murakkablik sinflari.",
+        "Chiziqli qidiruv O(n), ikkilik qidiruv O(log n) — lekin tartiblash talab qiladi.",
+        "Bubble sort O(n kvadrat) — o'quv uchun; amalda O(n log n) algoritmlar ishlatiladi.",
+        "Algoritm tanlash — murosaviy tanlov (trade-off), faqat tezlik emas."
+      ],
+      "callout": "Tabriklaymiz — asosiy bosqichni yakunladingiz!"
+    }
+  ],
+  "terms": [
+    {
+      "en": "Big-O notation",
+      "uz": "Big-O yozuvi",
+      "note": "Modulning markaziy tushunchasi."
+    },
+    {
+      "en": "trade-off",
+      "uz": "murosaviy tanlov",
+      "note": "Amaliy shartlar asosida tanlov."
+    },
+    {
+      "en": "scalability",
+      "uz": "masshtablanuvchanlik",
+      "note": "Hajm o'sganda ishlashda davom etish."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Quyidagi murakkabliklardan qaysi biri eng tez?",
+      "options": [
+        "O(n kvadrat)",
+        "O(1)",
+        "O(n)"
+      ],
+      "correctIndex": 1,
+      "explanation": "O(1) — doimiy vaqt, ma'lumot hajmiga umuman bog'liq emas."
+    },
+    {
+      "question": "Binary search nima uchun tez ishlaydi?",
+      "options": [
+        "Ko'p xotira ishlatadi",
+        "Har qadamda ro'yxatning yarmini tashlab yuboradi",
+        "Barcha elementni bir vaqtda tekshiradi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Hajmni har qadamda yarmiga qisqartirish O(log n) tezlikni beradi."
+    },
+    {
+      "question": "Eng tez algoritm har doim to'g'ri tanlovmi?",
+      "options": [
+        "Ha, har doim",
+        "Yo'q — hajm, chastota va murakkablik ham hisobga olinadi",
+        "Faqat kichik ma'lumotda"
+      ],
+      "correctIndex": 1,
+      "explanation": "Bu muhandislik qarori: tartiblash narxi, kod murakkabligi va foydalanish chastotasi ham muhim."
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "goal": "1-bosqich: funksiya, e'lon, chaqiruv va abstraksiya bo'yicha takrorlash.",
+  "sections": [
+    {
+      "heading": "Bosqich xulosasi",
+      "body": [
+        "Funksiya (function) — nomlangan, qayta ishlatiladigan kod bo'lagi.",
+        "E'lon (definition) kodni yozib qo'yadi, chaqiruv (function call) uni ishga tushiradi.",
+        "Abstraksiya (abstraction) ichki tafsilotni yashiradi — qora quti tamoyili.",
+        "Bir funksiya bir vazifani bajarishi kerak (single responsibility)."
+      ],
+      "callout": "Keyingi bosqichda parametrlar bilan funksiyani moslashuvchan qilamiz."
+    }
+  ],
+  "terms": [
+    {
+      "en": "function",
+      "uz": "funksiya",
+      "note": "Bosqichning asosiy tushunchasi."
+    },
+    {
+      "en": "abstraction",
+      "uz": "abstraksiya",
+      "note": "Tafsilotni yashirish tamoyili."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Qora quti tamoyili nimani bildiradi?",
+      "options": [
+        "Funksiya kodini o'chirish kerak",
+        "Funksiyani ishlatish uchun ichini bilish shart emas",
+        "Funksiya qora rangda yozilishi kerak"
+      ],
+      "correctIndex": 1,
+      "explanation": "Nomi va vazifasini bilish yetarli — bu abstraksiya tamoyili."
+    },
+    {
+      "question": "Funksiyani e'lon qilish nima qiladi?",
+      "options": [
+        "Kodni darhol bajaradi",
+        "Faqat yozib qo'yadi — bajarish uchun chaqirish kerak",
+        "Xotirani tozalaydi"
+      ],
+      "correctIndex": 1,
+      "explanation": "E'lon retsept yozishga o'xshaydi; chaqiruv esa uni tayyorlashga."
+    }
+  ]
+}

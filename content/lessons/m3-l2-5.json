@@ -1,0 +1,49 @@
+{
+  "goal": "2-bosqich: parametr, argument va umumlashtirish bo'yicha takrorlash.",
+  "sections": [
+    {
+      "heading": "Bosqich xulosasi",
+      "body": [
+        "Parametr (parameter) — e'londagi kirish nomi; argument (argument) — chaqiruvdagi haqiqiy qiymat.",
+        "Parametr funksiyani moslashuvchan qiladi: bir mantiq, ko'p natija.",
+        "Bir nechta parametrda tartib muhim.",
+        "Umumlashtirish (generalization) foydali, lekin haddan oshirmaslik kerak."
+      ],
+      "callout": "Keyingi bosqichda funksiyaning javob qaytarishini o'rganamiz."
+    }
+  ],
+  "terms": [
+    {
+      "en": "parameter",
+      "uz": "parametr",
+      "note": "Funksiya kirishi."
+    },
+    {
+      "en": "argument",
+      "uz": "argument",
+      "note": "Uzatilgan haqiqiy qiymat."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Parametr va argument orasidagi farq nima?",
+      "options": [
+        "Farq yo'q",
+        "Parametr — e'londagi nom, argument — uzatilgan qiymat",
+        "Argument faqat sonlar bo'ladi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Parametr bo'sh joy, argument esa unga qo'yilgan aniq qiymat."
+    },
+    {
+      "question": "Parametrli funksiyaning asosiy foydasi nima?",
+      "options": [
+        "Kod qisqaradi",
+        "Bir mantiq bilan turli natija olish mumkin",
+        "Tezroq ishlaydi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Parametr funksiyani turli holatlarga moslashtiradi."
+    }
+  ]
+}

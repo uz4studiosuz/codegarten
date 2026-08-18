@@ -1,0 +1,49 @@
+{
+  "goal": "2-bosqich: qidirish algoritmlari bo'yicha takrorlash.",
+  "sections": [
+    {
+      "heading": "Bosqich xulosasi",
+      "body": [
+        "Chiziqli qidiruv (linear search) O(n) — tartiblash talab qilmaydi.",
+        "Ikkilik qidiruv (binary search) O(log n) — lekin ro'yxat tartiblangan bo'lishi shart.",
+        "Har qadamda hajm yarmiga kamaysa, murakkablik logarifmik bo'ladi.",
+        "Algoritm tanlash — murosaviy tanlov (trade-off): hajm, chastota va murakkablik hisobga olinadi."
+      ],
+      "callout": "Keyingi bosqichda tartiblash algoritmlarini o'rganamiz."
+    }
+  ],
+  "terms": [
+    {
+      "en": "binary search",
+      "uz": "ikkilik qidiruv",
+      "note": "O(log n) qidirish usuli."
+    },
+    {
+      "en": "trade-off",
+      "uz": "murosaviy tanlov",
+      "note": "Afzalliklar orasidagi muvozanat."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "1 000 000 elementli tartiblangan ro'yxatda binary search taxminan necha qadam bajaradi?",
+      "options": [
+        "1 000 000",
+        "20",
+        "1000"
+      ],
+      "correctIndex": 1,
+      "explanation": "Har qadamda hajm yarmiga kamayadi. 2 ning 20-darajasi taxminan 1 000 000."
+    },
+    {
+      "question": "Chiziqli qidiruv murakkabligi qanday?",
+      "options": [
+        "O(1)",
+        "O(n)",
+        "O(log n)"
+      ],
+      "correctIndex": 1,
+      "explanation": "Eng yomon holatda barcha n elementni tekshirishga to'g'ri keladi."
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "goal": "Bir necha shartli murakkab tanlov qurishni o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Shartlarni birlashtirish",
+      "body": [
+        "Amalda ko'p qarorlar bir necha shartga bog'liq bo'ladi. Ularni mantiqiy amallar bilan birlashtirasiz.",
+        "Qavslar tekshirish tartibini aniq belgilaydi — matematikadagi kabi. Murakkab shartda qavs qo'yish o'qilishlilikni sezilarli oshiradi."
+      ],
+      "code": {
+        "caption": "Qavs ma'noni o'zgartiradi",
+        "lines": [
+          "// Qavssiz — noaniq",
+          "a VA b YOKI c",
+          "",
+          "// Qavsli — aniq",
+          "(a VA b) YOKI c",
+          "a VA (b YOKI c)",
+          "// Bu ikkisi turli natija beradi"
+        ]
+      }
+    },
+    {
+      "heading": "Shartni soddalashtirish",
+      "body": [
+        "Juda murakkab shartni mantiqiy qiymatga saqlab, keyin ishlatish mumkin. Bu kodni ancha tushunarli qiladi."
+      ],
+      "callout": "Murakkab shartni nomlangan qiymatga saqlash — o'qilishlilikni oshiradi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "logical operator",
+      "uz": "mantiqiy amal",
+      "note": "Shartlarni birlashtiruvchi amal (VA, YOKI, EMAS)."
+    },
+    {
+      "en": "precedence",
+      "uz": "ustuvorlik",
+      "note": "Amallarning bajarilish tartibi."
+    },
+    {
+      "en": "parentheses",
+      "uz": "qavslar",
+      "note": "Tekshirish tartibini aniq belgilovchi belgilar."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Murakkab shartda qavs qo'yishning foydasi nima?",
+      "options": [
+        "Kod qisqaradi",
+        "Tekshirish tartibi aniq bo'ladi",
+        "Tezroq ishlaydi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Qavs amallarning bajarilish tartibini aniq belgilaydi va noaniqlikni yo'qotadi."
+    }
+  ]
+}

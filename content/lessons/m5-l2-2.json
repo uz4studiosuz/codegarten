@@ -1,0 +1,63 @@
+{
+  "goal": "Ikki o'zgaruvchi qiymatini almashtirishni o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Klassik masala",
+      "body": [
+        "Ikki o'zgaruvchi qiymatini almashtirish oddiy ko'rinadi, lekin to'g'ridan-to'g'ri urinish ishlamaydi: birinchi qiymat yo'qoladi.",
+        "Yechim — temporary variable (vaqtinchalik o'zgaruvchi) ishlatish."
+      ],
+      "code": {
+        "caption": "Xato va to'g'ri yechim",
+        "lines": [
+          "a = 1   b = 2",
+          "",
+          "// XATO: a ning qiymati yo'qoldi",
+          "a = b     // a = 2",
+          "b = a     // b = 2  (1 emas!)",
+          "",
+          "// TO'G'RI: vaqtinchalik o'zgaruvchi",
+          "vaqt = a  // vaqt = 1",
+          "a = b     // a = 2",
+          "b = vaqt  // b = 1"
+        ]
+      }
+    },
+    {
+      "heading": "Nima uchun shunday",
+      "body": [
+        "a = b bajarilgach a ning eski qiymati o'chib ketadi. Uni oldindan saqlab qo'ymasa, tiklashning imkoni bo'lmaydi."
+      ],
+      "callout": "Qiymatni o'chirishdan oldin saqlab qo'ying."
+    }
+  ],
+  "terms": [
+    {
+      "en": "temporary variable",
+      "uz": "vaqtinchalik o'zgaruvchi",
+      "note": "Qiymatni vaqtincha saqlash uchun ishlatiladigan o'zgaruvchi."
+    },
+    {
+      "en": "swap",
+      "uz": "almashtirish",
+      "note": "Ikki o'zgaruvchi qiymatini o'rin almashtirish."
+    },
+    {
+      "en": "data loss",
+      "uz": "ma'lumot yo'qolishi",
+      "note": "Qiymat ustiga yozilib, tiklanmas bo'lib qolishi."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Ikki qiymatni almashtirish uchun nima kerak?",
+      "options": [
+        "Faqat ikki qatorlik kod",
+        "Vaqtinchalik uchinchi o'zgaruvchi",
+        "Sikl"
+      ],
+      "correctIndex": 1,
+      "explanation": "Birinchi qiymatni saqlab qo'ymasa u yo'qoladi. Shuning uchun vaqtinchalik o'zgaruvchi kerak."
+    }
+  ]
+}

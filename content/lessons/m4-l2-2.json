@@ -1,0 +1,60 @@
+{
+  "goal": "if bloki bilan shartli bajarilishni amalda qo'llaysiz.",
+  "sections": [
+    {
+      "heading": "if — eng oddiy shart",
+      "body": [
+        "if (agar) bloki faqat shart rost bo'lganda ichidagi kodni bajaradi. Shart yolg'on bo'lsa, blok butunlay o'tkazib yuboriladi.",
+        "if bloki yolg'on holat uchun hech narsa qilmaydi — shuning uchun \"aks holda\" kerak bo'lmaganda ishlatiladi."
+      ],
+      "code": {
+        "caption": "Faqat rost holatda ishlaydi",
+        "lines": [
+          "ball = 75",
+          "",
+          "agar (ball >= 60) {",
+          "  chiqar(\"Tabriklaymiz, o'tdingiz!\")",
+          "}",
+          "",
+          "chiqar(\"Dastur tugadi\")   // har doim bajariladi"
+        ]
+      }
+    },
+    {
+      "heading": "Blok chegarasi",
+      "body": [
+        "Faqat qavs ichidagi kod shartga bog'liq. Qavsdan tashqaridagi kod har doim bajariladi — bu ko'p boshlang'ich xatoning sababi."
+      ],
+      "callout": "Qavs ichi — shartli. Qavsdan tashqari — har doim bajariladi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "if statement",
+      "uz": "if bloki",
+      "note": "Shart rost bo'lganda bajariladigan kod bloki."
+    },
+    {
+      "en": "scope",
+      "uz": "amal doirasi",
+      "note": "Kod bo'lagining ta'sir chegarasi."
+    },
+    {
+      "en": "skip",
+      "uz": "o'tkazib yuborish",
+      "note": "Shart bajarilmaganda blokni bajarmaslik."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "if bloki shartida false chiqsa nima bo'ladi?",
+      "options": [
+        "Xato yuzaga keladi",
+        "Blok o'tkazib yuboriladi, dastur davom etadi",
+        "Dastur to'xtaydi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Shart yolg'on bo'lsa blok bajarilmaydi, lekin dastur keyingi qatorlardan davom etadi."
+    }
+  ]
+}

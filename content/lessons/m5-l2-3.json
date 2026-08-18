@@ -1,0 +1,63 @@
+{
+  "goal": "Hisoblagich yasab, qiymatni bosqichma-bosqich oshirishni o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Hisoblagich naqshi",
+      "body": [
+        "Hisoblagich — nol yoki boshqa qiymatdan boshlanib, hodisa yuz berganda oshib boradigan o'zgaruvchi.",
+        "Bu accumulator (yig'uvchi) naqshining eng oddiy shakli: o'zgaruvchi o'z qiymatiga tayanib yangilanadi."
+      ],
+      "code": {
+        "caption": "Hisoblagich va yig'uvchi",
+        "lines": [
+          "// Hisoblagich",
+          "soni = 0",
+          "repeat (5) { soni = soni + 1 }",
+          "chiqar(soni)      // 5",
+          "",
+          "// Yig'uvchi",
+          "jami = 0",
+          "jami = jami + 10",
+          "jami = jami + 25",
+          "chiqar(jami)      // 35"
+        ]
+      }
+    },
+    {
+      "heading": "Boshlang'ich qiymat muhim",
+      "body": [
+        "Hisoblagichni boshlang'ich qiymat bermasdan ishlatish xatoga olib keladi. Yig'uvchi uchun 0, ko'paytiruvchi uchun 1 dan boshlash kerak."
+      ],
+      "callout": "Yig'uvchi 0 dan, ko'paytiruvchi 1 dan boshlanadi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "accumulator",
+      "uz": "yig'uvchi",
+      "note": "Natijani bosqichma-bosqich to'plovchi o'zgaruvchi."
+    },
+    {
+      "en": "initialization",
+      "uz": "boshlang'ich qiymat",
+      "note": "O'zgaruvchiga birinchi qiymatni berish."
+    },
+    {
+      "en": "counter",
+      "uz": "hisoblagich",
+      "note": "Hodisalar sonini sanovchi o'zgaruvchi."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Yig'uvchi o'zgaruvchini qaysi qiymatdan boshlash kerak?",
+      "options": [
+        "1",
+        "0",
+        "Boshlang'ich qiymat kerak emas"
+      ],
+      "correctIndex": 1,
+      "explanation": "Qo'shish uchun 0 neytral qiymat. Ko'paytirish uchun esa 1 dan boshlanadi."
+    }
+  ]
+}

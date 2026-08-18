@@ -1,0 +1,49 @@
+{
+  "goal": "1-bosqich: buyruq, parametr va ketma-ketlik tushunchalarini mustahkamlaysiz.",
+  "sections": [
+    {
+      "heading": "Bosqich xulosasi",
+      "body": [
+        "Kompyuter so'zma-so'z ijrochi: faqat aytilgan narsani, aytilgan tartibda bajaradi.",
+        "Har bir buyruq (command) nomdan va kerak bo'lsa parametr (parameter) dan iborat.",
+        "Buyruqlar ketma-ketligi (sequence) natijani belgilaydi — tartib o'zgarsa natija ham o'zgaradi.",
+        "Xatoni tuzatish (debugging) — taxmin qilish emas, kodni kuzatib borish."
+      ],
+      "callout": "Keyingi bosqichda katta vazifani mayda qadamlarga bo'lishni o'rganamiz."
+    }
+  ],
+  "terms": [
+    {
+      "en": "sequence",
+      "uz": "ketma-ketlik",
+      "note": "Bosqichning asosiy tushunchasi — bajarilish tartibi."
+    },
+    {
+      "en": "debugging",
+      "uz": "xatoni tuzatish",
+      "note": "Xatoni kuzatish orqali topish."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Quyidagilardan qaysi biri kompyuter uchun to'g'ri buyruq hisoblanadi?",
+      "options": [
+        "Chiroyli rasm chiz",
+        "oldinga(100)",
+        "Nimadir qil"
+      ],
+      "correctIndex": 1,
+      "explanation": "Faqat oldinga(100) aniq: qaysi amal va qanday qiymat bilan — ikkisi ham ko'rsatilgan."
+    },
+    {
+      "question": "Dasturda xato bo'lsa, bu nimani bildiradi?",
+      "options": [
+        "Dasturchi qobiliyatsiz",
+        "Bu odatiy hol — tuzatish jarayonning bir qismi",
+        "Kodni tashlab yuborish kerak"
+      ],
+      "correctIndex": 1,
+      "explanation": "Xato — normal hol. Dasturlashning katta qismi aynan xatolarni topib tuzatishdan iborat."
+    }
+  ]
+}

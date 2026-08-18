@@ -1,0 +1,60 @@
+{
+  "goal": "Buyruqlar tartibi natijani qanday o'zgartirishini tushunib olasiz.",
+  "sections": [
+    {
+      "heading": "Tartib hammasini o'zgartiradi",
+      "body": [
+        "Kompyuter buyruqlarni yuqoridan pastga, birma-bir bajaradi. Bu sequence (ketma-ketlik) deb ataladi.",
+        "Xuddi retseptdek: avval xamir qorib, keyin pishirasiz. Tartibni almashtirsangiz natija butunlay boshqacha bo'ladi."
+      ],
+      "code": {
+        "caption": "Bir xil buyruqlar, boshqa natija",
+        "lines": [
+          "// 1-variant: avval yuradi, keyin buriladi",
+          "oldinga(100)",
+          "o'ngga(90)",
+          "",
+          "// 2-variant: avval buriladi, keyin yuradi",
+          "o'ngga(90)",
+          "oldinga(100)"
+        ]
+      }
+    },
+    {
+      "heading": "Nega bu muhim",
+      "body": [
+        "Dasturdagi ko'p xatolar buyruqlar noto'g'ri tartibda yozilganidan kelib chiqadi. Kod \"ishlaydi\", lekin kutilgan natijani bermaydi."
+      ],
+      "callout": "Bir xil buyruqlar to'plami — turli tartibda butunlay boshqa dastur."
+    }
+  ],
+  "terms": [
+    {
+      "en": "sequence",
+      "uz": "ketma-ketlik",
+      "note": "Buyruqlarning yuqoridan pastga bajarilish tartibi."
+    },
+    {
+      "en": "order",
+      "uz": "tartib",
+      "note": "Qaysi buyruq oldin, qaysi keyin bajarilishi."
+    },
+    {
+      "en": "top-to-bottom",
+      "uz": "yuqoridan pastga",
+      "note": "Kodning standart o'qilish va bajarilish yo'nalishi."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Buyruqlar tartibini almashtirsak natija o'zgaradimi?",
+      "options": [
+        "Yo'q, buyruqlar bir xil bo'lsa natija ham bir xil",
+        "Ha, tartib natijani o'zgartiradi",
+        "Faqat uzun dasturlarda o'zgaradi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ketma-ketlik natijaning bir qismi. Tartib o'zgarsa dastur boshqa ishni bajaradi."
+    }
+  ]
+}

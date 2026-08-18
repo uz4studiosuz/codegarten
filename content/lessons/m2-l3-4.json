@@ -1,0 +1,59 @@
+{
+  "goal": "Ichma-ich sikl va hisoblagich bilan murakkab naqsh generatori yasaysiz.",
+  "sections": [
+    {
+      "heading": "Naqshni tahlil qilish",
+      "body": [
+        "Murakkab naqshni yasashdan oldin uni tahlil qiling: nima qatorlar bo'yicha o'zgaradi, nima ustunlar bo'yicha?",
+        "Odatda tashqi sikl qatorlarni, ichki sikl esa har qatordagi elementlarni boshqaradi."
+      ],
+      "code": {
+        "caption": "Uchburchak naqsh",
+        "lines": [
+          "for (q = 1; q <= 4; q++) {",
+          "  for (u = 1; u <= q; u++) {",
+          "    chiqar(\"*\")     // ichki chegara q ga bog'liq",
+          "  }",
+          "  yangi_qator()",
+          "}"
+        ]
+      }
+    },
+    {
+      "heading": "Bog'liq chegaralar",
+      "body": [
+        "Yuqoridagi misolda ichki siklning chegarasi tashqi siklning hisoblagichiga bog'liq. Shuning uchun har qatorda element soni oshib boradi."
+      ],
+      "callout": "Ichki sikl chegarasi tashqi hisoblagichga bog'liq bo'lishi mumkin."
+    }
+  ],
+  "terms": [
+    {
+      "en": "nested loop",
+      "uz": "ichma-ich sikl",
+      "note": "Naqsh generatorining asosiy vositasi."
+    },
+    {
+      "en": "generator",
+      "uz": "generator",
+      "note": "Qonuniyat asosida natija hosil qiluvchi kod."
+    },
+    {
+      "en": "dependency",
+      "uz": "bog'liqlik",
+      "note": "Ichki chegaraning tashqi qiymatga bog'liqligi."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Ichki siklning chegarasi tashqi hisoblagichga bog'liq bo'lsa nima yuzaga keladi?",
+      "options": [
+        "Cheksiz sikl",
+        "Har qatorda element soni o'zgaradigan naqsh",
+        "Xato"
+      ],
+      "correctIndex": 1,
+      "explanation": "Bu uchburchak va zinapoya kabi o'sib boruvchi naqshlar yasashning standart usuli."
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "goal": "Hisoblagichdan foydalanib o'sib boruvchi zinapoya naqshini yasaysiz.",
+  "sections": [
+    {
+      "heading": "O'sib boruvchi naqsh",
+      "body": [
+        "Zinapoyada har qatorning uzunligi oshib boradi: 1, 2, 3, 4. Bu hisoblagich qiymatini bevosita ishlatishning klassik misoli.",
+        "Sikl tanasida hisoblagichni uzunlik sifatida ishlatsangiz, naqsh o'zi hosil bo'ladi."
+      ],
+      "code": {
+        "caption": "Zinapoya",
+        "lines": [
+          "for (i = 1; i <= 4; i++) {",
+          "  chiz_chiziq(i)   // uzunlik = i",
+          "}",
+          "",
+          "// Natija:",
+          "// *",
+          "// **",
+          "// ***",
+          "// ****"
+        ]
+      }
+    },
+    {
+      "heading": "Teskari yo'nalish",
+      "body": [
+        "Hisoblagichni kamaytirib borish ham mumkin. Shunda naqsh teskari — kattadan kichikka qarab hosil bo'ladi."
+      ],
+      "callout": "Hisoblagich naqshning shaklini belgilaydi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "counter",
+      "uz": "hisoblagich",
+      "note": "Naqsh o'lchamini boshqaruvchi sikl qiymati."
+    },
+    {
+      "en": "pattern",
+      "uz": "naqsh",
+      "note": "Qonuniyat bilan takrorlanuvchi tuzilma."
+    },
+    {
+      "en": "decrement",
+      "uz": "kamaytirish",
+      "note": "Qiymatni bittaga kamaytirish amali."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "for (i = 1; i <= 4; i++) { chiz_chiziq(i) } nima chizadi?",
+      "options": [
+        "4 ta bir xil uzunlikdagi chiziq",
+        "Uzunligi 1,2,3,4 bo'lgan 4 ta chiziq",
+        "Bitta uzun chiziq"
+      ],
+      "correctIndex": 1,
+      "explanation": "Har aylanishda i qiymati oshadi, shuning uchun chiziqlar uzunligi ham oshib boradi."
+    }
+  ]
+}

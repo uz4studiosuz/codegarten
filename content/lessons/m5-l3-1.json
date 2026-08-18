@@ -1,0 +1,57 @@
+{
+  "goal": "Ro'yxat nima va u qanday tuzilishini o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Bitta nom, ko'p qiymat",
+      "body": [
+        "Array yoki list (ro'yxat) — bitta nom ostida bir nechta qiymatni tartib bilan saqlovchi tuzilma.",
+        "100 ta o'quvchi bali uchun 100 ta o'zgaruvchi emas, bitta ro'yxat yaratiladi."
+      ],
+      "code": {
+        "caption": "Ro'yxat yaratish",
+        "lines": [
+          "ballar = [85, 92, 78, 95]",
+          "",
+          "chiqar(ballar.uzunlik)   // 4",
+          "chiqar(ballar[0])        // 85 — birinchi element"
+        ]
+      }
+    },
+    {
+      "heading": "Tartib saqlanadi",
+      "body": [
+        "Ro'yxatdagi elementlar tartibi saqlanadi — bu muhim xususiyat. Birinchi qo'shilgan element birinchi o'rinda turadi."
+      ],
+      "callout": "Ro'yxat — tartiblangan qiymatlar to'plami."
+    }
+  ],
+  "terms": [
+    {
+      "en": "array",
+      "uz": "massiv",
+      "note": "Tartiblangan qiymatlar to'plamini saqlovchi tuzilma."
+    },
+    {
+      "en": "element",
+      "uz": "element",
+      "note": "Ro'yxatdagi bitta qiymat."
+    },
+    {
+      "en": "length",
+      "uz": "uzunlik",
+      "note": "Ro'yxatdagi elementlar soni."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Ro'yxat (array) nima uchun ishlatiladi?",
+      "options": [
+        "Faqat sonlarni saqlash uchun",
+        "Bitta nom ostida ko'p qiymatni tartib bilan saqlash uchun",
+        "Kodni tezlashtirish uchun"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ro'yxat ko'p bog'liq qiymatni yagona nom bilan boshqarish imkonini beradi."
+    }
+  ]
+}

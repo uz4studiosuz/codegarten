@@ -1,0 +1,51 @@
+{
+  "goal": "Algoritmning rasmiy ta'rifi va uning shartlarini o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Algoritm nima",
+      "body": [
+        "Algorithm (algoritm) — muayyan masalani yechish uchun aniq belgilangan, chekli qadamlar ketma-ketligi.",
+        "Bu nom IX asrda yashagan buyuk xorazmiy matematik Muhammad al-Xorazmiy nomidan kelib chiqqan."
+      ]
+    },
+    {
+      "heading": "Algoritmning shartlari",
+      "body": [
+        "Aniqlik — har bir qadam bir xil tushunilishi kerak, ikki xil ma'no bo'lmasin.",
+        "Chekli — algoritm cheklangan qadamdan keyin tugashi shart.",
+        "Natijaviylik — bajarilgandan keyin aniq natija berishi kerak.",
+        "Ommaviylik — bir turdagi barcha masalalar uchun ishlashi kerak."
+      ],
+      "callout": "Cheksiz davom etadigan qadamlar ketma-ketligi algoritm hisoblanmaydi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "algorithm",
+      "uz": "algoritm",
+      "note": "Masalani yechuvchi aniq va chekli qadamlar ketma-ketligi."
+    },
+    {
+      "en": "finite",
+      "uz": "chekli",
+      "note": "Cheklangan qadamdan keyin albatta tugaydigan."
+    },
+    {
+      "en": "deterministic",
+      "uz": "aniq",
+      "note": "Bir xil kirish uchun har doim bir xil natija beruvchi."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Quyidagilardan qaysi biri algoritm bo'lish shartini buzadi?",
+      "options": [
+        "Qadamlar aniq yozilgan",
+        "Hech qachon tugamaydi",
+        "Natija beradi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Chekli bo'lish — algoritmning majburiy sharti. Tugamaydigan jarayon algoritm emas."
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "goal": "Ishlamayotgan koddagi xatoni topish va tuzatish usulini o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Xato — bu odatiy hol",
+      "body": [
+        "Hech bir dasturchi kodni birinchi urinishda mukammal yozmaydi. Xatoni topib tuzatish jarayoni debugging (xatoni tuzatish) deb ataladi.",
+        "Eng ishonchli usul — kodni kompyuter kabi o'qish: har bir qatorni birma-bir bajarib, natijani kuzatib borish."
+      ]
+    },
+    {
+      "heading": "Xatoni topish tartibi",
+      "body": [
+        "1. Kutilgan natijani aniq yozib oling.",
+        "2. Kodni qator-qator \"qo'lda\" bajaring.",
+        "3. Natija kutilganidan chetga chiqqan qatorni toping — xato aynan shu joyda."
+      ],
+      "code": {
+        "caption": "Kvadrat chizmoqchi edik, lekin qadam kam",
+        "lines": [
+          "oldinga(100)",
+          "o'ngga(90)",
+          "oldinga(100)",
+          "o'ngga(90)",
+          "oldinga(100)",
+          "// yetishmayapti: yana bir burilish va bir yurish"
+        ]
+      },
+      "callout": "Xatoni izlashda taxmin qilmang — kodni bajarib ko'ring."
+    }
+  ],
+  "terms": [
+    {
+      "en": "bug",
+      "uz": "xato",
+      "note": "Dasturning kutilganidan boshqacha ishlashiga olib keladigan nuqson."
+    },
+    {
+      "en": "debugging",
+      "uz": "xatoni tuzatish",
+      "note": "Xatoni topish, sababini aniqlash va bartaraf etish jarayoni."
+    },
+    {
+      "en": "trace",
+      "uz": "kuzatish",
+      "note": "Kodni qator-qator bajarib, holatni yozib borish usuli."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Kod ishlaydi, lekin natija noto'g'ri. Birinchi navbatda nima qilish kerak?",
+      "options": [
+        "Kodni butunlay o'chirib, boshidan yozish",
+        "Kutilgan natijani aniqlab, kodni qator-qator kuzatish",
+        "Tasodifiy qatorlarni o'zgartirib ko'rish"
+      ],
+      "correctIndex": 1,
+      "explanation": "Avval nima kutilganini aniq bilish, keyin kodni kuzatib chetga chiqqan joyni topish kerak."
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "goal": "Indeks orqali ro'yxat elementiga murojaat qilishni o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Indeks 0 dan boshlanadi",
+      "body": [
+        "Ro'yxatdagi element o'rni index (indeks) deb ataladi. Ko'p tillarda birinchi element indeksi 0 bo'ladi, ikkinchisi 1 va shu tarzda.",
+        "Shuning uchun n elementli ro'yxatning oxirgi element indeksi n - 1 bo'ladi."
+      ],
+      "code": {
+        "caption": "Indekslar",
+        "lines": [
+          "ranglar = [\"qizil\", \"yashil\", \"ko'k\"]",
+          "//            0         1         2",
+          "",
+          "chiqar(ranglar[0])   // qizil",
+          "chiqar(ranglar[2])   // ko'k",
+          "chiqar(ranglar[3])   // XATO — bunday indeks yo'q"
+        ]
+      }
+    },
+    {
+      "heading": "Chegaradan chiqish",
+      "body": [
+        "Mavjud bo'lmagan indeksga murojaat qilish out of bounds (chegaradan chiqish) xatosiga olib keladi. Shuning uchun indeks har doim 0 dan uzunlik - 1 oralig'ida bo'lishi kerak."
+      ],
+      "callout": "n elementli ro'yxat indekslari: 0 dan n-1 gacha."
+    }
+  ],
+  "terms": [
+    {
+      "en": "index",
+      "uz": "indeks",
+      "note": "Ro'yxatdagi elementning tartib raqami."
+    },
+    {
+      "en": "out of bounds",
+      "uz": "chegaradan chiqish",
+      "note": "Mavjud bo'lmagan indeksga murojaat qilish xatosi."
+    },
+    {
+      "en": "zero-based",
+      "uz": "noldan",
+      "note": "Indeksning 0 dan boshlanishi."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "5 elementli ro'yxatning oxirgi element indeksi qanday?",
+      "options": [
+        "5",
+        "4",
+        "6"
+      ],
+      "correctIndex": 1,
+      "explanation": "Indeks 0 dan boshlanadi: 0,1,2,3,4. Oxirgisi — 4, ya'ni uzunlik - 1."
+    }
+  ]
+}

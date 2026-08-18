@@ -1,0 +1,59 @@
+{
+  "goal": "Bir xil buyruqlarni ko'chirib yozishning muammolarini amalda ko'rasiz.",
+  "sections": [
+    {
+      "heading": "Ko'chirib yozishning narxi",
+      "body": [
+        "Bir xil kodni ko'chirib yozish oson ko'rinadi, lekin uchta muammo tug'diradi: kod uzayadi, xato ehtimoli oshadi va o'zgartirish qiyinlashadi.",
+        "Agar 20 marta takrorlangan kodda bitta qiymatni o'zgartirish kerak bo'lsa, 20 joyda o'zgartirasiz — bittasini unutsangiz xato paydo bo'ladi."
+      ],
+      "code": {
+        "caption": "Bu kodda masofani 150 ga o'zgartirish kerak bo'lsa...",
+        "lines": [
+          "oldinga(100)",
+          "o'ngga(90)",
+          "oldinga(100)",
+          "o'ngga(90)",
+          "oldinga(100)   // ... 3 joyda o'zgartirish kerak",
+          "o'ngga(90)"
+        ]
+      }
+    },
+    {
+      "heading": "Yechim yo'nalishi",
+      "body": [
+        "Sikl bilan bir xil kod faqat bitta joyda yoziladi. O'zgartirish kerak bo'lsa — bir joyda o'zgartirasiz, hammasi o'zgaradi."
+      ],
+      "callout": "Ko'chirib yozilgan kod — kelajakdagi xatoning manzili."
+    }
+  ],
+  "terms": [
+    {
+      "en": "duplication",
+      "uz": "takroriylik",
+      "note": "Bir xil kodning bir necha joyda yozilgani."
+    },
+    {
+      "en": "maintenance",
+      "uz": "qo'llab-quvvatlash",
+      "note": "Kodni keyinchalik o'zgartirish va tuzatish ishi."
+    },
+    {
+      "en": "single source",
+      "uz": "yagona manba",
+      "note": "Qiymat yoki mantiq faqat bitta joyda saqlanishi."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "20 marta ko'chirilgan kodda qiymatni o'zgartirish kerak. Asosiy xavf nima?",
+      "options": [
+        "Kod chiroyli ko'rinmaydi",
+        "Bir joyni unutib qoldirish va xato yuzaga kelishi",
+        "Kompyuter sekinlashadi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Qo'lda ko'p joyni o'zgartirishda bittasini unutish juda oson — bu tipik xato manbai."
+    }
+  ]
+}

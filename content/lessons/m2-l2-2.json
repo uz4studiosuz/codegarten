@@ -1,0 +1,56 @@
+{
+  "goal": "Siklning boshlanish va tugash chegaralarini to'g'ri belgilashni o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Chegaralar muhim",
+      "body": [
+        "Sikl qayerdan boshlanib qayerda tugashi boundary (chegara) deb ataladi. Chegarani bir birlikka xato qo'yish eng ko'p uchraydigan xato turi — u off-by-one error (bir birlik xatosi) deb ataladi.",
+        "i <= 3 va i < 3 orasidagi farq bitta aylanish: birinchisi 3 marta, ikkinchisi 2 marta aylanadi."
+      ],
+      "code": {
+        "caption": "Bitta belgi — bitta aylanish farqi",
+        "lines": [
+          "for (i = 1; i <= 3; i++) // 3 aylanish: 1,2,3",
+          "for (i = 1; i <  3; i++) // 2 aylanish: 1,2",
+          "for (i = 0; i <  3; i++) // 3 aylanish: 0,1,2"
+        ]
+      }
+    },
+    {
+      "heading": "Tekshirish usuli",
+      "body": [
+        "Chegarani tekshirishning eng oson yo'li — birinchi va oxirgi qiymatni qo'lda yozib ko'rish. Agar ikkisi ham to'g'ri bo'lsa, o'rtasi ham to'g'ri bo'ladi."
+      ],
+      "callout": "Har doim birinchi va oxirgi aylanishni qo'lda tekshiring."
+    }
+  ],
+  "terms": [
+    {
+      "en": "boundary",
+      "uz": "chegara",
+      "note": "Siklning boshlanish va tugash qiymatlari."
+    },
+    {
+      "en": "off-by-one",
+      "uz": "bir birlik xatosi",
+      "note": "Sikl bir marta ko'p yoki kam aylanishiga olib keladigan xato."
+    },
+    {
+      "en": "condition",
+      "uz": "shart",
+      "note": "Sikl davom etishini belgilovchi tekshiruv."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "for (i = 0; i < 5; i++) sikli necha marta aylanadi?",
+      "options": [
+        "4 marta",
+        "5 marta",
+        "6 marta"
+      ],
+      "correctIndex": 1,
+      "explanation": "i qiymatlari 0,1,2,3,4 — jami 5 aylanish. 5 ning o'zi shartga kirmaydi."
+    }
+  ]
+}

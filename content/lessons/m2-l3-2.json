@@ -1,0 +1,62 @@
+{
+  "goal": "Ichma-ich sikl bilan shaxmat taxtasi naqshini yasaysiz.",
+  "sections": [
+    {
+      "heading": "Ikki o'lchovli maydon",
+      "body": [
+        "Shaxmat taxtasi 8 qator va 8 ustundan iborat. Har katakni chizish uchun ikki sikl kerak: biri qatorlar, ikkinchisi ustunlar bo'yicha.",
+        "Katakning rangi qator va ustun raqamining yig'indisiga bog'liq: yig'indi juft bo'lsa oq, toq bo'lsa qora."
+      ],
+      "code": {
+        "caption": "Shaxmat taxtasi mantiqi",
+        "lines": [
+          "for (q = 0; q < 8; q++) {",
+          "  for (u = 0; u < 8; u++) {",
+          "    agar ((q + u) juft) {",
+          "      chiz(q, u, \"oq\")",
+          "    } aks holda {",
+          "      chiz(q, u, \"qora\")",
+          "    }",
+          "  }",
+          "}"
+        ]
+      }
+    },
+    {
+      "heading": "Koordinatalar",
+      "body": [
+        "Har katak ikki son bilan aniqlanadi: qator va ustun. Bu coordinate (koordinata) deb ataladi va grafikadagi asosiy tushuncha."
+      ],
+      "callout": "Ikki o'lchovli maydon — ikki sikl."
+    }
+  ],
+  "terms": [
+    {
+      "en": "coordinate",
+      "uz": "koordinata",
+      "note": "Nuqtaning o'rnini aniqlovchi sonlar to'plami."
+    },
+    {
+      "en": "grid",
+      "uz": "to'r",
+      "note": "Qator va ustunlardan tashkil topgan maydon."
+    },
+    {
+      "en": "matrix",
+      "uz": "matritsa",
+      "note": "Sonlarning qator-ustun ko'rinishidagi jadvali."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "8x8 shaxmat taxtasida jami nechta katak bor?",
+      "options": [
+        "16",
+        "64",
+        "32"
+      ],
+      "correctIndex": 1,
+      "explanation": "8 x 8 = 64. Ichma-ich sikl ham aynan 64 marta ishlaydi."
+    }
+  ]
+}

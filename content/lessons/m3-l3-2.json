@@ -1,0 +1,59 @@
+{
+  "goal": "Hisoblab natija qaytaruvchi funksiya yozasiz.",
+  "sections": [
+    {
+      "heading": "Hisoblovchi funksiya",
+      "body": [
+        "Hisoblovchi funksiya kirish qiymatlarini oladi, ular ustida amal bajaradi va natijani qaytaradi. U ekranga hech narsa chiqarmaydi — faqat javob beradi.",
+        "Bu pure function (toza funksiya) tamoyiliga yaqin: bir xil kirish har doim bir xil natija beradi va tashqi holatga ta'sir qilmaydi."
+      ],
+      "code": {
+        "caption": "Toza hisoblovchi funksiya",
+        "lines": [
+          "funksiya o'rtacha(a, b) {",
+          "  return (a + b) / 2",
+          "}",
+          "",
+          "chiqar(o'rtacha(10, 20))   // 15",
+          "chiqar(o'rtacha(3, 7))     // 5"
+        ]
+      }
+    },
+    {
+      "heading": "Nima uchun toza funksiya yaxshi",
+      "body": [
+        "Toza funksiyani sinash oson: kirishni berasiz, natijani tekshirasiz. Tashqi holatga bog'liq bo'lmaganligi uchun xatolarni topish ham osonlashadi."
+      ],
+      "callout": "Toza funksiya: bir xil kirish -> har doim bir xil natija."
+    }
+  ],
+  "terms": [
+    {
+      "en": "pure function",
+      "uz": "toza funksiya",
+      "note": "Tashqi holatga ta'sir qilmaydigan, bir xil kirishga bir xil natija beruvchi funksiya."
+    },
+    {
+      "en": "side effect",
+      "uz": "yon ta'sir",
+      "note": "Funksiyaning tashqi holatni o'zgartirishi."
+    },
+    {
+      "en": "testable",
+      "uz": "sinaladigan",
+      "note": "Natijani oson tekshirish mumkin bo'lgan kod."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Toza funksiya (pure function) nimasi bilan ajralib turadi?",
+      "options": [
+        "Juda qisqa bo'ladi",
+        "Bir xil kirish har doim bir xil natija beradi",
+        "Faqat sonlar bilan ishlaydi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Toza funksiya tashqi holatga bog'liq emas va uni o'zgartirmaydi."
+    }
+  ]
+}

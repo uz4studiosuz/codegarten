@@ -1,0 +1,57 @@
+{
+  "goal": "Mantiqiy qiymatlar nima va ular qanday hosil bo'lishini o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Faqat ikki qiymat",
+      "body": [
+        "Boolean (mantiqiy tur) — faqat ikki qiymatga ega tur: true (rost) yoki false (yolg'on).",
+        "Bu tur ingliz matematigi George Boole nomidan olingan. Kompyuterdagi barcha qarorlar oxir-oqibat shu ikki qiymatga borib taqaladi."
+      ],
+      "code": {
+        "caption": "Mantiqiy qiymatlar",
+        "lines": [
+          "yosh = 20",
+          "",
+          "katta = yosh >= 18     // true (rost)",
+          "kichik = yosh < 10     // false (yolg'on)"
+        ]
+      }
+    },
+    {
+      "heading": "Nima uchun kerak",
+      "body": [
+        "Mantiqiy qiymat dasturga tanlov qilish imkonini beradi. Shart rost bo'lsa bir yo'l, yolg'on bo'lsa boshqa yo'l tanlanadi."
+      ],
+      "callout": "Har qanday shart oxirida true yoki false ga aylanadi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "boolean",
+      "uz": "mantiqiy tur",
+      "note": "Faqat true yoki false qiymatini oluvchi ma'lumot turi."
+    },
+    {
+      "en": "true",
+      "uz": "rost",
+      "note": "Shart bajarilganini bildiruvchi qiymat."
+    },
+    {
+      "en": "false",
+      "uz": "yolg'on",
+      "note": "Shart bajarilmaganini bildiruvchi qiymat."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Boolean tur nechta qiymat qabul qilishi mumkin?",
+      "options": [
+        "Cheksiz",
+        "Ikki: true va false",
+        "Uch: true, false va bo'sh"
+      ],
+      "correctIndex": 1,
+      "explanation": "Boolean faqat ikki qiymatga ega: true (rost) va false (yolg'on)."
+    }
+  ]
+}

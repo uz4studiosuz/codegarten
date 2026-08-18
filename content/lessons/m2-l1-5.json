@@ -1,0 +1,49 @@
+{
+  "goal": "1-bosqich: naqsh, DRY va repeat sikli bo'yicha takrorlash.",
+  "sections": [
+    {
+      "heading": "Bosqich xulosasi",
+      "body": [
+        "Takrorlanuvchi qatorlar naqsh (pattern) borligini bildiradi.",
+        "DRY tamoyili bir xil kodni ko'chirib yozmaslikni talab qiladi.",
+        "repeat(n) sikl tanasini (loop body) aynan n marta bajaradi.",
+        "Muntazam ko'pburchakda burilish burchagi = 360 / qirralar soni."
+      ],
+      "callout": "Keyingi bosqichda sikl hisoblagichi bilan ishlashni o'rganamiz."
+    }
+  ],
+  "terms": [
+    {
+      "en": "loop",
+      "uz": "sikl",
+      "note": "Bosqichning asosiy tushunchasi."
+    },
+    {
+      "en": "DRY",
+      "uz": "takrorlamaslik",
+      "note": "Bir xil kodni ko'chirmaslik tamoyili."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Sikl tanasi (loop body) nima?",
+      "options": [
+        "Siklning nomi",
+        "Sikl ichidagi, har aylanishda bajariladigan kod",
+        "Sikl necha marta aylanishi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Sikl tanasi — qavs ichidagi kod. U har aylanishda to'liq qaytadan bajariladi."
+    },
+    {
+      "question": "Muntazam uchburchak uchun burilish burchagi qancha?",
+      "options": [
+        "90",
+        "120",
+        "60"
+      ],
+      "correctIndex": 1,
+      "explanation": "360 / 3 = 120 daraja."
+    }
+  ]
+}

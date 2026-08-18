@@ -1,0 +1,59 @@
+{
+  "goal": "O'zgaruvchi nima va u xotirada qanday saqlanishini tushunib olasiz.",
+  "sections": [
+    {
+      "heading": "Nomlangan quti",
+      "body": [
+        "Variable (o'zgaruvchi) — qiymat saqlanadigan, nom berilgan xotira joyi. Nom orqali qiymatni keyin topib, o'qib yoki o'zgartirish mumkin.",
+        "Uni yorliq yozilgan quti deb tasavvur qiling: quti ustida \"yosh\" yozilgan, ichida 20 soni turadi."
+      ],
+      "code": {
+        "caption": "O'zgaruvchi yaratish va o'qish",
+        "lines": [
+          "yosh = 20            // yaratildi, qiymat berildi",
+          "chiqar(yosh)         // 20",
+          "",
+          "ism = \"Ali\"",
+          "chiqar(ism)          // Ali"
+        ]
+      }
+    },
+    {
+      "heading": "Nima uchun kerak",
+      "body": [
+        "O'zgaruvchisiz har qiymatni qayta-qayta yozishga to'g'ri keladi. O'zgaruvchi bilan qiymat bir joyda saqlanadi va nom orqali istalgan joyda ishlatiladi.",
+        "Bundan tashqari nom kodni tushunarli qiladi: 0.2 emas, soliq_foizi yozilsa, ma'no darhol ayon bo'ladi."
+      ],
+      "callout": "O'zgaruvchi — nom berilgan xotira joyi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "variable",
+      "uz": "o'zgaruvchi",
+      "note": "Qiymat saqlanadigan, nom berilgan xotira joyi."
+    },
+    {
+      "en": "value",
+      "uz": "qiymat",
+      "note": "O'zgaruvchida saqlanayotgan ma'lumot."
+    },
+    {
+      "en": "memory",
+      "uz": "xotira",
+      "note": "Kompyuterda ma'lumot vaqtincha saqlanadigan joy."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "O'zgaruvchi nima uchun kodni tushunarli qiladi?",
+      "options": [
+        "Kodni qisqartiradi",
+        "Nom qiymatning ma'nosini aytib turadi",
+        "Xotirani tozalaydi"
+      ],
+      "correctIndex": 1,
+      "explanation": "soliq_foizi kabi mazmunli nom 0.2 sonidan ancha tushunarli."
+    }
+  ]
+}

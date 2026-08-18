@@ -1,0 +1,49 @@
+{
+  "goal": "1-bosqich: mantiqiy qiymatlar va taqqoslash bo'yicha takrorlash.",
+  "sections": [
+    {
+      "heading": "Bosqich xulosasi",
+      "body": [
+        "Boolean (mantiqiy tur) faqat true (rost) va false (yolg'on) qiymatlarini oladi.",
+        "Taqqoslash amallari (comparison operators) mantiqiy natija hosil qiladi.",
+        "= qiymat beradi, == taqqoslaydi.",
+        "Shartlarni chegaraviy holatlarda sinash zarur."
+      ],
+      "callout": "Keyingi bosqichda shartlar asosida tarmoqlanishni o'rganamiz."
+    }
+  ],
+  "terms": [
+    {
+      "en": "boolean",
+      "uz": "mantiqiy tur",
+      "note": "true yoki false qiymati."
+    },
+    {
+      "en": "condition",
+      "uz": "shart",
+      "note": "Mantiqiy natija beruvchi ifoda."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Qaysi amal taqqoslash uchun ishlatiladi?",
+      "options": [
+        "=",
+        "==",
+        "+"
+      ],
+      "correctIndex": 1,
+      "explanation": "== taqqoslaydi, = esa qiymat beradi."
+    },
+    {
+      "question": "\"5 != 3\" ifodasining natijasi qanday?",
+      "options": [
+        "false",
+        "true",
+        "5"
+      ],
+      "correctIndex": 1,
+      "explanation": "!= \"teng emas\" degani. 5 va 3 teng emas, shuning uchun true."
+    }
+  ]
+}

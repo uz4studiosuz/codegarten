@@ -1,0 +1,64 @@
+{
+  "goal": "Funksiya nima va u kodni qanday tartibga solishini tushunib olasiz.",
+  "sections": [
+    {
+      "heading": "Nomlangan kod bo'lagi",
+      "body": [
+        "Function (funksiya) — nom berilgan, qayta ishlatilishi mumkin kod bo'lagi. Bir marta yozasiz, keyin nomini aytib chaqirasiz.",
+        "Sikl bir xil kodni ketma-ket takrorlaydi. Funksiya esa kodni dasturning istalgan joyida, istalgan vaqtda ishlatishga imkon beradi."
+      ],
+      "code": {
+        "caption": "Funksiya e'loni va chaqirilishi",
+        "lines": [
+          "// E'lon (definition):",
+          "funksiya kvadrat_chiz() {",
+          "  repeat (4) {",
+          "    oldinga(100)",
+          "    o'ngga(90)",
+          "  }",
+          "}",
+          "",
+          "// Chaqirish (call):",
+          "kvadrat_chiz()",
+          "kvadrat_chiz()"
+        ]
+      }
+    },
+    {
+      "heading": "Qora quti tamoyili",
+      "body": [
+        "Funksiyani ishlatish uchun uning ichida nima borligini bilish shart emas — nomi va nima qilishini bilish yetarli. Bu abstraction (abstraksiya) yoki qora quti tamoyili deb ataladi."
+      ],
+      "callout": "Funksiya nomi uning nima qilishini aytib turishi kerak."
+    }
+  ],
+  "terms": [
+    {
+      "en": "function",
+      "uz": "funksiya",
+      "note": "Nom berilgan, qayta ishlatiladigan kod bo'lagi."
+    },
+    {
+      "en": "definition",
+      "uz": "e'lon",
+      "note": "Funksiyaning nima qilishini yozib qo'yish."
+    },
+    {
+      "en": "abstraction",
+      "uz": "abstraksiya",
+      "note": "Ichki tafsilotni yashirib, faqat kerakli qismini ko'rsatish."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Funksiya bilan sikl orasidagi asosiy farq nima?",
+      "options": [
+        "Funksiya tezroq ishlaydi",
+        "Funksiyani dasturning istalgan joyida qayta chaqirish mumkin",
+        "Sikl faqat sonlar bilan ishlaydi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Sikl kodni bir joyda ketma-ket takrorlaydi, funksiya esa istalgan joydan chaqirilishi mumkin."
+    }
+  ]
+}

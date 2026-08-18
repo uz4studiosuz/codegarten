@@ -1,0 +1,60 @@
+{
+  "goal": "Koddagi takrorlanuvchi naqshni ko'rishni va uni ajratib olishni o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Takrorlanish — signal",
+      "body": [
+        "Kodda bir xil qatorlar ketma-ket kelsa, bu naqsh (pattern) borligini bildiradi. Naqsh esa sikl bilan qisqartirilishi mumkin degani.",
+        "Yaxshi dasturchi kodni yozishdan oldin \"bu yerda nima takrorlanadi?\" degan savolni beradi."
+      ],
+      "code": {
+        "caption": "Naqshni toping",
+        "lines": [
+          "oldinga(100)",
+          "o'ngga(90)",
+          "oldinga(100)",
+          "o'ngga(90)",
+          "oldinga(100)",
+          "o'ngga(90)",
+          "// \"oldinga + o'ngga\" 3 marta takrorlanadi"
+        ]
+      }
+    },
+    {
+      "heading": "DRY tamoyili",
+      "body": [
+        "Dasturlashda DRY (Don't Repeat Yourself — o'zingizni takrorlamang) degan qoida bor. Bir xil kodni ko'chirib yozish keyinchalik muammo tug'diradi: o'zgartirish kerak bo'lsa, hamma joyda o'zgartirishga to'g'ri keladi."
+      ],
+      "callout": "Ikki marta ko'chirib yozdingizmi — sikl haqida o'ylash vaqti keldi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "pattern",
+      "uz": "naqsh",
+      "note": "Kodda takrorlanuvchi bir xil qatorlar guruhi."
+    },
+    {
+      "en": "DRY",
+      "uz": "takrorlamaslik",
+      "note": "Don't Repeat Yourself — bir xil kodni ko'chirmaslik tamoyili."
+    },
+    {
+      "en": "repetition",
+      "uz": "takrorlanish",
+      "note": "Bir amalning bir necha marta bajarilishi."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Kodda bir xil ikki qator 5 marta ketma-ket kelsa, bu nimani bildiradi?",
+      "options": [
+        "Kod to'g'ri yozilgan",
+        "Bu yerda naqsh bor — sikl ishlatish mumkin",
+        "Kodni o'chirish kerak"
+      ],
+      "correctIndex": 1,
+      "explanation": "Takrorlanish — sikl uchun signal. Naqshni ajratib, siklga o'rash mumkin."
+    }
+  ]
+}

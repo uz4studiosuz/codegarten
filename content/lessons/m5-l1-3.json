@@ -1,0 +1,59 @@
+{
+  "goal": "O'zgaruvchi qiymatini o'zgartirib, holatni kuzatishni o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Qiymat almashadi",
+      "body": [
+        "O'zgaruvchining nomi \"o'zgaruvchi\" — chunki uning qiymati dastur ishlashi davomida o'zgarishi mumkin.",
+        "Yangi qiymat yozilganda eski qiymat butunlay yo'qoladi. Kompyuter eski qiymatni eslab qolmaydi."
+      ],
+      "code": {
+        "caption": "Qiymat tarixi saqlanmaydi",
+        "lines": [
+          "ball = 10",
+          "ball = 25",
+          "ball = 40",
+          "",
+          "chiqar(ball)   // 40",
+          "// 10 va 25 butunlay yo'qoldi"
+        ]
+      }
+    },
+    {
+      "heading": "Holatni kuzatish",
+      "body": [
+        "Dasturdagi barcha o'zgaruvchilarning ayni damdagi qiymatlari birgalikda program state (dastur holati) deb ataladi. Xatoni topishda holatni qator-qator kuzatib borish eng ishonchli usul."
+      ],
+      "callout": "Yangi qiymat eski qiymatni butunlay o'chiradi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "mutation",
+      "uz": "o'zgartirish",
+      "note": "O'zgaruvchi qiymatini yangisiga almashtirish."
+    },
+    {
+      "en": "program state",
+      "uz": "dastur holati",
+      "note": "Barcha o'zgaruvchilarning ayni damdagi qiymatlari."
+    },
+    {
+      "en": "overwrite",
+      "uz": "ustiga yozish",
+      "note": "Eski qiymatni yangisi bilan almashtirish."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "O'zgaruvchiga yangi qiymat yozilsa, eski qiymat nima bo'ladi?",
+      "options": [
+        "Saqlanib qoladi",
+        "Butunlay yo'qoladi",
+        "Ikkinchi qutiga ko'chadi"
+      ],
+      "correctIndex": 1,
+      "explanation": "O'zgaruvchi faqat bitta qiymat saqlaydi. Yangisi eskisini o'chiradi."
+    }
+  ]
+}

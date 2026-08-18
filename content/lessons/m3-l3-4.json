@@ -1,0 +1,65 @@
+{
+  "goal": "3-modul: funksiyalar bo'yicha yakuniy takrorlash.",
+  "sections": [
+    {
+      "heading": "Modul xulosasi",
+      "body": [
+        "Funksiya (function) — nomlangan, qayta ishlatiladigan kod bo'lagi; e'lon va chaqiruv farqli narsalar.",
+        "Abstraksiya (abstraction) ichki tafsilotni yashiradi.",
+        "Parametr (parameter) va argument (argument) funksiyani moslashuvchan qiladi.",
+        "return natijani qaytaradi va funksiyani tugatadi.",
+        "Kompozitsiya (composition) oddiy funksiyalardan murakkab mantiq yasaydi."
+      ],
+      "callout": "Endi dasturga qaror qabul qilishni o'rgatamiz — shartlarga o'tamiz."
+    }
+  ],
+  "terms": [
+    {
+      "en": "function",
+      "uz": "funksiya",
+      "note": "Modulning markaziy tushunchasi."
+    },
+    {
+      "en": "return",
+      "uz": "qaytarish",
+      "note": "Natijani tashqariga chiqarish."
+    },
+    {
+      "en": "composition",
+      "uz": "kompozitsiya",
+      "note": "Funksiyalarni ulash."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Funksiyaga ajratish (extract function) qachon kerak bo'ladi?",
+      "options": [
+        "Kod juda qisqa bo'lganda",
+        "Kod bo'lagi takrorlansa va unga nom berish mumkin bo'lsa",
+        "Har 10 qatordan keyin"
+      ],
+      "correctIndex": 1,
+      "explanation": "Takrorlanish va nom berish imkoniyati — funksiyaga ajratishning asosiy belgilari."
+    },
+    {
+      "question": "return nima qiladi?",
+      "options": [
+        "Faqat ekranga chiqaradi",
+        "Natijani qaytaradi va funksiyani tugatadi",
+        "Funksiyani qaytadan boshlaydi"
+      ],
+      "correctIndex": 1,
+      "explanation": "return qiymatni tashqariga uzatib, funksiya ishini darhol to'xtatadi."
+    },
+    {
+      "question": "Kompozitsiya (composition) nima?",
+      "options": [
+        "Funksiyani o'chirish",
+        "Bir funksiya natijasini boshqasiga uzatish",
+        "Ikki funksiyani bitta nom bilan atash"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kompozitsiya kichik funksiyalardan murakkabroq mantiq qurish usuli."
+    }
+  ]
+}

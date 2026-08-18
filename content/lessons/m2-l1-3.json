@@ -1,0 +1,60 @@
+{
+  "goal": "repeat bloki bilan takrorlanuvchi kodni qisqartirishni o'rganasiz.",
+  "sections": [
+    {
+      "heading": "repeat qanday ishlaydi",
+      "body": [
+        "Loop (sikl) — kodning bir bo'lagini belgilangan marta takrorlaydigan konstruksiya. Eng oddiy shakli — repeat (takrorlash).",
+        "repeat(n) { ... } yozuvi ichidagi kodni aynan n marta bajaradi."
+      ],
+      "code": {
+        "caption": "6 qator -> 3 qator",
+        "lines": [
+          "// Sikl bilan:",
+          "repeat (3) {",
+          "  oldinga(100)",
+          "  o'ngga(90)",
+          "}",
+          "",
+          "// Natija ilgarigidek, lekin qiymat bir joyda"
+        ]
+      }
+    },
+    {
+      "heading": "Sikl tanasi",
+      "body": [
+        "Qavs ichidagi kod loop body (sikl tanasi) deb ataladi. Sikl tanasi har aylanishda to'liq qaytadan bajariladi."
+      ],
+      "callout": "repeat(n) — sikl tanasini aynan n marta bajaradi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "loop",
+      "uz": "sikl",
+      "note": "Kod bo'lagini bir necha marta takrorlovchi konstruksiya."
+    },
+    {
+      "en": "loop body",
+      "uz": "sikl tanasi",
+      "note": "Sikl ichidagi, har aylanishda bajariladigan kod."
+    },
+    {
+      "en": "iteration",
+      "uz": "aylanish",
+      "note": "Sikl tanasining bir marta bajarilishi."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "repeat (4) { oldinga(10) } buyrug'i nima qiladi?",
+      "options": [
+        "Bir marta 40 masofaga yuradi",
+        "oldinga(10) ni 4 marta bajaradi",
+        "4 masofaga yuradi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Sikl tanasi 4 marta bajariladi, ya'ni har biri 10 masofadan 4 marta harakat bo'ladi."
+    }
+  ]
+}

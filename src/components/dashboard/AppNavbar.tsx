@@ -5,6 +5,7 @@ import Image from "next/image";
 import {
   IconHome,
   IconBook,
+  IconBookmarks,
   IconBolt,
   IconMenu2,
   IconX,
@@ -23,8 +24,15 @@ import { UserProfileMock, mockUserProfile } from "@/data/mockCourseData";
 import { useTheme } from "@/context/ThemeContext";
 import { useProgress } from "@/context/ProgressContext";
 
+/** Single source for the primary tabs, so mobile and desktop cannot drift. */
+const NAV_TABS = [
+  { key: "home", href: "/home", label: "Bosh sahifa", Icon: IconHome },
+  { key: "courses", href: "/courses", label: "Kurslar", Icon: IconBook },
+  { key: "vocabulary", href: "/vocabulary", label: "Lug'at", Icon: IconBookmarks },
+] as const;
+
 interface AppNavbarProps {
-  activeTab?: "home" | "courses" | "settings";
+  activeTab?: "home" | "courses" | "vocabulary" | "settings";
   setActiveTab?: (tab: "home" | "courses") => void;
   user?: UserProfileMock;
   onOpenStreakModal?: () => void;
@@ -73,10 +81,10 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
           {/* ========================================================= */}
           {/* LEFT: Codegarten Brand Logo                               */}
           {/* ========================================================= */}
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-3 sm:gap-6 lg:gap-8 min-w-0">
             <Link
               href="/home"
-              className="flex items-center gap-2.5 group cursor-pointer focus:outline-none select-none"
+              className="flex items-center gap-2.5 group cursor-pointer focus:outline-none select-none shrink-0"
             >
               <div className="w-8 h-8 group-hover:scale-105 transition-transform shrink-0">
                 <Image
@@ -88,46 +96,38 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
                   priority
                 />
               </div>
-              <span className="text-xl font-bold tracking-tight text-[#000000] dark:text-white font-sans">
+              {/* The wordmark yields to the tabs on narrow screens */}
+              <span className="hidden sm:inline text-xl font-bold tracking-tight text-[#000000] dark:text-white font-sans">
                 Codegarten
               </span>
             </Link>
 
             {/* ========================================================= */}
-            {/* CENTER: Clean Tabs (Bosh sahifa, Kurslar)                 */}
+            {/* CENTER: Tabs — visible on every size, labels from sm up    */}
             {/* ========================================================= */}
-            <nav className="hidden md:flex items-center gap-6">
-              <Link
-                href="/home"
-                onClick={() => setActiveTab?.("home")}
-                className={`relative py-5 text-sm font-semibold transition-colors flex items-center gap-2 cursor-pointer ${
-                  activeTab === "home"
-                    ? "text-[#000000] dark:text-white font-bold"
-                    : "text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white"
-                }`}
-              >
-                <IconHome size={18} stroke={2} />
-                <span>Bosh sahifa</span>
-                {activeTab === "home" && (
-                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-black dark:bg-white rounded-full" />
-                )}
-              </Link>
-
-              <Link
-                href="/courses"
-                onClick={() => setActiveTab?.("courses")}
-                className={`relative py-5 text-sm font-semibold transition-colors flex items-center gap-2 cursor-pointer ${
-                  activeTab === "courses"
-                    ? "text-[#000000] dark:text-white font-bold"
-                    : "text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white"
-                }`}
-              >
-                <IconBook size={18} stroke={2} />
-                <span>Kurslar</span>
-                {activeTab === "courses" && (
-                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-black dark:bg-white rounded-full" />
-                )}
-              </Link>
+            <nav className="flex items-center gap-1 sm:gap-4 lg:gap-6 min-w-0">
+              {NAV_TABS.map((tab) => {
+                const isActive = activeTab === tab.key;
+                return (
+                  <Link
+                    key={tab.key}
+                    href={tab.href}
+                    onClick={() => tab.key !== "vocabulary" && setActiveTab?.(tab.key as "home" | "courses")}
+                    title={tab.label}
+                    className={`relative py-4 sm:py-5 px-2 sm:px-0 text-sm font-semibold transition-colors flex items-center gap-2 cursor-pointer ${
+                      isActive
+                        ? "text-[#000000] dark:text-white font-bold"
+                        : "text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white"
+                    }`}
+                  >
+                    <tab.Icon size={20} stroke={2} className="shrink-0" />
+                    <span className="hidden sm:inline whitespace-nowrap">{tab.label}</span>
+                    {isActive && (
+                      <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-black dark:bg-white rounded-full" />
+                    )}
+                  </Link>
+                );
+              })}
             </nav>
           </div>
 

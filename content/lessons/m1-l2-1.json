@@ -1,0 +1,59 @@
+{
+  "goal": "Katta vazifani bajarilishi mumkin mayda qadamlarga bo'lishni o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Katta vazifa — mayda qadamlar",
+      "body": [
+        "\"Uyni tozala\" — bu vazifa, buyruq emas. Uni bajarish uchun kichik qadamlarga bo'lish kerak: idishlarni yuvish, polni supurish, chang olish.",
+        "Bu usul decomposition (bo'laklash) deb ataladi va dasturlashning eng kuchli vositalaridan biri."
+      ]
+    },
+    {
+      "heading": "Qanday bo'laklash kerak",
+      "body": [
+        "Qadam shunchalik mayda bo'lishi kerak-ki, uni bajarish uchun yana savol tug'ilmasin. Agar \"buni qanday qilaman?\" degan savol qolsa — qadam hali ham katta."
+      ],
+      "code": {
+        "caption": "Vazifani bo'laklash",
+        "lines": [
+          "// Vazifa: kvadrat chizish",
+          "// 1-daraja: 4 ta qirra chizish",
+          "// 2-daraja:",
+          "oldinga(100)   // qirra",
+          "o'ngga(90)     // burilish",
+          "// ... va shu 4 marta"
+        ]
+      },
+      "callout": "Qadam \"qanday?\" savolini tug'dirmasa — yetarlicha mayda."
+    }
+  ],
+  "terms": [
+    {
+      "en": "decomposition",
+      "uz": "bo'laklash",
+      "note": "Katta vazifani mayda, bajariladigan qismlarga ajratish."
+    },
+    {
+      "en": "task",
+      "uz": "vazifa",
+      "note": "Erishilishi kerak bo'lgan umumiy maqsad."
+    },
+    {
+      "en": "step",
+      "uz": "qadam",
+      "note": "Vazifaning bo'linmas, bajariladigan bir qismi."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Qadam yetarlicha mayda bo'lganini qanday bilamiz?",
+      "options": [
+        "Bir qatorga sig'sa",
+        "\"Buni qanday qilaman?\" degan savol qolmasa",
+        "Uzunligi 10 so'zdan kam bo'lsa"
+      ],
+      "correctIndex": 1,
+      "explanation": "Agar qadamni bajarish uchun yana tushuntirish kerak bo'lsa, u hali ham katta hisoblanadi."
+    }
+  ]
+}

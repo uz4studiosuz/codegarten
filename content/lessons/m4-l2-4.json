@@ -1,0 +1,60 @@
+{
+  "goal": "Shartlar bilan to'siqni aniqlab, robotni undan o'tkazasiz.",
+  "sections": [
+    {
+      "heading": "Vaziyatga javob berish",
+      "body": [
+        "Shartsiz robot ko'r-ko'rona harakat qiladi. Shart bilan esa u atrofni \"sezib\", vaziyatga mos qaror qabul qiladi.",
+        "Bu reactive behaviour (javob beruvchi xatti-harakat) deb ataladi va robototexnikaning asosi."
+      ],
+      "code": {
+        "caption": "To'siqni aylanib o'tish",
+        "lines": [
+          "repeat (10) {",
+          "  agar (oldinda_to'siq()) {",
+          "    o'ngga_buril()",
+          "  } aks holda {",
+          "    oldinga(1)",
+          "  }",
+          "}"
+        ]
+      }
+    },
+    {
+      "heading": "Sikl va shart birgalikda",
+      "body": [
+        "Sikl ichidagi shart eng kuchli kombinatsiyalardan biri: har aylanishda vaziyat qaytadan tekshiriladi va mos qaror qabul qilinadi."
+      ],
+      "callout": "Sikl + shart = vaziyatga moslashuvchi dastur."
+    }
+  ],
+  "terms": [
+    {
+      "en": "reactive behaviour",
+      "uz": "javob beruvchi xatti-harakat",
+      "note": "Atrof holatiga qarab qaror qabul qilish."
+    },
+    {
+      "en": "sensor",
+      "uz": "sezgir",
+      "note": "Atrof-muhit holatini tekshiruvchi funksiya."
+    },
+    {
+      "en": "guard",
+      "uz": "qo'riqchi shart",
+      "note": "Xatarli amaldan oldin qo'yiladigan tekshiruv."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Sikl ichidagi shart nima uchun kuchli?",
+      "options": [
+        "Kod qisqaradi",
+        "Har aylanishda vaziyat qaytadan tekshiriladi",
+        "Tezroq ishlaydi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Har aylanishda shart yangidan hisoblanadi, shuning uchun dastur o'zgaruvchi vaziyatga moslashadi."
+    }
+  ]
+}

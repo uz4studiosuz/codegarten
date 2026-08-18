@@ -1,0 +1,62 @@
+{
+  "goal": "Binary search bilan qidirishni keskin tezlashtirishni o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Yarmini tashlab yuborish",
+      "body": [
+        "Binary search (ikkilik qidiruv) tartiblangan ro'yxatda ishlaydi. Har qadamda o'rtadagi elementni tekshirib, ro'yxatning yarmini butunlay tashlab yuboradi.",
+        "Xuddi lug'atdan so'z izlash kabi: o'rtasini ochib, keraksiz yarmini yopib qo'yasiz."
+      ],
+      "code": {
+        "caption": "Ikkilik qidiruv",
+        "lines": [
+          "chap = 0,  o'ng = n - 1",
+          "",
+          "while (chap <= o'ng) {",
+          "  o'rta = (chap + o'ng) / 2",
+          "  agar (ro'yxat[o'rta] == maqsad) return o'rta",
+          "  agar (ro'yxat[o'rta] < maqsad) chap = o'rta + 1",
+          "  aks holda o'ng = o'rta - 1",
+          "}"
+        ]
+      }
+    },
+    {
+      "heading": "Logarifmik tezlik",
+      "body": [
+        "Har qadamda hajm yarmiga kamayadi, shuning uchun murakkablik O(log n) — logarithmic time (logarifmik vaqt).",
+        "1 000 000 element uchun chiziqli qidiruv 1 000 000 qadam, ikkilik qidiruv esa faqat 20 qadam bajaradi."
+      ],
+      "callout": "Million elementdan keraklisini 20 qadamda topish mumkin."
+    }
+  ],
+  "terms": [
+    {
+      "en": "binary search",
+      "uz": "ikkilik qidiruv",
+      "note": "Tartiblangan ro'yxatda yarmini tashlab qidirish usuli."
+    },
+    {
+      "en": "logarithmic time",
+      "uz": "logarifmik vaqt",
+      "note": "O(log n) — har qadamda hajm yarmiga kamayadigan tezlik."
+    },
+    {
+      "en": "sorted",
+      "uz": "tartiblangan",
+      "note": "Elementlari o'sish yoki kamayish tartibida joylashgan."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Binary search ishlashi uchun qanday shart bajarilishi kerak?",
+      "options": [
+        "Ro'yxat kichik bo'lishi",
+        "Ro'yxat tartiblangan bo'lishi",
+        "Elementlar son bo'lishi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Tartiblanmagan ro'yxatda o'rtadagi elementni taqqoslash ma'no bermaydi."
+    }
+  ]
+}

@@ -85,47 +85,43 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
 
   const displayName = authUser?.name || "o'quvchi";
 
-  // Land on whichever module the learner last touched.
-  const initialIndex = useMemo(() => {
-    const lastModuleId = recentLessons[0]?.module.id;
-    const idx = modules.findIndex((m) => m.id === lastModuleId);
-    return idx >= 0 ? idx : 0;
-  }, [recentLessons, modules]);
+  /**
+   * The big cards and the strip below show the same thing — where to resume.
+   * Recent lessons drive both; a learner with no history gets the recommended
+   * first lesson so the card is never empty.
+   */
+  const cards = useMemo(() => {
+    if (recentLessons.length > 0) return recentLessons;
+    const fallback = recommendedLesson ?? nextLessonIn(modules[0].id);
+    return fallback ? [fallback] : [];
+  }, [recentLessons, recommendedLesson, nextLessonIn, modules]);
 
-  const [selectedModuleIndex, setSelectedModuleIndex] = useState(initialIndex);
+  const [selectedCardIndex, setSelectedCardIndex] = useState(0);
   const [swipeDir, setSwipeDir] = useState<1 | -1 | 0>(0);
   const [animKey, setAnimKey] = useState(0);
-  const hasUserPicked = useRef(false);
-
-  // Follow the stored progress until the learner takes over the carousel.
-  useEffect(() => {
-    if (!hasUserPicked.current) setSelectedModuleIndex(initialIndex);
-  }, [initialIndex]);
 
   const dragStartX = useRef<number | null>(null);
   const [dragOffset, setDragOffset] = useState(0);
   const isDragging = useRef(false);
 
-  const activeModule = modules[selectedModuleIndex] || modules[0];
-  const activeProgress = moduleProgress(activeModule.id);
-  const activeNext = nextLessonIn(activeModule.id);
-  const total = modules.length;
+  const activeCard = cards.length > 0 ? cards[Math.min(selectedCardIndex, cards.length - 1)] : undefined;
+  const activeCardProgress = moduleProgress(activeCard?.module.id ?? "");
+  const total = cards.length;
 
   const goTo = useCallback(
     (nextIdx: number, dir: 1 | -1) => {
       const clamped = Math.max(0, Math.min(total - 1, nextIdx));
-      if (clamped === selectedModuleIndex) return;
-      hasUserPicked.current = true;
+      if (clamped === selectedCardIndex) return;
       setSwipeDir(dir);
       setAnimKey((k) => k + 1);
-      setSelectedModuleIndex(clamped);
+      setSelectedCardIndex(clamped);
     },
-    [selectedModuleIndex, total]
+    [selectedCardIndex, total]
   );
 
-  const handleSelectModule = (index: number) => {
-    if (index === selectedModuleIndex) return;
-    goTo(index, index > selectedModuleIndex ? 1 : -1);
+  const handleSelectCard = (index: number) => {
+    if (index === selectedCardIndex) return;
+    goTo(index, index > selectedCardIndex ? 1 : -1);
   };
 
   // ── Drag handlers on the main card ──
@@ -143,6 +139,11 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
     if (isDragging.current) setDragOffset(diff);
   };
 
+  // Keep the selection inside range when history changes underneath it.
+  useEffect(() => {
+    setSelectedCardIndex((i) => (i < cards.length ? i : 0));
+  }, [cards.length]);
+
   const onPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
     if (dragStartX.current === null) return;
     const diff = e.clientX - dragStartX.current;
@@ -150,8 +151,8 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
     setDragOffset(0);
 
     if (Math.abs(diff) > 60) {
-      if (diff < 0) goTo(selectedModuleIndex + 1, 1);
-      else goTo(selectedModuleIndex - 1, -1);
+      if (diff < 0) goTo(selectedCardIndex + 1, 1);
+      else goTo(selectedCardIndex - 1, -1);
     }
     isDragging.current = false;
   };
@@ -284,20 +285,22 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
 
         {/* ══ RIGHT COLUMN: Tezkor qaytish ══ */}
         <div className="lg:col-span-8 flex flex-col gap-3">
-          <div className="flex items-center justify-between">
-            <span className="text-sm sm:text-base font-bold text-gray-500 dark:text-zinc-400">
+          <div className="flex items-center justify-between gap-3">
+            <span className="text-sm sm:text-base font-bold text-gray-500 dark:text-zinc-400 min-w-0 truncate">
               Tezkor qaytish
             </span>
             <button
               type="button"
               onClick={onNavigateToCourses}
-              className="text-[13px] font-semibold text-[#26B54F] hover:underline cursor-pointer"
+              className="shrink-0 inline-flex items-center gap-1 text-[13px] font-semibold text-[#26B54F] hover:underline cursor-pointer whitespace-nowrap"
             >
               Barcha kurslar
+              <IconArrowRight size={14} />
             </button>
           </div>
 
-          {/* LAYERED CARD STACK */}
+          {/* LAYERED CARD STACK — one card per resume target */}
+          {activeCard && (
           <div className="relative">
             <div className="absolute -right-3 top-3 bottom-3 w-full rounded-[15px] border-2 border-gray-200/50 dark:border-[#27272a]/60 bg-white/40 dark:bg-[#1F1F1F]/40 z-0 pointer-events-none" />
             <div className="absolute -right-1.5 top-1.5 bottom-1.5 w-full rounded-[15px] border-2 border-gray-200/80 dark:border-[#27272a]/80 bg-white/70 dark:bg-[#1F1F1F]/70 z-0 pointer-events-none" />
@@ -339,21 +342,24 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                 `}</style>
 
                 <div className="text-center mb-4 pointer-events-none">
-                  <h2 className="text-2xl sm:text-3xl font-extrabold text-black dark:text-white tracking-tight">
-                    {activeModule.title}
+                  <span className="inline-block text-xs font-extrabold font-mono tracking-widest text-[#26B54F] uppercase">
+                    {activeCard!.module.title}
+                  </span>
+                  <h2 className="mt-1.5 text-xl sm:text-2xl font-extrabold text-black dark:text-white tracking-tight leading-tight">
+                    {activeCard!.lesson.title}
                   </h2>
-                  <span className="inline-block mt-1 text-xs font-extrabold font-mono tracking-widest text-[#26B54F] uppercase">
-                    Modul {activeModule.num} · {moduleStats(activeModule).lessonCount} dars
+                  <span className="mt-1 block text-xs text-gray-400 dark:text-zinc-500">
+                    Level {activeCard!.level.num} · {activeCard!.level.title}
                   </span>
                 </div>
 
-                <div className="flex items-center justify-center my-6 sm:my-8 pointer-events-none">
-                  <div className="relative w-32 h-32 sm:w-40 sm:h-40">
+                <div className="flex items-center justify-center my-6 sm:my-7 pointer-events-none">
+                  <div className="relative w-28 h-28 sm:w-36 sm:h-36">
                     <Image
-                      src={activeModule.imageSrc}
-                      alt={activeModule.title}
-                      width={160}
-                      height={160}
+                      src={activeCard!.module.imageSrc}
+                      alt={activeCard!.module.title}
+                      width={144}
+                      height={144}
                       className="w-full h-full object-contain drop-shadow-md"
                       priority
                       draggable={false}
@@ -361,7 +367,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                   </div>
                 </div>
 
-                {/* Progress strip */}
+                {/* Module progress behind this lesson */}
                 <div className="bg-gray-50 dark:bg-[#222328] rounded-[15px] p-4 border-2 border-gray-100 dark:border-zinc-800 mb-6 flex items-center gap-4 transition-colors pointer-events-none">
                   <div className="relative w-11 h-11 shrink-0 flex items-center justify-center">
                     <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
@@ -374,7 +380,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                       />
                       <path
                         className="text-[#26B54F]"
-                        strokeDasharray={`${activeProgress.percent}, 100`}
+                        strokeDasharray={`${activeCardProgress.percent}, 100`}
                         strokeWidth="3.5"
                         strokeLinecap="round"
                         stroke="currentColor"
@@ -383,173 +389,150 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                       />
                     </svg>
                     <span className="absolute text-[10px] font-bold font-mono text-black dark:text-white">
-                      {activeProgress.percent}%
+                      {activeCardProgress.percent}%
                     </span>
                   </div>
                   <div className="min-w-0">
                     <span className="text-xs text-gray-400 dark:text-gray-400 block font-medium">
-                      {activeProgress.isFinished
-                        ? "Modul yakunlandi"
-                        : activeProgress.isStarted
-                        ? "Hozirgi mavzu"
-                        : "Birinchi mavzu"}
+                      {isCompleted(activeCard!.lesson.id)
+                        ? "Yakunlangan dars"
+                        : activeCardProgress.isStarted
+                        ? "Kutib turgan dars"
+                        : "Birinchi dars"}
                     </span>
                     <span className="text-sm sm:text-base font-bold text-black dark:text-white truncate block">
-                      {activeNext?.lesson.title ?? "—"}
+                      {activeCard!.lesson.xp} XP · {activeCard!.lesson.estMinutes} daqiqa
                     </span>
                   </div>
                 </div>
 
                 <button
                   type="button"
-                  onClick={() => onStartLesson(activeModule.id, activeNext?.lesson.id)}
+                  onClick={() =>
+                    onStartLesson(activeCard!.module.id, activeCard!.lesson.id)
+                  }
                   className="btn-primary-tactile w-full flex items-center justify-center"
                 >
                   <span>
-                    {activeProgress.isFinished
+                    {isCompleted(activeCard!.lesson.id)
                       ? "Qayta ko'rish"
-                      : activeProgress.isStarted
+                      : activeCardProgress.isStarted
                       ? "Davom ettirish"
                       : "Boshlash"}
                   </span>
                 </button>
               </div>
 
-              {/* Dots now carry module selection, since the strip below shows lessons */}
-              <div className="flex items-center justify-center gap-1.5 mt-4">
-                {modules.map((mod, i) => (
-                  <button
-                    key={mod.id}
-                    type="button"
-                    onClick={() => handleSelectModule(i)}
-                    aria-label={mod.title}
-                    title={mod.title}
-                    className="p-1.5 -m-1 cursor-pointer"
-                  >
-                    <span
-                      className={`block rounded-full transition-all duration-300 ${
-                        i === selectedModuleIndex
-                          ? "w-4 h-1.5 bg-[#26B54F]"
-                          : "w-1.5 h-1.5 bg-gray-200 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-zinc-600"
-                      }`}
-                    />
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* ── OXIRGI DARSLAR: horizontal strip ── */}
-          {isFreshStart ? (
-            /* Nothing opened yet — point at one clear first step */
-            <div className="mt-2 rounded-[15px] border-2 border-dashed border-gray-200 dark:border-[#27272a] p-5 sm:p-6">
-              <div className="flex items-start gap-3">
-                <div className="w-9 h-9 shrink-0 rounded-full bg-[#26B54F]/15 flex items-center justify-center">
-                  <IconSparkles size={18} className="text-[#26B54F]" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-bold text-black dark:text-white">
-                    Bu yerda oxirgi darslaringiz ko&apos;rinadi
-                  </p>
-                  <p className="mt-1 text-[13px] text-gray-500 dark:text-zinc-400 leading-relaxed">
-                    Hali hech narsa boshlanmagan. Quyidagi darsdan boshlash tavsiya
-                    etiladi — 3 daqiqa vaqt oladi.
-                  </p>
-
-                  {recommendedLesson && (
+              {/* Dots mirror the strip below */}
+              {cards.length > 1 && (
+                <div className="flex items-center justify-center gap-1.5 mt-4">
+                  {cards.map((card, i) => (
                     <button
+                      key={card.lesson.id}
                       type="button"
-                      onClick={() =>
-                        onStartLesson(
-                          recommendedLesson.module.id,
-                          recommendedLesson.lesson.id
-                        )
-                      }
-                      className="mt-4 w-full flex items-center gap-3 rounded-[12px] border-2 border-gray-200 dark:border-[#27272a] p-3 text-left hover:border-[#26B54F] transition-colors cursor-pointer group"
+                      onClick={() => handleSelectCard(i)}
+                      aria-label={card.lesson.title}
+                      title={card.lesson.title}
+                      className="p-1.5 -m-1 cursor-pointer"
                     >
-                      <span className="w-9 h-9 shrink-0 rounded-full bg-[#26B54F] flex items-center justify-center">
-                        <IconPlayerPlayFilled size={14} className="text-white" />
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="block text-[13px] font-bold text-black dark:text-white truncate">
-                          {recommendedLesson.lesson.title}
-                        </span>
-                        <span className="block text-[12px] text-gray-500 dark:text-zinc-500 truncate">
-                          {recommendedLesson.module.title} ·{" "}
-                          {recommendedLesson.lesson.xp} XP
-                        </span>
-                      </span>
-                      <IconArrowRight
-                        size={16}
-                        className="shrink-0 text-gray-400 group-hover:text-[#26B54F] transition-colors"
+                      <span
+                        className={`block rounded-full transition-all duration-300 ${
+                          i === selectedCardIndex
+                            ? "w-4 h-1.5 bg-[#26B54F]"
+                            : "w-1.5 h-1.5 bg-gray-200 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-zinc-600"
+                        }`}
                       />
                     </button>
-                  )}
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="mt-2">
-              <div className="flex items-center gap-2 mb-2.5">
-                <IconClock size={15} className="text-gray-400" />
-                <span className="text-xs font-extrabold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  OXIRGI DARSLAR
-                </span>
-              </div>
-
-              {/* Newest first, scrolls sideways when the history grows */}
-              <div
-                className="flex gap-2.5 sm:gap-3.5 overflow-x-auto scrollbar-none pb-1"
-                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-              >
-                {recentLessons.map((entry) => {
-                  const locked = !isUnlocked(entry.module.id, entry.lesson.id);
-                  const done = isCompleted(entry.lesson.id);
-
-                  return (
-                    <Link
-                      key={entry.lesson.id}
-                      href={
-                        locked
-                          ? `/courses/${entry.module.id}`
-                          : `/learn/${entry.module.id}/${entry.lesson.id}`
-                      }
-                      title={`${entry.lesson.title} — ${entry.module.title}`}
-                      className="group shrink-0 w-[104px] sm:w-[116px] rounded-[15px] border-2 border-gray-200 dark:border-[#27272a] p-2.5 hover:border-[#26B54F] transition-colors"
-                    >
-                      <div className="relative aspect-square rounded-[10px] bg-gray-50 dark:bg-[#1a1a1e] flex items-center justify-center mb-2">
-                        <Image
-                          src={entry.module.imageSrc}
-                          alt={entry.module.title}
-                          width={44}
-                          height={44}
-                          className="w-10 h-10 sm:w-11 sm:h-11 object-contain"
-                        />
-                        {done && (
-                          <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-[#26B54F] flex items-center justify-center">
-                            <IconCheck size={10} stroke={4} className="text-white" />
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-[11.5px] font-bold leading-snug text-black dark:text-white line-clamp-2 min-h-[30px]">
-                        {entry.lesson.title}
-                      </p>
-                      <p className="mt-0.5 text-[10.5px] text-gray-500 dark:text-zinc-500 truncate">
-                        Level {entry.level.num}
-                      </p>
-                    </Link>
-                  );
-                })}
-              </div>
-
-              {earnedBadges.length > 0 && (
-                <div className="mt-3 flex items-center gap-2 text-[12px] text-gray-500 dark:text-zinc-400">
-                  <IconTrophy size={14} className="text-amber-500" />
-                  Eng yangi yutuq: {earnedBadges[earnedBadges.length - 1].name}
+                  ))}
                 </div>
               )}
             </div>
+          </div>
           )}
+
+          {/* ── OXIRGI DARSLAR: horizontal strip, also the card selector ── */}
+          <div className="mt-5">
+            {isFreshStart ? (
+              /* Nothing opened yet — point at one clear first step */
+              <div className="rounded-[15px] border-2 border-dashed border-gray-200 dark:border-[#27272a] p-5 sm:p-6">
+                <div className="flex items-start gap-3">
+                  <div className="w-9 h-9 shrink-0 rounded-full bg-[#26B54F]/15 flex items-center justify-center">
+                    <IconSparkles size={18} className="text-[#26B54F]" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-bold text-black dark:text-white">
+                      Bu yerda oxirgi darslaringiz ko&apos;rinadi
+                    </p>
+                    <p className="mt-1 text-[13px] text-gray-500 dark:text-zinc-400 leading-relaxed">
+                      Hali hech narsa boshlanmagan. Yuqoridagi kartadan boshlasangiz,
+                      darslar shu yerda to&apos;planib boradi.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="flex items-center gap-2 mb-2.5">
+                  <IconClock size={15} className="text-gray-400" />
+                  <span className="text-xs font-extrabold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    OXIRGI DARSLAR
+                  </span>
+                </div>
+
+                <div
+                  className="flex gap-2.5 sm:gap-3.5 overflow-x-auto scrollbar-none pb-1"
+                  style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+                >
+                  {cards.map((card, i) => {
+                    const done = isCompleted(card.lesson.id);
+                    const isSelected = i === selectedCardIndex;
+
+                    return (
+                      <button
+                        key={card.lesson.id}
+                        type="button"
+                        onClick={() => handleSelectCard(i)}
+                        title={`${card.lesson.title} — ${card.module.title}`}
+                        className={`shrink-0 w-[104px] sm:w-[116px] rounded-[15px] border-2 p-2.5 text-left transition-all cursor-pointer ${
+                          isSelected
+                            ? "border-[#26B54F] bg-[#26B54F]/[0.08]"
+                            : "border-gray-200 dark:border-[#27272a] hover:border-gray-300 dark:hover:border-zinc-700"
+                        }`}
+                      >
+                        <div className="relative aspect-square rounded-[10px] bg-gray-50 dark:bg-[#1a1a1e] flex items-center justify-center mb-2">
+                          <Image
+                            src={card.module.imageSrc}
+                            alt={card.module.title}
+                            width={44}
+                            height={44}
+                            className="w-10 h-10 sm:w-11 sm:h-11 object-contain"
+                          />
+                          {done && (
+                            <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-[#26B54F] flex items-center justify-center">
+                              <IconCheck size={10} stroke={4} className="text-white" />
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-[11.5px] font-bold leading-snug text-black dark:text-white line-clamp-2 min-h-[30px]">
+                          {card.lesson.title}
+                        </p>
+                        <p className="mt-0.5 text-[10.5px] text-gray-500 dark:text-zinc-500 truncate">
+                          Level {card.level.num}
+                        </p>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {earnedBadges.length > 0 && (
+                  <div className="mt-3 flex items-center gap-2 text-[12px] text-gray-500 dark:text-zinc-400">
+                    <IconTrophy size={14} className="text-amber-500" />
+                    Eng yangi yutuq: {earnedBadges[earnedBadges.length - 1].name}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
         </div>
 
       </div>

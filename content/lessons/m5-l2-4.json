@@ -1,0 +1,49 @@
+{
+  "goal": "2-bosqich: turlar, almashtirish va yig'uvchi bo'yicha takrorlash.",
+  "sections": [
+    {
+      "heading": "Bosqich xulosasi",
+      "body": [
+        "Ma'lumot turi (data type) qiymat bilan qanday amallar mumkinligini belgilaydi.",
+        "\"2\" + \"3\" = \"23\" — matnlarda + birlashtiradi (concatenation).",
+        "Ikki qiymatni almashtirish uchun vaqtinchalik o'zgaruvchi kerak.",
+        "Yig'uvchi (accumulator) 0 dan, ko'paytiruvchi 1 dan boshlanadi."
+      ],
+      "callout": "Keyingi bosqichda bitta nom ostida ko'p qiymat saqlashni o'rganamiz."
+    }
+  ],
+  "terms": [
+    {
+      "en": "data type",
+      "uz": "ma'lumot turi",
+      "note": "Qiymat turi."
+    },
+    {
+      "en": "accumulator",
+      "uz": "yig'uvchi",
+      "note": "Natijani to'plovchi o'zgaruvchi."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "2 + 3 va \"2\" + \"3\" natijalari nima uchun farq qiladi?",
+      "options": [
+        "Farq qilmaydi",
+        "Turlari boshqa: sonlar qo'shiladi, matnlar ulanadi",
+        "Ikkinchisi xato"
+      ],
+      "correctIndex": 1,
+      "explanation": "+ amali turga qarab boshqa ish bajaradi."
+    },
+    {
+      "question": "Vaqtinchalik o'zgaruvchi nima uchun kerak?",
+      "options": [
+        "Kodni chiroyli qilish uchun",
+        "Qiymat ustiga yozilishidan oldin uni saqlash uchun",
+        "Xotirani tejash uchun"
+      ],
+      "correctIndex": 1,
+      "explanation": "Aks holda birinchi qiymat yo'qoladi va tiklanmaydi."
+    }
+  ]
+}
