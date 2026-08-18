@@ -12,93 +12,85 @@ import {
   IconStarFilled,
   IconLockFilled,
   IconBarbell,
+  IconPlayerPlayFilled,
 } from "@tabler/icons-react";
 import { AppNavbar } from "@/components/dashboard/AppNavbar";
-import { foundationalLearningPath, mockUserProfile } from "@/data/mockCourseData";
+import {
+  Lesson,
+  Level,
+  getModule,
+  moduleLessons,
+  moduleStats,
+} from "@/data/curriculum";
+import { useProgress } from "@/context/ProgressContext";
 
-type NodeState = "completed" | "active" | "locked";
+/** Brand primary, matching the Figma "Primary" token. */
+const PRIMARY = "#26B54F";
 
-/** Vertical air above an item, and for nodes the offset from the column centre. */
-type PathItem =
-  | { kind: "level"; num: number; title: string; gapTop: number }
-  | { kind: "nextup"; title: string; lessonId: string; gapTop: number }
-  | {
-      kind: "node";
-      id: string;
-      title: string;
-      state: NodeState;
-      zig: number;
-      gapTop: number;
-      isReview?: boolean;
-    };
+/** Sticky offsets: 64px navbar, then the pinned "Next up" ribbon. */
+const NEXTUP_TOP = 76;
+const LEVEL_TOP = 160;
+
+/** A repeating sine-like wander that turns a lesson list into a trail. */
+const ZIG_PATTERN = [0, 40, 64, 40, 0, -40, -64, -40];
+
+type DiscState = "completed" | "active" | "locked";
 
 /**
- * The trail is hand-authored as a flat ribbon: banners, the "Next up" card and
- * the snaking nodes appear in exactly this order, with the horizontal offsets
- * and vertical gaps that give the path its wandering shape.
+ * Duolingo-style pressable disc: a hard offset shadow that collapses as the
+ * node is pushed down, so clicking feels physical.
  */
-const PATH_ITEMS: PathItem[] = [
-  { kind: "level", num: 1, title: "Variables", gapTop: 0 },
-  { kind: "node", id: "step-1", title: "Multiple Variables", state: "completed", zig: 17, gapTop: 31 },
-  { kind: "node", id: "step-2", title: "Using Variables", state: "active", zig: -79, gapTop: 30 },
-  { kind: "node", id: "step-3", title: "Setting Variables", state: "locked", zig: -117, gapTop: 32 },
-  { kind: "node", id: "step-4", title: "Level Review", state: "locked", zig: -64, gapTop: 33, isReview: true },
-  { kind: "nextup", title: "Using Variables", lessonId: "step-2", gapTop: 28 },
-  { kind: "node", id: "step-5", title: "Setting Variables", state: "locked", zig: 3, gapTop: 31 },
-  { kind: "node", id: "step-6", title: "Setting Variables", state: "locked", zig: -43, gapTop: 41 },
-  { kind: "node", id: "step-7", title: "Setting Variables", state: "locked", zig: -113, gapTop: 42 },
-  { kind: "node", id: "step-8", title: "Setting Variables", state: "locked", zig: -159, gapTop: 42 },
-  { kind: "node", id: "step-9", title: "Setting Variables", state: "locked", zig: -123, gapTop: 41 },
-  { kind: "node", id: "step-10", title: "Level Review", state: "locked", zig: -43, gapTop: 41, isReview: true },
-];
-
-const DISC_SIZE = { completed: 76, active: 76, locked: 72 } as const;
-
-// ── Node disc ───────────────────────────────────────────────────────────────
-function NodeDisc({
+function LessonDisc({
   state,
-  size,
   isReview,
 }: {
-  state: NodeState;
-  size: number;
-  isReview?: boolean;
+  state: DiscState;
+  isReview: boolean;
 }) {
-  const box = { width: size, height: size };
-  const lift = "shadow-[0_5px_12px_rgba(0,0,0,0.45)]";
+  const skin =
+    state === "completed"
+      ? "bg-[#26B54F] shadow-[0px_5px_0px_0px_#1A8038]"
+      : state === "active"
+      ? "bg-[#F0B03C] shadow-[0px_5px_0px_0px_#C0851F]"
+      : "bg-neutral-200 shadow-[0px_5px_0px_0px_rgba(183,183,183,1.00)]";
 
-  if (state === "completed") {
-    return (
-      <div
-        style={box}
-        className={`shrink-0 rounded-full bg-gradient-to-b from-[#6BC95F] to-[#55AE4A] ${lift} flex items-center justify-center`}
-      >
-        <IconCheck size={30} stroke={3.2} className="text-white" />
-      </div>
+  const icon =
+    state === "completed" ? (
+      <IconCheck size={28} stroke={3.2} className="text-white" />
+    ) : state === "active" ? (
+      <IconStarFilled size={25} className="text-white" />
+    ) : isReview ? (
+      <IconBarbell size={25} stroke={2} className="text-neutral-400" />
+    ) : (
+      <IconLockFilled size={21} className="text-neutral-400" />
     );
-  }
-
-  if (state === "active") {
-    return (
-      <div
-        style={box}
-        className={`shrink-0 rounded-full bg-gradient-to-b from-[#F5BB4D] to-[#E09E2A] ${lift} flex items-center justify-center`}
-      >
-        <IconStarFilled size={26} className="text-white" />
-      </div>
-    );
-  }
 
   return (
     <div
-      style={box}
-      className={`shrink-0 rounded-full bg-gradient-to-b from-[#F1F1F1] to-[#DCDCDC] ${lift} flex items-center justify-center`}
+      className={`w-16 h-14 rounded-full flex items-center justify-center transition-all duration-100 group-active:translate-y-[5px] group-active:shadow-none ${skin}`}
     >
-      {isReview ? (
-        <IconBarbell size={26} stroke={2} className="text-[#9A9AA1]" />
-      ) : (
-        <IconLockFilled size={22} className="text-[#9A9AA1]" />
-      )}
+      {icon}
+    </div>
+  );
+}
+
+/** The Figma level card: 2px inset outline plus a 6px inset base in primary. */
+function LevelCard({ level }: { level: Level }) {
+  return (
+    <div
+      className="px-4 py-3 bg-[#0d0d0f] rounded-[20px] flex flex-col justify-start items-stretch"
+      style={{
+        outline: `2px solid ${PRIMARY}`,
+        outlineOffset: "-2px",
+        boxShadow: `inset 0px -6px 0px 0px ${PRIMARY}`,
+      }}
+    >
+      <div className="text-center text-[10px] font-mono font-bold uppercase leading-4 tracking-wide text-gray-500">
+        Level {level.num}
+      </div>
+      <div className="pt-0.5 text-center text-sm font-normal leading-5 text-white">
+        {level.title}
+      </div>
     </div>
   );
 }
@@ -107,13 +99,42 @@ export default function ModulePathPage() {
   const urlParams = useParams();
   const moduleId = (urlParams?.moduleId as string) || "mod-2";
 
-  const path = foundationalLearningPath;
-  const mod =
-    path.modules.find((m) => m.id === moduleId) || path.modules[1] || path.modules[0];
+  const { isCompleted, isUnlocked, nextLessonIn, moduleProgress, levelProgress } =
+    useProgress();
+
+  const module = getModule(moduleId);
+
+  if (!module) {
+    return (
+      <div className="min-h-screen bg-[#0d0d0f] text-white flex flex-col font-sans">
+        <AppNavbar activeTab="courses" />
+        <div className="flex-1 flex flex-col items-center justify-center gap-4 px-6 text-center">
+          <p className="text-lg font-bold">Bunday modul topilmadi.</p>
+          <Link
+            href="/courses"
+            className="text-[15px] text-[#26B54F] hover:underline"
+          >
+            Kurslar ro&apos;yxatiga qaytish
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const stats = moduleStats(module);
+  const progress = moduleProgress(moduleId);
+  const nextLesson = nextLessonIn(moduleId);
+  const allLessons = moduleLessons(module);
+
+  const discStateFor = (lesson: Lesson): DiscState => {
+    if (isCompleted(lesson.id)) return "completed";
+    if (nextLesson?.lesson.id === lesson.id) return "active";
+    return isUnlocked(moduleId, lesson.id) ? "active" : "locked";
+  };
 
   return (
     <div className="min-h-screen bg-[#0d0d0f] text-white flex flex-col font-sans">
-      <AppNavbar activeTab="courses" user={mockUserProfile} />
+      <AppNavbar activeTab="courses" />
 
       {/* ── Breadcrumb ── */}
       <div className="border-b border-white/[0.06]">
@@ -126,122 +147,169 @@ export default function ModulePathPage() {
             Courses
           </Link>
           <span className="text-[#3a3a41] text-[15px]">/</span>
-          <span className="text-[15px] text-[#c9c9d0]">{mod.title}</span>
+          <span className="text-[15px] text-[#c9c9d0]">{module.title}</span>
         </div>
       </div>
 
       <main className="flex-1 max-w-[1118px] w-full mx-auto px-6 py-[52px]">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-11 lg:gap-[72px] items-start">
 
-          {/* ══ LEFT: module summary card ══ */}
-          <div className="rounded-[26px] border border-[#2b2b31] bg-[#101013] p-7">
-            <Image
-              src={mod.imageSrc || "/images/loops.png"}
-              alt={mod.title}
-              width={72}
-              height={72}
-              className="w-[72px] h-[72px] object-contain"
-            />
+          {/* ══ LEFT: module summary — pinned while the path scrolls ══ */}
+          <div className="lg:sticky lg:top-[76px]">
+            <div className="rounded-[26px] border border-[#2b2b31] bg-[#101013] p-7">
+              <Image
+                src={module.imageSrc}
+                alt={module.title}
+                width={72}
+                height={72}
+                className="w-[72px] h-[72px] object-contain"
+              />
 
-            <h1 className="mt-6 text-[26px] font-bold leading-tight text-white">
-              {mod.title}
-            </h1>
-            <p className="mt-2.5 text-[15px] leading-[1.65] text-[#8b8b93]">
-              {mod.description}
-            </p>
+              <h1 className="mt-6 text-[26px] font-bold leading-tight text-white">
+                {module.title}
+              </h1>
+              <p className="mt-2.5 text-[15px] leading-[1.65] text-[#8b8b93]">
+                {module.description}
+              </p>
 
-            <div className="mt-7 h-px bg-[#2b2b31]" />
+              {/* Live module progress */}
+              <div className="mt-6">
+                <div className="flex items-center justify-between mb-2 text-[13px]">
+                  <span className="text-[#8b8b93]">
+                    {progress.completed}/{progress.total} dars
+                  </span>
+                  <span className="font-bold text-[#4ADE80]">{progress.percent}%</span>
+                </div>
+                <div className="h-2 rounded-full bg-white/[0.08] overflow-hidden">
+                  <div
+                    className="h-full rounded-full bg-[#26B54F] transition-[width] duration-500"
+                    style={{ width: `${progress.percent}%` }}
+                  />
+                </div>
+              </div>
 
-            <div className="mt-5 flex items-center gap-7 text-[15px] text-[#9a9aa2]">
-              <span className="inline-flex items-center gap-2">
-                <IconBook size={18} stroke={1.8} className="text-[#7a7a83]" />
-                15 Lessons
-              </span>
-              <span className="inline-flex items-center gap-2">
-                <IconDumbbell size={18} stroke={1.8} className="text-[#7a7a83]" />
-                150 Exercises
-              </span>
+              <div className="mt-6 h-px bg-[#2b2b31]" />
+
+              <div className="mt-5 flex items-center gap-7 text-[15px] text-[#9a9aa2]">
+                <span className="inline-flex items-center gap-2">
+                  <IconBook size={18} stroke={1.8} className="text-[#7a7a83]" />
+                  {stats.lessonCount} Lessons
+                </span>
+                <span className="inline-flex items-center gap-2">
+                  <IconDumbbell size={18} stroke={1.8} className="text-[#7a7a83]" />
+                  {stats.exerciseCount} Exercises
+                </span>
+              </div>
             </div>
           </div>
 
-          {/* ══ RIGHT: snaking lesson path ══ */}
-          <div className="flex flex-col">
-            {PATH_ITEMS.map((item, idx) => {
-              if (item.kind === "level") {
-                return (
-                  <div
-                    key={`level-${item.num}`}
-                    style={{ marginTop: item.gapTop }}
-                    className="rounded-[16px] border-2 border-[#22C55E] px-5 py-4 text-center"
-                  >
-                    <div className="text-[11px] font-mono font-bold uppercase leading-none tracking-[0.22em] text-[#8b8b93]">
-                      Level {item.num}
-                    </div>
-                    <div className="mt-1.5 text-[16px] font-bold leading-none text-white">
-                      {item.title}
+          {/* ══ RIGHT: the lesson trail ══ */}
+          <div className="min-w-0">
+
+            {/* Pinned "Next up" ribbon — always reachable while scrolling */}
+            {nextLesson && (
+              <div
+                className="sticky z-30 mb-8"
+                style={{ top: NEXTUP_TOP }}
+              >
+                <Link
+                  href={`/learn/${moduleId}/${nextLesson.lesson.id}`}
+                  className="flex items-center gap-4 rounded-[20px] border border-[#2b2b31] bg-[#16161a]/95 backdrop-blur px-5 py-3.5 hover:border-[#3d3d45] transition-colors"
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="text-[13px] text-[#8b8b93]">Next up</div>
+                    <div className="mt-0.5 text-[16px] font-bold text-white truncate">
+                      {nextLesson.lesson.title}
                     </div>
                   </div>
-                );
-              }
+                  <span className="shrink-0 inline-flex items-center gap-1.5 rounded-full bg-[#26B54F] px-4 py-2 text-[13px] font-bold text-white">
+                    <IconPlayerPlayFilled size={13} />
+                    {progress.isStarted ? "Davom etish" : "Boshlash"}
+                  </span>
+                </Link>
+              </div>
+            )}
 
-              if (item.kind === "nextup") {
-                return (
-                  <Link
-                    key={`nextup-${idx}`}
-                    href={`/learn/${moduleId}/${item.lessonId}`}
-                    style={{ marginTop: item.gapTop }}
-                    className="block rounded-[16px] border border-[#2b2b31] bg-[#16161a] px-6 py-4 hover:border-[#3d3d45] transition-colors"
-                  >
-                    <div className="text-[13px] text-[#8b8b93]">Next up</div>
-                    <div className="mt-0.5 text-[16px] font-bold text-white">
-                      {item.title}
-                    </div>
-                  </Link>
-                );
-              }
-
-              const isLocked = item.state === "locked";
-              const size = DISC_SIZE[item.state];
-
-              /*
-               * The disc — not the disc+label group — is what has to land on the
-               * trail, so it is absolutely placed at the column centre plus its
-               * offset. Narrow screens use a damped offset so nothing escapes.
-               */
-              const anchor = {
-                "--x": `calc(50% + ${item.zig}px - ${size / 2}px)`,
-                "--x-sm": `calc(50% + ${Math.round(item.zig * 0.45)}px - ${size / 2}px)`,
-                marginTop: item.gapTop,
-                height: size,
-              } as React.CSSProperties;
+            {/*
+             * One section per level. The level card is sticky inside its own
+             * section, so as a section scrolls out its card hands the pinned
+             * slot over to the next level's card.
+             */}
+            {module.levels.map((level) => {
+              const lp = levelProgress(moduleId, level.id);
 
               return (
-                <div key={item.id} className="relative w-full" style={anchor}>
-                  <Link
-                    href={isLocked ? "#" : `/learn/${moduleId}/${item.id}`}
-                    aria-disabled={isLocked}
-                    tabIndex={isLocked ? -1 : undefined}
-                    onClick={(e) => isLocked && e.preventDefault()}
-                    className={`absolute top-0 left-[var(--x-sm)] lg:left-[var(--x)] flex items-center gap-5 rounded-full ${
-                      isLocked
-                        ? "cursor-default"
-                        : "cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#22C55E]"
-                    }`}
-                  >
-                    <NodeDisc state={item.state} size={size} isReview={item.isReview} />
-                    <span
-                      className={`text-[15px] whitespace-nowrap ${
-                        item.state === "active"
-                          ? "font-bold text-white"
-                          : item.isReview
-                          ? "font-medium text-[#6d6d74]"
-                          : "font-medium text-[#c9c9d0]"
-                      }`}
-                    >
-                      {item.title}
-                    </span>
-                  </Link>
-                </div>
+                <section key={level.id} className="relative mb-4">
+                  <div className="sticky z-20 py-2 bg-[#0d0d0f]" style={{ top: LEVEL_TOP }}>
+                    <LevelCard level={level} />
+                  </div>
+
+                  <div className="flex flex-col pt-6">
+                    {level.lessons.map((lesson) => {
+                      const globalIndex = allLessons.findIndex(
+                        (l) => l.lesson.id === lesson.id
+                      );
+                      const zig = ZIG_PATTERN[globalIndex % ZIG_PATTERN.length];
+                      const state = discStateFor(lesson);
+                      const locked = state === "locked";
+                      const isReview = lesson.kind === "review";
+
+                      const anchor = {
+                        "--x": `calc(50% + ${zig}px - 32px)`,
+                        "--x-sm": `calc(50% + ${Math.round(zig * 0.45)}px - 32px)`,
+                      } as React.CSSProperties;
+
+                      return (
+                        <div
+                          key={lesson.id}
+                          className="relative w-full h-[61px] mb-[38px]"
+                          style={anchor}
+                        >
+                          <Link
+                            href={locked ? "#" : `/learn/${moduleId}/${lesson.id}`}
+                            aria-disabled={locked}
+                            tabIndex={locked ? -1 : undefined}
+                            onClick={(e) => locked && e.preventDefault()}
+                            title={`${lesson.title} · ${lesson.xp} XP`}
+                            className={`group absolute top-0 left-[var(--x-sm)] lg:left-[var(--x)] flex items-center gap-4 ${
+                              locked
+                                ? "cursor-default"
+                                : "cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#26B54F] rounded-full"
+                            }`}
+                          >
+                            <LessonDisc state={state} isReview={isReview} />
+                            <div className="min-w-0">
+                              <div
+                                className={`text-[15px] whitespace-nowrap ${
+                                  state === "active"
+                                    ? "font-bold text-white"
+                                    : locked
+                                    ? "font-medium text-[#6d6d74]"
+                                    : "font-medium text-[#c9c9d0]"
+                                }`}
+                              >
+                                {lesson.title}
+                              </div>
+                              <div className="text-[12px] text-[#5c5c64] whitespace-nowrap">
+                                {lesson.xp} XP · {lesson.estMinutes} daq
+                              </div>
+                            </div>
+                          </Link>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Level footer — shows the level is cleared */}
+                  {lp.isFinished && (
+                    <div className="flex justify-center pb-2">
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-[#26B54F]/15 px-3.5 py-1.5 text-[12px] font-bold text-[#4ADE80]">
+                        <IconCheck size={13} stroke={3} />
+                        Bosqich yakunlandi
+                      </span>
+                    </div>
+                  )}
+                </section>
               );
             })}
           </div>

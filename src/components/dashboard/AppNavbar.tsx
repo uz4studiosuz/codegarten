@@ -21,6 +21,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { UserProfileMock, mockUserProfile } from "@/data/mockCourseData";
 import { useTheme } from "@/context/ThemeContext";
+import { useProgress } from "@/context/ProgressContext";
 
 interface AppNavbarProps {
   activeTab?: "home" | "courses" | "settings";
@@ -42,6 +43,7 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
   const router = useRouter();
   const { theme, toggleTheme } = useTheme();
   const { logout, user: authUser } = useAuth();
+  const { streak, xp } = useProgress();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -138,10 +140,10 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
               type="button"
               onClick={onOpenStreakModal}
               className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-gray-200 dark:border-zinc-700 bg-white dark:bg-[#1c1c1e] text-black dark:text-white hover:bg-gray-50 dark:hover:bg-zinc-800 transition-all cursor-pointer select-none font-bold text-xs shadow-xs"
-              title="2 kunlik faollik"
+              title={`${streak} kunlik faollik · ${xp} XP`}
             >
               <IconBolt size={16} stroke={2} className="text-[#22C55E] fill-[#22C55E] dark:text-amber-400 dark:fill-amber-400" />
-              <span className="font-mono text-sm">{displayUser.streakDays}</span>
+              <span className="font-mono text-sm">{streak}</span>
             </button>
 
             {/* Menu Hamburger Button */}
@@ -157,7 +159,7 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
 
               {/* Exact Dropdown Menu */}
               {isMenuOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-[#1c1c1e] rounded-2xl shadow-2xl border border-gray-100 dark:border-zinc-800 py-2 z-50 animate-scaleIn">
+                <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-[#1c1c1e] rounded-[10px] shadow-2xl border border-gray-100 dark:border-zinc-800 py-2 z-50 animate-scaleIn">
                   {/* Settings */}
                   <Link
                     href="/settings"

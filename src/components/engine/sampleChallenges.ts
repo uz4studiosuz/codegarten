@@ -161,13 +161,14 @@ export const sampleGridChallenge: ExerciseChallenge<GridWorldState> = {
     coinsCollected: 0,
   },
 
+  // Starts one step short of the target — the learner has to fix the count.
   initialAST: [
     {
       id: "g-blk-1",
       opcode: "move_forward",
       category: "action",
       label: "oldinga",
-      params: { steps: { type: "number", value: 2 } },
+      params: { steps: { type: "number", value: 1 } },
     },
     {
       id: "g-blk-2",
@@ -241,3 +242,20 @@ export const sampleGridChallenge: ExerciseChallenge<GridWorldState> = {
     };
   },
 };
+
+// ============================================================================
+// REGISTRY
+// ============================================================================
+const challengeRegistry: Record<string, ExerciseChallenge<never>> = {
+  "shape-color": sampleShapeChallenge as unknown as ExerciseChallenge<never>,
+  "grid-walk": sampleGridChallenge as unknown as ExerciseChallenge<never>,
+};
+
+/**
+ * Resolve the challenge a curriculum lesson points at. Renderers are looked up
+ * per challenge at runtime, so the state type stays opaque to callers.
+ */
+export function getChallenge(id: string): ExerciseChallenge<unknown> {
+  const found = challengeRegistry[id] ?? challengeRegistry["shape-color"];
+  return found as unknown as ExerciseChallenge<unknown>;
+}

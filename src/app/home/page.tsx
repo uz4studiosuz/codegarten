@@ -11,8 +11,8 @@ export default function HomePage() {
   const router = useRouter();
   const [isAboutOpen, setIsAboutOpen] = useState(false);
 
-  const handleStartLesson = (moduleId: string) => {
-    router.push(`/courses/${moduleId}`);
+  const handleStartLesson = (moduleId: string, lessonId?: string) => {
+    router.push(lessonId ? `/learn/${moduleId}/${lessonId}` : `/courses/${moduleId}`);
   };
 
   return (

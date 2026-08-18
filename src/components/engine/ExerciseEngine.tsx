@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
 import { IconX, IconBolt, IconArrowRight } from "@tabler/icons-react";
 import { ExerciseChallenge } from "./types";
@@ -18,6 +18,12 @@ interface ExerciseEngineProps<TState> {
   progressPercent?: number;
   /** Small dots trailing the bar — the sections still to come. */
   upcomingSections?: number;
+  /** XP shown in the energy pill once the exercise is solved. */
+  xpReward?: number;
+  /** Fired once, the first time the exercise is solved. */
+  onSolved?: () => void;
+  /** Label for the forward action; defaults to "Continue". */
+  nextLabel?: string;
 }
 
 /**
@@ -51,13 +57,15 @@ export function ExerciseEngine<TState>({
   nextHref,
   progressPercent = 34,
   upcomingSections = 3,
+  xpReward = 0,
+  onSolved,
+  nextLabel = "Continue",
 }: ExerciseEngineProps<TState>) {
   const {
     ast,
     runtimeState,
     evaluation,
     isEvaluating,
-    energyXP,
     updateBlockParam,
     resetToInitial,
     checkAnswer,
@@ -67,6 +75,15 @@ export function ExerciseEngine<TState>({
 
   const isSuccess = evaluation?.isSuccess === true;
   const isWrong = evaluation !== null && !evaluation.isSuccess;
+
+  // Report the solve exactly once, even if the evaluator re-runs.
+  const hasReported = useRef(false);
+  useEffect(() => {
+    if (isSuccess && !hasReported.current) {
+      hasReported.current = true;
+      onSolved?.();
+    }
+  }, [isSuccess, onSolved]);
 
   // Check stays inert until the learner actually changes something.
   const isDirty = useMemo(
@@ -103,9 +120,24 @@ export function ExerciseEngine<TState>({
           </div>
         </div>
 
-        <div className="shrink-0 flex items-center gap-1.5 rounded-full border border-[#3a3a41] bg-[#16161a] px-3.5 py-1.5">
-          <span className="font-mono text-[15px] font-bold text-white">{energyXP}</span>
-          <IconBolt size={16} className="text-amber-400 fill-amber-400" />
+        <div
+          className={`shrink-0 flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 transition-colors duration-300 ${
+            isSuccess
+              ? "border-[#26B54F] bg-[#26B54F]/15"
+              : "border-[#3a3a41] bg-[#16161a]"
+          }`}
+        >
+          <span className="font-mono text-[15px] font-bold text-white">
+            {isSuccess ? xpReward : 0}
+          </span>
+          <IconBolt
+            size={16}
+            className={
+              isSuccess
+                ? "text-[#4ADE80] fill-[#4ADE80]"
+                : "text-amber-400 fill-amber-400"
+            }
+          />
         </div>
       </header>
 
@@ -131,13 +163,23 @@ export function ExerciseEngine<TState>({
 
           {/* Feedback only appears once an answer has been checked */}
           {evaluation && (
-            <p
-              className={`mt-6 text-[15px] font-semibold ${
-                isSuccess ? "text-[#4ADE80]" : "text-amber-400"
-              }`}
-            >
-              {evaluation.feedbackMessage}
-            </p>
+            <div className="mt-6 flex flex-col items-center gap-1.5">
+              <p
+                className={`text-[15px] font-semibold ${
+                  isSuccess ? "text-[#4ADE80]" : "text-amber-400"
+                }`}
+              >
+                {evaluation.feedbackMessage}
+              </p>
+              {isSuccess && xpReward > 0 && (
+                <p className="text-[13px] font-bold text-[#8b8b93]">+{xpReward} XP</p>
+              )}
+              {isWrong && evaluation.solutionHint && (
+                <p className="max-w-[420px] text-center text-[13px] text-[#8b8b93]">
+                  {evaluation.solutionHint}
+                </p>
+              )}
+            </div>
           )}
         </div>
 
@@ -146,9 +188,9 @@ export function ExerciseEngine<TState>({
           {isSuccess && nextHref ? (
             <Link
               href={nextHref}
-              className="flex items-center justify-center gap-2 w-full rounded-full py-4 text-[17px] font-bold bg-[#22C55E] text-white hover:bg-[#1ea94f] transition-colors"
+              className="flex items-center justify-center gap-2 w-full rounded-full py-4 text-[17px] font-bold bg-[#26B54F] text-white hover:bg-[#1ea94f] transition-colors"
             >
-              Continue
+              {nextLabel}
               <IconArrowRight size={19} stroke={2.4} />
             </Link>
           ) : (
