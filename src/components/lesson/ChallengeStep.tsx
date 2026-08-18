@@ -22,12 +22,12 @@ interface ChallengeStepProps<TState> {
 function Prompt({ text }: { text: string }) {
   const segments = text.split("`");
   return (
-    <h2 className="text-center text-[20px] sm:text-[24px] font-semibold leading-snug text-white">
+    <h2 className="text-center text-[20px] sm:text-[24px] font-semibold leading-snug text-gray-900 dark:text-white">
       {segments.map((segment, i) =>
         i % 2 === 1 ? (
           <code
             key={i}
-            className="mx-0.5 rounded-[7px] bg-[#2b2b31] px-2.5 py-1 font-mono text-[0.82em] align-middle text-[#e4e4e7]"
+            className="mx-0.5 rounded-[7px] bg-gray-200 dark:bg-[#2b2b31] px-2.5 py-1 font-mono text-[0.82em] align-middle text-gray-800 dark:text-[#e4e4e7]"
           >
             {segment}
           </code>
@@ -108,7 +108,7 @@ export function ChallengeStep<TState>({
             {evaluation.feedbackMessage}
           </p>
           {isWrong && evaluation.solutionHint && (
-            <p className="max-w-[420px] text-center text-[13px] text-[#8b8b93]">
+            <p className="max-w-[420px] text-center text-[13px] text-gray-500 dark:text-[#8b8b93]">
               {evaluation.solutionHint}
             </p>
           )}

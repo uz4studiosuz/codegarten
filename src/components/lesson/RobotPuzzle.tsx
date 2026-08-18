@@ -118,6 +118,7 @@ export function RobotPuzzle({
     x: number;
     y: number;
     moved: boolean;
+    fromIndex?: number;
   } | null>(null);
   const dragOrigin = useRef<{ x: number; y: number } | null>(null);
 
@@ -196,10 +197,10 @@ export function RobotPuzzle({
 
   // ── Drag handlers ────────────────────────────────────────────────────────
 
-  const startDrag = (command: Command) => (e: React.PointerEvent) => {
+  const startDrag = (command: Command, fromIndex?: number) => (e: React.PointerEvent) => {
     if (runFrame !== null) return;
     dragOrigin.current = { x: e.clientX, y: e.clientY };
-    setDrag({ command, x: e.clientX, y: e.clientY, moved: false });
+    setDrag({ command, x: e.clientX, y: e.clientY, moved: false, fromIndex });
     (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
   };
 
@@ -215,14 +216,38 @@ export function RobotPuzzle({
     if (!drag) return;
 
     if (!drag.moved) {
-      // Treated as a tap: drop it into the first free slot.
-      appendCommand(drag.command);
+      // Treated as a tap: drop it into the first free slot if from palette.
+      if (drag.fromIndex === undefined) {
+        appendCommand(drag.command);
+      }
+      // If tapped on an existing slot, do nothing (they can use the X button)
     } else {
       // Find the slot under the pointer without relying on HTML5 drop events,
       // which never fire on touch devices.
       const el = document.elementFromPoint(e.clientX, e.clientY);
       const slotEl = el?.closest("[data-slot-index]") as HTMLElement | null;
-      if (slotEl) placeAt(Number(slotEl.dataset.slotIndex), drag.command);
+      const targetSlot = slotEl ? Number(slotEl.dataset.slotIndex) : -1;
+
+      if (targetSlot !== -1) {
+        if (drag.fromIndex !== undefined) {
+          // Moving between slots
+          setVerdict("idle");
+          setSlots((prev) => {
+            const next = [...prev];
+            // Swap if target is occupied, otherwise just move
+            const temp = next[targetSlot];
+            next[targetSlot] = drag.command;
+            next[drag.fromIndex!] = temp;
+            return next;
+          });
+        } else {
+          // New from palette
+          placeAt(targetSlot, drag.command);
+        }
+      } else if (drag.fromIndex !== undefined) {
+        // Dragged outside of any slot -> remove it
+        clearSlot(drag.fromIndex);
+      }
     }
 
     dragOrigin.current = null;
@@ -234,22 +259,22 @@ export function RobotPuzzle({
 
   return (
     <div className="w-full flex flex-col items-center">
-      <h2 className="text-center text-[20px] sm:text-[24px] font-semibold leading-snug text-white">
+      <h2 className="text-center text-[20px] sm:text-[24px] font-semibold leading-snug text-gray-900 dark:text-white">
         Robotni yulduz turgan katakka olib boring.
       </h2>
-      <p className="mt-2 text-center text-[14px] text-[#8b8b93] max-w-[420px]">
+      <p className="mt-2 text-center text-[14px] text-gray-500 dark:text-[#8b8b93] max-w-[420px]">
         Bloklarni pastdan ushlab, qatorlarga tashlang — yoki ustiga bosing.
       </p>
 
-      <div className="mt-7 w-full max-w-[460px] rounded-[20px] border border-[#26262a] bg-[#141416] overflow-hidden">
+      <div className="mt-7 w-full max-w-[460px] rounded-[20px] border border-gray-200 dark:border-[#26262a] bg-gray-50 dark:bg-[#141416] overflow-hidden">
 
         {/* ── Grid ── */}
-        <div className="p-4 sm:p-6 bg-[#101013]">
+        <div className="p-4 sm:p-6 bg-white dark:bg-[#101013]">
           <div className="relative w-full aspect-square max-w-[300px] mx-auto">
             {/* Cells */}
             <div className="absolute inset-0 grid grid-cols-4 grid-rows-4 gap-1.5">
               {Array.from({ length: GRID * GRID }).map((_, i) => (
-                <div key={i} className="rounded-[8px] bg-[#1c1c20]" />
+                <div key={i} className="rounded-[8px] bg-gray-100 dark:bg-[#1c1c20]" />
               ))}
             </div>
 
@@ -293,7 +318,7 @@ export function RobotPuzzle({
         </div>
 
         {/* ── Program slots ── */}
-        <div className="px-4 sm:px-5 py-4 border-t border-[#26262a]">
+        <div className="px-4 sm:px-5 py-4 border-t border-gray-200 dark:border-[#26262a]">
           <div className="flex flex-col gap-2">
             {slots.map((command, index) => {
               const spec = command ? COMMAND_BY_ID.get(command) : undefined;
@@ -301,7 +326,7 @@ export function RobotPuzzle({
 
               return (
                 <div key={index} className="flex items-center gap-3">
-                  <span className="w-4 shrink-0 text-right font-mono text-[13px] text-[#5c5c64]">
+                  <span className="w-4 shrink-0 text-right font-mono text-[13px] text-gray-400 dark:text-[#5c5c64]">
                     {index + 1}
                   </span>
 
@@ -311,7 +336,7 @@ export function RobotPuzzle({
                       spec
                         ? "border-2 border-transparent"
                         : `border-2 border-dashed ${
-                            drag?.moved ? "border-[#26B54F]/70 bg-[#26B54F]/[0.06]" : "border-[#3a3a41]"
+                            drag?.moved ? "border-[#26B54F]/70 bg-[#26B54F]/[0.06]" : "border-gray-300 dark:border-[#3a3a41]"
                           }`
                     }`}
                   >
@@ -319,10 +344,14 @@ export function RobotPuzzle({
                       <div
                         className={`w-full h-full rounded-[10px] flex items-center gap-2.5 px-3.5 text-white font-bold text-[14px] ${spec.tone} ${
                           isCurrent ? "ring-2 ring-white/40" : ""
-                        }`}
+                        } ${!isRunning ? "cursor-grab touch-none" : ""}`}
+                        onPointerDown={!isRunning ? startDrag(spec.id, index) : undefined}
+                        onPointerMove={!isRunning ? moveDrag : undefined}
+                        onPointerUp={!isRunning ? endDrag : undefined}
+                        onPointerCancel={!isRunning ? endDrag : undefined}
                       >
-                        <spec.Icon size={17} stroke={2.6} className="shrink-0" />
-                        <span className="font-mono truncate">{spec.label}</span>
+                        <spec.Icon size={17} stroke={2.6} className="shrink-0 pointer-events-none" />
+                        <span className="font-mono truncate pointer-events-none">{spec.label}</span>
                         {!isRunning && (
                           <button
                             type="button"
@@ -343,8 +372,8 @@ export function RobotPuzzle({
         </div>
 
         {/* ── Palette ── */}
-        <div className="px-4 sm:px-5 py-4 border-t border-[#26262a] bg-[#17171a]">
-          <div className="text-[11px] font-mono font-bold uppercase tracking-[0.18em] text-[#6d6d74] mb-2.5">
+        <div className="px-4 sm:px-5 py-4 border-t border-gray-200 dark:border-[#26262a] bg-gray-50 dark:bg-[#17171a]">
+          <div className="text-[11px] font-mono font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-[#6d6d74] mb-2.5">
             Bloklar
           </div>
 
@@ -369,14 +398,14 @@ export function RobotPuzzle({
           </div>
 
           <div className="mt-3 flex items-center justify-between gap-3">
-            <span className="text-[12px] text-[#6d6d74]">
+            <span className="text-[12px] text-gray-500 dark:text-[#6d6d74]">
               {filledCount}/{SLOT_COUNT} qator to&apos;ldirildi
             </span>
             <button
               type="button"
               onClick={resetAll}
               disabled={isRunning}
-              className="flex items-center gap-1.5 font-mono text-[13px] text-[#6f6f77] hover:text-[#a1a1aa] disabled:opacity-40 transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 font-mono text-[13px] text-gray-400 dark:text-[#6f6f77] hover:text-gray-600 dark:hover:text-[#a1a1aa] disabled:opacity-40 transition-colors cursor-pointer"
             >
               <IconRotate2 size={14} stroke={2} />
               <span>Start over</span>
@@ -398,7 +427,7 @@ export function RobotPuzzle({
               : "Robot yulduzga yetib bormadi."}
           </p>
           {verdict === "fail" && (
-            <p className="max-w-[420px] text-center text-[13px] text-[#8b8b93]">
+            <p className="max-w-[420px] text-center text-[13px] text-gray-500 dark:text-[#8b8b93]">
               Robot {finalState.x + 1}-ustun, {finalState.y + 1}-qatorda to&apos;xtadi.
               Yulduz 3-ustun, 2-qatorda — qadamlarni qayta hisoblang.
             </p>

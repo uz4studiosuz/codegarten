@@ -51,8 +51,8 @@ function LessonDisc({
     state === "completed"
       ? "bg-[#26B54F] shadow-[0px_5px_0px_0px_#1A8038]"
       : state === "active"
-      ? "bg-[#F0B03C] shadow-[0px_5px_0px_0px_#C0851F]"
-      : "bg-neutral-200 shadow-[0px_5px_0px_0px_rgba(183,183,183,1.00)]";
+        ? "bg-[#F0B03C] shadow-[0px_5px_0px_0px_#C0851F]"
+        : "bg-neutral-200 shadow-[0px_5px_0px_0px_rgba(183,183,183,1.00)]";
 
   const icon =
     state === "completed" ? (
@@ -78,17 +78,17 @@ function LessonDisc({
 function LevelCard({ level }: { level: Level }) {
   return (
     <div
-      className="px-4 py-3 bg-[#0d0d0f] rounded-[20px] flex flex-col justify-start items-stretch"
+      className="px-4 py-3 bg-white dark:bg-[#0d0d0f] rounded-[20px] flex flex-col justify-start items-stretch"
       style={{
         outline: `2px solid ${PRIMARY}`,
         outlineOffset: "-2px",
         boxShadow: `inset 0px -6px 0px 0px ${PRIMARY}`,
       }}
     >
-      <div className="text-center text-[10px] font-mono font-bold uppercase leading-4 tracking-wide text-gray-500">
+      <div className="text-center text-[10px] font-mono font-bold uppercase leading-4 tracking-wide text-gray-500 dark:text-gray-400">
         Level {level.num}
       </div>
-      <div className="pt-0.5 text-center text-sm font-normal leading-5 text-white">
+      <div className="pt-0.5 text-center text-sm font-normal leading-5 text-black dark:text-white">
         {level.title}
       </div>
     </div>
@@ -106,7 +106,7 @@ export default function ModulePathPage() {
 
   if (!module) {
     return (
-      <div className="min-h-screen bg-[#0d0d0f] text-white flex flex-col font-sans">
+      <div className="min-h-screen bg-white dark:bg-[#0d0d0f] text-black dark:text-white flex flex-col font-sans transition-colors duration-200">
         <AppNavbar activeTab="courses" />
         <div className="flex-1 flex flex-col items-center justify-center gap-4 px-6 text-center">
           <p className="text-lg font-bold">Bunday modul topilmadi.</p>
@@ -133,21 +133,21 @@ export default function ModulePathPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0d0d0f] text-white flex flex-col font-sans">
+    <div className="min-h-screen bg-white dark:bg-[#0d0d0f] text-black dark:text-white flex flex-col font-sans transition-colors duration-200">
       <AppNavbar activeTab="courses" />
 
       {/* ── Breadcrumb ── */}
-      <div className="border-b border-white/[0.06]">
+      <div className="border-b border-gray-100 dark:border-white/[0.06]">
         <div className="max-w-[1118px] mx-auto px-6 py-5 flex items-center gap-2.5">
           <Link
             href="/courses"
-            className="inline-flex items-center gap-2 text-[15px] text-[#8b8b93] hover:text-white transition-colors"
+            className="inline-flex items-center gap-2 text-[15px] text-gray-500 dark:text-[#8b8b93] hover:text-black dark:hover:text-white transition-colors"
           >
             <IconArrowLeft size={18} />
             Courses
           </Link>
-          <span className="text-[#3a3a41] text-[15px]">/</span>
-          <span className="text-[15px] text-[#c9c9d0]">{module.title}</span>
+          <span className="text-gray-300 dark:text-[#3a3a41] text-[15px]">/</span>
+          <span className="text-[15px] text-gray-700 dark:text-[#c9c9d0]">{module.title}</span>
         </div>
       </div>
 
@@ -156,7 +156,7 @@ export default function ModulePathPage() {
 
           {/* ══ LEFT: module summary — pinned while the path scrolls ══ */}
           <div className="lg:sticky lg:top-[76px]">
-            <div className="rounded-[26px] border border-[#2b2b31] bg-[#101013] p-7">
+            <div className="rounded-[26px] border border-gray-200 dark:border-[#2b2b31] bg-[#F8F9FA] dark:bg-[#101013] p-7 shadow-xs">
               <Image
                 src={module.imageSrc}
                 alt={module.title}
@@ -165,22 +165,22 @@ export default function ModulePathPage() {
                 className="w-[72px] h-[72px] object-contain"
               />
 
-              <h1 className="mt-6 text-[26px] font-bold leading-tight text-white">
+              <h1 className="mt-6 text-[26px] font-bold leading-tight text-black dark:text-white">
                 {module.title}
               </h1>
-              <p className="mt-2.5 text-[15px] leading-[1.65] text-[#8b8b93]">
+              <p className="mt-2.5 text-[15px] leading-[1.65] text-gray-600 dark:text-[#8b8b93]">
                 {module.description}
               </p>
 
               {/* Live module progress */}
               <div className="mt-6">
                 <div className="flex items-center justify-between mb-2 text-[13px]">
-                  <span className="text-[#8b8b93]">
+                  <span className="text-gray-500 dark:text-[#8b8b93]">
                     {progress.completed}/{progress.total} dars
                   </span>
-                  <span className="font-bold text-[#4ADE80]">{progress.percent}%</span>
+                  <span className="font-bold text-[#26B54F] dark:text-[#4ADE80]">{progress.percent}%</span>
                 </div>
-                <div className="h-2 rounded-full bg-white/[0.08] overflow-hidden">
+                <div className="h-2 rounded-full bg-gray-200 dark:bg-white/[0.08] overflow-hidden">
                   <div
                     className="h-full rounded-full bg-[#26B54F] transition-[width] duration-500"
                     style={{ width: `${progress.percent}%` }}
@@ -188,16 +188,16 @@ export default function ModulePathPage() {
                 </div>
               </div>
 
-              <div className="mt-6 h-px bg-[#2b2b31]" />
+              <div className="mt-6 h-px bg-gray-200 dark:bg-[#2b2b31]" />
 
-              <div className="mt-5 flex items-center gap-7 text-[15px] text-[#9a9aa2]">
+              <div className="mt-5 flex items-center gap-7 text-[15px] text-gray-600 dark:text-[#9a9aa2]">
                 <span className="inline-flex items-center gap-2">
-                  <IconBook size={18} stroke={1.8} className="text-[#7a7a83]" />
-                  {stats.lessonCount} Lessons
+                  <IconBook size={18} stroke={1.8} className="text-gray-400 dark:text-[#7a7a83]" />
+                  {stats.lessonCount} Darslar
                 </span>
                 <span className="inline-flex items-center gap-2">
-                  <IconDumbbell size={18} stroke={1.8} className="text-[#7a7a83]" />
-                  {stats.exerciseCount} Exercises
+                  <IconDumbbell size={18} stroke={1.8} className="text-gray-400 dark:text-[#7a7a83]" />
+                  {stats.exerciseCount} Mashqlar
                 </span>
               </div>
             </div>
@@ -214,15 +214,15 @@ export default function ModulePathPage() {
               >
                 <Link
                   href={`/learn/${moduleId}/${nextLesson.lesson.id}`}
-                  className="flex items-center gap-4 rounded-[20px] border border-[#2b2b31] bg-[#16161a]/95 backdrop-blur px-5 py-3.5 hover:border-[#3d3d45] transition-colors"
+                  className="flex items-center gap-4 rounded-[20px] border border-gray-200 dark:border-[#2b2b31] bg-white/95 dark:bg-[#16161a]/95 backdrop-blur px-5 py-3.5 hover:border-gray-300 dark:hover:border-[#3d3d45] transition-colors shadow-xs"
                 >
                   <div className="min-w-0 flex-1">
-                    <div className="text-[13px] text-[#8b8b93]">Next up</div>
-                    <div className="mt-0.5 text-[16px] font-bold text-white truncate">
+                    <div className="text-[13px] text-gray-500 dark:text-[#8b8b93]">Next up</div>
+                    <div className="mt-0.5 text-[16px] font-bold text-black dark:text-white truncate">
                       {nextLesson.lesson.title}
                     </div>
                   </div>
-                  <span className="shrink-0 inline-flex items-center gap-1.5 rounded-full bg-[#26B54F] px-4 py-2 text-[13px] font-bold text-white">
+                  <span className="shrink-0 inline-flex items-center gap-1.5 rounded-full bg-[#26B54F] px-4 py-2 text-[13px] font-bold text-white shadow-xs">
                     <IconPlayerPlayFilled size={13} />
                     {progress.isStarted ? "Davom etish" : "Boshlash"}
                   </span>
@@ -240,7 +240,7 @@ export default function ModulePathPage() {
 
               return (
                 <section key={level.id} className="relative mb-4">
-                  <div className="sticky z-20 py-2 bg-[#0d0d0f]" style={{ top: LEVEL_TOP }}>
+                  <div className="sticky z-20 py-2 bg-white dark:bg-[#0d0d0f] transition-colors duration-200" style={{ top: LEVEL_TOP }}>
                     <LevelCard level={level} />
                   </div>
 
@@ -277,26 +277,24 @@ export default function ModulePathPage() {
                             tabIndex={locked ? -1 : undefined}
                             onClick={(e) => locked && e.preventDefault()}
                             title={`${lesson.title} · ${lesson.xp} XP`}
-                            className={`group absolute top-0 left-[var(--x-sm)] lg:left-[var(--x)] flex items-center gap-4 ${
-                              locked
-                                ? "cursor-default"
-                                : "cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#26B54F] rounded-full"
-                            }`}
+                            className={`group absolute top-0 left-[var(--x-sm)] lg:left-[var(--x)] flex items-center gap-4 ${locked
+                              ? "cursor-default"
+                              : "cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#26B54F] rounded-full"
+                              }`}
                           >
                             <LessonDisc state={state} isReview={isReview} />
                             <div className="min-w-0 max-w-[calc(100vw-150px)] sm:max-w-[280px] lg:max-w-none">
                               <div
-                                className={`text-[14px] sm:text-[15px] leading-snug lg:whitespace-nowrap ${
-                                  state === "active"
-                                    ? "font-bold text-white"
-                                    : locked
-                                    ? "font-medium text-[#6d6d74]"
-                                    : "font-medium text-[#c9c9d0]"
-                                }`}
+                                className={`text-[14px] sm:text-[15px] leading-snug lg:whitespace-nowrap ${state === "active"
+                                  ? "font-bold text-black dark:text-white"
+                                  : locked
+                                    ? "font-medium text-gray-400 dark:text-[#6d6d74]"
+                                    : "font-medium text-gray-700 dark:text-[#c9c9d0]"
+                                  }`}
                               >
                                 {lesson.title}
                               </div>
-                              <div className="text-[12px] text-[#5c5c64] whitespace-nowrap">
+                              <div className="text-[12px] text-gray-500 dark:text-[#5c5c64] whitespace-nowrap">
                                 {lesson.xp} XP · {lesson.estMinutes} daq
                               </div>
                             </div>
@@ -309,7 +307,7 @@ export default function ModulePathPage() {
                   {/* Level footer — shows the level is cleared */}
                   {lp.isFinished && (
                     <div className="flex justify-center pb-2">
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-[#26B54F]/15 px-3.5 py-1.5 text-[12px] font-bold text-[#4ADE80]">
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-[#26B54F]/15 px-3.5 py-1.5 text-[12px] font-bold text-[#26B54F] dark:text-[#4ADE80]">
                         <IconCheck size={13} stroke={3} />
                         Bosqich yakunlandi
                       </span>

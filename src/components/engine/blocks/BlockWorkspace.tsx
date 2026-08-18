@@ -17,7 +17,7 @@ export const BlockWorkspace: React.FC<BlockWorkspaceProps> = ({
   onReset,
 }) => {
   return (
-    <div className="bg-[#1b1b1f] px-5 pt-4 pb-3">
+    <div className="bg-gray-100 dark:bg-[#1b1b1f] border-t border-gray-200 dark:border-transparent px-5 pt-4 pb-3 transition-colors">
       <div className="space-y-2.5">
         {ast.map((block, idx) => (
           <InstructionBlockView
@@ -33,7 +33,7 @@ export const BlockWorkspace: React.FC<BlockWorkspaceProps> = ({
         <button
           type="button"
           onClick={onReset}
-          className="flex items-center gap-1.5 font-mono text-[13px] text-[#6f6f77] hover:text-[#a1a1aa] transition-colors cursor-pointer"
+          className="flex items-center gap-1.5 font-mono text-[13px] text-gray-400 dark:text-[#6f6f77] hover:text-gray-600 dark:hover:text-[#a1a1aa] transition-colors cursor-pointer"
         >
           <IconRotate2 size={14} stroke={2} />
           <span>Start over</span>

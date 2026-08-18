@@ -91,7 +91,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
    * first lesson so the card is never empty.
    */
   const cards = useMemo(() => {
-    if (recentLessons.length > 0) return recentLessons;
+    if (recentLessons.length > 0) return recentLessons.slice(0, 6);
     const fallback = recommendedLesson ?? nextLessonIn(modules[0].id);
     return fallback ? [fallback] : [];
   }, [recentLessons, recommendedLesson, nextLessonIn, modules]);

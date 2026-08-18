@@ -135,7 +135,7 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
           {/* RIGHT: Streak Counter & Menu Button                       */}
           {/* ========================================================= */}
           <div className="flex items-center gap-3">
-            {/* Streak Counter Pill: [ ⚡ 2 ] */}
+            {/* Streak & XP Pill */}
             <button
               type="button"
               onClick={onOpenStreakModal}
@@ -144,6 +144,8 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
             >
               <IconBolt size={16} stroke={2} className="text-[#22C55E] fill-[#22C55E] dark:text-amber-400 dark:fill-amber-400" />
               <span className="font-mono text-sm">{streak}</span>
+              <div className="w-px h-3.5 bg-gray-200 dark:bg-zinc-700 mx-0.5" />
+              <span className="font-mono text-sm text-[#26B54F]">{xp} XP</span>
             </button>
 
             {/* Menu Hamburger Button */}

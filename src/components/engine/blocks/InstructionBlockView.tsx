@@ -20,10 +20,10 @@ export const InstructionBlockView: React.FC<InstructionBlockViewProps> = ({
   return (
     <div className="flex items-center gap-3 font-mono text-[15px] leading-none">
       {/* Gutter line number */}
-      <span className="w-3 shrink-0 text-right text-[#5c5c64]">{lineNumber}</span>
+      <span className="w-3 shrink-0 text-right text-gray-400 dark:text-[#5c5c64]">{lineNumber}</span>
 
       {/* Opcode chip */}
-      <span className="rounded-[6px] bg-[#22C55E]/[0.16] px-2 py-[4px] font-bold text-[#4ADE80]">
+      <span className="rounded-[6px] bg-[#22C55E]/[0.16] px-2 py-[4px] font-bold text-[#26B54F] dark:text-[#4ADE80]">
         {block.label}
       </span>
 
@@ -33,7 +33,7 @@ export const InstructionBlockView: React.FC<InstructionBlockViewProps> = ({
         // Structural blocks show their fixed arguments as plain code…
         if (options.length === 0 && block.isLocked) {
           return (
-            <span key={paramKey} className="text-[#d4d4d8]">
+            <span key={paramKey} className="text-gray-800 dark:text-[#d4d4d8]">
               {String(param.value)}
             </span>
           );
@@ -54,7 +54,7 @@ export const InstructionBlockView: React.FC<InstructionBlockViewProps> = ({
                 )
               }
               aria-label={paramKey}
-              className="w-14 rounded-[8px] bg-[#2f2f36] border border-[#3a3a42] px-2 py-[3px] text-center font-bold text-[#A78BFA] outline-none focus:border-[#26B54F] transition-colors"
+              className="w-14 rounded-[8px] bg-white dark:bg-[#2f2f36] border border-gray-300 dark:border-[#3a3a42] px-2 py-[3px] text-center font-bold text-[#7C5CE0] dark:text-[#A78BFA] outline-none focus:border-[#26B54F] transition-colors"
             />
           );
         }
@@ -66,10 +66,10 @@ export const InstructionBlockView: React.FC<InstructionBlockViewProps> = ({
             <button
               type="button"
               onClick={() => setOpenParamKey(isOpen ? null : paramKey)}
-              className="flex items-center gap-1.5 rounded-[8px] bg-[#2f2f36] hover:bg-[#3a3a42] px-2.5 py-[4px] font-bold text-[#A78BFA] transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 rounded-[8px] bg-white dark:bg-[#2f2f36] hover:bg-gray-50 dark:hover:bg-[#3a3a42] border border-gray-200 dark:border-transparent px-2.5 py-[4px] font-bold text-[#7C5CE0] dark:text-[#A78BFA] transition-colors cursor-pointer shadow-2xs"
             >
               <span>&quot;{String(param.value)}&quot;</span>
-              <IconChevronDown size={14} stroke={2.2} className="text-[#8b8b93]" />
+              <IconChevronDown size={14} stroke={2.2} className="text-gray-400 dark:text-[#8b8b93]" />
             </button>
 
             {isOpen && (
@@ -79,7 +79,7 @@ export const InstructionBlockView: React.FC<InstructionBlockViewProps> = ({
                   className="fixed inset-0 z-40"
                   onClick={() => setOpenParamKey(null)}
                 />
-                <div className="absolute left-0 top-full mt-1.5 z-50 w-32 rounded-[10px] border border-[#3a3a42] bg-[#212127] py-1 shadow-2xl overflow-hidden">
+                <div className="absolute left-0 top-full mt-1.5 z-50 w-32 rounded-[10px] border border-gray-200 dark:border-[#3a3a42] bg-white dark:bg-[#212127] py-1 shadow-2xl overflow-hidden">
                   {options.map((opt) => (
                     <button
                       key={String(opt.value)}
@@ -88,7 +88,7 @@ export const InstructionBlockView: React.FC<InstructionBlockViewProps> = ({
                         onUpdateParam(block.id, paramKey, opt.value);
                         setOpenParamKey(null);
                       }}
-                      className="flex w-full items-center gap-2 px-3 py-1.5 text-left font-bold text-[#d4d4d8] hover:bg-[#2f2f36] transition-colors cursor-pointer"
+                      className="flex w-full items-center gap-2 px-3 py-1.5 text-left font-bold text-gray-800 dark:text-[#d4d4d8] hover:bg-gray-100 dark:hover:bg-[#2f2f36] transition-colors cursor-pointer"
                     >
                       {opt.colorHex && (
                         <span

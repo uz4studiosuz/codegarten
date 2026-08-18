@@ -173,14 +173,14 @@ export const InteractiveLessonEngine: React.FC<InteractiveLessonEngineProps> = (
   );
 
   return (
-    <div className="min-h-screen bg-[#0d0d0f] text-white flex flex-col font-sans select-none">
+    <div className="min-h-screen bg-white dark:bg-[#0d0d0f] text-gray-900 dark:text-white flex flex-col font-sans select-none transition-colors duration-200">
 
       {/* ── TOP BAR ── */}
       <div className="flex items-center gap-4 px-5 py-3 shrink-0">
         {/* Close */}
         <Link
           href={`/courses/${moduleId}`}
-          className="w-8 h-8 rounded-full flex items-center justify-center text-gray-500 hover:text-white hover:bg-white/8 transition-colors shrink-0"
+          className="w-8 h-8 rounded-full flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/8 transition-colors shrink-0"
         >
           <IconX size={18} stroke={2} />
         </Link>
@@ -188,7 +188,7 @@ export const InteractiveLessonEngine: React.FC<InteractiveLessonEngineProps> = (
         {/* Progress bar — screenshot style: filled segment + dot indicators */}
         <div className="flex-1 flex items-center gap-2">
           {/* Green filled bar */}
-          <div className="flex-1 h-[6px] bg-white/10 rounded-full overflow-hidden">
+          <div className="flex-1 h-[6px] bg-gray-200 dark:bg-white/10 rounded-full overflow-hidden">
             <div
               className="h-full bg-[#22C55E] rounded-full transition-all duration-500"
               style={{ width: `${((step + (status === "correct" ? 1 : 0)) / totalSteps) * 100}%` }}
@@ -202,7 +202,7 @@ export const InteractiveLessonEngine: React.FC<InteractiveLessonEngineProps> = (
                 <div
                   key={i}
                   className={`w-[7px] h-[7px] rounded-full transition-all duration-300 ${
-                    done ? "bg-[#22C55E]" : "bg-white/20"
+                    done ? "bg-[#22C55E]" : "bg-gray-300 dark:bg-white/20"
                   }`}
                 />
               );
@@ -214,7 +214,7 @@ export const InteractiveLessonEngine: React.FC<InteractiveLessonEngineProps> = (
         <div className={`flex items-center gap-1 px-2.5 py-1 rounded-full border text-xs font-bold font-mono transition-all duration-300 shrink-0 ${
           xpFlash
             ? "bg-[#22C55E]/15 border-[#22C55E] text-[#22C55E] scale-110"
-            : "bg-transparent border-white/10 text-gray-400"
+            : "bg-transparent border-gray-200 dark:border-white/10 text-gray-500 dark:text-gray-400"
         }`}>
           {xpFlash && <span className="text-[#22C55E]">+15</span>}
           {!xpFlash && <span>{energyXP}</span>}
@@ -226,15 +226,15 @@ export const InteractiveLessonEngine: React.FC<InteractiveLessonEngineProps> = (
       <div className="flex-1 flex flex-col items-center justify-center px-4 pb-24 pt-6 gap-6">
 
         {/* Instruction */}
-        <p className="text-center text-sm sm:text-[15px] text-gray-200 font-medium leading-snug max-w-md">
+        <p className="text-center text-sm sm:text-[15px] text-gray-700 dark:text-gray-200 font-medium leading-snug max-w-md">
           {challenge.prompt}{" "}
-          <span className="inline-flex items-center px-2 py-0.5 rounded-[5px] bg-[#1e1e22] border border-white/10 font-bold text-white font-mono text-[13px]">
+          <span className="inline-flex items-center px-2 py-0.5 rounded-[5px] bg-gray-100 dark:bg-[#1e1e22] border border-gray-200 dark:border-white/10 font-bold text-black dark:text-white font-mono text-[13px]">
             {challenge.highlight}
           </span>
           {challenge.promptSuffix && (
             <>
               {" "}{challenge.promptSuffix}{" "}
-              <span className="inline-flex items-center px-2 py-0.5 rounded-[5px] bg-[#1e1e22] border border-white/10 font-bold text-white font-mono text-[13px]">
+              <span className="inline-flex items-center px-2 py-0.5 rounded-[5px] bg-gray-100 dark:bg-[#1e1e22] border border-gray-200 dark:border-white/10 font-bold text-black dark:text-white font-mono text-[13px]">
                 {challenge.highlight2}
               </span>
             </>
@@ -243,7 +243,7 @@ export const InteractiveLessonEngine: React.FC<InteractiveLessonEngineProps> = (
         </p>
 
         {/* Interactive Card */}
-        <div className={`w-full max-w-[340px] rounded-2xl overflow-hidden shadow-2xl transition-all duration-300 ${
+        <div className={`w-full max-w-[340px] rounded-2xl overflow-hidden border border-gray-200 dark:border-transparent shadow-2xl transition-all duration-300 ${
           status === "correct"
             ? "ring-2 ring-[#22C55E]/70 shadow-[0_0_32px_rgba(34,197,94,0.2)]"
             : status === "wrong"
@@ -288,12 +288,12 @@ export const InteractiveLessonEngine: React.FC<InteractiveLessonEngineProps> = (
           </div>
 
           {/* Code Blocks */}
-          <div className="bg-[#181820] border-t border-white/5 px-4 pt-3 pb-2 space-y-2.5 font-mono text-xs">
+          <div className="bg-gray-50 dark:bg-[#181820] border-t border-gray-200 dark:border-white/5 px-4 pt-3 pb-2 space-y-2.5 font-mono text-xs">
             {(["circle", "hexagon", "triangle"] as const).map((shape, i) => (
               <div key={shape} className="flex items-center gap-2.5">
-                <span className="text-white/20 w-3 text-right text-[11px] shrink-0">{i + 1}</span>
-                <span className="px-1.5 py-0.5 rounded text-[11px] font-bold bg-[#22C55E]/10 text-[#4ade80] border border-[#22C55E]/20 shrink-0">draw</span>
-                <span className="text-gray-400 shrink-0">{shape}</span>
+                <span className="text-gray-400 dark:text-white/20 w-3 text-right text-[11px] shrink-0">{i + 1}</span>
+                <span className="px-1.5 py-0.5 rounded text-[11px] font-bold bg-[#22C55E]/10 text-[#26B54F] dark:text-[#4ade80] border border-[#22C55E]/20 shrink-0">draw</span>
+                <span className="text-gray-600 dark:text-gray-400 shrink-0">{shape}</span>
                 <ColorDropdown shape={shape} />
               </div>
             ))}
@@ -303,7 +303,7 @@ export const InteractiveLessonEngine: React.FC<InteractiveLessonEngineProps> = (
               <button
                 type="button"
                 onClick={resetColors}
-                className="flex items-center gap-1 text-[11px] text-gray-600 hover:text-gray-300 transition-colors cursor-pointer"
+                className="flex items-center gap-1 text-[11px] text-gray-500 dark:text-gray-600 hover:text-gray-800 dark:hover:text-gray-300 transition-colors cursor-pointer"
               >
                 <IconRotate2 size={11} />
                 Start over
@@ -315,7 +315,7 @@ export const InteractiveLessonEngine: React.FC<InteractiveLessonEngineProps> = (
         {/* Wrong state hint */}
         {status === "wrong" && (
           <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500/10 border border-amber-500/25 max-w-[340px] w-full">
-            <span className="text-amber-400 text-xs font-bold">{challenge.hint}</span>
+            <span className="text-amber-600 dark:text-amber-400 text-xs font-bold">{challenge.hint}</span>
           </div>
         )}
 
@@ -323,18 +323,18 @@ export const InteractiveLessonEngine: React.FC<InteractiveLessonEngineProps> = (
         {status === "correct" && (
           <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#22C55E]/10 border border-[#22C55E]/25 max-w-[340px] w-full">
             <IconCheck size={15} className="text-[#22C55E] shrink-0" />
-            <span className="text-[#4ade80] text-xs font-bold">That&apos;s it! Well done.</span>
+            <span className="text-[#26B54F] dark:text-[#4ade80] text-xs font-bold">That&apos;s it! Well done.</span>
           </div>
         )}
       </div>
 
       {/* ── FIXED BOTTOM BAR ── */}
-      <div className="fixed bottom-0 left-0 right-0 px-5 pb-5 pt-3 bg-gradient-to-t from-[#0d0d0f] via-[#0d0d0f]/95 to-transparent flex flex-col items-center gap-2">
+      <div className="fixed bottom-0 left-0 right-0 px-5 pb-5 pt-3 bg-gradient-to-t from-white via-white/95 to-transparent dark:from-[#0d0d0f] dark:via-[#0d0d0f]/95 dark:to-transparent flex flex-col items-center gap-2">
         {status === null && (
           <button
             type="button"
             onClick={handleCheck}
-            className="w-full max-w-[340px] py-3.5 rounded-full bg-[#2a2a2f] hover:bg-[#33333a] text-gray-300 text-sm font-bold transition-all cursor-pointer"
+            className="w-full max-w-[340px] py-3.5 rounded-full bg-gray-200 dark:bg-[#2a2a2f] hover:bg-gray-300 dark:hover:bg-[#33333a] text-gray-800 dark:text-gray-300 text-sm font-bold transition-all cursor-pointer"
           >
             Check
           </button>
@@ -345,7 +345,7 @@ export const InteractiveLessonEngine: React.FC<InteractiveLessonEngineProps> = (
             <button
               type="button"
               onClick={() => setShowSolution(true)}
-              className="flex-1 py-3.5 rounded-full bg-[#1e1e24] hover:bg-[#27272f] text-white text-sm font-bold border border-white/10 cursor-pointer transition-all"
+              className="flex-1 py-3.5 rounded-full bg-gray-100 dark:bg-[#1e1e24] hover:bg-gray-200 dark:hover:bg-[#27272f] text-black dark:text-white text-sm font-bold border border-gray-200 dark:border-white/10 cursor-pointer transition-all"
             >
               See answer
             </button>
@@ -364,7 +364,7 @@ export const InteractiveLessonEngine: React.FC<InteractiveLessonEngineProps> = (
             <button
               type="button"
               onClick={() => setShowWhy(true)}
-              className="px-5 py-3.5 rounded-full bg-[#1e1e24] hover:bg-[#27272f] text-white text-sm font-bold border border-white/10 cursor-pointer transition-all shrink-0"
+              className="px-5 py-3.5 rounded-full bg-gray-100 dark:bg-[#1e1e24] hover:bg-gray-200 dark:hover:bg-[#27272f] text-black dark:text-white text-sm font-bold border border-gray-200 dark:border-white/10 cursor-pointer transition-all shrink-0"
             >
               Why?
             </button>
