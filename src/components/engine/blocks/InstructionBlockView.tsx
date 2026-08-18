@@ -30,12 +30,32 @@ export const InstructionBlockView: React.FC<InstructionBlockViewProps> = ({
       {Object.entries(block.params).map(([paramKey, param]) => {
         const options = param.options ?? [];
 
-        // Fixed arguments read as plain code — only choices get a control.
-        if (options.length === 0) {
+        // Structural blocks show their fixed arguments as plain code…
+        if (options.length === 0 && block.isLocked) {
           return (
             <span key={paramKey} className="text-[#d4d4d8]">
               {String(param.value)}
             </span>
+          );
+        }
+
+        // …while editable blocks expose a field the learner can change.
+        if (options.length === 0) {
+          return (
+            <input
+              key={paramKey}
+              type={param.type === "number" ? "number" : "text"}
+              value={String(param.value)}
+              onChange={(e) =>
+                onUpdateParam(
+                  block.id,
+                  paramKey,
+                  param.type === "number" ? Number(e.target.value) : e.target.value
+                )
+              }
+              aria-label={paramKey}
+              className="w-14 rounded-[8px] bg-[#2f2f36] border border-[#3a3a42] px-2 py-[3px] text-center font-bold text-[#A78BFA] outline-none focus:border-[#26B54F] transition-colors"
+            />
           );
         }
 

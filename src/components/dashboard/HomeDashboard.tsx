@@ -10,6 +10,7 @@ import {
   IconSparkles,
   IconTrophy,
   IconClock,
+  IconCheck,
   IconLock,
 } from "@tabler/icons-react";
 import { foundationsTrack, moduleStats } from "@/data/curriculum";
@@ -76,6 +77,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
     recommendedLesson,
     trackPercent,
     isUnlocked,
+    isCompleted,
   } = useProgress();
 
   const modules = foundationsTrack.modules;
@@ -413,163 +415,141 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                 </button>
               </div>
 
-              <div className="flex items-center justify-center gap-1.5 mt-4 pointer-events-none">
-                {modules.map((_, i) => (
-                  <span
-                    key={i}
-                    className={`block rounded-full transition-all duration-300 ${
-                      i === selectedModuleIndex
-                        ? "w-4 h-1.5 bg-[#26B54F]"
-                        : "w-1.5 h-1.5 bg-gray-200 dark:bg-zinc-700"
-                    }`}
-                  />
+              {/* Dots now carry module selection, since the strip below shows lessons */}
+              <div className="flex items-center justify-center gap-1.5 mt-4">
+                {modules.map((mod, i) => (
+                  <button
+                    key={mod.id}
+                    type="button"
+                    onClick={() => handleSelectModule(i)}
+                    aria-label={mod.title}
+                    title={mod.title}
+                    className="p-1.5 -m-1 cursor-pointer"
+                  >
+                    <span
+                      className={`block rounded-full transition-all duration-300 ${
+                        i === selectedModuleIndex
+                          ? "w-4 h-1.5 bg-[#26B54F]"
+                          : "w-1.5 h-1.5 bg-gray-200 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-zinc-600"
+                      }`}
+                    />
+                  </button>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* MODULE THUMBNAILS */}
-          <div className="grid grid-cols-6 gap-2.5 sm:gap-3.5 mt-2">
-            {modules.map((mod, idx) => {
-              const isSelected = idx === selectedModuleIndex;
-              const mp = moduleProgress(mod.id);
-              return (
-                <button
-                  key={mod.id}
-                  onClick={() => handleSelectModule(idx)}
-                  className={`relative aspect-square rounded-[15px] p-2 flex items-center justify-center transition-all duration-200 cursor-pointer ${
-                    isSelected
-                      ? "border-2 border-[#26B54F] shadow-xs scale-105 bg-[#26B54F]/20"
-                      : "border-2 border-gray-200 dark:border-[#27272a] hover:border-gray-300 dark:hover:border-zinc-700 opacity-80 hover:opacity-100"
-                  }`}
-                  title={`${mod.title} — ${mp.percent}%`}
-                >
-                  <div className="relative w-8 h-8 sm:w-11 sm:h-11">
-                    <Image
-                      src={mod.imageSrc}
-                      alt={mod.title}
-                      width={44}
-                      height={44}
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                  {mp.isFinished && (
-                    <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-[#26B54F]" />
+          {/* ── OXIRGI DARSLAR: horizontal strip ── */}
+          {isFreshStart ? (
+            /* Nothing opened yet — point at one clear first step */
+            <div className="mt-2 rounded-[15px] border-2 border-dashed border-gray-200 dark:border-[#27272a] p-5 sm:p-6">
+              <div className="flex items-start gap-3">
+                <div className="w-9 h-9 shrink-0 rounded-full bg-[#26B54F]/15 flex items-center justify-center">
+                  <IconSparkles size={18} className="text-[#26B54F]" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-bold text-black dark:text-white">
+                    Bu yerda oxirgi darslaringiz ko&apos;rinadi
+                  </p>
+                  <p className="mt-1 text-[13px] text-gray-500 dark:text-zinc-400 leading-relaxed">
+                    Hali hech narsa boshlanmagan. Quyidagi darsdan boshlash tavsiya
+                    etiladi — 3 daqiqa vaqt oladi.
+                  </p>
+
+                  {recommendedLesson && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        onStartLesson(
+                          recommendedLesson.module.id,
+                          recommendedLesson.lesson.id
+                        )
+                      }
+                      className="mt-4 w-full flex items-center gap-3 rounded-[12px] border-2 border-gray-200 dark:border-[#27272a] p-3 text-left hover:border-[#26B54F] transition-colors cursor-pointer group"
+                    >
+                      <span className="w-9 h-9 shrink-0 rounded-full bg-[#26B54F] flex items-center justify-center">
+                        <IconPlayerPlayFilled size={14} className="text-white" />
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-[13px] font-bold text-black dark:text-white truncate">
+                          {recommendedLesson.lesson.title}
+                        </span>
+                        <span className="block text-[12px] text-gray-500 dark:text-zinc-500 truncate">
+                          {recommendedLesson.module.title} ·{" "}
+                          {recommendedLesson.lesson.xp} XP
+                        </span>
+                      </span>
+                      <IconArrowRight
+                        size={16}
+                        className="shrink-0 text-gray-400 group-hover:text-[#26B54F] transition-colors"
+                      />
+                    </button>
                   )}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* ── OXIRGI DARSLAR / TAVSIYA ── */}
-          <div className="mt-5">
-            {isFreshStart ? (
-              /* Nothing started yet — point at one clear first step */
-              <div className="rounded-[15px] border-2 border-dashed border-gray-200 dark:border-[#27272a] p-5 sm:p-6">
-                <div className="flex items-start gap-3">
-                  <div className="w-9 h-9 shrink-0 rounded-full bg-[#26B54F]/15 flex items-center justify-center">
-                    <IconSparkles size={18} className="text-[#26B54F]" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-bold text-black dark:text-white">
-                      Bu yerda oxirgi darslaringiz ko&apos;rinadi
-                    </p>
-                    <p className="mt-1 text-[13px] text-gray-500 dark:text-zinc-400 leading-relaxed">
-                      Hali hech narsa boshlanmagan. Quyidagi darsdan boshlash tavsiya
-                      etiladi — 3 daqiqa vaqt oladi.
-                    </p>
-
-                    {recommendedLesson && (
-                      <button
-                        type="button"
-                        onClick={() =>
-                          onStartLesson(
-                            recommendedLesson.module.id,
-                            recommendedLesson.lesson.id
-                          )
-                        }
-                        className="mt-4 w-full flex items-center gap-3 rounded-[12px] border-2 border-gray-200 dark:border-[#27272a] p-3 text-left hover:border-[#26B54F] transition-colors cursor-pointer group"
-                      >
-                        <span className="w-9 h-9 shrink-0 rounded-full bg-[#26B54F] flex items-center justify-center">
-                          <IconPlayerPlayFilled size={14} className="text-white" />
-                        </span>
-                        <span className="min-w-0 flex-1">
-                          <span className="block text-[13px] font-bold text-black dark:text-white truncate">
-                            {recommendedLesson.lesson.title}
-                          </span>
-                          <span className="block text-[12px] text-gray-500 dark:text-zinc-500 truncate">
-                            {recommendedLesson.module.title} ·{" "}
-                            {recommendedLesson.lesson.xp} XP
-                          </span>
-                        </span>
-                        <IconArrowRight
-                          size={16}
-                          className="shrink-0 text-gray-400 group-hover:text-[#26B54F] transition-colors"
-                        />
-                      </button>
-                    )}
-                  </div>
                 </div>
               </div>
-            ) : (
-              <div className="rounded-[15px] border-2 border-gray-200 dark:border-[#27272a] p-5">
-                <div className="flex items-center gap-2 mb-3">
-                  <IconClock size={15} className="text-gray-400" />
-                  <span className="text-xs font-extrabold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    OXIRGI DARSLAR
-                  </span>
-                </div>
-
-                <div className="flex flex-col gap-2">
-                  {recentLessons.slice(0, 4).map((entry) => {
-                    const done = moduleProgress(entry.module.id);
-                    const locked = !isUnlocked(entry.module.id, entry.lesson.id);
-                    return (
-                      <Link
-                        key={entry.lesson.id}
-                        href={
-                          locked
-                            ? `/courses/${entry.module.id}`
-                            : `/learn/${entry.module.id}/${entry.lesson.id}`
-                        }
-                        className="flex items-center gap-3 rounded-[12px] border-2 border-gray-100 dark:border-[#222226] p-2.5 hover:border-[#26B54F]/60 transition-colors group"
-                      >
-                        <span className="w-8 h-8 shrink-0">
-                          <Image
-                            src={entry.module.imageSrc}
-                            alt={entry.module.title}
-                            width={32}
-                            height={32}
-                            className="w-full h-full object-contain"
-                          />
-                        </span>
-                        <span className="min-w-0 flex-1">
-                          <span className="block text-[13px] font-bold text-black dark:text-white truncate">
-                            {entry.lesson.title}
-                          </span>
-                          <span className="block text-[11px] text-gray-500 dark:text-zinc-500 truncate">
-                            {entry.module.title} · Level {entry.level.num} ·{" "}
-                            {done.percent}%
-                          </span>
-                        </span>
-                        <IconArrowRight
-                          size={15}
-                          className="shrink-0 text-gray-300 dark:text-zinc-600 group-hover:text-[#26B54F] transition-colors"
-                        />
-                      </Link>
-                    );
-                  })}
-                </div>
-
-                {earnedBadges.length > 0 && (
-                  <div className="mt-4 flex items-center gap-2 text-[12px] text-gray-500 dark:text-zinc-400">
-                    <IconTrophy size={14} className="text-amber-500" />
-                    Eng yangi yutuq: {earnedBadges[earnedBadges.length - 1].name}
-                  </div>
-                )}
+            </div>
+          ) : (
+            <div className="mt-2">
+              <div className="flex items-center gap-2 mb-2.5">
+                <IconClock size={15} className="text-gray-400" />
+                <span className="text-xs font-extrabold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  OXIRGI DARSLAR
+                </span>
               </div>
-            )}
-          </div>
+
+              {/* Newest first, scrolls sideways when the history grows */}
+              <div
+                className="flex gap-2.5 sm:gap-3.5 overflow-x-auto scrollbar-none pb-1"
+                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+              >
+                {recentLessons.map((entry) => {
+                  const locked = !isUnlocked(entry.module.id, entry.lesson.id);
+                  const done = isCompleted(entry.lesson.id);
+
+                  return (
+                    <Link
+                      key={entry.lesson.id}
+                      href={
+                        locked
+                          ? `/courses/${entry.module.id}`
+                          : `/learn/${entry.module.id}/${entry.lesson.id}`
+                      }
+                      title={`${entry.lesson.title} — ${entry.module.title}`}
+                      className="group shrink-0 w-[104px] sm:w-[116px] rounded-[15px] border-2 border-gray-200 dark:border-[#27272a] p-2.5 hover:border-[#26B54F] transition-colors"
+                    >
+                      <div className="relative aspect-square rounded-[10px] bg-gray-50 dark:bg-[#1a1a1e] flex items-center justify-center mb-2">
+                        <Image
+                          src={entry.module.imageSrc}
+                          alt={entry.module.title}
+                          width={44}
+                          height={44}
+                          className="w-10 h-10 sm:w-11 sm:h-11 object-contain"
+                        />
+                        {done && (
+                          <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-[#26B54F] flex items-center justify-center">
+                            <IconCheck size={10} stroke={4} className="text-white" />
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-[11.5px] font-bold leading-snug text-black dark:text-white line-clamp-2 min-h-[30px]">
+                        {entry.lesson.title}
+                      </p>
+                      <p className="mt-0.5 text-[10.5px] text-gray-500 dark:text-zinc-500 truncate">
+                        Level {entry.level.num}
+                      </p>
+                    </Link>
+                  );
+                })}
+              </div>
+
+              {earnedBadges.length > 0 && (
+                <div className="mt-3 flex items-center gap-2 text-[12px] text-gray-500 dark:text-zinc-400">
+                  <IconTrophy size={14} className="text-amber-500" />
+                  Eng yangi yutuq: {earnedBadges[earnedBadges.length - 1].name}
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
       </div>

@@ -6,6 +6,7 @@ import React, {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import {
@@ -119,6 +120,13 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({
   const [data, setData] = useState<ProgressData>(EMPTY);
   const [hydrated, setHydrated] = useState(false);
 
+  /**
+   * Child effects run before parent effects, so a consumer can try to write
+   * before this provider has read storage. Writing then would persist the
+   * EMPTY baseline over real progress, so every write is gated on this ref.
+   */
+  const hydratedRef = useRef(false);
+
   // Load once on mount — the server renders the empty state.
   useEffect(() => {
     try {
@@ -130,17 +138,26 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({
     } catch {
       // Corrupt or unavailable storage — start clean rather than crash.
     }
+    hydratedRef.current = true;
     setHydrated(true);
   }, []);
 
-  const persist = useCallback((next: ProgressData) => {
-    setData(next);
+  const writeThrough = useCallback((next: ProgressData) => {
+    if (!hydratedRef.current) return;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
     } catch {
       // Storage full or blocked; progress stays in memory for this session.
     }
   }, []);
+
+  const persist = useCallback(
+    (next: ProgressData) => {
+      setData(next);
+      writeThrough(next);
+    },
+    [writeThrough]
+  );
 
   // ── Reads ────────────────────────────────────────────────────────────────
 
@@ -283,24 +300,21 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const visitLesson = useCallback(
     (moduleId: string, lessonId: string) => {
+      if (!hydratedRef.current) return;
       setData((prev) => {
         const next = { ...prev, recent: pushRecent(prev.recent, moduleId, lessonId) };
-        try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-        } catch {
-          // non-fatal
-        }
+        writeThrough(next);
         return next;
       });
     },
-    []
+    [writeThrough]
   );
 
   /** Returns the XP actually awarded — zero when the lesson was already done. */
   const completeLesson = useCallback(
     (moduleId: string, lessonId: string): number => {
       const location = findLesson(moduleId, lessonId);
-      if (!location) return 0;
+      if (!location || !hydratedRef.current) return 0;
 
       let awarded = 0;
 
@@ -329,17 +343,13 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({
           recent: pushRecent(prev.recent, moduleId, lessonId),
         };
 
-        try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-        } catch {
-          // non-fatal
-        }
+        writeThrough(next);
         return next;
       });
 
       return awarded;
     },
-    []
+    [writeThrough]
   );
 
   const resetProgress = useCallback(() => persist(EMPTY), [persist]);
