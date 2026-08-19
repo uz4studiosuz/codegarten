@@ -6,13 +6,28 @@
 import fs from "node:fs";
 import ts from "typescript";
 
-const source = fs.readFileSync("src/lib/writerDraft.ts", "utf8");
-const js = ts.transpileModule(source, {
-  compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2020 },
-}).outputText;
+/**
+ * Both modules are type-only at their edges, so transpiling and importing them as
+ * data URLs runs the real code without a build step. writerDraft imports
+ * lessonSteps, so that import is rewritten to the sibling data URL.
+ */
+function transpile(file) {
+  return ts.transpileModule(fs.readFileSync(file, "utf8"), {
+    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2020 },
+  }).outputText;
+}
 
-const dataUrl = "data:text/javascript;base64," + Buffer.from(js).toString("base64");
-const W = await import(dataUrl);
+const asDataUrl = (js) =>
+  "data:text/javascript;base64," + Buffer.from(js).toString("base64");
+
+const stepsUrl = asDataUrl(transpile("src/lib/lessonSteps.ts"));
+const draftJs = transpile("src/lib/writerDraft.ts").replace(
+  /(['"])\.\/lessonSteps\1/g,
+  JSON.stringify(stepsUrl)
+);
+
+const W = await import(asDataUrl(draftJs));
+const S = await import(stepsUrl);
 
 let failures = 0;
 const check = (name, condition, detail) => {
@@ -57,7 +72,10 @@ const draft = {
             steps: [
               {
                 kind: "section",
-                section: { heading: "Birinchi bo'lim", body: ["Matn."] },
+                section: {
+                  heading: "Birinchi bo'lim",
+                  blocks: [{ kind: "text", text: "Matn." }],
+                },
               },
               {
                 kind: "quiz",
@@ -74,12 +92,23 @@ const draft = {
                 kind: "section",
                 section: {
                   heading: "O'yindan keyingi bo'lim",
-                  body: ["Xulosa."],
-                  image: {
-                    src: "data:image/png;base64," + PNG,
-                    alt: "Sinov rasmi",
-                    caption: "Yuklangan rasm",
-                  },
+                  /*
+                   * Deliberately not the old fixed order: the picture first, the
+                   * code that explains it directly underneath, prose last.
+                   */
+                  blocks: [
+                    {
+                      kind: "image",
+                      image: {
+                        src: "data:image/png;base64," + PNG,
+                        alt: "Sinov rasmi",
+                        caption: "Yuklangan rasm",
+                      },
+                    },
+                    { kind: "code", caption: "sikl.uz", lines: ["takrorla 3 marta:"] },
+                    { kind: "text", text: "Xulosa." },
+                    { kind: "callout", text: "Eng muhim fikr." },
+                  ],
                 },
               },
               { kind: "terms", terms: [{ en: "loop", uz: "sikl", note: "Takrorlash." }] },
@@ -142,12 +171,29 @@ check(
     JSON.stringify(["section", "quiz", "challenge", "section", "terms"]),
   lesson.steps.map((s) => s.kind)
 );
+const laidOut = lesson.steps[3].section;
+check(
+  "block order inside a screen is preserved",
+  JSON.stringify(laidOut.blocks.map((b) => b.kind)) ===
+    JSON.stringify(["image", "code", "text", "callout"]),
+  laidOut.blocks.map((b) => b.kind)
+);
 check(
   "image src rewritten to a project path",
-  lesson.steps[3].section.image.src === "/images/lessons/mod-test-l1-1-1.png",
-  lesson.steps[3].section.image
+  laidOut.blocks[0].image.src === "/images/lessons/mod-test-l1-1-1.png",
+  laidOut.blocks[0].image
 );
-check("image caption kept", lesson.steps[3].section.image.caption === "Yuklangan rasm");
+check("image caption kept", laidOut.blocks[0].image.caption === "Yuklangan rasm");
+check(
+  "code block keeps its caption and lines",
+  laidOut.blocks[1].caption === "sikl.uz" && laidOut.blocks[1].lines.length === 1,
+  laidOut.blocks[1]
+);
+check(
+  "the old fixed section fields are gone",
+  !("body" in laidOut) && !("code" in laidOut) && !("image" in laidOut),
+  Object.keys(laidOut)
+);
 check(
   "blank option dropped and the answer key remapped",
   lesson.steps[1].question.options.length === 2 &&
@@ -196,7 +242,7 @@ check(
 );
 
 const oversized = structuredClone(draft);
-oversized.levels[0].lessons[0].content.steps[3].section.image.src =
+oversized.levels[0].lessons[0].content.steps[3].section.blocks[0].image.src =
   "data:image/png;base64," + "A".repeat(4 * 1024 * 1024);
 const oversizedIssues = W.validateDraft(oversized, {
   existingTrackIds: ["programming-cs-foundations"],
@@ -206,10 +252,32 @@ check(
   oversizedIssues.some((i) => i.level === "error" && /juda katta/.test(i.message))
 );
 
+const emptyBlockDraft = structuredClone(draft);
+emptyBlockDraft.levels[0].lessons[0].content.steps[0].section.blocks.push({
+  kind: "text",
+  text: "   ",
+});
+const emptyBlockIssues = W.validateDraft(emptyBlockDraft, {
+  existingTrackIds: ["programming-cs-foundations"],
+});
+check(
+  "an empty block is an error",
+  emptyBlockIssues.some((i) => i.level === "error" && /blok \(Matn\) bo'sh/.test(i.message)),
+  emptyBlockIssues.filter((i) => i.level === "error").map((i) => i.message)
+);
+
 // ── Legacy content still reads ──────────────────────────────────────────────
 const legacy = W.toDraftContent({
   goal: "Eski shakl",
-  sections: [{ heading: "A", body: ["x"] }],
+  sections: [
+    {
+      heading: "A",
+      body: ["x", "y"],
+      code: { caption: "c", lines: ["z"] },
+      callout: "k",
+      image: { src: "/images/loops.png", alt: "a" },
+    },
+  ],
   terms: [{ en: "loop", uz: "sikl", note: "n" }],
   quiz: [{ question: "q", options: ["a", "b"], correctIndex: 0, explanation: "e" }],
 });
@@ -218,6 +286,23 @@ check(
   JSON.stringify(legacy.steps.map((s) => s.kind)) ===
     JSON.stringify(["section", "terms", "quiz"]),
   legacy.steps.map((s) => s.kind)
+);
+check(
+  "legacy section fields convert to blocks in the order they used to render",
+  JSON.stringify(legacy.steps[0].section.blocks.map((b) => b.kind)) ===
+    JSON.stringify(["text", "text", "image", "code", "callout"]),
+  legacy.steps[0].section.blocks.map((b) => b.kind)
+);
+check(
+  "a legacy section renders identically through sectionBlocks",
+  JSON.stringify(
+    S.sectionBlocks({
+      heading: "A",
+      body: ["x"],
+      code: { lines: ["z"] },
+      callout: "k",
+    }).map((b) => b.kind)
+  ) === JSON.stringify(["text", "code", "callout"])
 );
 
 // A new track has to reach content/tracks.json.

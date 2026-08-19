@@ -17,6 +17,9 @@ import { ALL_TOPICS, TOPIC_LABELS, type GameTopic } from "@/games/topics";
 import { listGames } from "@/games/registry";
 import { resolveGame } from "@/games/resolve";
 import {
+  BLOCK_HINTS,
+  BLOCK_LABELS,
+  type BlockKind,
   DraftIssue,
   DraftLesson,
   DraftModule,
@@ -30,7 +33,9 @@ import {
   STEP_LABELS,
   XP_BY_KIND,
   dataUriBytes,
+  draftBlocks,
   draftSteps,
+  emptyBlock,
   emptyStep,
   emptyTerm,
   idsAreStale,
@@ -45,6 +50,7 @@ import type {
   LessonImage,
   LessonStep,
   QuizQuestion,
+  SectionBlock,
 } from "@/types/lessonContent";
 import type { Selection } from "./selection";
 import { AddButton, Field, Section, Select, SubCard, TextArea, TextInput } from "./fields";
@@ -236,7 +242,7 @@ function ModuleForm({
                 onClick={() => toggleTopic(topic)}
                 className={`rounded-full border-2 px-3 py-1.5 text-[12px] font-bold transition-colors cursor-pointer ${
                   active
-                    ? "border-[#26B54F] bg-[#26B54F]/12 text-[#1a8a3c] dark:text-[#4ADE80]"
+                    ? "border-[#26B54F] bg-[#26B54F]/15 text-[#1a8a3c] dark:text-[#4ADE80]"
                     : "border-gray-200 dark:border-[#27272a] text-gray-500 dark:text-zinc-400 hover:border-gray-300 dark:hover:border-zinc-600"
                 }`}
               >
@@ -625,7 +631,7 @@ function LessonForm({
       <Section
         title="Qadamlar"
         count={steps.length}
-        badge={badgeFor(lessonIssues, (m) => /qadam|bo'lim|savol|variant|javob|atama|rasm/.test(m))}
+        badge={badgeFor(lessonIssues, (m) => /qadam|blok|bo'lim|savol|variant|javob|atama|rasm/.test(m))}
       >
         <p className="text-[12px] leading-relaxed text-gray-500 dark:text-zinc-400 flex items-start gap-2">
           <IconInfoCircle size={15} className="shrink-0 mt-0.5 text-[#A78BFA]" />
@@ -695,6 +701,55 @@ function LessonForm({
 }
 
 /** One step in the run: its header, order controls and its own editor. */
+/**
+ * Reorder and delete, identical for a step in a lesson and a block in a screen.
+ * Both lists are "the author decides the order", so they must not look different.
+ */
+function MoveControls({
+  index,
+  total,
+  onMove,
+  onRemove,
+  removeLabel,
+}: {
+  index: number;
+  total: number;
+  onMove: (direction: -1 | 1) => void;
+  onRemove: () => void;
+  removeLabel: string;
+}) {
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => onMove(-1)}
+        disabled={index === 0}
+        aria-label="Yuqoriga ko'chirish"
+        className="p-1 rounded-full text-gray-300 dark:text-zinc-600 enabled:hover:text-[#26B54F] disabled:opacity-30 transition-colors cursor-pointer"
+      >
+        <IconChevronUp size={15} />
+      </button>
+      <button
+        type="button"
+        onClick={() => onMove(1)}
+        disabled={index === total - 1}
+        aria-label="Pastga ko'chirish"
+        className="p-1 rounded-full text-gray-300 dark:text-zinc-600 enabled:hover:text-[#26B54F] disabled:opacity-30 transition-colors cursor-pointer"
+      >
+        <IconChevronDown size={15} />
+      </button>
+      <button
+        type="button"
+        onClick={onRemove}
+        aria-label={removeLabel}
+        className="p-1 rounded-full text-gray-300 dark:text-zinc-600 hover:text-red-500 transition-colors cursor-pointer"
+      >
+        <IconTrash size={14} />
+      </button>
+    </>
+  );
+}
+
 function StepCard({
   index,
   total,
@@ -739,32 +794,13 @@ function StepCard({
           {label}
         </span>
 
-        <button
-          type="button"
-          onClick={() => onMove(-1)}
-          disabled={index === 0}
-          aria-label="Yuqoriga ko'chirish"
-          className="p-1 rounded-full text-gray-300 dark:text-zinc-600 enabled:hover:text-[#26B54F] disabled:opacity-30 transition-colors cursor-pointer"
-        >
-          <IconChevronUp size={15} />
-        </button>
-        <button
-          type="button"
-          onClick={() => onMove(1)}
-          disabled={index === total - 1}
-          aria-label="Pastga ko'chirish"
-          className="p-1 rounded-full text-gray-300 dark:text-zinc-600 enabled:hover:text-[#26B54F] disabled:opacity-30 transition-colors cursor-pointer"
-        >
-          <IconChevronDown size={15} />
-        </button>
-        <button
-          type="button"
-          onClick={onRemove}
-          aria-label="Qadamni o'chirish"
-          className="p-1 rounded-full text-gray-300 dark:text-zinc-600 hover:text-red-500 transition-colors cursor-pointer"
-        >
-          <IconTrash size={14} />
-        </button>
+        <MoveControls
+          index={index}
+          total={total}
+          onMove={onMove}
+          onRemove={onRemove}
+          removeLabel="Qadamni o'chirish"
+        />
       </div>
       {children}
     </div>
@@ -773,6 +809,23 @@ function StepCard({
 
 // ── Step editors ────────────────────────────────────────────────────────────
 
+const BLOCK_ORDER: BlockKind[] = ["text", "code", "image", "callout"];
+
+const BLOCK_TONES: Record<BlockKind, string> = {
+  text: "border-gray-100 dark:border-[#222226]",
+  code: "border-[#A78BFA]/40",
+  image: "border-[#3B82F6]/40",
+  callout: "border-[#26B54F]/40",
+};
+
+/**
+ * One screen, built block by block
+ * --------------------------------
+ * A teaching screen used to have a fixed shape: paragraphs, then the picture,
+ * then the code, then the takeaway. That made some material impossible to lay out
+ * — a code sample that belongs directly under the picture it explains, for one.
+ * The screen is now an ordered list, and this is where the author arranges it.
+ */
 function SectionStepEditor({
   section,
   onChange,
@@ -780,9 +833,22 @@ function SectionStepEditor({
   section: ContentSection;
   onChange: (section: ContentSection) => void;
 }) {
+  const blocks = draftBlocks(section);
+  const setBlocks = (next: SectionBlock[]) => onChange({ ...section, blocks: next });
+  const replace = (index: number, block: SectionBlock) =>
+    setBlocks(blocks.map((b, i) => (i === index ? block : b)));
+
+  const move = (index: number, direction: -1 | 1) => {
+    const target = index + direction;
+    if (target < 0 || target >= blocks.length) return;
+    const next = [...blocks];
+    [next[index], next[target]] = [next[target], next[index]];
+    setBlocks(next);
+  };
+
   return (
     <>
-      <Field label="Sarlavha">
+      <Field label="Sarlavha" hint="Ekranning yuqorisidagi nom">
         <TextInput
           value={section.heading}
           placeholder="Sikl nima uchun kerak"
@@ -790,53 +856,106 @@ function SectionStepEditor({
         />
       </Field>
 
-      <Field label="Matn" hint="Har xatboshi — alohida qator">
-        <TextArea
-          rows={4}
-          value={section.body.join("\n")}
-          onChange={(e) => onChange({ ...section, body: e.target.value.split("\n") })}
-        />
-      </Field>
+      <p className="text-[12px] leading-relaxed text-gray-500 dark:text-zinc-400 flex items-start gap-2">
+        <IconInfoCircle size={15} className="shrink-0 mt-0.5 text-[#A78BFA]" />
+        Ekran shu tartibda chiziladi — masalan rasmni qo&apos;yib, uning ostiga kod
+        blokini qo&apos;shsangiz, o&apos;quvchi ham aynan shunday ko&apos;radi.
+      </p>
 
-      <ImageField
-        image={section.image}
-        onChange={(image) => onChange({ ...section, image })}
-      />
+      {blocks.map((block, i) => (
+        <div
+          key={i}
+          className={`rounded-[12px] border-2 ${BLOCK_TONES[block.kind]} p-3 flex flex-col gap-3`}
+        >
+          <div className="flex items-center gap-1.5">
+            <span className="shrink-0 w-[20px] h-[20px] rounded-[6px] bg-gray-100 dark:bg-[#232327] text-[10.5px] font-mono font-bold text-gray-500 dark:text-zinc-400 flex items-center justify-center">
+              {i + 1}
+            </span>
+            <span className="min-w-0 flex-1 text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-zinc-400 truncate">
+              {BLOCK_LABELS[block.kind]}
+            </span>
+            <MoveControls
+              index={i}
+              total={blocks.length}
+              onMove={(direction) => move(i, direction)}
+              onRemove={() => setBlocks(blocks.filter((_, k) => k !== i))}
+              removeLabel="Blokni o'chirish"
+            />
+          </div>
 
-      <Field label="Kod sarlavhasi (ixtiyoriy)">
-        <TextInput
-          value={section.code?.caption ?? ""}
-          placeholder="oldinga.uz"
-          onChange={(e) =>
-            onChange({
-              ...section,
-              code: { caption: e.target.value, lines: section.code?.lines ?? [] },
-            })
-          }
-        />
-      </Field>
+          {block.kind === "text" && (
+            <Field label="Matn" hint="Har xatboshi — alohida qator">
+              <TextArea
+                rows={4}
+                value={block.text}
+                placeholder="Sikl bir xil ishni takrorlash uchun kerak."
+                onChange={(e) => replace(i, { kind: "text", text: e.target.value })}
+              />
+            </Field>
+          )}
 
-      <Field label="Kod (ixtiyoriy)" hint="Har buyruq — alohida qator">
-        <TextArea
-          rows={3}
-          value={(section.code?.lines ?? []).join("\n")}
-          placeholder="oldinga(100)"
-          onChange={(e) =>
-            onChange({
-              ...section,
-              code: { caption: section.code?.caption, lines: e.target.value.split("\n") },
-            })
-          }
-          style={{ fontFamily: "var(--font-mono)" }}
-        />
-      </Field>
+          {block.kind === "callout" && (
+            <Field label="Xulosa" hint="Eng muhim fikr bir gapda">
+              <TextInput
+                value={block.text}
+                placeholder="Bir marta yoz, yuz marta ishlat."
+                onChange={(e) => replace(i, { kind: "callout", text: e.target.value })}
+              />
+            </Field>
+          )}
 
-      <Field label="Xulosa (ixtiyoriy)" hint="Eng muhim fikr bir gapda">
-        <TextInput
-          value={section.callout ?? ""}
-          onChange={(e) => onChange({ ...section, callout: e.target.value })}
-        />
-      </Field>
+          {block.kind === "code" && (
+            <>
+              <Field label="Kod sarlavhasi (ixtiyoriy)">
+                <TextInput
+                  value={block.caption ?? ""}
+                  placeholder="oldinga.uz"
+                  onChange={(e) =>
+                    replace(i, { ...block, caption: e.target.value })
+                  }
+                />
+              </Field>
+              <Field label="Kod" hint="Har buyruq — alohida qator">
+                <TextArea
+                  rows={4}
+                  value={block.lines.join("\n")}
+                  placeholder="oldinga(100)"
+                  onChange={(e) =>
+                    replace(i, { ...block, lines: e.target.value.split("\n") })
+                  }
+                  style={{ fontFamily: "var(--font-mono)" }}
+                />
+              </Field>
+            </>
+          )}
+
+          {block.kind === "image" && (
+            <ImageField
+              compact
+              image={block.image}
+              onChange={(image) =>
+                replace(i, { kind: "image", image: image ?? { src: "", alt: "" } })
+              }
+            />
+          )}
+        </div>
+      ))}
+
+      <div className="flex flex-wrap gap-2">
+        {BLOCK_ORDER.map((kind) => (
+          <AddButton
+            key={kind}
+            label={BLOCK_LABELS[kind]}
+            onClick={() => setBlocks([...blocks, emptyBlock(kind)])}
+          />
+        ))}
+      </div>
+
+      <p className="text-[11.5px] text-gray-400 dark:text-zinc-500">
+        {BLOCK_ORDER.map((kind) => `${BLOCK_LABELS[kind]} — ${BLOCK_HINTS[kind]}`).join(
+          " · "
+        )}
+      </p>
     </>
   );
 }
@@ -850,9 +969,12 @@ function SectionStepEditor({
 function ImageField({
   image,
   onChange,
+  compact = false,
 }: {
   image: LessonImage | undefined;
   onChange: (image: LessonImage | undefined) => void;
+  /** Inside a block card the surrounding frame and title would be repeated. */
+  compact?: boolean;
 }) {
   const uploaded = Boolean(image?.src && isUploadedImage(image.src));
   const [mode, setMode] = useState<"url" | "upload">(uploaded ? "upload" : "url");
@@ -891,8 +1013,14 @@ function ImageField({
   };
 
   return (
-    <div className="rounded-[12px] border-2 border-gray-100 dark:border-[#222226] p-3 flex flex-col gap-3">
-      <div className="flex items-center gap-2">
+    <div
+      className={
+        compact
+          ? "flex flex-col gap-3"
+          : "rounded-[12px] border-2 border-gray-100 dark:border-[#222226] p-3 flex flex-col gap-3"
+      }
+    >
+      <div className={`items-center gap-2 ${compact ? "hidden" : "flex"}`}>
         <IconPhoto size={15} className="shrink-0 text-gray-400" />
         <span className="min-w-0 flex-1 text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-zinc-400">
           Rasm (ixtiyoriy)

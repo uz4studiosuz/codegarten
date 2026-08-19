@@ -146,7 +146,7 @@ export default function ModulePathPage() {
 
   if (!module) {
     return (
-      <div className="min-h-screen bg-white dark:bg-[#0d0d0f] text-black dark:text-white flex flex-col font-sans transition-colors duration-200">
+      <div className="min-h-screen bg-white dark:bg-[#0d0d0f] text-black dark:text-white flex flex-col font-sans pb-[92px] sm:pb-0 transition-colors duration-200">
         <AppNavbar activeTab="courses" />
         <div className="flex-1 flex flex-col items-center justify-center gap-4 px-6 text-center">
           <p className="text-lg font-bold">Bunday modul topilmadi.</p>
@@ -176,7 +176,7 @@ export default function ModulePathPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0d0d0f] text-black dark:text-white flex flex-col font-sans transition-colors duration-200">
+    <div className="min-h-screen bg-white dark:bg-[#0d0d0f] text-black dark:text-white flex flex-col font-sans pb-[92px] sm:pb-0 transition-colors duration-200">
       <AppNavbar activeTab="courses" />
 
       {/* ── Breadcrumb ── */}

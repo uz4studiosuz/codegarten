@@ -149,7 +149,7 @@ export function GameChip({
 }) {
   const tones: Record<string, string> = {
     neutral: selected
-      ? "border-[#26B54F] bg-[#26B54F]/12 text-[#177F37] dark:text-[#4ADE80]"
+      ? "border-[#26B54F] bg-[#26B54F]/15 text-[#177F37] dark:text-[#4ADE80]"
       : "border-gray-200 dark:border-[#2b2b31] hover:border-gray-300 dark:hover:border-[#3d3d45] text-gray-700 dark:text-[#c9c9d0]",
     green: "border-transparent bg-[#26B54F] text-white shadow-[0_3px_0_0_#177F37]",
     violet: "border-transparent bg-[#7C5CE0] text-white shadow-[0_3px_0_0_#563DA6]",

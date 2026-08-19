@@ -5,7 +5,9 @@ import type {
   LessonImage,
   LessonStep,
   QuizQuestion,
+  SectionBlock,
 } from "@/types/lessonContent";
+import { sectionBlocks } from "./lessonSteps";
 
 /**
  * Writer draft model
@@ -102,6 +104,21 @@ export const KIND_HINTS: Record<LessonKind, string> = {
 };
 
 export type StepKind = LessonStep["kind"];
+export type BlockKind = SectionBlock["kind"];
+
+export const BLOCK_LABELS: Record<BlockKind, string> = {
+  text: "Matn",
+  code: "Kod",
+  image: "Rasm",
+  callout: "Xulosa",
+};
+
+export const BLOCK_HINTS: Record<BlockKind, string> = {
+  text: "Bir yoki bir necha xatboshi",
+  code: "Kod namunasi — har buyruq alohida qator",
+  image: "Havola yoki yuklangan rasm",
+  callout: "Eng muhim fikr, ajratib ko'rsatiladi",
+};
 
 export const STEP_LABELS: Record<Exclude<StepKind, "goal">, string> = {
   section: "Bo'lim",
@@ -117,8 +134,38 @@ export function kindHasGame(kind: LessonKind): boolean {
 
 // ── Empty shapes ────────────────────────────────────────────────────────────
 
+export function emptyBlock(kind: BlockKind): SectionBlock {
+  if (kind === "code") return { kind: "code", caption: "", lines: [] };
+  if (kind === "image") return { kind: "image", image: { src: "", alt: "" } };
+  if (kind === "callout") return { kind: "callout", text: "" };
+  return { kind: "text", text: "" };
+}
+
 export function emptySection(): ContentSection {
-  return { heading: "", body: [""] };
+  return { heading: "", blocks: [emptyBlock("text")] };
+}
+
+/**
+ * A section as the editor works on it: always an ordered block list, never the
+ * older fixed fields. Sections imported from the project may still use those.
+ */
+export function toDraftSection(section: ContentSection): ContentSection {
+  const blocks = sectionBlocks(section);
+  return {
+    heading: section.heading ?? "",
+    blocks: blocks.length > 0 ? blocks : [emptyBlock("text")],
+  };
+}
+
+export function draftBlocks(section: ContentSection): SectionBlock[] {
+  return section.blocks ?? [];
+}
+
+/** True when nothing has been written into this block yet. */
+export function blockIsEmpty(block: SectionBlock): boolean {
+  if (block.kind === "text" || block.kind === "callout") return !block.text.trim();
+  if (block.kind === "image") return !block.image.src.trim();
+  return !block.lines.some((line) => line.trim());
 }
 
 export function emptyQuestion(): QuizQuestion {
@@ -149,12 +196,20 @@ export function toDraftContent(content: LessonContent | undefined): LessonConten
   if (content.steps && content.steps.length > 0) {
     return {
       goal: content.goal ?? "",
-      steps: content.steps.filter((step) => step.kind !== "goal"),
+      steps: content.steps
+        .filter((step) => step.kind !== "goal")
+        .map((step) =>
+          step.kind === "section"
+            ? { kind: "section", section: toDraftSection(step.section) }
+            : step
+        ),
     };
   }
 
   const steps: LessonStep[] = [];
-  for (const section of content.sections ?? []) steps.push({ kind: "section", section });
+  for (const section of content.sections ?? []) {
+    steps.push({ kind: "section", section: toDraftSection(section) });
+  }
   if ((content.terms ?? []).length > 0) {
     steps.push({ kind: "terms", terms: content.terms! });
   }
@@ -356,14 +411,12 @@ export function moduleFileFor(draft: DraftModule) {
 }
 
 function tidyImage(
-  image: LessonImage | undefined,
+  image: LessonImage,
   rewrite: (src: string) => string
-): { image: LessonImage } | Record<string, never> {
-  const src = image?.src.trim();
-  if (!image || !src) return {};
+): { image: LessonImage } {
   return {
     image: {
-      src: rewrite(src),
+      src: rewrite(image.src.trim()),
       alt: image.alt.trim() || image.caption?.trim() || "Dars rasmi",
       ...(image.caption?.trim() ? { caption: image.caption.trim() } : {}),
     },
@@ -374,22 +427,27 @@ function tidySection(
   section: ContentSection,
   rewrite: (src: string) => string
 ): ContentSection {
-  return {
-    heading: section.heading.trim(),
-    body: section.body.map((b) => b.trim()).filter(Boolean),
-    ...tidyImage(section.image, rewrite),
-    ...(section.code && section.code.lines.filter(Boolean).length > 0
-      ? {
-          code: {
-            ...(section.code.caption?.trim()
-              ? { caption: section.code.caption.trim() }
-              : {}),
-            lines: section.code.lines,
-          },
-        }
-      : {}),
-    ...(section.callout?.trim() ? { callout: section.callout.trim() } : {}),
-  };
+  const blocks: SectionBlock[] = [];
+
+  for (const block of sectionBlocks(section)) {
+    if (block.kind === "text" || block.kind === "callout") {
+      const text = block.text.trim();
+      if (text) blocks.push({ kind: block.kind, text });
+    } else if (block.kind === "code") {
+      const lines = block.lines;
+      if (lines.some((line) => line.trim())) {
+        blocks.push({
+          kind: "code",
+          ...(block.caption?.trim() ? { caption: block.caption.trim() } : {}),
+          lines,
+        });
+      }
+    } else if (block.image.src.trim()) {
+      blocks.push({ kind: "image", ...tidyImage(block.image, rewrite) });
+    }
+  }
+
+  return { heading: section.heading.trim(), blocks };
 }
 
 /**
@@ -427,8 +485,7 @@ export function tidyContent(
   for (const step of draftSteps(content)) {
     if (step.kind === "section") {
       const section = tidySection(step.section, rewriteImage);
-      const empty =
-        !section.heading && section.body.length === 0 && !section.image && !section.code;
+      const empty = !section.heading && (section.blocks ?? []).length === 0;
       if (!empty) steps.push({ kind: "section", section });
     } else if (step.kind === "terms") {
       const terms = step.terms
@@ -668,30 +725,36 @@ export function validateDraft(
           sectionCount += 1;
           const { section } = step;
           if (!section.heading.trim()) err(`${at} (bo'lim) sarlavhasi bo'sh`, target);
-          if (
-            !section.body.some((b) => b.trim()) &&
-            !section.image?.src.trim() &&
-            !(section.code?.lines ?? []).some((l) => l.trim())
-          ) {
-            err(`${at} (bo'lim) bo'sh — matn, rasm yoki kod kerak`, target);
+
+          const blocks = sectionBlocks(section);
+          if (blocks.length === 0 || blocks.every(blockIsEmpty)) {
+            err(`${at} (bo'lim) bo'sh — matn, rasm yoki kod bloki qo'shing`, target);
           }
-          const src = section.image?.src.trim();
-          if (src) {
-            if (!section.image?.alt.trim()) {
-              warn(`${at}: rasmning izohli nomi (alt) yozilmagan`, target);
+
+          blocks.forEach((block, bi) => {
+            const where = `${at}, ${bi + 1}-blok (${BLOCK_LABELS[block.kind]})`;
+            if (blockIsEmpty(block)) {
+              err(`${where} bo'sh — to'ldiring yoki o'chirib tashlang`, target);
+              return;
+            }
+            if (block.kind !== "image") return;
+
+            const src = block.image.src.trim();
+            if (!block.image.alt.trim()) {
+              warn(`${where}: izohli nom (alt) yozilmagan`, target);
             }
             if (isUploadedImage(src)) {
               const bytes = dataUriBytes(src);
               if (bytes > MAX_IMAGE_BYTES) {
                 err(
-                  `${at}: yuklangan rasm juda katta (${Math.round(
+                  `${where}: yuklangan rasm juda katta (${Math.round(
                     bytes / 1024
                   )} KB) — 2 MB dan kichik bo'lishi kerak`,
                   target
                 );
               } else if (bytes > LARGE_IMAGE_BYTES) {
                 warn(
-                  `${at}: rasm ${Math.round(
+                  `${where}: rasm ${Math.round(
                     bytes / 1024
                   )} KB — brauzerdagi qoralama uchun kattaroq, siqib yuklash tavsiya etiladi`,
                   target
@@ -699,11 +762,11 @@ export function validateDraft(
               }
             } else if (!/^(\/|https?:\/\/)/.test(src)) {
               err(
-                `${at}: rasm manzili "/" bilan boshlanadigan yo'l yoki http(s) havola bo'lishi kerak`,
+                `${where}: manzil "/" bilan boshlanadigan yo'l yoki http(s) havola bo'lishi kerak`,
                 target
               );
             }
-          }
+          });
         } else if (step.kind === "terms") {
           const filled = step.terms.filter((t) => t.en.trim());
           if (filled.length === 0) {

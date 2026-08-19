@@ -10,7 +10,7 @@ import { WriterWorkspace } from "@/components/writer/WriterWorkspace";
  */
 export default function WriterPage() {
   return (
-    <div className="min-h-screen bg-white dark:bg-[#141414] text-black dark:text-white flex flex-col font-sans">
+    <div className="min-h-screen bg-white dark:bg-[#141414] text-black dark:text-white flex flex-col font-sans pb-[92px] sm:pb-0">
       <AppNavbar />
       <WriterWorkspace />
     </div>

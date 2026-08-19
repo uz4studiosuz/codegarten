@@ -3,9 +3,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import {
-  IconHome,
-  IconBook,
-  IconBookmarks,
   IconPencilPlus,
   IconBolt,
   IconMenu2,
@@ -24,13 +21,8 @@ import { useAuth } from "@/context/AuthContext";
 import { UserProfileMock, mockUserProfile } from "@/data/mockCourseData";
 import { useTheme } from "@/context/ThemeContext";
 import { useProgress } from "@/context/ProgressContext";
-
-/** Single source for the primary tabs, so mobile and desktop cannot drift. */
-const NAV_TABS = [
-  { key: "home", href: "/home", label: "Bosh sahifa", Icon: IconHome },
-  { key: "courses", href: "/courses", label: "Kurslar", Icon: IconBook },
-  { key: "vocabulary", href: "/vocabulary", label: "Lug'at", Icon: IconBookmarks },
-] as const;
+import { MobileTabBar } from "./MobileTabBar";
+import { NAV_TABS } from "./navTabs";
 
 interface AppNavbarProps {
   activeTab?: "home" | "courses" | "vocabulary" | "settings";
@@ -42,7 +34,7 @@ interface AppNavbarProps {
 }
 
 export const AppNavbar: React.FC<AppNavbarProps> = ({
-  activeTab = "home",
+  activeTab: activeTabProp,
   setActiveTab,
   user: propUser,
   onOpenStreakModal,
@@ -57,6 +49,11 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
   const menuRef = useRef<HTMLDivElement>(null);
 
   const displayUser = propUser || mockUserProfile;
+  /*
+   * The header has always fallen back to "home"; the bottom bar must not, or the
+   * writer — which passes no tab — would light up a tab the learner is not on.
+   */
+  const activeTab = activeTabProp ?? "home";
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -76,6 +73,7 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
   };
 
   return (
+    <>
     <header className="sticky top-0 left-0 right-0 z-40 bg-white dark:bg-[#1F1F1F] border-b border-gray-100 dark:border-[#27272a] transition-colors duration-200 font-sans">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
@@ -97,16 +95,15 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
                   priority
                 />
               </div>
-              {/* The wordmark yields to the tabs on narrow screens */}
-              <span className="hidden sm:inline text-xl font-bold tracking-tight text-[#000000] dark:text-white font-sans">
+              <span className="text-lg sm:text-xl font-bold tracking-tight text-[#000000] dark:text-white font-sans">
                 Codegarten
               </span>
             </Link>
 
             {/* ========================================================= */}
-            {/* CENTER: Tabs — visible on every size, labels from sm up    */}
+            {/* CENTER: Tabs — from sm up; phones get the bottom bar       */}
             {/* ========================================================= */}
-            <nav className="flex items-center gap-1 sm:gap-4 lg:gap-6 min-w-0">
+            <nav className="hidden sm:flex items-center gap-1 sm:gap-4 lg:gap-6 min-w-0">
               {NAV_TABS.map((tab) => {
                 const isActive = activeTab === tab.key;
                 return (
@@ -241,6 +238,9 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
         </div>
       </div>
     </header>
+
+    <MobileTabBar activeTab={activeTabProp} />
+    </>
   );
 };
 

@@ -43,7 +43,7 @@ export default function VocabularyPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#141414] text-black dark:text-white flex flex-col font-sans transition-colors duration-200">
+    <div className="min-h-screen bg-white dark:bg-[#141414] text-black dark:text-white flex flex-col font-sans pb-[92px] sm:pb-0 transition-colors duration-200">
       <AppNavbar activeTab="vocabulary" />
 
       <main className="flex-1 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">

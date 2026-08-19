@@ -22,9 +22,14 @@ import {
 import type { GameDefinition } from "@/games/types";
 import { useVocabulary } from "@/context/VocabularyContext";
 import { useSpeech } from "@/context/SpeechContext";
-import { lessonSteps } from "@/lib/lessonSteps";
+import { lessonSteps, sectionBlocks } from "@/lib/lessonSteps";
 import { hashSeed } from "@/games/shared/seed";
-import type { LessonContent, LessonStep, QuizQuestion } from "@/types/lessonContent";
+import type {
+  LessonContent,
+  LessonStep,
+  QuizQuestion,
+  SectionBlock,
+} from "@/types/lessonContent";
 
 interface LessonRunnerProps {
   lessonId: string;
@@ -83,6 +88,64 @@ function shuffleQuestion(question: QuizQuestion, salt: string): QuizQuestion {
     options: order.map((i) => question.options[i]),
     correctIndex: order.indexOf(question.correctIndex),
   };
+}
+
+/** One authored block of a teaching screen. */
+function SectionBlockView({ block }: { block: SectionBlock }) {
+  if (block.kind === "text") {
+    return (
+      <p className="text-[16px] leading-[1.75] text-gray-700 dark:text-[#c9c9d0]">
+        {block.text}
+      </p>
+    );
+  }
+
+  if (block.kind === "image") {
+    return (
+      <figure className="rounded-[16px] border border-gray-200 dark:border-[#26262a] bg-gray-50 dark:bg-[#141416] overflow-hidden">
+        {/* Plain <img>: sources are authored freely — a path in public/, a remote
+            URL, or a data: URI from the writer — and next/image would need every
+            host configured. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={block.image.src}
+          alt={block.image.alt}
+          className="w-full max-h-[380px] object-contain bg-white dark:bg-[#0d0d0f]"
+        />
+        {block.image.caption && (
+          <figcaption className="px-4 py-2.5 border-t border-gray-200 dark:border-[#26262a] text-[13px] text-gray-500 dark:text-[#8b8b93]">
+            {block.image.caption}
+          </figcaption>
+        )}
+      </figure>
+    );
+  }
+
+  if (block.kind === "code") {
+    return (
+      <div className="rounded-[16px] border border-gray-200 dark:border-[#26262a] bg-gray-50 dark:bg-[#141416] overflow-hidden">
+        {block.caption && (
+          <div className="px-4 py-2.5 border-b border-gray-200 dark:border-[#26262a] text-[12px] font-mono text-gray-500 dark:text-[#8b8b93]">
+            {block.caption}
+          </div>
+        )}
+        <pre className="px-4 py-3.5 overflow-x-auto">
+          <code className="font-mono text-[13.5px] leading-[1.7] text-gray-800 dark:text-[#d4d4d8]">
+            {block.lines.join("\n")}
+          </code>
+        </pre>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-start gap-3 rounded-[16px] border border-[#26B54F]/30 bg-[#26B54F]/[0.08] px-4 py-3.5">
+      <IconBulb size={19} className="shrink-0 mt-0.5 text-[#4ADE80]" />
+      <p className="text-[15px] leading-relaxed font-medium text-green-900 dark:text-[#d4f7dd]">
+        {block.text}
+      </p>
+    </div>
+  );
 }
 
 export function LessonRunner({
@@ -160,14 +223,15 @@ export function LessonRunner({
     if (!step) return "";
     if (step.kind === "goal") return `${lessonTitle}. ${content.goal}`;
     if (step.kind === "section") {
-      return [
-        step.section.heading,
-        ...step.section.body,
-        step.section.image?.caption ?? "",
-        step.section.callout ?? "",
-      ]
-        .filter(Boolean)
-        .join(". ");
+      // Code blocks are skipped: reading punctuation aloud is noise, not help.
+      const spoken = sectionBlocks(step.section).flatMap((block) =>
+        block.kind === "text" || block.kind === "callout"
+          ? [block.text]
+          : block.kind === "image"
+          ? [block.image.caption ?? block.image.alt]
+          : []
+      );
+      return [step.section.heading, ...spoken].filter(Boolean).join(". ");
     }
     if (step.kind === "terms") {
       return [
@@ -416,60 +480,15 @@ export function LessonRunner({
                 </p>
               </div>
             ) : step?.kind === "section" ? (
-              /* ── Teaching page ── */
+              /* ── Teaching page: blocks in the order they were authored ── */
               <div className="flex flex-col gap-5">
                 <h2 className="text-[22px] sm:text-[26px] font-bold leading-tight">
                   {step.section.heading}
                 </h2>
 
-                {step.section.body.map((paragraph, i) => (
-                  <p key={i} className="text-[16px] leading-[1.75] text-gray-700 dark:text-[#c9c9d0]">
-                    {paragraph}
-                  </p>
+                {sectionBlocks(step.section).map((block, i) => (
+                  <SectionBlockView key={i} block={block} />
                 ))}
-
-                {step.section.image?.src && (
-                  <figure className="rounded-[16px] border border-gray-200 dark:border-[#26262a] bg-gray-50 dark:bg-[#141416] overflow-hidden">
-                    {/* Plain <img>: sources are authored freely — a path in
-                        public/, a remote URL, or a data: URI from the writer —
-                        and next/image would need every host configured. */}
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={step.section.image.src}
-                      alt={step.section.image.alt}
-                      className="w-full max-h-[380px] object-contain bg-white dark:bg-[#0d0d0f]"
-                    />
-                    {step.section.image.caption && (
-                      <figcaption className="px-4 py-2.5 border-t border-gray-200 dark:border-[#26262a] text-[13px] text-gray-500 dark:text-[#8b8b93]">
-                        {step.section.image.caption}
-                      </figcaption>
-                    )}
-                  </figure>
-                )}
-
-                {step.section.code && (
-                  <div className="rounded-[16px] border border-gray-200 dark:border-[#26262a] bg-gray-50 dark:bg-[#141416] overflow-hidden">
-                    {step.section.code.caption && (
-                      <div className="px-4 py-2.5 border-b border-gray-200 dark:border-[#26262a] text-[12px] font-mono text-gray-500 dark:text-[#8b8b93]">
-                        {step.section.code.caption}
-                      </div>
-                    )}
-                    <pre className="px-4 py-3.5 overflow-x-auto">
-                      <code className="font-mono text-[13.5px] leading-[1.7] text-gray-800 dark:text-[#d4d4d8]">
-                        {step.section.code.lines.join("\n")}
-                      </code>
-                    </pre>
-                  </div>
-                )}
-
-                {step.section.callout && (
-                  <div className="flex items-start gap-3 rounded-[16px] border border-[#26B54F]/30 bg-[#26B54F]/[0.08] px-4 py-3.5">
-                    <IconBulb size={19} className="shrink-0 mt-0.5 text-[#4ADE80]" />
-                    <p className="text-[15px] leading-relaxed font-medium text-green-900 dark:text-[#d4f7dd]">
-                      {step.section.callout}
-                    </p>
-                  </div>
-                )}
               </div>
             ) : step?.kind === "terms" ? (
               /* ── Key terms: English keyword + Uzbek in parentheses ── */

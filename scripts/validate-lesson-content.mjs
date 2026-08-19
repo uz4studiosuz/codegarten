@@ -157,9 +157,37 @@ function flatten(data, fail) {
   };
 }
 
+const BLOCK_KINDS = ["text", "code", "image", "callout"];
+
+/**
+ * A screen is either an ordered `blocks` list or the older fixed fields. Both are
+ * flattened to the same list here. Mirrors sectionBlocks() in src/lib/lessonSteps.ts.
+ */
+function flattenBlocks(section) {
+  if (Array.isArray(section.blocks) && section.blocks.length > 0) {
+    return section.blocks.map((value, i) => ({ at: `blocks[${i}]`, value }));
+  }
+
+  const blocks = [];
+  for (const paragraph of section.body ?? []) {
+    if (String(paragraph).trim()) blocks.push({ at: "body", value: { kind: "text", text: paragraph } });
+  }
+  if (section.image) blocks.push({ at: "image", value: { kind: "image", image: section.image } });
+  if (section.code) {
+    blocks.push({ at: "code", value: { kind: "code", ...section.code } });
+  }
+  if (section.callout) {
+    blocks.push({ at: "callout", value: { kind: "callout", text: section.callout } });
+  }
+  return blocks;
+}
+
 /** Uploaded images must have been turned into real files before they land here. */
 function checkImage(image, at, fail, warn) {
-  if (!image) return;
+  if (!image) {
+    fail(`${at}.image missing`);
+    return;
+  }
   if (!isNonEmptyString(image.src)) {
     fail(`${at}.image.src missing`);
     return;
@@ -199,15 +227,28 @@ for (const fullPath of lessonFiles) {
   if (sections.length === 0) fail("no sections — a lesson needs something to read");
   for (const { at, value: section } of sections) {
     if (!isNonEmptyString(section.heading)) fail(`${at}.heading missing`);
-    const hasBody = Array.isArray(section.body) && section.body.length > 0;
-    const hasCode = section.code && Array.isArray(section.code.lines) && section.code.lines.length > 0;
-    if (!hasBody && !hasCode && !section.image) {
-      fail(`${at} is empty — needs body, code or an image`);
+
+    const blocks = flattenBlocks(section);
+    if (blocks.length === 0) {
+      fail(`${at} is empty — needs a text, code or image block`);
     }
-    if (section.code && !Array.isArray(section.code.lines)) {
-      fail(`${at}.code.lines must be an array`);
+
+    for (const { at: blockAt, value: block } of blocks) {
+      const where = `${at}.${blockAt}`;
+      if (!block || !BLOCK_KINDS.includes(block.kind)) {
+        fail(`${where}.kind must be one of ${BLOCK_KINDS.join(", ")}`);
+        continue;
+      }
+      if (block.kind === "text" || block.kind === "callout") {
+        if (!isNonEmptyString(block.text)) fail(`${where}.text is empty`);
+      } else if (block.kind === "code") {
+        if (!Array.isArray(block.lines) || block.lines.length === 0) {
+          fail(`${where}.lines must be a non-empty array`);
+        }
+      } else {
+        checkImage(block.image, where, fail, warn);
+      }
     }
-    checkImage(section.image, at, fail, warn);
   }
 
   for (const { at, value: term } of terms) {

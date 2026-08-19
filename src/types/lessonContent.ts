@@ -33,9 +33,30 @@ export interface LessonImage {
   caption?: string;
 }
 
+/**
+ * One piece of a teaching screen.
+ *
+ * A section used to have a fixed internal layout — every paragraph, then the
+ * image, then the code, then the takeaway — so an author could not put a code
+ * sample directly under the picture it explains. `ContentSection.blocks` is an
+ * ordered list of these instead, and the screen renders them in exactly the
+ * order they were authored.
+ */
+export type SectionBlock =
+  | { kind: "text"; text: string }
+  | { kind: "code"; caption?: string; lines: string[] }
+  | { kind: "image"; image: LessonImage }
+  | { kind: "callout"; text: string };
+
 export interface ContentSection {
   heading: string;
-  body: string[];
+  /**
+   * The authored layout. When absent, it is derived from the fields below in the
+   * historical order, so every lesson written before this existed renders
+   * unchanged.
+   */
+  blocks?: SectionBlock[];
+  body?: string[];
   code?: CodeBlock;
   image?: LessonImage;
   /** Highlighted takeaway, rendered in a tinted box. */

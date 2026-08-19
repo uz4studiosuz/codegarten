@@ -16,7 +16,7 @@ export default function CoursesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#141414] text-black dark:text-white flex flex-col font-sans transition-colors duration-200 selection:bg-[#22C55E]/20 selection:text-[#22C55E]">
+    <div className="min-h-screen bg-white dark:bg-[#141414] text-black dark:text-white flex flex-col font-sans pb-[92px] sm:pb-0 transition-colors duration-200 selection:bg-[#22C55E]/20 selection:text-[#22C55E]">
       {/* About Modal */}
       <AboutModal
         isOpen={isAboutOpen}

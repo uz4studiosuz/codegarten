@@ -4,19 +4,21 @@ import type {
   LessonContent,
   LessonStep,
   QuizQuestion,
+  SectionBlock,
 } from "@/types/lessonContent";
 
 /**
  * The run of a lesson
  * -------------------
- * One place that answers "which screens does this lesson have, in what order".
- * Two shapes reach it: content authored as an ordered `steps` list, and the older
- * pools (`sections`, `terms`, `quiz`) that imply the historical order. Everything
- * downstream — the runner, the writer preview, validation — reads the result of
- * this function rather than the raw fields, so neither shape leaks further.
+ * One place that answers "which screens does this lesson have, in what order —
+ * and what does each screen lay out, in what order". Two shapes reach it: content
+ * authored as ordered lists (`steps`, `section.blocks`), and the older fields that
+ * imply a fixed order. Everything downstream — the runner, the writer preview,
+ * validation — reads the result of these functions rather than the raw fields, so
+ * neither shape leaks further.
  *
- * Pure and free of React on purpose: the same normalisation runs in the content
- * validation script's sibling logic and could move to the server unchanged.
+ * Pure and free of React on purpose: the same normalisation could move to the
+ * server unchanged.
  */
 
 /** The order lessons written before `steps` existed are played in. */
@@ -62,6 +64,30 @@ export function lessonSteps(content: LessonContent, hasGame: boolean): LessonSte
   return steps;
 }
 
+/**
+ * What one teaching screen lays out, in order. Sections written before `blocks`
+ * existed keep the layout they always had: paragraphs, then the picture, then the
+ * code sample, then the takeaway.
+ */
+export function sectionBlocks(section: ContentSection): SectionBlock[] {
+  if (section.blocks && section.blocks.length > 0) return section.blocks;
+
+  const blocks: SectionBlock[] = [];
+  for (const paragraph of section.body ?? []) {
+    if (paragraph.trim()) blocks.push({ kind: "text", text: paragraph });
+  }
+  if (section.image?.src) blocks.push({ kind: "image", image: section.image });
+  if (section.code && section.code.lines.length > 0) {
+    blocks.push({
+      kind: "code",
+      ...(section.code.caption ? { caption: section.code.caption } : {}),
+      lines: section.code.lines,
+    });
+  }
+  if (section.callout?.trim()) blocks.push({ kind: "callout", text: section.callout });
+  return blocks;
+}
+
 /** Sections in run order, whichever shape the content uses. */
 export function lessonSections(content: LessonContent): ContentSection[] {
   if (content.steps?.length) {
@@ -97,7 +123,12 @@ export function hasReadableBody(content: LessonContent): boolean {
   return lessonSections(content).some(
     (section) =>
       section.heading.trim() ||
-      section.body.some((line) => line.trim()) ||
-      section.image?.src.trim()
+      sectionBlocks(section).some((block) =>
+        block.kind === "text" || block.kind === "callout"
+          ? block.text.trim().length > 0
+          : block.kind === "image"
+          ? block.image.src.trim().length > 0
+          : block.lines.some((line) => line.trim().length > 0)
+      )
   );
 }
