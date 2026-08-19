@@ -6,7 +6,7 @@
   "titleEn": "Variables & Memory Storage",
   "description": "Ma'lumotlarni xotirada saqlash, o'zgartirish va ularga murojaat qilish.",
   "tagline": "Ma'lumot qayerda yashaydi",
-  "imageSrc": "/images/loops.png",
+  "imageSrc": "/images/variables.png",
   "topics": [
     "variables"
   ],

@@ -6,7 +6,7 @@
   "titleEn": "Algorithmic Efficiency & Big-O",
   "description": "Tezkor va xotirani kam sarflovchi algoritmlarni tahlil qilish va tanlash.",
   "tagline": "Nega bir kod tezroq ishlaydi",
-  "imageSrc": "/images/functions.png",
+  "imageSrc": "/images/algorithmic.png",
   "topics": [
     "efficiency"
   ],
