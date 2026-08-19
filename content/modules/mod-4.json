@@ -1,0 +1,128 @@
+{
+  "id": "mod-4",
+  "num": 4,
+  "trackId": "programming-cs-foundations",
+  "title": "Shartlar va Mantiqiy Tarmoqlar",
+  "titleEn": "Conditionals & Boolean Logic",
+  "description": "If/Else mantiqiy qarorlar qabul qilish va tarmoqlanuvchi dasturlar yozish.",
+  "tagline": "Dastur qanday qaror qabul qiladi",
+  "imageSrc": "/images/sequences.png",
+  "accent": "#F59E0B",
+  "levels": [
+    {
+      "id": "m4-l1",
+      "num": 1,
+      "title": "To'g'ri yoki Yolg'on",
+      "summary": "Kompyuter dunyosida har savolning javobi rost yoki yolg'on.",
+      "lessons": [
+        {
+          "id": "m4-l1-1",
+          "title": "Mantiqiy qiymatlar",
+          "kind": "concept",
+          "xp": 10,
+          "estMinutes": 3
+        },
+        {
+          "id": "m4-l1-2",
+          "title": "Taqqoslash amallari",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m4-l1-3",
+          "title": "Shart tuzish",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m4-l1-4",
+          "title": "Bosqich takrori",
+          "kind": "review",
+          "xp": 30,
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m4-l2",
+      "num": 2,
+      "title": "if va else",
+      "summary": "Yo'l ikkiga ajralganda dastur qaysi tomonga buriladi.",
+      "lessons": [
+        {
+          "id": "m4-l2-1",
+          "title": "Tarmoqlanish",
+          "kind": "concept",
+          "xp": 10,
+          "estMinutes": 3
+        },
+        {
+          "id": "m4-l2-2",
+          "title": "if bloki",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m4-l2-3",
+          "title": "else bilan tanlov",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m4-l2-4",
+          "title": "Robot to'siqdan o'tadi",
+          "kind": "challenge",
+          "xp": 25,
+          "estMinutes": 8
+        },
+        {
+          "id": "m4-l2-5",
+          "title": "Bosqich takrori",
+          "kind": "review",
+          "xp": 30,
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m4-l3",
+      "num": 3,
+      "title": "Murakkab shartlar",
+      "summary": "Bir nechta shartni VA / YOKI orqali birlashtirish.",
+      "lessons": [
+        {
+          "id": "m4-l3-1",
+          "title": "VA / YOKI mantiqi",
+          "kind": "concept",
+          "xp": 10,
+          "estMinutes": 3
+        },
+        {
+          "id": "m4-l3-2",
+          "title": "Ko'p shartli tanlov",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m4-l3-3",
+          "title": "Qaror daraxti",
+          "kind": "challenge",
+          "xp": 25,
+          "estMinutes": 8
+        },
+        {
+          "id": "m4-l3-4",
+          "title": "Bosqich takrori",
+          "kind": "review",
+          "xp": 30,
+          "estMinutes": 10
+        }
+      ]
+    }
+  ]
+}

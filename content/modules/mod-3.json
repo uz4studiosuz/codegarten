@@ -1,0 +1,135 @@
+{
+  "id": "mod-3",
+  "num": 3,
+  "trackId": "programming-cs-foundations",
+  "title": "Funksiyalar va Modullik",
+  "titleEn": "Functions & Modular Code",
+  "description": "Kodni qayta ishlatish, parametrlar uzatish va toza arxitektura tuzish.",
+  "tagline": "Kodni bo'lakla, nomla, qayta ishlat",
+  "imageSrc": "/images/functions.png",
+  "accent": "#EC4899",
+  "levels": [
+    {
+      "id": "m3-l1",
+      "num": 1,
+      "title": "Qora quti tamoyili",
+      "summary": "Ichida nima bo'layotganini bilmasdan ishlatish mumkin bo'lgan blok.",
+      "lessons": [
+        {
+          "id": "m3-l1-1",
+          "title": "Funksiya nima?",
+          "kind": "concept",
+          "xp": 10,
+          "estMinutes": 3
+        },
+        {
+          "id": "m3-l1-2",
+          "title": "Birinchi funksiya",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m3-l1-3",
+          "title": "Funksiyani chaqirish",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m3-l1-4",
+          "title": "Takrorni funksiyaga yig'ish",
+          "kind": "challenge",
+          "xp": 25,
+          "estMinutes": 8
+        },
+        {
+          "id": "m3-l1-5",
+          "title": "Bosqich takrori",
+          "kind": "review",
+          "xp": 30,
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m3-l2",
+      "num": 2,
+      "title": "Parametrlar",
+      "summary": "Bir funksiya — turli natijalar. Parametr shuni ta'minlaydi.",
+      "lessons": [
+        {
+          "id": "m3-l2-1",
+          "title": "Parametr tushunchasi",
+          "kind": "concept",
+          "xp": 10,
+          "estMinutes": 3
+        },
+        {
+          "id": "m3-l2-2",
+          "title": "Parametrli chizish",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m3-l2-3",
+          "title": "Bir nechta parametr",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m3-l2-4",
+          "title": "Universal shakl chizuvchi",
+          "kind": "challenge",
+          "xp": 25,
+          "estMinutes": 8
+        },
+        {
+          "id": "m3-l2-5",
+          "title": "Bosqich takrori",
+          "kind": "review",
+          "xp": 30,
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m3-l3",
+      "num": 3,
+      "title": "Qaytariladigan qiymat",
+      "summary": "Funksiya nafaqat ish bajaradi, balki javob ham qaytaradi.",
+      "lessons": [
+        {
+          "id": "m3-l3-1",
+          "title": "return nima qiladi?",
+          "kind": "concept",
+          "xp": 10,
+          "estMinutes": 3
+        },
+        {
+          "id": "m3-l3-2",
+          "title": "Hisoblovchi funksiya",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m3-l3-3",
+          "title": "Funksiyalarni birlashtirish",
+          "kind": "challenge",
+          "xp": 25,
+          "estMinutes": 8
+        },
+        {
+          "id": "m3-l3-4",
+          "title": "Bosqich takrori",
+          "kind": "review",
+          "xp": 30,
+          "estMinutes": 10
+        }
+      ]
+    }
+  ]
+}

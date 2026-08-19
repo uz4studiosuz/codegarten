@@ -1,0 +1,121 @@
+{
+  "id": "mod-5",
+  "num": 5,
+  "trackId": "programming-cs-foundations",
+  "title": "O'zgaruvchilar va Xotira",
+  "titleEn": "Variables & Memory Storage",
+  "description": "Ma'lumotlarni xotirada saqlash, o'zgartirish va ularga murojaat qilish.",
+  "tagline": "Ma'lumot qayerda yashaydi",
+  "imageSrc": "/images/loops.png",
+  "accent": "#3B82F6",
+  "levels": [
+    {
+      "id": "m5-l1",
+      "num": 1,
+      "title": "Xotira qutilari",
+      "summary": "Nomlangan quti — qiymatni saqlash va keyin topishning yo'li.",
+      "lessons": [
+        {
+          "id": "m5-l1-1",
+          "title": "O'zgaruvchi nima?",
+          "kind": "concept",
+          "xp": 10,
+          "estMinutes": 3
+        },
+        {
+          "id": "m5-l1-2",
+          "title": "Qiymat berish",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m5-l1-3",
+          "title": "O'zgaruvchini o'zgartirish",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m5-l1-4",
+          "title": "Bosqich takrori",
+          "kind": "review",
+          "xp": 30,
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m5-l2",
+      "num": 2,
+      "title": "Qiymatlar bilan ishlash",
+      "summary": "Son, matn va mantiqiy qiymatlar — har biri o'zicha tutadi.",
+      "lessons": [
+        {
+          "id": "m5-l2-1",
+          "title": "Turlar: son va matn",
+          "kind": "concept",
+          "xp": 10,
+          "estMinutes": 3
+        },
+        {
+          "id": "m5-l2-2",
+          "title": "Ikki qiymatni almashtirish",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m5-l2-3",
+          "title": "Hisoblagich yasash",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m5-l2-4",
+          "title": "Bosqich takrori",
+          "kind": "review",
+          "xp": 30,
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m5-l3",
+      "num": 3,
+      "title": "Ro'yxatlar",
+      "summary": "Bitta nom ostida ko'p qiymatni saqlash va aylanib chiqish.",
+      "lessons": [
+        {
+          "id": "m5-l3-1",
+          "title": "Ro'yxat tushunchasi",
+          "kind": "concept",
+          "xp": 10,
+          "estMinutes": 3
+        },
+        {
+          "id": "m5-l3-2",
+          "title": "Elementga murojaat",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m5-l3-3",
+          "title": "Ro'yxatni aylanib chiqish",
+          "kind": "challenge",
+          "xp": 25,
+          "estMinutes": 8
+        },
+        {
+          "id": "m5-l3-4",
+          "title": "Bosqich takrori",
+          "kind": "review",
+          "xp": 30,
+          "estMinutes": 10
+        }
+      ]
+    }
+  ]
+}

@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/context/ThemeContext";
 import { AuthProvider } from "@/context/AuthContext";
 import { ProgressProvider } from "@/context/ProgressContext";
 import { VocabularyProvider } from "@/context/VocabularyContext";
+import { SpeechProvider } from "@/context/SpeechContext";
 import { AuthModal } from "@/components/auth/AuthModal";
 
 export const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -13,8 +14,10 @@ export const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children
       <AuthProvider>
         <ProgressProvider>
           <VocabularyProvider>
-            <AuthModal />
-            {children}
+            <SpeechProvider>
+              <AuthModal />
+              {children}
+            </SpeechProvider>
           </VocabularyProvider>
         </ProgressProvider>
       </AuthProvider>

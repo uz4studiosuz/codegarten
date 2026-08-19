@@ -1,0 +1,121 @@
+{
+  "id": "mod-6",
+  "num": 6,
+  "trackId": "programming-cs-foundations",
+  "title": "Algoritmik Murakkablik",
+  "titleEn": "Algorithmic Efficiency & Big-O",
+  "description": "Tezkor va xotirani kam sarflovchi algoritmlarni tahlil qilish va tanlash.",
+  "tagline": "Nega bir kod tezroq ishlaydi",
+  "imageSrc": "/images/functions.png",
+  "accent": "#10B981",
+  "levels": [
+    {
+      "id": "m6-l1",
+      "num": 1,
+      "title": "Tezlikni o'lchash",
+      "summary": "Algoritm tezligini soatda emas, qadamlar sonida o'lchaymiz.",
+      "lessons": [
+        {
+          "id": "m6-l1-1",
+          "title": "Nima uchun tezlik muhim?",
+          "kind": "concept",
+          "xp": 10,
+          "estMinutes": 3
+        },
+        {
+          "id": "m6-l1-2",
+          "title": "Qadamlarni sanash",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m6-l1-3",
+          "title": "O(1) va O(N)",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m6-l1-4",
+          "title": "Bosqich takrori",
+          "kind": "review",
+          "xp": 30,
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m6-l2",
+      "num": 2,
+      "title": "Qidirish algoritmlari",
+      "summary": "Million elementdan keraklisini 20 qadamda topish mumkin.",
+      "lessons": [
+        {
+          "id": "m6-l2-1",
+          "title": "Chiziqli qidiruv",
+          "kind": "concept",
+          "xp": 10,
+          "estMinutes": 3
+        },
+        {
+          "id": "m6-l2-2",
+          "title": "Binary Search kuchi",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m6-l2-3",
+          "title": "Qaysi tezroq?",
+          "kind": "challenge",
+          "xp": 25,
+          "estMinutes": 8
+        },
+        {
+          "id": "m6-l2-4",
+          "title": "Bosqich takrori",
+          "kind": "review",
+          "xp": 30,
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m6-l3",
+      "num": 3,
+      "title": "Saralash",
+      "summary": "Tartiblangan ma'lumot bilan ishlash necha barobar tezroq.",
+      "lessons": [
+        {
+          "id": "m6-l3-1",
+          "title": "Saralash nima uchun kerak?",
+          "kind": "concept",
+          "xp": 10,
+          "estMinutes": 3
+        },
+        {
+          "id": "m6-l3-2",
+          "title": "Bubble Sort",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m6-l3-3",
+          "title": "Saralashni tanlash",
+          "kind": "challenge",
+          "xp": 25,
+          "estMinutes": 8
+        },
+        {
+          "id": "m6-l3-4",
+          "title": "Bosqich takrori",
+          "kind": "review",
+          "xp": 30,
+          "estMinutes": 10
+        }
+      ]
+    }
+  ]
+}

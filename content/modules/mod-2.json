@@ -1,0 +1,142 @@
+{
+  "id": "mod-2",
+  "num": 2,
+  "trackId": "programming-cs-foundations",
+  "title": "Sikllar (Loops)",
+  "titleEn": "Loops & Pattern Recognition",
+  "description": "Kodning qaytarilishini optimallashtirish va takroriy naqshlarni avtomatlashtirish.",
+  "tagline": "Bir marta yoz, yuz marta ishlat",
+  "imageSrc": "/images/loops.png",
+  "accent": "#22C55E",
+  "levels": [
+    {
+      "id": "m2-l1",
+      "num": 1,
+      "title": "Takrorlanuvchi naqshlar",
+      "summary": "Bir xil kodni ko'chirib yozish o'rniga naqshni ko'rishni o'rganamiz.",
+      "lessons": [
+        {
+          "id": "m2-l1-1",
+          "title": "Naqshni sezish",
+          "kind": "concept",
+          "xp": 10,
+          "estMinutes": 3
+        },
+        {
+          "id": "m2-l1-2",
+          "title": "Bir xil buyruqlar",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m2-l1-3",
+          "title": "repeat blokini ishlatish",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m2-l1-4",
+          "title": "Kvadrat chizish",
+          "kind": "challenge",
+          "xp": 25,
+          "estMinutes": 8
+        },
+        {
+          "id": "m2-l1-5",
+          "title": "Bosqich takrori",
+          "kind": "review",
+          "xp": 30,
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m2-l2",
+      "num": 2,
+      "title": "Sikl hisoblagichi",
+      "summary": "Sikl necha marta aylanadi va hisoblagich qanday o'zgaradi.",
+      "lessons": [
+        {
+          "id": "m2-l2-1",
+          "title": "Hisoblagich nima?",
+          "kind": "concept",
+          "xp": 10,
+          "estMinutes": 3
+        },
+        {
+          "id": "m2-l2-2",
+          "title": "Sikl chegaralari",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m2-l2-3",
+          "title": "Ranglarni almashtirish",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m2-l2-4",
+          "title": "Zinapoya naqshi",
+          "kind": "challenge",
+          "xp": 25,
+          "estMinutes": 8
+        },
+        {
+          "id": "m2-l2-5",
+          "title": "Bosqich takrori",
+          "kind": "review",
+          "xp": 30,
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m2-l3",
+      "num": 3,
+      "title": "Ichma-ich sikllar",
+      "summary": "Sikl ichidagi sikl — jadval va maydonlarni to'ldirish kaliti.",
+      "lessons": [
+        {
+          "id": "m2-l3-1",
+          "title": "Sikl ichida sikl",
+          "kind": "concept",
+          "xp": 10,
+          "estMinutes": 3
+        },
+        {
+          "id": "m2-l3-2",
+          "title": "Shaxmat taxtasi",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m2-l3-3",
+          "title": "Cheksiz sikldan qochish",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m2-l3-4",
+          "title": "Naqsh generatori",
+          "kind": "challenge",
+          "xp": 25,
+          "estMinutes": 8
+        },
+        {
+          "id": "m2-l3-5",
+          "title": "Bosqich takrori",
+          "kind": "review",
+          "xp": 30,
+          "estMinutes": 10
+        }
+      ]
+    }
+  ]
+}

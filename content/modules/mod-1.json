@@ -1,0 +1,135 @@
+{
+  "id": "mod-1",
+  "num": 1,
+  "trackId": "programming-cs-foundations",
+  "title": "Buyruqlar va Ketma-ketlik",
+  "titleEn": "Commands & Sequencing",
+  "description": "Kompyuterga aniq ko'rsatmalar berish va ketma-ket ijro mantiqini o'zlashtirish.",
+  "tagline": "Kompyuter til topishishni o'rganamiz",
+  "imageSrc": "/images/sequences.png",
+  "accent": "#22C55E",
+  "levels": [
+    {
+      "id": "m1-l1",
+      "num": 1,
+      "title": "Birinchi buyruqlar",
+      "summary": "Kompyuter faqat aytilgan ishni bajaradi — na ko'p, na kam.",
+      "lessons": [
+        {
+          "id": "m1-l1-1",
+          "title": "Kompyuter nimani tushunadi?",
+          "kind": "concept",
+          "xp": 10,
+          "estMinutes": 3
+        },
+        {
+          "id": "m1-l1-2",
+          "title": "Birinchi buyrug'ingiz",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m1-l1-3",
+          "title": "Buyruqlar tartibi",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m1-l1-4",
+          "title": "Xatoni topish",
+          "kind": "challenge",
+          "xp": 25,
+          "estMinutes": 8
+        },
+        {
+          "id": "m1-l1-5",
+          "title": "Bosqich takrori",
+          "kind": "review",
+          "xp": 30,
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m1-l2",
+      "num": 2,
+      "title": "Ketma-ketlik mantiqi",
+      "summary": "Katta vazifani mayda, bajarilishi mumkin qadamlarga bo'lish.",
+      "lessons": [
+        {
+          "id": "m1-l2-1",
+          "title": "Qadamlarga bo'lish",
+          "kind": "concept",
+          "xp": 10,
+          "estMinutes": 3
+        },
+        {
+          "id": "m1-l2-2",
+          "title": "Robotni boshqarish",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m1-l2-3",
+          "title": "Ortiqcha qadamni olib tashlash",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m1-l2-4",
+          "title": "Labirintdan chiqish",
+          "kind": "challenge",
+          "xp": 25,
+          "estMinutes": 8
+        },
+        {
+          "id": "m1-l2-5",
+          "title": "Bosqich takrori",
+          "kind": "review",
+          "xp": 30,
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m1-l3",
+      "num": 3,
+      "title": "Algoritm tushunchasi",
+      "summary": "Har qanday aniq ko'rsatmalar to'plami — bu algoritm.",
+      "lessons": [
+        {
+          "id": "m1-l3-1",
+          "title": "Algoritm nima?",
+          "kind": "concept",
+          "xp": 10,
+          "estMinutes": 3
+        },
+        {
+          "id": "m1-l3-2",
+          "title": "Kundalik algoritmlar",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m1-l3-3",
+          "title": "Eng qisqa yo'l",
+          "kind": "challenge",
+          "xp": 25,
+          "estMinutes": 8
+        },
+        {
+          "id": "m1-l3-4",
+          "title": "Bosqich takrori",
+          "kind": "review",
+          "xp": 30,
+          "estMinutes": 10
+        }
+      ]
+    }
+  ]
+}

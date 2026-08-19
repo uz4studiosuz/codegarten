@@ -6,6 +6,7 @@ import {
   IconHome,
   IconBook,
   IconBookmarks,
+  IconPencilPlus,
   IconBolt,
   IconMenu2,
   IconX,
@@ -174,6 +175,18 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
                     <div className="flex items-center gap-3">
                       <IconSettings size={18} stroke={1.75} className="text-gray-500" />
                       <span>Sozlamalar</span>
+                    </div>
+                  </Link>
+
+                  {/* Writer — authoring tool, kept out of the learner tabs */}
+                  <Link
+                    href="/writer"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-zinc-800/60 transition-colors text-left cursor-pointer"
+                  >
+                    <div className="flex items-center gap-3">
+                      <IconPencilPlus size={18} stroke={1.75} className="text-gray-500" />
+                      <span>Writer (modul yaratish)</span>
                     </div>
                   </Link>
 

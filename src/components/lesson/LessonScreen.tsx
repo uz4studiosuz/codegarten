@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect } from "react";
 import { LessonRunner } from "./LessonRunner";
-import { getChallenge } from "@/components/engine/sampleChallenges";
+import { getGame } from "@/games/registry";
 import { useProgress } from "@/context/ProgressContext";
 import type { LessonContent } from "@/types/lessonContent";
 
@@ -15,8 +15,8 @@ interface LessonScreenProps {
   xpReward: number;
   /** Loaded on the server and handed over ready to render. */
   content: LessonContent;
-  /** Which interactive block challenge to finish with, if any. */
-  challengeId?: string;
+  /** Which interactive game to finish with, if any. */
+  gameId?: string;
   nextHref: string;
   nextLabel: string;
 }
@@ -32,7 +32,7 @@ export function LessonScreen({
   levelTitle,
   xpReward,
   content,
-  challengeId,
+  gameId,
   nextHref,
   nextLabel,
 }: LessonScreenProps) {
@@ -47,9 +47,7 @@ export function LessonScreen({
     completeLesson(moduleId, lessonId);
   }, [completeLesson, moduleId, lessonId]);
 
-  const isRobotPuzzle = challengeId === "grid-walk";
-  const challenge =
-    challengeId && !isRobotPuzzle ? getChallenge(challengeId) : undefined;
+  const game = getGame(gameId);
 
   return (
     <LessonRunner
@@ -58,8 +56,7 @@ export function LessonScreen({
       lessonTitle={lessonTitle}
       levelTitle={levelTitle}
       content={content}
-      challenge={challenge}
-      robotPuzzle={isRobotPuzzle}
+      game={game}
       xpReward={xpReward}
       exitHref={`/courses/${moduleId}`}
       nextHref={nextHref}

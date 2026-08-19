@@ -1,0 +1,26 @@
+[
+  {
+    "id": "programming-cs-foundations",
+    "category": "ASOSIY BOSQICH",
+    "title": "Dasturiy Tafakkur & Algoritmlar",
+    "titleEn": "Thinking in Code & Computer Science",
+    "description": "Kompyuter mantiqi, algoritmik fikrlash va kod arxitekturasi poydevori.",
+    "colorTheme": "#22C55E"
+  },
+  {
+    "id": "data-analysis-path",
+    "category": "O'RTA BOSQICH",
+    "title": "Ma'lumotlar Tahlili va Python",
+    "titleEn": "Data Analysis & Python Logic",
+    "description": "Katta ma'lumotlar tahlili, grafiklar va statistik vizualizatsiya.",
+    "colorTheme": "#F59E0B"
+  },
+  {
+    "id": "ai-neural-networks",
+    "category": "MAXSUS BOSQICH",
+    "title": "Sun'iy Intellekt va Neyron Tarmoqlar",
+    "titleEn": "How AI & Neural Networks Work",
+    "description": "Mashinaviy ta'lim, vaznlar, aktivatsiya funksiyalari va LLM larni chuqur tushunish.",
+    "colorTheme": "#EC4899"
+  }
+]

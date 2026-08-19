@@ -10,19 +10,34 @@ import path from "node:path";
 
 const repoRoot = process.cwd();
 const contentDir = path.join(repoRoot, "content", "lessons");
-const curriculumFile = path.join(repoRoot, "src", "data", "curriculum.ts");
+const modulesDir = path.join(repoRoot, "content", "modules");
 
 const errors = [];
 const warnings = [];
 
-// ── Curriculum lesson ids, read straight from the source of truth ───────────
-const curriculumSrc = fs.readFileSync(curriculumFile, "utf8");
-const curriculumIds = [...curriculumSrc.matchAll(/L\("([a-z0-9-]+)",/g)].map(
-  (m) => m[1]
-);
+// ── Curriculum lesson ids, read from the authored module files ───────────────
+const curriculumIds = [];
+if (!fs.existsSync(modulesDir)) {
+  errors.push("Missing content/modules — run scripts/export-modules.mjs first");
+} else {
+  for (const file of fs.readdirSync(modulesDir).filter((f) => f.endsWith(".json"))) {
+    let module;
+    try {
+      module = JSON.parse(fs.readFileSync(path.join(modulesDir, file), "utf8"));
+    } catch (err) {
+      errors.push(`modules/${file}: invalid JSON — ${err.message}`);
+      continue;
+    }
+    for (const level of module.levels ?? []) {
+      for (const lesson of level.lessons ?? []) {
+        if (lesson.id) curriculumIds.push(lesson.id);
+      }
+    }
+  }
+}
 
 if (curriculumIds.length === 0) {
-  errors.push("Could not read any lesson ids from src/data/curriculum.ts");
+  errors.push("No lesson ids found in content/modules/*.json");
 }
 
 // ── Authored files ──────────────────────────────────────────────────────────
@@ -104,7 +119,7 @@ for (const file of files) {
 
 // ── Report ──────────────────────────────────────────────────────────────────
 console.log(
-  `Checked ${files.length} content files against ${curriculumIds.length} curriculum lessons.`
+  `Checked ${files.length} content files against ${curriculumIds.length} lessons in content/modules.`
 );
 for (const w of warnings) console.warn(`  warn  ${w}`);
 for (const e of errors) console.error(`  FAIL  ${e}`);

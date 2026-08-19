@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   IconX,
@@ -13,11 +13,13 @@ import {
   IconTargetArrow,
   IconBookmark,
   IconBookmarkFilled,
+  IconVolume,
+  IconVolumeOff,
+  IconPlayerStopFilled,
 } from "@tabler/icons-react";
-import { ExerciseChallenge } from "@/components/engine/types";
-import { ChallengeStep } from "./ChallengeStep";
-import { RobotPuzzle } from "./RobotPuzzle";
+import type { GameDefinition } from "@/games/types";
 import { useVocabulary } from "@/context/VocabularyContext";
+import { useSpeech } from "@/context/SpeechContext";
 import {
   ContentSection,
   KeyTerm,
@@ -30,10 +32,8 @@ interface LessonRunnerProps {
   lessonTitle: string;
   levelTitle: string;
   content: LessonContent;
-  /** Block-editor challenge, appended as the final step of an exercise lesson. */
-  challenge?: ExerciseChallenge<unknown>;
-  /** Set instead of `challenge` to finish with the drag-and-drop robot puzzle. */
-  robotPuzzle?: boolean;
+  /** Interactive game appended as the final step of an exercise lesson. */
+  game?: GameDefinition;
   xpReward: number;
   /** Where the exit dialog sends the learner. */
   exitHref: string;
@@ -42,6 +42,11 @@ interface LessonRunnerProps {
   nextLabel: string;
   /** Fired once the whole lesson is finished. */
   onFinished: () => void;
+  /**
+   * Render inside a container instead of filling the viewport, and drop the exit
+   * button — used by the writer's live preview.
+   */
+  embedded?: boolean;
 }
 
 type Step =
@@ -83,16 +88,20 @@ export function LessonRunner({
   lessonTitle,
   levelTitle,
   content,
-  challenge,
-  robotPuzzle = false,
+  game,
   xpReward,
   exitHref,
   nextHref,
   nextLabel,
   onFinished,
+  embedded = false,
 }: LessonRunnerProps) {
   const router = useRouter();
   const { isSaved, toggleTerm } = useVocabulary();
+  const speech = useSpeech();
+  // Pulled out so the narration effect below does not re-run every time
+  // `speaking` toggles and narrate the same step twice.
+  const { speakAuto, stop: stopSpeech } = speech;
 
   const steps = useMemo<Step[]>(() => {
     const list: Step[] = [{ kind: "goal" }];
@@ -101,9 +110,9 @@ export function LessonRunner({
     content.quiz.forEach((question, index) =>
       list.push({ kind: "quiz", question: shuffleQuestion(question), index })
     );
-    if (challenge || robotPuzzle) list.push({ kind: "challenge" });
+    if (game) list.push({ kind: "challenge" });
     return list;
-  }, [content, challenge, robotPuzzle]);
+  }, [content, game]);
 
   const [stepIndex, setStepIndex] = useState(0);
   const [showExitDialog, setShowExitDialog] = useState(false);
@@ -124,6 +133,38 @@ export function LessonRunner({
   const isLastStep = stepIndex === steps.length - 1;
   const progressPercent = Math.round(((stepIndex + (isFinished ? 1 : 0)) / steps.length) * 100);
 
+  /**
+   * What the narrator reads for the current step. Code samples are skipped —
+   * reading punctuation aloud is noise rather than help.
+   */
+  const narration = useMemo(() => {
+    if (!step) return "";
+    if (step.kind === "goal") return `${lessonTitle}. ${content.goal}`;
+    if (step.kind === "section") {
+      return [step.section.heading, ...step.section.body, step.section.callout ?? ""]
+        .filter(Boolean)
+        .join(". ");
+    }
+    if (step.kind === "terms") {
+      return [
+        "Kalit so'zlar.",
+        ...step.terms.map((t) => `${t.en}, ya'ni ${t.uz}. ${t.note}`),
+      ].join(" ");
+    }
+    if (step.kind === "quiz") {
+      return [step.question.question, ...step.question.options].join(". ");
+    }
+    return "";
+  }, [step, lessonTitle, content.goal]);
+
+  // Narrate each step as it opens, when the learner has autoplay on.
+  useEffect(() => {
+    if (narration) speakAuto(narration);
+  }, [narration, speakAuto]);
+
+  // Never let narration continue after the lesson screen goes away.
+  useEffect(() => () => stopSpeech(), [stopSpeech]);
+
   const registerCheck = useCallback((fn: () => void) => {
     checkRef.current = fn;
   }, []);
@@ -137,7 +178,7 @@ export function LessonRunner({
   const goNext = () => {
     if (isLastStep) {
       // Non-challenge lessons award their XP on completion.
-      if (!challenge && !robotPuzzle) setEarnedXp(xpReward);
+      if (!game) setEarnedXp(xpReward);
       setIsFinished(true);
       onFinished();
       return;
@@ -200,7 +241,11 @@ export function LessonRunner({
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0d0d0f] text-gray-900 dark:text-white flex flex-col font-sans">
+    <div
+      className={`bg-white dark:bg-[#0d0d0f] text-gray-900 dark:text-white flex flex-col font-sans ${
+        embedded ? "h-full" : "min-h-screen"
+      }`}
+    >
 
       {/* ═══ Top bar ═══ */}
       <header className="flex items-center gap-4 sm:gap-8 px-5 sm:px-10 py-5">
@@ -208,10 +253,50 @@ export function LessonRunner({
           type="button"
           onClick={() => setShowExitDialog(true)}
           aria-label="Darsdan chiqish"
+          hidden={embedded}
           className="shrink-0 text-gray-500 dark:text-[#8b8b93] hover:text-black dark:hover:text-white transition-colors cursor-pointer"
         >
           <IconX size={24} stroke={2} />
         </button>
+
+        {/* Read-aloud: plays the current step, or stops if already reading */}
+        {speech.supported && narration && (
+          <button
+            type="button"
+            onClick={() =>
+              speech.settings.enabled ? speech.toggle(narration) : speech.setEnabled(true)
+            }
+            aria-label={
+              !speech.settings.enabled
+                ? "Ovozni yoqish"
+                : speech.speaking
+                ? "O'qishni to'xtatish"
+                : "Matnni o'qib berish"
+            }
+            title={
+              !speech.settings.enabled
+                ? "Ovoz o'chirilgan — yoqish"
+                : speech.speaking
+                ? "To'xtatish"
+                : "Matnni o'qib berish"
+            }
+            className={`shrink-0 w-9 h-9 rounded-full flex items-center justify-center border transition-colors cursor-pointer ${
+              !speech.settings.enabled
+                ? "border-gray-200 dark:border-[#3a3a41] text-gray-400 dark:text-[#6d6d74] hover:text-gray-600 dark:hover:text-[#a1a1aa]"
+                : speech.speaking
+                ? "border-[#26B54F] bg-[#26B54F]/15 text-[#26B54F] dark:text-[#4ADE80]"
+                : "border-gray-200 dark:border-[#3a3a41] text-gray-500 dark:text-[#8b8b93] hover:text-black dark:hover:text-white hover:border-gray-300 dark:hover:border-[#55555f]"
+            }`}
+          >
+            {!speech.settings.enabled ? (
+              <IconVolumeOff size={17} />
+            ) : speech.speaking ? (
+              <IconPlayerStopFilled size={14} />
+            ) : (
+              <IconVolume size={17} />
+            )}
+          </button>
+        )}
 
         <div className="flex-1 flex items-center justify-center gap-3 sm:gap-4 min-w-0">
           <div className="w-full max-w-[834px] h-2.5 rounded-full bg-gray-200 dark:bg-[#2e2e34] overflow-hidden">
@@ -453,18 +538,9 @@ export function LessonRunner({
                   </div>
                 )}
               </div>
-            ) : step?.kind === "challenge" && robotPuzzle ? (
-              /* ── Drag-and-drop robot programming ── */
-              <RobotPuzzle
-                onSolved={handleChallengeSolved}
-                onReadyChange={setChallengeReady}
-                registerCheck={registerCheck}
-                onStatusChange={setChallengeStatus}
-              />
-            ) : step?.kind === "challenge" && challenge ? (
-              /* ── Interactive block challenge ── */
-              <ChallengeStep
-                challenge={challenge}
+            ) : step?.kind === "challenge" && game ? (
+              /* ── Interactive game, resolved from the registry ── */
+              <game.Component
                 onSolved={handleChallengeSolved}
                 onReadyChange={setChallengeReady}
                 registerCheck={registerCheck}

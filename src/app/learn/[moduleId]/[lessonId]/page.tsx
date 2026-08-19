@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { LessonScreen } from "@/components/lesson/LessonScreen";
-import { challengeIdFor, findLesson, nextLessonAfter } from "@/data/curriculum";
+import { gameIdFor, findLesson, nextLessonAfter } from "@/data/curriculum";
 import { getLessonContent } from "@/lib/lessonContent.server";
 
 interface PageProps {
@@ -47,7 +47,7 @@ export default async function LearnLessonPage({ params }: PageProps) {
       levelTitle={`Level ${level.num} - ${level.title}`}
       xpReward={lesson.xp}
       content={content}
-      challengeId={wantsChallenge ? challengeIdFor(lesson, moduleIndex) : undefined}
+      gameId={wantsChallenge ? gameIdFor(lesson, moduleIndex) : undefined}
       nextHref={
         following ? `/learn/${moduleId}/${following.lesson.id}` : `/courses/${moduleId}`
       }

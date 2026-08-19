@@ -1,2 +1,4 @@
 node_modules/
 .next/
+# Generated from content/ by scripts/build-curriculum.mjs
+src/data/curriculum.generated.json

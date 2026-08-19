@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useSpeech } from "@/context/SpeechContext";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -30,6 +31,7 @@ export type SettingsTab = "account" | "premium" | "preferences";
 export const SettingsView: React.FC = () => {
   const { theme, setTheme } = useTheme();
   const { user: authUser } = useAuth();
+  const speech = useSpeech();
 
   const [activeTab, setActiveTab] = useState<SettingsTab>("account");
 
@@ -393,6 +395,106 @@ export const SettingsView: React.FC = () => {
           {/* ────────────────────────────────────────────────────────── */}
           {activeTab === "preferences" && (
             <div className="space-y-10 animate-fadeIn max-w-2xl">
+              {/* 0. Narration — some learners want it, some find it noise */}
+              <section className="space-y-4">
+                <div>
+                  <h2 className="text-xl sm:text-2xl font-bold text-black dark:text-white tracking-tight">
+                    Ovozli o&apos;qish
+                  </h2>
+                  <p className="text-sm text-gray-500 dark:text-zinc-400 mt-1">
+                    Dars matnini ovoz bilan o&apos;qib berish sozlamalari.
+                  </p>
+                </div>
+
+                {!speech.supported ? (
+                  <p className="text-sm text-gray-500 dark:text-zinc-400 rounded-[12px] border-2 border-gray-100 dark:border-zinc-800 p-4">
+                    Brauzeringiz ovozli o&apos;qishni qo&apos;llab-quvvatlamaydi.
+                  </p>
+                ) : (
+                  <div className="space-y-2.5">
+                    <label className="flex items-center justify-between gap-4 rounded-[12px] border-2 border-gray-100 dark:border-zinc-800 p-4 cursor-pointer hover:border-gray-200 dark:hover:border-zinc-700 transition-colors">
+                      <span className="min-w-0">
+                        <span className="block text-sm font-bold text-black dark:text-white">
+                          Ovozli o&apos;qishni yoqish
+                        </span>
+                        <span className="block text-xs text-gray-500 dark:text-zinc-400 mt-0.5">
+                          O&apos;chirilsa, darsdagi ovoz tugmasi ham ishlamaydi.
+                        </span>
+                      </span>
+                      <input
+                        type="checkbox"
+                        checked={speech.settings.enabled}
+                        onChange={(e) => speech.setEnabled(e.target.checked)}
+                        className="shrink-0 w-5 h-5 accent-[#26B54F] cursor-pointer"
+                      />
+                    </label>
+
+                    <label
+                      className={`flex items-center justify-between gap-4 rounded-[12px] border-2 border-gray-100 dark:border-zinc-800 p-4 transition-colors ${
+                        speech.settings.enabled
+                          ? "cursor-pointer hover:border-gray-200 dark:hover:border-zinc-700"
+                          : "opacity-50 cursor-not-allowed"
+                      }`}
+                    >
+                      <span className="min-w-0">
+                        <span className="block text-sm font-bold text-black dark:text-white">
+                          Har darsda o&apos;zi gapirsin
+                        </span>
+                        <span className="block text-xs text-gray-500 dark:text-zinc-400 mt-0.5">
+                          Har bosqich ochilganda matn avtomatik o&apos;qiladi.
+                        </span>
+                      </span>
+                      <input
+                        type="checkbox"
+                        disabled={!speech.settings.enabled}
+                        checked={speech.settings.autoplay}
+                        onChange={(e) => speech.setAutoplay(e.target.checked)}
+                        className="shrink-0 w-5 h-5 accent-[#26B54F] cursor-pointer disabled:cursor-not-allowed"
+                      />
+                    </label>
+
+                    <div
+                      className={`rounded-[12px] border-2 border-gray-100 dark:border-zinc-800 p-4 ${
+                        speech.settings.enabled ? "" : "opacity-50"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-4 mb-2.5">
+                        <span className="text-sm font-bold text-black dark:text-white">
+                          O&apos;qish tezligi
+                        </span>
+                        <span className="font-mono text-xs text-gray-500 dark:text-zinc-400">
+                          {speech.settings.rate.toFixed(2)}x
+                        </span>
+                      </div>
+                      <input
+                        type="range"
+                        min={0.5}
+                        max={1.5}
+                        step={0.05}
+                        disabled={!speech.settings.enabled}
+                        value={speech.settings.rate}
+                        onChange={(e) => speech.setRate(Number(e.target.value))}
+                        className="w-full accent-[#26B54F] cursor-pointer disabled:cursor-not-allowed"
+                      />
+                    </div>
+
+                    <button
+                      type="button"
+                      disabled={!speech.settings.enabled}
+                      onClick={() =>
+                        speech.toggle(
+                          "Salom! Codegarten ovozli o'qish shu tarzda eshitiladi."
+                        )
+                      }
+                      className="inline-flex items-center gap-2 rounded-full bg-[#26B54F] px-4 py-2.5 text-sm font-bold text-white hover:bg-[#1ea94f] disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                    >
+                      <IconVolume size={16} />
+                      {speech.speaking ? "To'xtatish" : "Sinab ko'rish"}
+                    </button>
+                  </div>
+                )}
+              </section>
+
               {/* 1. Appearance */}
               <section className="space-y-4">
                 <h2 className="text-xl sm:text-2xl font-bold text-black dark:text-white tracking-tight">

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { GameProps } from "../types";
 import {
   IconStarFilled,
   IconArrowUp,
@@ -92,23 +93,14 @@ const FACING_ROTATION: Record<Facing, number> = {
   left: 270,
 };
 
-interface RobotPuzzleProps {
-  /** Fired once, the first time the robot lands on the star. */
-  onSolved: () => void;
-  /** Tells the runner whether its footer Check button should be active. */
-  onReadyChange: (ready: boolean) => void;
-  /** Hands the runner the check action so its footer can drive it. */
-  registerCheck: (check: () => void) => void;
-  /** Reports current evaluation status to the runner */
-  onStatusChange?: (status: "idle" | "success" | "fail") => void;
-}
+type RobotGridGameProps = GameProps;
 
-export function RobotPuzzle({
+export function RobotGridGame({
   onSolved,
   onReadyChange,
   registerCheck,
   onStatusChange,
-}: RobotPuzzleProps) {
+}: RobotGridGameProps) {
   const [slots, setSlots] = useState<(Command | null)[]>(
     Array(SLOT_COUNT).fill(null)
   );
