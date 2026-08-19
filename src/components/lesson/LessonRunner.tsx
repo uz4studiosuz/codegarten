@@ -304,19 +304,6 @@ export function LessonRunner({
           <IconX size={24} stroke={2} />
         </button>
 
-        {/* A lesson is not one-way: re-reading the page before a question is the
-            normal thing to want, and the only way used to be starting over. */}
-        <button
-          type="button"
-          onClick={goBack}
-          disabled={!canGoBack}
-          aria-label="Oldingi qadamga qaytish"
-          title="Oldingi qadam"
-          className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center border border-gray-200 dark:border-[#3a3a41] text-gray-500 dark:text-[#8b8b93] enabled:hover:text-black enabled:hover:border-gray-300 dark:enabled:hover:text-white dark:enabled:hover:border-[#55555f] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
-        >
-          <IconArrowLeft size={17} stroke={2.2} />
-        </button>
-
         {/* Sound: one control mutes the lesson outright, the other plays or stops
             the current screen. Before, the only button stopped the utterance and
             autoplay simply spoke again on the next step. */}
@@ -655,15 +642,32 @@ export function LessonRunner({
           </div>
         </div>
 
-        {/* ═══ Footer action ═══ */}
-        <div className="w-full max-w-[484px] mt-8">
+        {/* ═══ Footer actions (Duolingo 3D Pressable style) ═══ */}
+        <div className="w-full max-w-[500px] mt-8 flex items-center gap-3 sm:gap-4">
+          {!isFinished && (
+            <button
+              type="button"
+              onClick={goBack}
+              disabled={!canGoBack}
+              aria-label="Orqaga qaytish"
+              className={`shrink-0 inline-flex items-center justify-center gap-1.5 px-5 sm:px-6 py-3.5 sm:py-4 rounded-full text-[15px] sm:text-[16px] font-bold border-2 transition-all ${
+                canGoBack
+                  ? "border-gray-200 dark:border-[#33333c] bg-white dark:bg-[#16161a] text-gray-700 dark:text-[#c9c9d0] shadow-[0_4px_0_0_#d1d5db] dark:shadow-[0_4px_0_0_#26262f] hover:bg-gray-50 dark:hover:bg-[#1c1c22] active:translate-y-[4px] active:shadow-none cursor-pointer"
+                  : "border-gray-100 dark:border-white/[0.05] bg-gray-100 dark:bg-white/[0.03] text-gray-400 dark:text-[#55555d] opacity-40 cursor-not-allowed"
+              }`}
+            >
+              <IconArrowLeft size={18} stroke={2.5} />
+              <span>Orqaga</span>
+            </button>
+          )}
+
           {isFinished ? (
             <button
               type="button"
               onClick={() => (onRestart ? onRestart() : router.push(nextHref))}
-              className="flex items-center justify-center gap-2 w-full rounded-full py-4 text-[17px] font-bold bg-[#26B54F] text-white hover:bg-[#1ea94f] transition-colors cursor-pointer"
+              className="flex-1 flex items-center justify-center gap-2 rounded-full py-3.5 sm:py-4 text-[16px] sm:text-[17px] font-bold bg-[#26B54F] text-white shadow-[0_4px_0_0_#1A8038] hover:bg-[#22a849] active:translate-y-[4px] active:shadow-none transition-all cursor-pointer"
             >
-              {nextLabel}
+              <span>{nextLabel}</span>
               <IconArrowRight size={19} stroke={2.4} />
             </button>
           ) : (
@@ -671,13 +675,13 @@ export function LessonRunner({
               type="button"
               disabled={!footerEnabled}
               onClick={footerAction}
-              className={`w-full rounded-full py-4 text-[17px] font-bold transition-colors ${
+              className={`flex-1 flex items-center justify-center gap-2 rounded-full py-3.5 sm:py-4 text-[16px] sm:text-[17px] font-bold transition-all ${
                 footerEnabled
-                  ? "bg-[#26B54F] text-white hover:bg-[#1ea94f] cursor-pointer active:scale-[0.995]"
-                  : "bg-gray-200 dark:bg-[#1e1e21] text-gray-400 dark:text-[#6f6f77] cursor-not-allowed"
+                  ? "bg-[#26B54F] text-white shadow-[0_4px_0_0_#1A8038] hover:bg-[#22a849] active:translate-y-[4px] active:shadow-none cursor-pointer"
+                  : "bg-gray-200 dark:bg-[#202024] text-gray-400 dark:text-[#6f6f77] shadow-[0_4px_0_0_#d1d5db] dark:shadow-[0_4px_0_0_#151517] cursor-not-allowed"
               }`}
             >
-              {footerLabel}
+              <span>{footerLabel}</span>
             </button>
           )}
         </div>
