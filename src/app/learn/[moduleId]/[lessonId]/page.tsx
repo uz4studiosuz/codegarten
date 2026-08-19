@@ -33,7 +33,6 @@ export default async function LearnLessonPage({ params }: PageProps) {
   }
 
   const { lesson, level } = location;
-  const following = nextLessonAfter(moduleId, lessonId);
 
   return (
     <LessonScreen
@@ -45,10 +44,8 @@ export default async function LearnLessonPage({ params }: PageProps) {
       xpReward={lesson.xp}
       content={content}
       gameMatch={gameMatchInputFor(location)}
-      nextHref={
-        following ? `/learn/${moduleId}/${following.lesson.id}` : `/courses/${moduleId}`
-      }
-      nextLabel={following ? "Keyingi dars" : "Modulga qaytish"}
+      nextHref={`/courses/${moduleId}?justCompleted=${lessonId}#lesson-${lessonId}`}
+      nextLabel="Davom etish"
     />
   );
 }

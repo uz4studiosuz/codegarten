@@ -104,6 +104,24 @@ export default function ModulePathPage() {
 
   const module = getModule(moduleId);
 
+  React.useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const fromQuery = params.get("justCompleted");
+    const fromHash = window.location.hash.replace("#lesson-", "");
+    const targetId = fromQuery || fromHash;
+
+    if (targetId) {
+      const timer = setTimeout(() => {
+        const el = document.getElementById(`lesson-${targetId}`);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }, 250);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
   if (!module) {
     return (
       <div className="min-h-screen bg-white dark:bg-[#0d0d0f] text-black dark:text-white flex flex-col font-sans transition-colors duration-200">
@@ -268,7 +286,8 @@ export default function ModulePathPage() {
                       return (
                         <div
                           key={lesson.id}
-                          className="relative w-full min-h-[76px] lg:h-[61px] mb-6 lg:mb-[38px]"
+                          id={`lesson-${lesson.id}`}
+                          className="relative w-full min-h-[76px] lg:h-[61px] mb-6 lg:mb-[38px] scroll-mt-32"
                           style={anchor}
                         >
                           <Link
@@ -277,20 +296,22 @@ export default function ModulePathPage() {
                             tabIndex={locked ? -1 : undefined}
                             onClick={(e) => locked && e.preventDefault()}
                             title={`${lesson.title} · ${lesson.xp} XP`}
-                            className={`group absolute top-0 left-[var(--x-sm)] lg:left-[var(--x)] flex items-center gap-4 ${locked
-                              ? "cursor-default"
-                              : "cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#26B54F] rounded-full"
-                              }`}
+                            className={`group absolute top-0 left-[var(--x-sm)] lg:left-[var(--x)] flex items-center gap-4 ${
+                              locked
+                                ? "cursor-default"
+                                : "cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#26B54F] rounded-full"
+                            }`}
                           >
                             <LessonDisc state={state} isReview={isReview} />
                             <div className="min-w-0 max-w-[calc(100vw-150px)] sm:max-w-[280px] lg:max-w-none">
                               <div
-                                className={`text-[14px] sm:text-[15px] leading-snug lg:whitespace-nowrap ${state === "active"
-                                  ? "font-bold text-black dark:text-white"
-                                  : locked
-                                    ? "font-medium text-gray-400 dark:text-[#6d6d74]"
-                                    : "font-medium text-gray-700 dark:text-[#c9c9d0]"
-                                  }`}
+                                className={`text-[14px] sm:text-[15px] leading-snug lg:whitespace-nowrap ${
+                                  state === "active"
+                                    ? "font-bold text-black dark:text-white"
+                                    : locked
+                                      ? "font-medium text-gray-400 dark:text-[#6d6d74]"
+                                      : "font-medium text-gray-700 dark:text-[#c9c9d0]"
+                                }`}
                               >
                                 {lesson.title}
                               </div>
