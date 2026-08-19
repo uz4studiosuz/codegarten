@@ -5,7 +5,8 @@
     "title": "Dasturiy Tafakkur & Algoritmlar",
     "titleEn": "Thinking in Code & Computer Science",
     "description": "Kompyuter mantiqi, algoritmik fikrlash va kod arxitekturasi poydevori.",
-    "colorTheme": "#22C55E"
+    "colorTheme": "#22C55E",
+    "isSoon": false
   },
   {
     "id": "data-analysis-path",
@@ -13,7 +14,8 @@
     "title": "Ma'lumotlar Tahlili va Python",
     "titleEn": "Data Analysis & Python Logic",
     "description": "Katta ma'lumotlar tahlili, grafiklar va statistik vizualizatsiya.",
-    "colorTheme": "#F59E0B"
+    "colorTheme": "#F59E0B",
+    "isSoon": true
   },
   {
     "id": "ai-neural-networks",
@@ -21,6 +23,7 @@
     "title": "Sun'iy Intellekt va Neyron Tarmoqlar",
     "titleEn": "How AI & Neural Networks Work",
     "description": "Mashinaviy ta'lim, vaznlar, aktivatsiya funksiyalari va LLM larni chuqur tushunish.",
-    "colorTheme": "#EC4899"
+    "colorTheme": "#EC4899",
+    "isSoon": true
   }
 ]

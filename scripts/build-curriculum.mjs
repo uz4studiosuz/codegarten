@@ -21,15 +21,29 @@ if (!fs.existsSync(tracksFile)) {
 
 const tracks = JSON.parse(fs.readFileSync(tracksFile, "utf8"));
 
-const moduleFiles = fs.existsSync(modulesDir)
-  ? fs.readdirSync(modulesDir).filter((f) => f.endsWith(".json"))
-  : [];
+function findJsonFiles(dir) {
+  if (!fs.existsSync(dir)) return [];
+  let results = [];
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      results = results.concat(findJsonFiles(fullPath));
+    } else if (entry.isFile() && entry.name.endsWith(".json")) {
+      results.push(fullPath);
+    }
+  }
+  return results;
+}
 
-const modules = moduleFiles.map((file) => {
-  const data = JSON.parse(fs.readFileSync(path.join(modulesDir, file), "utf8"));
-  if (!data.id) throw new Error(`${file}: missing "id"`);
-  if (!data.trackId) throw new Error(`${file}: missing "trackId"`);
-  if (!Array.isArray(data.levels)) throw new Error(`${file}: "levels" must be an array`);
+const moduleFiles = findJsonFiles(modulesDir);
+
+const modules = moduleFiles.map((fullFilePath) => {
+  const fileRel = path.relative(modulesDir, fullFilePath);
+  const data = JSON.parse(fs.readFileSync(fullFilePath, "utf8"));
+  if (!data.id) throw new Error(`${fileRel}: missing "id"`);
+  if (!data.trackId) throw new Error(`${fileRel}: missing "trackId"`);
+  if (!Array.isArray(data.levels)) throw new Error(`${fileRel}: "levels" must be an array`);
   return data;
 });
 
@@ -49,11 +63,15 @@ for (const m of modules) {
 
 const assembled = tracks.map((track) => ({
   ...track,
+  isSoon: track.isSoon !== undefined ? Boolean(track.isSoon) : false,
   modules: modules
     .filter((m) => m.trackId === track.id)
     .sort((a, b) => a.num - b.num)
     // trackId was only needed for grouping.
-    .map(({ trackId, ...rest }) => rest),
+    .map(({ trackId, ...rest }) => ({
+      ...rest,
+      accent: rest.accent || track.colorTheme || "#22C55E",
+    })),
 }));
 
 const lessonCount = modules.reduce(

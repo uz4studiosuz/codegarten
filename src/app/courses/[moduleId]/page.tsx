@@ -21,11 +21,12 @@ import {
   getModule,
   moduleLessons,
   moduleStats,
+  allTracks,
 } from "@/data/curriculum";
 import { useProgress } from "@/context/ProgressContext";
 
-/** Brand primary, matching the Figma "Primary" token. */
-const PRIMARY = "#26B54F";
+/** Default brand primary if no track/module color found. */
+const DEFAULT_PRIMARY = "#26B54F";
 
 /** Sticky offsets: 64px navbar, then the pinned "Next up" ribbon. */
 const NEXTUP_TOP = 76;
@@ -43,16 +44,27 @@ type DiscState = "completed" | "active" | "locked";
 function LessonDisc({
   state,
   isReview,
+  color,
 }: {
   state: DiscState;
   isReview: boolean;
+  color: string;
 }) {
+  const isCompletedState = state === "completed";
+
+  const discStyle = isCompletedState
+    ? {
+        backgroundColor: color,
+        boxShadow: "0px 5px 0px 0px rgba(0, 0, 0, 0.28)",
+      }
+    : undefined;
+
   const skin =
     state === "completed"
-      ? "bg-[#26B54F] shadow-[0px_5px_0px_0px_#1A8038]"
+      ? ""
       : state === "active"
         ? "bg-[#F0B03C] shadow-[0px_5px_0px_0px_#C0851F]"
-        : "bg-neutral-200 shadow-[0px_5px_0px_0px_rgba(183,183,183,1.00)]";
+        : "bg-neutral-200 dark:bg-zinc-800 shadow-[0px_5px_0px_0px_rgba(183,183,183,1.00)] dark:shadow-[0px_5px_0px_0px_#27272a]";
 
   const icon =
     state === "completed" ? (
@@ -60,13 +72,14 @@ function LessonDisc({
     ) : state === "active" ? (
       <IconStarFilled size={25} className="text-white" />
     ) : isReview ? (
-      <IconBarbell size={25} stroke={2} className="text-neutral-400" />
+      <IconBarbell size={25} stroke={2} className="text-neutral-400 dark:text-zinc-500" />
     ) : (
-      <IconLockFilled size={21} className="text-neutral-400" />
+      <IconLockFilled size={21} className="text-neutral-400 dark:text-zinc-500" />
     );
 
   return (
     <div
+      style={discStyle}
       className={`w-16 h-14 rounded-full flex items-center justify-center transition-all duration-100 group-active:translate-y-[5px] group-active:shadow-none ${skin}`}
     >
       {icon}
@@ -74,15 +87,15 @@ function LessonDisc({
   );
 }
 
-/** The Figma level card: 2px inset outline plus a 6px inset base in primary. */
-function LevelCard({ level }: { level: Level }) {
+/** The Figma level card: 2px inset outline plus a 6px inset base in track theme color. */
+function LevelCard({ level, color }: { level: Level; color: string }) {
   return (
     <div
       className="px-4 py-3 bg-white dark:bg-[#0d0d0f] rounded-[20px] flex flex-col justify-start items-stretch"
       style={{
-        outline: `2px solid ${PRIMARY}`,
+        outline: `2px solid ${color}`,
         outlineOffset: "-2px",
-        boxShadow: `inset 0px -6px 0px 0px ${PRIMARY}`,
+        boxShadow: `inset 0px -6px 0px 0px ${color}`,
       }}
     >
       <div className="text-center text-[10px] font-mono font-bold uppercase leading-4 tracking-wide text-gray-500 dark:text-gray-400">
@@ -144,6 +157,9 @@ export default function ModulePathPage() {
   const nextLesson = nextLessonIn(moduleId);
   const allLessons = moduleLessons(module);
 
+  const track = allTracks.find((t) => t.modules.some((m) => m.id === moduleId));
+  const themeColor = module.accent || track?.colorTheme || DEFAULT_PRIMARY;
+
   const discStateFor = (lesson: Lesson): DiscState => {
     if (isCompleted(lesson.id)) return "completed";
     if (nextLesson?.lesson.id === lesson.id) return "active";
@@ -196,12 +212,14 @@ export default function ModulePathPage() {
                   <span className="text-gray-500 dark:text-[#8b8b93]">
                     {progress.completed}/{progress.total} dars
                   </span>
-                  <span className="font-bold text-[#26B54F] dark:text-[#4ADE80]">{progress.percent}%</span>
+                  <span className="font-bold" style={{ color: themeColor }}>
+                    {progress.percent}%
+                  </span>
                 </div>
                 <div className="h-2 rounded-full bg-gray-200 dark:bg-white/[0.08] overflow-hidden">
                   <div
-                    className="h-full rounded-full bg-[#26B54F] transition-[width] duration-500"
-                    style={{ width: `${progress.percent}%` }}
+                    className="h-full rounded-full transition-[width] duration-500"
+                    style={{ width: `${progress.percent}%`, backgroundColor: themeColor }}
                   />
                 </div>
               </div>
@@ -240,7 +258,10 @@ export default function ModulePathPage() {
                       {nextLesson.lesson.title}
                     </div>
                   </div>
-                  <span className="shrink-0 inline-flex items-center gap-1.5 rounded-full bg-[#26B54F] px-4 py-2 text-[13px] font-bold text-white shadow-xs">
+                  <span
+                    className="shrink-0 inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[13px] font-bold text-white shadow-xs"
+                    style={{ backgroundColor: themeColor }}
+                  >
                     <IconPlayerPlayFilled size={13} />
                     {progress.isStarted ? "Davom etish" : "Boshlash"}
                   </span>
@@ -259,7 +280,7 @@ export default function ModulePathPage() {
               return (
                 <section key={level.id} className="relative mb-4">
                   <div className="sticky z-20 py-2 bg-white dark:bg-[#0d0d0f] transition-colors duration-200" style={{ top: LEVEL_TOP }}>
-                    <LevelCard level={level} />
+                    <LevelCard level={level} color={themeColor} />
                   </div>
 
                   <div className="flex flex-col pt-6">
@@ -299,10 +320,10 @@ export default function ModulePathPage() {
                             className={`group absolute top-0 left-[var(--x-sm)] lg:left-[var(--x)] flex items-center gap-4 ${
                               locked
                                 ? "cursor-default"
-                                : "cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#26B54F] rounded-full"
+                                : "cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 rounded-full"
                             }`}
                           >
-                            <LessonDisc state={state} isReview={isReview} />
+                            <LessonDisc state={state} isReview={isReview} color={themeColor} />
                             <div className="min-w-0 max-w-[calc(100vw-150px)] sm:max-w-[280px] lg:max-w-none">
                               <div
                                 className={`text-[14px] sm:text-[15px] leading-snug lg:whitespace-nowrap ${
@@ -328,7 +349,13 @@ export default function ModulePathPage() {
                   {/* Level footer — shows the level is cleared */}
                   {lp.isFinished && (
                     <div className="flex justify-center pb-2">
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-[#26B54F]/15 px-3.5 py-1.5 text-[12px] font-bold text-[#26B54F] dark:text-[#4ADE80]">
+                      <span
+                        className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[12px] font-bold"
+                        style={{
+                          color: themeColor,
+                          backgroundColor: `${themeColor}20`,
+                        }}
+                      >
                         <IconCheck size={13} stroke={3} />
                         Bosqich yakunlandi
                       </span>

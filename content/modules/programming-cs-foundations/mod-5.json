@@ -7,7 +7,6 @@
   "description": "Ma'lumotlarni xotirada saqlash, o'zgartirish va ularga murojaat qilish.",
   "tagline": "Ma'lumot qayerda yashaydi",
   "imageSrc": "/images/loops.png",
-  "accent": "#3B82F6",
   "topics": [
     "variables"
   ],

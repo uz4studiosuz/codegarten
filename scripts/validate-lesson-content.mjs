@@ -27,15 +27,33 @@ const KNOWN_TOPICS = [
   "geometry",
 ];
 
+function findJsonFiles(dir) {
+  if (!fs.existsSync(dir)) return [];
+  let results = [];
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      results = results.concat(findJsonFiles(fullPath));
+    } else if (entry.isFile() && entry.name.endsWith(".json")) {
+      results.push(fullPath);
+    }
+  }
+  return results;
+}
+
 // ── Curriculum lesson ids, read from the authored module files ───────────────
 const curriculumIds = [];
-if (!fs.existsSync(modulesDir)) {
+const moduleFiles = findJsonFiles(modulesDir);
+
+if (moduleFiles.length === 0) {
   errors.push("Missing content/modules — run scripts/export-modules.mjs first");
 } else {
-  for (const file of fs.readdirSync(modulesDir).filter((f) => f.endsWith(".json"))) {
+  for (const fullPath of moduleFiles) {
+    const file = path.basename(fullPath);
     let module;
     try {
-      module = JSON.parse(fs.readFileSync(path.join(modulesDir, file), "utf8"));
+      module = JSON.parse(fs.readFileSync(fullPath, "utf8"));
     } catch (err) {
       errors.push(`modules/${file}: invalid JSON — ${err.message}`);
       continue;
@@ -68,10 +86,8 @@ if (curriculumIds.length === 0) {
 }
 
 // ── Authored files ──────────────────────────────────────────────────────────
-const files = fs.existsSync(contentDir)
-  ? fs.readdirSync(contentDir).filter((f) => f.endsWith(".json"))
-  : [];
-const authoredIds = files.map((f) => f.replace(/\.json$/, ""));
+const lessonFiles = findJsonFiles(contentDir);
+const authoredIds = lessonFiles.map((f) => path.basename(f).replace(/\.json$/, ""));
 
 for (const id of curriculumIds) {
   if (!authoredIds.includes(id)) errors.push(`Missing content file: ${id}.json`);
@@ -85,11 +101,12 @@ for (const id of authoredIds) {
 // ── Shape checks ────────────────────────────────────────────────────────────
 const isNonEmptyString = (v) => typeof v === "string" && v.trim().length > 0;
 
-for (const file of files) {
+for (const fullPath of lessonFiles) {
+  const file = path.basename(fullPath);
   const id = file.replace(/\.json$/, "");
   let data;
   try {
-    data = JSON.parse(fs.readFileSync(path.join(contentDir, file), "utf8"));
+    data = JSON.parse(fs.readFileSync(fullPath, "utf8"));
   } catch (err) {
     errors.push(`${file}: invalid JSON — ${err.message}`);
     continue;
@@ -146,7 +163,7 @@ for (const file of files) {
 
 // ── Report ──────────────────────────────────────────────────────────────────
 console.log(
-  `Checked ${files.length} content files against ${curriculumIds.length} lessons in content/modules.`
+  `Checked ${lessonFiles.length} content files against ${curriculumIds.length} lessons in content/modules.`
 );
 for (const w of warnings) console.warn(`  warn  ${w}`);
 for (const e of errors) console.error(`  FAIL  ${e}`);

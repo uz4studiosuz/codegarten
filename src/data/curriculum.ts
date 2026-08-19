@@ -42,7 +42,7 @@ export interface CourseModule {
   /** Short blurb used on catalog cards. */
   tagline: string;
   imageSrc: string;
-  accent: string;
+  accent?: string;
   /**
    * What this module teaches, in the vocabulary of src/games/topics.ts. Used to
    * end each lesson with a game that practises the very idea it taught.
@@ -58,7 +58,8 @@ export interface Track {
   titleEn: string;
   description: string;
   colorTheme: string;
-  /** Tracks without modules render as "Tez kunda" teasers. */
+  isSoon?: boolean;
+  /** Tracks without modules or with isSoon render as "Tez kunda" teasers. */
   modules: CourseModule[];
 }
 
@@ -66,12 +67,18 @@ export interface Track {
 
 export const allTracks: Track[] = generated.tracks as Track[];
 
-/** The main track learners start on — the first one that actually has modules. */
-export const foundationsTrack: Track =
-  allTracks.find((t) => t.modules.length > 0) ?? allTracks[0];
+/** Active tracks available for learners (not marked as isSoon and have modules). */
+export const activeTracks: Track[] = allTracks.filter(
+  (t) => !t.isSoon && t.modules.length > 0
+);
 
+/** The main track learners start on — the first active track with modules. */
+export const foundationsTrack: Track =
+  activeTracks[0] ?? allTracks[0];
+
+/** Tracks marked as isSoon or having no modules yet (shown in "Tez kunda"). */
 export const upcomingTracks: Track[] = allTracks.filter(
-  (t) => t.id !== foundationsTrack.id
+  (t) => t.isSoon || t.modules.length === 0
 );
 
 // ── Lookups & traversal ─────────────────────────────────────────────────────

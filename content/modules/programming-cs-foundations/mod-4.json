@@ -7,7 +7,6 @@
   "description": "If/Else mantiqiy qarorlar qabul qilish va tarmoqlanuvchi dasturlar yozish.",
   "tagline": "Dastur qanday qaror qabul qiladi",
   "imageSrc": "/images/sequences.png",
-  "accent": "#F59E0B",
   "topics": [
     "conditionals"
   ],
