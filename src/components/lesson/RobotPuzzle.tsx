@@ -99,12 +99,15 @@ interface RobotPuzzleProps {
   onReadyChange: (ready: boolean) => void;
   /** Hands the runner the check action so its footer can drive it. */
   registerCheck: (check: () => void) => void;
+  /** Reports current evaluation status to the runner */
+  onStatusChange?: (status: "idle" | "success" | "fail") => void;
 }
 
 export function RobotPuzzle({
   onSolved,
   onReadyChange,
   registerCheck,
+  onStatusChange,
 }: RobotPuzzleProps) {
   const [slots, setSlots] = useState<(Command | null)[]>(
     Array(SLOT_COUNT).fill(null)
@@ -133,9 +136,14 @@ export function RobotPuzzle({
     onReadyChange(filledCount > 0 && runFrame === null);
   }, [filledCount, runFrame, onReadyChange]);
 
+  useEffect(() => {
+    onStatusChange?.(verdict);
+  }, [verdict, onStatusChange]);
+
   const runProgram = useCallback(() => {
     if (filledCount === 0) return;
     setVerdict("idle");
+    onStatusChange?.("idle");
     setRunFrame(0);
 
     // Step through the frames so the learner can see what their program does.
@@ -146,7 +154,9 @@ export function RobotPuzzle({
         clearInterval(timer);
         const last = frames[frames.length - 1];
         const won = last.x === TARGET.x && last.y === TARGET.y;
-        setVerdict(won ? "success" : "fail");
+        const newVerdict = won ? "success" : "fail";
+        setVerdict(newVerdict);
+        onStatusChange?.(newVerdict);
         setRunFrame(null);
         if (won && !reported.current) {
           reported.current = true;
@@ -156,7 +166,7 @@ export function RobotPuzzle({
       }
       setRunFrame(frame);
     }, 420);
-  }, [frames, filledCount, onSolved]);
+  }, [frames, filledCount, onSolved, onStatusChange]);
 
   useEffect(() => {
     registerCheck(runProgram);

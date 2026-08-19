@@ -14,6 +14,8 @@ interface ChallengeStepProps<TState> {
   onReadyChange: (ready: boolean) => void;
   /** The runner drives "Check" from its footer, so it needs the handler. */
   registerCheck: (check: () => void) => void;
+  /** Reports current evaluation status to the runner */
+  onStatusChange?: (status: "idle" | "success" | "fail") => void;
 }
 
 /**
@@ -44,6 +46,7 @@ export function ChallengeStep<TState>({
   onSolved,
   onReadyChange,
   registerCheck,
+  onStatusChange,
 }: ChallengeStepProps<TState>) {
   const {
     ast,
@@ -72,6 +75,16 @@ export function ChallengeStep<TState>({
   useEffect(() => {
     registerCheck(checkAnswer);
   }, [checkAnswer, registerCheck]);
+
+  useEffect(() => {
+    if (evaluation === null) {
+      onStatusChange?.("idle");
+    } else if (evaluation.isSuccess) {
+      onStatusChange?.("success");
+    } else {
+      onStatusChange?.("fail");
+    }
+  }, [evaluation, onStatusChange]);
 
   const reported = useRef(false);
   useEffect(() => {

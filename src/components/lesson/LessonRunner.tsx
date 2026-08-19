@@ -117,6 +117,7 @@ export function LessonRunner({
   // Challenge state, driven from the footer button
   const [challengeReady, setChallengeReady] = useState(false);
   const [challengeSolved, setChallengeSolved] = useState(false);
+  const [challengeStatus, setChallengeStatus] = useState<"idle" | "success" | "fail">("idle");
   const checkRef = useRef<(() => void) | null>(null);
 
   const step = steps[stepIndex];
@@ -129,6 +130,7 @@ export function LessonRunner({
 
   const handleChallengeSolved = useCallback(() => {
     setChallengeSolved(true);
+    setChallengeStatus("success");
     setEarnedXp((prev) => prev + xpReward);
   }, [xpReward]);
 
@@ -142,6 +144,9 @@ export function LessonRunner({
     }
     setPicked(null);
     setRevealed(false);
+    setChallengeStatus("idle");
+    setChallengeSolved(false);
+    setChallengeReady(false);
     setStepIndex((i) => i + 1);
   };
 
@@ -173,6 +178,24 @@ export function LessonRunner({
       footerLabel = "Tekshirish";
       footerEnabled = challengeReady;
       footerAction = () => checkRef.current?.();
+    }
+  }
+
+  // ── Compute dynamic frame border & drop shadow ──────────────────────────
+  let frameTone = "border-gray-200 dark:border-[#26262a]";
+
+  if (step?.kind === "quiz" && revealed) {
+    const isCorrect = picked === step.question.correctIndex;
+    if (isCorrect) {
+      frameTone = "border-[#26B54F] shadow-[0_6px_0_0_#26B54F]";
+    } else {
+      frameTone = "border-amber-500 shadow-[0_6px_0_0_#F59E0B]";
+    }
+  } else if (step?.kind === "challenge") {
+    if (challengeSolved || challengeStatus === "success") {
+      frameTone = "border-[#26B54F] shadow-[0_6px_0_0_#26B54F]";
+    } else if (challengeStatus === "fail") {
+      frameTone = "border-amber-500 shadow-[0_6px_0_0_#F59E0B]";
     }
   }
 
@@ -222,7 +245,7 @@ export function LessonRunner({
       </header>
 
       {/* ═══ Lesson frame ═══ */}
-      <main className="flex-1 flex flex-col items-center rounded-[26px] border border-gray-200 dark:border-[#26262a] mx-4 sm:mx-8 lg:mx-[68px] mb-8 px-5 sm:px-8 py-10">
+      <main className={`flex-1 flex flex-col items-center rounded-[26px] border-2 mx-4 sm:mx-8 lg:mx-[68px] mb-8 px-5 sm:px-8 py-10 transition-all duration-300 ${frameTone}`}>
         <div className="flex-1 w-full flex flex-col items-center justify-center">
           <div className="w-full max-w-[680px]">
 
@@ -436,6 +459,7 @@ export function LessonRunner({
                 onSolved={handleChallengeSolved}
                 onReadyChange={setChallengeReady}
                 registerCheck={registerCheck}
+                onStatusChange={setChallengeStatus}
               />
             ) : step?.kind === "challenge" && challenge ? (
               /* ── Interactive block challenge ── */
@@ -444,6 +468,7 @@ export function LessonRunner({
                 onSolved={handleChallengeSolved}
                 onReadyChange={setChallengeReady}
                 registerCheck={registerCheck}
+                onStatusChange={setChallengeStatus}
               />
             ) : null}
 
