@@ -15,6 +15,18 @@ const modulesDir = path.join(repoRoot, "content", "modules");
 const errors = [];
 const warnings = [];
 
+/** Mirrors GameTopic in src/games/topics.ts. */
+const KNOWN_TOPICS = [
+  "sequencing",
+  "debugging",
+  "loops",
+  "functions",
+  "conditionals",
+  "variables",
+  "efficiency",
+  "geometry",
+];
+
 // ── Curriculum lesson ids, read from the authored module files ───────────────
 const curriculumIds = [];
 if (!fs.existsSync(modulesDir)) {
@@ -28,6 +40,21 @@ if (!fs.existsSync(modulesDir)) {
       errors.push(`modules/${file}: invalid JSON — ${err.message}`);
       continue;
     }
+    // Topics decide which interactive game each lesson ends with, so a typo
+    // here silently downgrades every exercise in the module to a fallback game.
+    for (const topic of module.topics ?? []) {
+      if (!KNOWN_TOPICS.includes(topic)) {
+        errors.push(
+          `modules/${file}: unknown topic "${topic}" — expected one of ${KNOWN_TOPICS.join(", ")}`
+        );
+      }
+    }
+    if (!module.topics || module.topics.length === 0) {
+      warnings.push(
+        `modules/${file}: no topics — its exercises fall back to a generic game`
+      );
+    }
+
     for (const level of module.levels ?? []) {
       for (const lesson of level.lessons ?? []) {
         if (lesson.id) curriculumIds.push(lesson.id);

@@ -65,7 +65,7 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
         </div>
 
         <div className="mt-6 pt-4 border-t border-gray-100 dark:border-zinc-800 flex items-center justify-center gap-1.5 text-xs text-gray-400">
-          <span>Toshkentda mehr bilan yaratilgan</span>
+          <span>Created by Uz4studios Team</span>
           <IconHeart size={14} className="text-red-500 fill-red-500" />
         </div>
       </div>

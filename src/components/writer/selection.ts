@@ -8,22 +8,31 @@ export type Selection =
   | { kind: "level"; levelIndex: number }
   | { kind: "lesson"; levelIndex: number; lessonIndex: number };
 
-/** Keeps a selection pointing at something that still exists after a delete. */
+/**
+ * Keeps a selection pointing at something that still exists after a delete.
+ * Returns the same object when nothing moved, so the caller's setState is a
+ * no-op on the common path (this runs on every keystroke).
+ */
 export function clampSelection(
   selection: Selection,
   levels: readonly { lessons: readonly unknown[] }[]
 ): Selection {
-  if (levels.length === 0) return { kind: "module" };
+  if (levels.length === 0) {
+    return selection.kind === "module" ? selection : { kind: "module" };
+  }
   if (selection.kind === "module") return selection;
 
   const levelIndex = Math.min(selection.levelIndex, levels.length - 1);
-  if (selection.kind === "level") return { kind: "level", levelIndex };
+
+  if (selection.kind === "level") {
+    return levelIndex === selection.levelIndex ? selection : { kind: "level", levelIndex };
+  }
 
   const lessons = levels[levelIndex].lessons;
   if (lessons.length === 0) return { kind: "level", levelIndex };
-  return {
-    kind: "lesson",
-    levelIndex,
-    lessonIndex: Math.min(selection.lessonIndex, lessons.length - 1),
-  };
+
+  const lessonIndex = Math.min(selection.lessonIndex, lessons.length - 1);
+  return levelIndex === selection.levelIndex && lessonIndex === selection.lessonIndex
+    ? selection
+    : { kind: "lesson", levelIndex, lessonIndex };
 }
