@@ -8,6 +8,9 @@
   "tagline": "Kodni bo'lakla, nomla, qayta ishlat",
   "imageSrc": "/images/functions.png",
   "accent": "#EC4899",
+  "topics": [
+    "functions"
+  ],
   "levels": [
     {
       "id": "m3-l1",

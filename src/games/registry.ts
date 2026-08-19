@@ -1,13 +1,31 @@
 import type { GameDefinition } from "./types";
+import { algoRaceGame } from "./algo-race";
+import { conditionBranchGame } from "./condition-branch";
+import { debugExtraGame } from "./debug-extra";
+import { functionFactoryGame } from "./function-factory";
+import { loopRepeatGame } from "./loop-repeat";
 import { robotGridGame } from "./robot-grid";
+import { sequenceOrderGame } from "./sequence-order";
 import { shapeColorGame } from "./shape-color";
+import { variableTraceGame } from "./variable-trace";
 
 /**
  * The one place a game gets registered. Add the import above and the entry
- * below, and the game is immediately selectable from content JSON and from the
- * writer's picker — nothing else needs to change.
+ * below, and the game is immediately selectable from content JSON, matchable by
+ * topic (see resolve.ts) and visible in the writer's picker — nothing else needs
+ * to change.
  */
-const GAMES: GameDefinition[] = [shapeColorGame, robotGridGame];
+const GAMES: GameDefinition[] = [
+  sequenceOrderGame,
+  robotGridGame,
+  debugExtraGame,
+  loopRepeatGame,
+  functionFactoryGame,
+  shapeColorGame,
+  conditionBranchGame,
+  variableTraceGame,
+  algoRaceGame,
+];
 
 const BY_ID = new Map(GAMES.map((g) => [g.id, g]));
 

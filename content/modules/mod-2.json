@@ -8,6 +8,9 @@
   "tagline": "Bir marta yoz, yuz marta ishlat",
   "imageSrc": "/images/loops.png",
   "accent": "#22C55E",
+  "topics": [
+    "loops"
+  ],
   "levels": [
     {
       "id": "m2-l1",

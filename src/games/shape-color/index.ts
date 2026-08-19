@@ -7,5 +7,7 @@ export const shapeColorGame: GameDefinition = {
   description:
     "Kod bloklaridagi rang parametrini o'zgartirib, barcha shakllarni sariq qilish.",
   suits: ["exercise", "challenge"],
+  topics: ["geometry", "functions"],
+  keywords: ["shakl", "rang", "bo'ya", "chiz", "kvadrat", "parametr"],
   Component: ShapeColorGame,
 };

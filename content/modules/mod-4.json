@@ -8,6 +8,9 @@
   "tagline": "Dastur qanday qaror qabul qiladi",
   "imageSrc": "/images/sequences.png",
   "accent": "#F59E0B",
+  "topics": [
+    "conditionals"
+  ],
   "levels": [
     {
       "id": "m4-l1",

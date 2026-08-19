@@ -7,5 +7,7 @@ export const robotGridGame: GameDefinition = {
   description:
     "Buyruq bloklarini sudrab qatorlarga terib, robotni yulduzga olib borish.",
   suits: ["exercise", "challenge"],
+  topics: ["sequencing"],
+  keywords: ["robot", "labirint", "yo'l", "boshqar", "harakat", "buyruq", "katak"],
   Component: RobotGridGame,
 };

@@ -8,6 +8,10 @@
   "tagline": "Kompyuter til topishishni o'rganamiz",
   "imageSrc": "/images/sequences.png",
   "accent": "#22C55E",
+  "topics": [
+    "sequencing",
+    "debugging"
+  ],
   "levels": [
     {
       "id": "m1-l1",

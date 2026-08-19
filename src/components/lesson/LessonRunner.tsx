@@ -47,6 +47,11 @@ interface LessonRunnerProps {
    * button — used by the writer's live preview.
    */
   embedded?: boolean;
+  /**
+   * Embedded previews have nowhere to navigate to, so the final button replays
+   * the lesson instead of routing. When absent, the button routes as usual.
+   */
+  onRestart?: () => void;
 }
 
 type Step =
@@ -95,6 +100,7 @@ export function LessonRunner({
   nextLabel,
   onFinished,
   embedded = false,
+  onRestart,
 }: LessonRunnerProps) {
   const router = useRouter();
   const { isSaved, toggleTerm } = useVocabulary();
@@ -317,7 +323,9 @@ export function LessonRunner({
             earnedXp > 0 ? "border-[#26B54F] bg-[#26B54F]/15" : "border-gray-200 dark:border-[#3a3a41] bg-gray-50 dark:bg-[#16161a]"
           }`}
         >
-          <span className="font-mono text-[15px] font-bold text-white">{earnedXp}</span>
+          <span className="font-mono text-[15px] font-bold text-gray-900 dark:text-white">
+            {earnedXp}
+          </span>
           <IconBolt
             size={16}
             className={
@@ -532,7 +540,7 @@ export function LessonRunner({
                           : "text-amber-400"
                       }`}
                     />
-                    <p className="text-[15px] leading-relaxed text-[#d4d4d8]">
+                    <p className="text-[15px] leading-relaxed text-gray-700 dark:text-[#d4d4d8]">
                       {step.question.explanation}
                     </p>
                   </div>
@@ -541,6 +549,8 @@ export function LessonRunner({
             ) : step?.kind === "challenge" && game ? (
               /* ── Interactive game, resolved from the registry ── */
               <game.Component
+                seed={lessonId}
+                context={`${lessonTitle} ${levelTitle}`.toLowerCase()}
                 onSolved={handleChallengeSolved}
                 onReadyChange={setChallengeReady}
                 registerCheck={registerCheck}
@@ -556,7 +566,7 @@ export function LessonRunner({
           {isFinished ? (
             <button
               type="button"
-              onClick={() => router.push(exitHref)}
+              onClick={() => (onRestart ? onRestart() : router.push(nextHref))}
               className="flex items-center justify-center gap-2 w-full rounded-full py-4 text-[17px] font-bold bg-[#26B54F] text-white hover:bg-[#1ea94f] transition-colors cursor-pointer"
             >
               {nextLabel}

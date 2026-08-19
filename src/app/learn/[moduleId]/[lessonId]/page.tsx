@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { LessonScreen } from "@/components/lesson/LessonScreen";
-import { gameIdFor, findLesson, nextLessonAfter } from "@/data/curriculum";
+import { findLesson, gameMatchInputFor, nextLessonAfter } from "@/data/curriculum";
 import { getLessonContent } from "@/lib/lessonContent.server";
 
 interface PageProps {
@@ -32,11 +32,8 @@ export default async function LearnLessonPage({ params }: PageProps) {
     );
   }
 
-  const { lesson, level, moduleIndex } = location;
+  const { lesson, level } = location;
   const following = nextLessonAfter(moduleId, lessonId);
-
-  // Concept and review lessons teach and quiz; the rest end hands-on.
-  const wantsChallenge = lesson.kind === "exercise" || lesson.kind === "challenge";
 
   return (
     <LessonScreen
@@ -47,7 +44,7 @@ export default async function LearnLessonPage({ params }: PageProps) {
       levelTitle={`Level ${level.num} - ${level.title}`}
       xpReward={lesson.xp}
       content={content}
-      gameId={wantsChallenge ? gameIdFor(lesson, moduleIndex) : undefined}
+      gameMatch={gameMatchInputFor(location)}
       nextHref={
         following ? `/learn/${moduleId}/${following.lesson.id}` : `/courses/${moduleId}`
       }

@@ -1,4 +1,5 @@
 import type React from "react";
+import type { GameTopic } from "./topics";
 
 /**
  * Interactive game contract
@@ -8,7 +9,8 @@ import type React from "react";
  * upward through these callbacks. That keeps games self-contained: a new one can
  * be added without touching the runner.
  *
- * See README.md in this folder for how to add one.
+ * See README.md in this folder for how to add one, and resolve.ts for how a
+ * lesson gets matched to the game that actually teaches its topic.
  */
 
 export type GameStatus = "idle" | "success" | "fail";
@@ -28,6 +30,18 @@ export interface GameProps {
   registerCheck: (check: () => void) => void;
   /** Optional: lets the runner reflect success/failure in its own chrome. */
   onStatusChange?: (status: GameStatus) => void;
+  /**
+   * Stable per-lesson string (the lesson id). Games with several puzzles pick
+   * one from it, so two lessons sharing a game do not pose the same puzzle —
+   * and reopening a lesson always poses the same one.
+   */
+  seed?: string;
+  /**
+   * The lesson and level titles, lowercased. A game holding several puzzles can
+   * narrow them to the one the lesson is actually about — a "Binary Search"
+   * lesson should not be handed the linear-search puzzle.
+   */
+  context?: string;
 }
 
 export interface GameDefinition {
@@ -39,5 +53,15 @@ export interface GameDefinition {
   description: string;
   /** Which lesson kinds this game suits, for authoring guidance. */
   suits: string[];
+  /**
+   * Which curriculum topics the game actually practises. Matching on this is
+   * what keeps a loops lesson from ending in a geometry puzzle.
+   */
+  topics: GameTopic[];
+  /**
+   * Lowercase words that, appearing in a lesson or level title, mean this game
+   * is the right ending for it. Uzbek and English both, since titles mix them.
+   */
+  keywords?: string[];
   Component: React.ComponentType<GameProps>;
 }

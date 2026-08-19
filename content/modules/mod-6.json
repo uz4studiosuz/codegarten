@@ -8,6 +8,9 @@
   "tagline": "Nega bir kod tezroq ishlaydi",
   "imageSrc": "/images/functions.png",
   "accent": "#10B981",
+  "topics": [
+    "efficiency"
+  ],
   "levels": [
     {
       "id": "m6-l1",

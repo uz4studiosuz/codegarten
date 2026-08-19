@@ -12,6 +12,7 @@ import React, {
 import {
   CourseModule,
   LessonLocation,
+  allTracks,
   findLesson,
   foundationsTrack,
   getModule,
@@ -28,6 +29,13 @@ interface RecentEntry {
   at: string;
 }
 
+interface RecentModuleEntry {
+  moduleId: string;
+  /** Lesson the learner was on when they last left the module. */
+  lessonId: string;
+  at: string;
+}
+
 interface ProgressData {
   /** lessonId → ISO timestamp it was first completed. */
   completed: Record<string, string>;
@@ -38,6 +46,11 @@ interface ProgressData {
   /** Every day (YYYY-MM-DD) the learner finished at least one lesson. */
   activeDays: string[];
   recent: RecentEntry[];
+  /**
+   * Modules in visit order, newest first. Resuming happens at module level —
+   * a learner thinks "I was doing Loops", not "I was on lesson m2-l2-3".
+   */
+  recentModules: RecentModuleEntry[];
 }
 
 const EMPTY: ProgressData = {
@@ -47,7 +60,26 @@ const EMPTY: ProgressData = {
   lastCompletedDay: null,
   activeDays: [],
   recent: [],
+  recentModules: [],
 };
+
+/**
+ * Saves written before module-level resume have no `recentModules`. Rather than
+ * showing an empty "continue" list to a learner mid-course, the module history
+ * is rebuilt from the lesson history, newest first.
+ */
+function migrate(data: ProgressData): ProgressData {
+  if (data.recentModules.length > 0 || data.recent.length === 0) return data;
+
+  const seen = new Set<string>();
+  const recentModules: RecentModuleEntry[] = [];
+  for (const entry of data.recent) {
+    if (seen.has(entry.moduleId)) continue;
+    seen.add(entry.moduleId);
+    recentModules.push({ moduleId: entry.moduleId, lessonId: entry.lessonId, at: entry.at });
+  }
+  return { ...data, recentModules };
+}
 
 // ── Date helpers (local time, day granularity) ──────────────────────────────
 
@@ -72,6 +104,28 @@ export interface DayActivity {
   isCompleted: boolean;
   isToday: boolean;
   isFuture: boolean;
+}
+
+/** A module the learner has already opened, resolved and ready to render. */
+export interface ModuleVisit {
+  module: CourseModule;
+  progress: ModuleProgress;
+  /** Where "Davom ettirish" lands: first unfinished lesson of the module. */
+  nextLesson: LessonLocation | undefined;
+  /** The lesson they were last on, for the "you left off here" line. */
+  lastLesson: LessonLocation | undefined;
+  at: string;
+}
+
+/** Flat counters, the input every achievement rule reads. */
+export interface ProgressStats {
+  completedLessons: number;
+  xp: number;
+  streak: number;
+  activeDays: number;
+  completedModules: number;
+  completedLevels: number;
+  trackPercent: number;
 }
 
 export interface ModuleProgress {
@@ -104,6 +158,10 @@ interface ProgressContextValue {
   nextLessonIn: (moduleId: string) => LessonLocation | undefined;
   /** Most recently opened lessons, newest first, already resolved. */
   recentLessons: LessonLocation[];
+  /** Most recently opened modules, newest first — what the dashboard resumes. */
+  recentModules: ModuleVisit[];
+  /** Counters used by the achievements engine. */
+  stats: ProgressStats;
   /** True when the learner has never opened or finished anything. */
   isFreshStart: boolean;
   /** What to nudge a brand-new learner toward. */
@@ -133,7 +191,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
         const parsed = JSON.parse(raw) as Partial<ProgressData>;
-        setData({ ...EMPTY, ...parsed });
+        setData(migrate({ ...EMPTY, ...parsed }));
       }
     } catch {
       // Corrupt or unavailable storage — start clean rather than crash.
@@ -242,6 +300,37 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({
     [data.recent]
   );
 
+  const recentModules = useMemo<ModuleVisit[]>(
+    () =>
+      (data.recentModules || [])
+        .map((entry): ModuleVisit | undefined => {
+          const module = getModule(entry.moduleId);
+          if (!module) return undefined;
+          const lessons = moduleLessons(module);
+          const completed = lessons.filter((l) => data.completed[l.lesson.id]).length;
+          return {
+            module,
+            progress: {
+              completed,
+              total: lessons.length,
+              percent:
+                lessons.length === 0
+                  ? 0
+                  : Math.round((completed / lessons.length) * 100),
+              isStarted: completed > 0,
+              isFinished: lessons.length > 0 && completed === lessons.length,
+            },
+            nextLesson:
+              lessons.find((l) => !data.completed[l.lesson.id]) ??
+              lessons[lessons.length - 1],
+            lastLesson: lessons.find((l) => l.lesson.id === entry.lessonId),
+            at: entry.at,
+          };
+        })
+        .filter((visit): visit is ModuleVisit => Boolean(visit)),
+    [data.recentModules, data.completed]
+  );
+
   /** A streak only counts while unbroken: finished today, or yesterday and still catchable. */
   const streak = useMemo(() => {
     if (!data.lastCompletedDay) return 0;
@@ -281,6 +370,45 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const isFreshStart = completedCount === 0 && data.recent.length === 0;
 
+  /**
+   * Counters the achievements engine reads. Kept here because this provider is
+   * the only place that knows what "finished" means for a level or a module.
+   */
+  const stats = useMemo<ProgressStats>(() => {
+    let completedModules = 0;
+    let completedLevels = 0;
+
+    for (const track of allTracks) {
+      for (const module of track.modules) {
+        const lessons = moduleLessons(module);
+        if (
+          lessons.length > 0 &&
+          lessons.every((l) => data.completed[l.lesson.id])
+        ) {
+          completedModules += 1;
+        }
+        for (const level of module.levels) {
+          if (
+            level.lessons.length > 0 &&
+            level.lessons.every((l) => data.completed[l.id])
+          ) {
+            completedLevels += 1;
+          }
+        }
+      }
+    }
+
+    return {
+      completedLessons: completedCount,
+      xp: data.xp,
+      streak,
+      activeDays: data.activeDays.length,
+      completedModules,
+      completedLevels,
+      trackPercent,
+    };
+  }, [data.completed, data.xp, data.activeDays.length, streak, trackPercent, completedCount]);
+
   const recommendedLesson = useMemo(
     () => nextLessonIn(foundationsTrack.modules[0].id),
     [nextLessonIn]
@@ -298,11 +426,25 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({
     return [entry, ...withoutDupe].slice(0, RECENT_LIMIT);
   };
 
+  const pushRecentModule = (
+    list: RecentModuleEntry[] = [],
+    moduleId: string,
+    lessonId: string
+  ): RecentModuleEntry[] => {
+    const entry: RecentModuleEntry = { moduleId, lessonId, at: new Date().toISOString() };
+    const withoutDupe = (list || []).filter((r) => r.moduleId !== moduleId);
+    return [entry, ...withoutDupe].slice(0, RECENT_LIMIT);
+  };
+
   const visitLesson = useCallback(
     (moduleId: string, lessonId: string) => {
       if (!hydratedRef.current) return;
       setData((prev) => {
-        const next = { ...prev, recent: pushRecent(prev.recent, moduleId, lessonId) };
+        const next: ProgressData = {
+          ...prev,
+          recent: pushRecent(prev.recent, moduleId, lessonId),
+          recentModules: pushRecentModule(prev.recentModules, moduleId, lessonId),
+        };
         writeThrough(next);
         return next;
       });
@@ -341,6 +483,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({
             ? prev.activeDays
             : [...prev.activeDays, today],
           recent: pushRecent(prev.recent, moduleId, lessonId),
+          recentModules: pushRecentModule(prev.recentModules, moduleId, lessonId),
         };
 
         writeThrough(next);
@@ -370,6 +513,8 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({
     trackPercent,
     nextLessonIn,
     recentLessons,
+    recentModules,
+    stats,
     isFreshStart,
     recommendedLesson,
     resetProgress,
@@ -388,6 +533,8 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({
     trackPercent,
     nextLessonIn,
     recentLessons,
+    recentModules,
+    stats,
     isFreshStart,
     recommendedLesson,
     resetProgress,

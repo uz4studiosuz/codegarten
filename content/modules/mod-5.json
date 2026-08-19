@@ -8,6 +8,9 @@
   "tagline": "Ma'lumot qayerda yashaydi",
   "imageSrc": "/images/loops.png",
   "accent": "#3B82F6",
+  "topics": [
+    "variables"
+  ],
   "levels": [
     {
       "id": "m5-l1",

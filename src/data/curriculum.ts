@@ -10,6 +10,7 @@
  */
 
 import generated from "./curriculum.generated.json";
+import type { GameMatchInput } from "@/games/resolve";
 
 export type LessonKind = "concept" | "exercise" | "challenge" | "review";
 
@@ -42,6 +43,11 @@ export interface CourseModule {
   tagline: string;
   imageSrc: string;
   accent: string;
+  /**
+   * What this module teaches, in the vocabulary of src/games/topics.ts. Used to
+   * end each lesson with a game that practises the very idea it taught.
+   */
+  topics?: string[];
   levels: Level[];
 }
 
@@ -134,11 +140,18 @@ export function moduleStats(module: CourseModule) {
 }
 
 /**
- * Which interactive game a lesson opens. Authored content wins; until a lesson
- * names one, lessons rotate through the built-in games so every node is playable.
+ * Which interactive game a lesson opens. Authored `gameId` wins; otherwise the
+ * lesson's own words and its module's topics decide, so a loops lesson ends in a
+ * loops puzzle. See src/games/resolve.ts for the matching rules.
  */
-const GAME_ROTATION = ["shape-color", "robot-grid"];
-
-export function gameIdFor(lesson: Lesson, moduleIndex: number): string {
-  return lesson.gameId ?? GAME_ROTATION[moduleIndex % GAME_ROTATION.length];
+export function gameMatchInputFor(location: LessonLocation): GameMatchInput {
+  const { lesson, level, module } = location;
+  return {
+    gameId: lesson.gameId,
+    kind: lesson.kind,
+    lessonTitle: lesson.title,
+    levelTitle: level.title,
+    moduleTopics: module.topics,
+    seed: lesson.id,
+  };
 }

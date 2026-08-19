@@ -1,0 +1,216 @@
+"use client";
+
+import React, { useMemo, useState } from "react";
+import { IconMinus, IconPlus, IconSearch } from "@tabler/icons-react";
+import type { GameProps } from "../types";
+import { GameBoard, GameNote, GameShell, useGameCheck } from "../shared";
+import { pickVariant } from "../shared/seed";
+
+/**
+ * Count the steps
+ * ---------------
+ * Efficiency only becomes real when a learner counts the work themselves. They
+ * predict how many checks a strategy needs on a concrete list; after answering,
+ * the board replays the exact cells the algorithm looked at, in order, so the
+ * number stops being abstract.
+ */
+
+type Strategy = "linear" | "binary";
+
+interface Puzzle {
+  strategy: Strategy;
+  items: number[];
+  target: number;
+  hint: string;
+  why: string;
+}
+
+const PUZZLES: Puzzle[] = [
+  {
+    strategy: "linear",
+    items: [3, 8, 12, 17, 21, 30, 41, 55],
+    target: 21,
+    hint: "Chiziqli qidiruv birinchi elementdan boshlab birma-bir tekshiradi.",
+    why:
+      "Chiziqli qidiruv 5-o'rindagi elementga yetish uchun 5 marta tekshirdi. Ro'yxat 2 barobar uzaysa, qadam ham 2 barobar oshadi — bu O(N).",
+  },
+  {
+    strategy: "binary",
+    items: [3, 8, 12, 17, 21, 30, 41, 55],
+    target: 21,
+    hint: "Binary search har qadamda ro'yxatning o'rtasiga qaraydi va yarmini tashlab yuboradi.",
+    why:
+      "Har tekshiruv qolgan variantlar sonini yarmiga qisqartirdi: 8 → 4 → 2 → 1. Shuning uchun qadam soni O(log N).",
+  },
+  {
+    strategy: "binary",
+    items: [1, 4, 6, 9, 13, 18, 22, 27, 31, 40, 44, 51, 58, 60, 71, 88],
+    target: 58,
+    hint: "16 element bor. Har qadam nechta variantni yo'q qiladi?",
+    why:
+      "16 elementli ro'yxatda binary search 4 qadamdan oshmaydi: 16 → 8 → 4 → 2 → 1. Chiziqli qidiruvda esa 13 qadam ketardi.",
+  },
+  {
+    strategy: "linear",
+    items: [5, 9, 14, 20, 26, 33],
+    target: 33,
+    hint: "Eng yomon holat — kerakli element eng oxirida turganda.",
+    why:
+      "Element oxirida bo'lsa, chiziqli qidiruv butun ro'yxatni ko'rib chiqadi — 6 elementga 6 qadam. Bu O(N) ning eng yomon holati.",
+  },
+];
+
+/** The cells the strategy actually inspects, in order. */
+function visitOrder(puzzle: Puzzle): number[] {
+  const visits: number[] = [];
+
+  if (puzzle.strategy === "linear") {
+    for (let i = 0; i < puzzle.items.length; i++) {
+      visits.push(i);
+      if (puzzle.items[i] === puzzle.target) break;
+    }
+    return visits;
+  }
+
+  let low = 0;
+  let high = puzzle.items.length - 1;
+  while (low <= high) {
+    const mid = Math.floor((low + high) / 2);
+    visits.push(mid);
+    if (puzzle.items[mid] === puzzle.target) break;
+    if (puzzle.items[mid] < puzzle.target) low = mid + 1;
+    else high = mid - 1;
+  }
+  return visits;
+}
+
+const STRATEGY_LABELS: Record<Strategy, string> = {
+  linear: "Chiziqli qidiruv",
+  binary: "Binary search",
+};
+
+export function AlgoRaceGame(props: GameProps) {
+  /**
+   * A lesson about binary search must not be handed the linear-search puzzle, so
+   * the lesson's own title picks the strategy when it names one.
+   */
+  const puzzle = useMemo(() => {
+    const context = props.context ?? "";
+    const wanted: Strategy | undefined = /binary|ikkil/.test(context)
+      ? "binary"
+      : /chiziqli|linear/.test(context)
+      ? "linear"
+      : undefined;
+    return pickVariant(PUZZLES, props.seed, wanted ? (p) => p.strategy === wanted : undefined);
+  }, [props.seed, props.context]);
+  const visits = useMemo(() => visitOrder(puzzle), [puzzle]);
+
+  const [guess, setGuess] = useState(1);
+  const [touched, setTouched] = useState(false);
+
+  const { status, reset } = useGameCheck(props, {
+    ready: touched,
+    check: () => guess === visits.length,
+  });
+
+  const bump = (delta: number) => {
+    reset();
+    setTouched(true);
+    setGuess((prev) => Math.max(1, Math.min(puzzle.items.length, prev + delta)));
+  };
+
+  const revealed = status !== "idle";
+  const visitIndexOf = (index: number) => visits.indexOf(index);
+
+  return (
+    <GameShell
+      task={STRATEGY_LABELS[puzzle.strategy] + " nechta tekshiruvda " + puzzle.target + " ni topadi?"}
+      hint={puzzle.hint}
+      status={status}
+      successText={puzzle.why}
+      failText={
+        guess < visits.length
+          ? "Bundan ko'proq tekshiruv kerak bo'ldi. Pastda algoritm qaysi kataklarga qaraganini ko'rasiz."
+          : "Algoritm bundan kamroq tekshiruvda topdi. Qaralgan kataklar tartibiga e'tibor bering."
+      }
+      footer={
+        revealed ? (
+          <GameNote>
+            Algoritm {visits.length} marta tekshirdi. Kataklardagi raqamlar — tekshiruv
+            tartibi.
+          </GameNote>
+        ) : undefined
+      }
+    >
+      <GameBoard label={"Ro'yxat (" + puzzle.items.length + " element)"}>
+        <div className="flex flex-wrap gap-2">
+          {puzzle.items.map((value, index) => {
+            const order = revealed ? visitIndexOf(index) : -1;
+            const isVisited = order !== -1;
+            const isTarget = value === puzzle.target;
+
+            return (
+              <div key={index} className="relative">
+                <div
+                  className={`w-11 h-11 rounded-[10px] border-2 flex items-center justify-center font-mono text-[13.5px] font-bold transition-colors ${
+                    revealed && isTarget
+                      ? "border-[#26B54F] bg-[#26B54F]/15 text-[#177F37] dark:text-[#4ADE80]"
+                      : isVisited
+                      ? "border-[#7C5CE0] bg-[#7C5CE0]/10 text-[#7C5CE0] dark:text-[#c4b5fd]"
+                      : "border-gray-200 dark:border-[#2b2b31] bg-white dark:bg-[#101013] text-gray-500 dark:text-[#8b8b93]"
+                  }`}
+                >
+                  {value}
+                </div>
+                {isVisited && (
+                  <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-[#7C5CE0] text-white text-[10.5px] font-bold flex items-center justify-center">
+                    {order + 1}
+                  </span>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="mt-4 flex items-center gap-2 text-[13px] text-gray-500 dark:text-[#8b8b93]">
+          <IconSearch size={15} className="text-[#E0A13C]" />
+          Qidirilayotgan qiymat:{" "}
+          <span className="font-mono font-bold text-gray-800 dark:text-white">
+            {puzzle.target}
+          </span>
+        </div>
+      </GameBoard>
+
+      <div className="mt-3">
+        <GameBoard label="Sizning taxminingiz">
+          <div className="flex items-center justify-center gap-3">
+            <button
+              type="button"
+              onClick={() => bump(-1)}
+              aria-label="Kamaytirish"
+              className="w-9 h-9 rounded-full border-2 border-gray-200 dark:border-[#2b2b31] flex items-center justify-center hover:border-gray-300 dark:hover:border-[#3d3d45] transition-colors cursor-pointer"
+            >
+              <IconMinus size={15} stroke={2.6} />
+            </button>
+            <div className="flex flex-col items-center">
+              <span className="font-mono text-[28px] font-extrabold leading-none text-gray-900 dark:text-white">
+                {guess}
+              </span>
+              <span className="mt-1 text-[11px] font-mono uppercase tracking-wider text-gray-400 dark:text-[#6d6d74]">
+                tekshiruv
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => bump(1)}
+              aria-label="Oshirish"
+              className="w-9 h-9 rounded-full border-2 border-gray-200 dark:border-[#2b2b31] flex items-center justify-center hover:border-gray-300 dark:hover:border-[#3d3d45] transition-colors cursor-pointer"
+            >
+              <IconPlus size={15} stroke={2.6} />
+            </button>
+          </div>
+        </GameBoard>
+      </div>
+    </GameShell>
+  );
+}

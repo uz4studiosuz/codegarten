@@ -2,7 +2,8 @@
 
 import React, { useCallback, useEffect } from "react";
 import { LessonRunner } from "./LessonRunner";
-import { getGame } from "@/games/registry";
+import { resolveGame } from "@/games/resolve";
+import type { GameMatchInput } from "@/games/resolve";
 import { useProgress } from "@/context/ProgressContext";
 import type { LessonContent } from "@/types/lessonContent";
 
@@ -15,8 +16,12 @@ interface LessonScreenProps {
   xpReward: number;
   /** Loaded on the server and handed over ready to render. */
   content: LessonContent;
-  /** Which interactive game to finish with, if any. */
-  gameId?: string;
+  /**
+   * Everything needed to pick the interactive game that ends this lesson.
+   * Resolved here rather than on the server so the game components stay out of
+   * the server graph.
+   */
+  gameMatch: GameMatchInput;
   nextHref: string;
   nextLabel: string;
 }
@@ -32,7 +37,7 @@ export function LessonScreen({
   levelTitle,
   xpReward,
   content,
-  gameId,
+  gameMatch,
   nextHref,
   nextLabel,
 }: LessonScreenProps) {
@@ -47,7 +52,7 @@ export function LessonScreen({
     completeLesson(moduleId, lessonId);
   }, [completeLesson, moduleId, lessonId]);
 
-  const game = getGame(gameId);
+  const game = resolveGame(gameMatch);
 
   return (
     <LessonRunner
