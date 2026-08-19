@@ -51,9 +51,9 @@
     {
       "question": "Sikl chegarasida 4 emas ballar.uzunlik yozishning foydasi nima?",
       "options": [
-        "Tezroq ishlaydi",
+        "Dastur sezilarli darajada tezroq ishlaydi",
         "Ro'yxat o'zgarsa ham kod ishlashda davom etadi",
-        "Kod qisqaradi"
+        "Kod qatorlari soni bir necha barobar qisqarib ketadi"
       ],
       "correctIndex": 1,
       "explanation": "Uzunlikni qattiq yozish ro'yxat o'zgarganda xatoga olib keladi."

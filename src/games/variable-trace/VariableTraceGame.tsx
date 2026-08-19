@@ -3,16 +3,17 @@
 import React, { useMemo, useState } from "react";
 import { IconMinus, IconPlus } from "@tabler/icons-react";
 import type { GameProps } from "../types";
-import { GameBoard, GameNote, GameShell, useGameCheck } from "../shared";
-import { pickVariant } from "../shared/seed";
+import { GameBoard, GameNote, GameShell, pickVariant, useGameCheck } from "../shared";
 
 /**
  * Trace the boxes
  * ---------------
  * A variable is a box whose old value is gone the moment a new one goes in.
- * The learner predicts the final contents before running anything; only after
- * checking does the board reveal the value of every box after every line, so a
- * wrong prediction turns into a readable explanation rather than a red cross.
+ * The learner predicts the final contents before running anything.
+ *
+ * Only a correct answer opens the line-by-line trace. Showing it after a wrong
+ * guess — and printing the right number under the box, as the first version did —
+ * handed over the answer and left nothing to think about on the second attempt.
  */
 
 type Kind = "set" | "copy" | "add" | "sub" | "mul";
@@ -81,6 +82,55 @@ const PUZZLES: Puzzle[] = [
     why:
       "vaqt a ning qiymatini saqlab turdi, shuning uchun a va b muvaffaqiyatli almashdi. Vaqtinchalik quti bo'lmasa, eski qiymat yo'qolardi.",
   },
+  {
+    hint: "Ayirish ham qutining eski qiymatidan boshlanadi.",
+    vars: ["ball", "jarima"],
+    program: [
+      { target: "ball", kind: "set", value: 20 },
+      { target: "jarima", kind: "set", value: 3 },
+      { target: "ball", kind: "sub", value: "jarima" },
+      { target: "ball", kind: "sub", value: "jarima" },
+    ],
+    why:
+      "Bitta jarima qiymati ikki marta ayirildi: 20 − 3 − 3. jarima qutisining o'zi esa o'zgarmadi.",
+  },
+  {
+    hint: "Ikki quti bir xil qiymat bilan boshlanadi — keyin yo'llari ajraladi.",
+    vars: ["x", "y"],
+    program: [
+      { target: "x", kind: "set", value: 6 },
+      { target: "y", kind: "copy", value: "x" },
+      { target: "x", kind: "mul", value: 2 },
+      { target: "y", kind: "add", value: 1 },
+    ],
+    why:
+      "y = x nusxa oldi, keyin ikkisi mustaqil o'zgardi. Nusxa olish — bog'lanish emas.",
+  },
+  {
+    hint: "Uchta quti, ammo faqat bittasi oxirida o'zgaradi.",
+    vars: ["a", "b", "c"],
+    program: [
+      { target: "a", kind: "set", value: 2 },
+      { target: "b", kind: "set", value: 3 },
+      { target: "c", kind: "copy", value: "b" },
+      { target: "c", kind: "mul", value: "a" },
+      { target: "a", kind: "add", value: 1 },
+    ],
+    why:
+      "c = b * a qatori o'sha paytdagi qiymatlarni oldi (3 * 2). Keyin a ning o'zgarishi c ga yetib bormadi.",
+  },
+  {
+    hint: "Qiymat bir necha marta almashadi — faqat oxirgisi qoladi.",
+    vars: ["n"],
+    program: [
+      { target: "n", kind: "set", value: 10 },
+      { target: "n", kind: "set", value: 4 },
+      { target: "n", kind: "add", value: 6 },
+      { target: "n", kind: "sub", value: 1 },
+    ],
+    why:
+      "Ikkinchi qator 10 ni butunlay o'chirdi. Qutida faqat oxirgi solingan qiymat ustidagi hisob qoldi: 4 + 6 − 1.",
+  },
 ];
 
 const OPS: Record<Kind, (current: number, operand: number) => number> = {
@@ -91,11 +141,19 @@ const OPS: Record<Kind, (current: number, operand: number) => number> = {
   mul: (current, operand) => current * operand,
 };
 
+const SYMBOLS: Record<Kind, string> = {
+  set: "=",
+  copy: "=",
+  add: "+",
+  sub: "-",
+  mul: "*",
+};
+
 function renderStmt(stmt: Stmt): string {
   const right =
     stmt.kind === "set" || stmt.kind === "copy"
       ? String(stmt.value)
-      : `${stmt.target} ${stmt.kind === "add" ? "+" : stmt.kind === "sub" ? "-" : "*"} ${stmt.value}`;
+      : `${stmt.target} ${SYMBOLS[stmt.kind]} ${stmt.value}`;
   return `${stmt.target} = ${right}`;
 }
 
@@ -114,7 +172,10 @@ function trace(puzzle: Puzzle): Record<string, number>[] {
 }
 
 export function VariableTraceGame(props: GameProps) {
-  const puzzle = useMemo(() => pickVariant(PUZZLES, props.seed), [props.seed]);
+  const puzzle = useMemo(
+    () => pickVariant(PUZZLES, props.seed, { ordinal: props.variant }),
+    [props.seed, props.variant]
+  );
   const frames = useMemo(() => trace(puzzle), [puzzle]);
   const final = frames[frames.length - 1];
 
@@ -131,11 +192,15 @@ export function VariableTraceGame(props: GameProps) {
   const bump = (name: string, delta: number) => {
     reset();
     setTouched(true);
-    setGuess((prev) => ({ ...prev, [name]: Math.max(-20, Math.min(99, prev[name] + delta)) }));
+    setGuess((prev) => ({
+      ...prev,
+      [name]: Math.max(-40, Math.min(199, prev[name] + delta)),
+    }));
   };
 
   const wrongVars = puzzle.vars.filter((name) => guess[name] !== final[name]);
-  const revealed = status !== "idle";
+  /** The trace is a reward for a correct prediction, not a consolation prize. */
+  const solved = status === "success";
 
   return (
     <GameShell
@@ -144,15 +209,15 @@ export function VariableTraceGame(props: GameProps) {
       status={status}
       successText={puzzle.why}
       failText={
-        "Hozircha " +
-        wrongVars.join(", ") +
-        " qutisi to'g'ri emas. Pastdagi jadvalda har qatordan keyingi qiymatlarni kuzatib chiqing."
+        wrongVars.length === puzzle.vars.length
+          ? "Hali to'g'ri emas. Birinchi qatordan boshlab, har qatordan keyin quti ichida nima turganini qog'ozga yozib chiqing."
+          : `${wrongVars.join(", ")} qutisi to'g'ri emas — shu quti qatnashgan qatorlarni qayta o'qing.`
       }
       footer={
-        revealed ? undefined : (
+        solved ? undefined : (
           <GameNote>
             Har qator bajarilgach, quti ichidagi qiymat almashadi. Oxirgi holatni oldindan
-            aytib bering — keyin dastur qatorma-qator ko&apos;rsatiladi.
+            aytib bering — to&apos;g&apos;ri javobdan keyin dastur qatorma-qator ochiladi.
           </GameNote>
         )
       }
@@ -171,8 +236,8 @@ export function VariableTraceGame(props: GameProps) {
                 {renderStmt(stmt)}
               </span>
 
-              {/* Values appear only after the learner has committed to an answer */}
-              {revealed && (
+              {/* The trace opens only once the prediction was right */}
+              {solved && (
                 <span className="shrink-0 font-mono text-[12px] text-gray-500 dark:text-[#8b8b93]">
                   {puzzle.vars.map((name) => `${name}=${frames[i][name]}`).join("  ")}
                 </span>
@@ -186,8 +251,8 @@ export function VariableTraceGame(props: GameProps) {
         <GameBoard label="Sizning javobingiz">
           <div className="flex flex-wrap gap-3">
             {puzzle.vars.map((name) => {
-              const ok = revealed && guess[name] === final[name];
-              const bad = revealed && guess[name] !== final[name];
+              const ok = solved;
+              const bad = status === "fail" && guess[name] !== final[name];
 
               return (
                 <div
@@ -208,29 +273,41 @@ export function VariableTraceGame(props: GameProps) {
                     <button
                       type="button"
                       onClick={() => bump(name, -1)}
-                      aria-label={name + " qiymatini kamaytirish"}
+                      aria-label={`${name} qiymatini kamaytirish`}
                       className="w-7 h-7 rounded-full border-2 border-gray-200 dark:border-[#2b2b31] flex items-center justify-center hover:border-gray-300 dark:hover:border-[#3d3d45] transition-colors cursor-pointer"
                     >
                       <IconMinus size={12} stroke={2.8} />
                     </button>
-                    <span className="w-8 text-center font-mono text-[17px] font-bold text-gray-900 dark:text-white">
+                    <span className="w-9 text-center font-mono text-[17px] font-bold text-gray-900 dark:text-white">
                       {guess[name]}
                     </span>
                     <button
                       type="button"
                       onClick={() => bump(name, 1)}
-                      aria-label={name + " qiymatini oshirish"}
+                      aria-label={`${name} qiymatini oshirish`}
                       className="w-7 h-7 rounded-full border-2 border-gray-200 dark:border-[#2b2b31] flex items-center justify-center hover:border-gray-300 dark:hover:border-[#3d3d45] transition-colors cursor-pointer"
                     >
                       <IconPlus size={12} stroke={2.8} />
                     </button>
                   </div>
 
-                  {bad && (
-                    <span className="font-mono text-[11.5px] text-amber-600 dark:text-amber-400">
-                      to&apos;g&apos;risi: {final[name]}
-                    </span>
-                  )}
+                  {/* Bigger jumps, so a large answer is not forty taps away */}
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => bump(name, -10)}
+                      className="rounded-[8px] border border-gray-200 dark:border-[#2b2b31] px-2 py-0.5 font-mono text-[11px] text-gray-500 dark:text-[#8b8b93] hover:border-gray-300 dark:hover:border-[#3d3d45] transition-colors cursor-pointer"
+                    >
+                      −10
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => bump(name, 10)}
+                      className="rounded-[8px] border border-gray-200 dark:border-[#2b2b31] px-2 py-0.5 font-mono text-[11px] text-gray-500 dark:text-[#8b8b93] hover:border-gray-300 dark:hover:border-[#3d3d45] transition-colors cursor-pointer"
+                    >
+                      +10
+                    </button>
+                  </div>
                 </div>
               );
             })}

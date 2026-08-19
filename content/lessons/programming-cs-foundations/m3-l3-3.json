@@ -47,9 +47,9 @@
     {
       "question": "yarim(kvadrat(4)) qanday hisoblanadi?",
       "options": [
-        "Avval yarim, keyin kvadrat",
+        "Avval yarim(4)=2, keyin kvadrat(2)=4 bo'ladi",
         "Avval kvadrat(4)=16, keyin yarim(16)=8",
-        "Ikkisi bir vaqtda"
+        "Ikki funksiya bir vaqtda hisoblanadi"
       ],
       "correctIndex": 1,
       "explanation": "Eng ichkaridagi chaqiruv birinchi bajariladi, natijasi tashqi funksiyaga uzatiladi."

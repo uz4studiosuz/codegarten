@@ -28,7 +28,7 @@
     {
       "question": "i < 3 va i <= 3 shartlari orasidagi farq nima?",
       "options": [
-        "Farq yo'q",
+        "Hech qanday farq yo'q",
         "Bitta aylanish farqi",
         "Uch aylanish farqi"
       ],
@@ -38,9 +38,9 @@
     {
       "question": "Off-by-one error qanday xato?",
       "options": [
-        "Sintaksis xatosi",
+        "Kod yozilishidagi oddiy sintaksis xatosi",
         "Sikl bir marta ko'p yoki kam aylanishi",
-        "Kompyuter xatosi"
+        "Kompyuter xotirasidagi nosozlik"
       ],
       "correctIndex": 1,
       "explanation": "Bu chegara xatosi: sikl kutilganidan bir marta ortiq yoki kam bajariladi."

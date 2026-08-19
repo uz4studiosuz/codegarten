@@ -53,9 +53,9 @@
     {
       "question": "Funksiyaga juda ko'p parametr qo'shishning kamchiligi nima?",
       "options": [
-        "Sekin ishlaydi",
+        "Funksiya sezilarli darajada sekinroq ishlab qoladi",
         "Funksiyani ishlatish va tushunish qiyinlashadi",
-        "Xotira to'lib qoladi"
+        "Kompyuter xotirasi tezda to'lib qoladi"
       ],
       "correctIndex": 1,
       "explanation": "Ko'p parametr chaqiruvni murakkablashtiradi va xato ehtimolini oshiradi."

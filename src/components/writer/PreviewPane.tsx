@@ -15,6 +15,7 @@ import { resolveGame } from "@/games/resolve";
 import { getGame } from "@/games/registry";
 import type { CourseModule } from "@/data/curriculum";
 import { DraftModule, KIND_LABELS } from "@/lib/writerDraft";
+import { hasReadableBody } from "@/lib/lessonSteps";
 import type { Selection } from "./selection";
 
 /**
@@ -386,10 +387,17 @@ function LessonStage({
     return <Placeholder text="Bu dars o'chirilgan — boshqasini tanlang." />;
   }
 
-  const hasBody = lesson.content.sections.some(
-    (s) => s.heading.trim() || s.body.some((b) => b.trim())
-  );
-  if (!hasBody) {
+  /*
+   * Stands in for src/games/ordinal.ts, which numbers lessons across the whole
+   * project: a draft is not in the curriculum yet, so its own position decides
+   * which puzzle the preview shows. Two neighbouring lessons still differ.
+   */
+  const globalLessonIndex =
+    draft.levels
+      .slice(0, selection.levelIndex)
+      .reduce((sum, l) => sum + l.lessons.length, 0) + selection.lessonIndex;
+
+  if (!hasReadableBody(lesson.content)) {
     return (
       <Placeholder text="Dars matni hali bo'sh. Maqsad va kamida bitta bo'lim yozilgach, dars shu yerda ishga tushadi." />
     );
@@ -431,6 +439,7 @@ function LessonStage({
           levelTitle={`Level ${selection.levelIndex + 1} - ${level.title || ""}`}
           content={lesson.content}
           game={game}
+          gameVariant={globalLessonIndex}
           xpReward={lesson.xp}
           exitHref="#"
           nextHref="#"

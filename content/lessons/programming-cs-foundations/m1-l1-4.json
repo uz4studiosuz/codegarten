@@ -50,7 +50,7 @@
     {
       "question": "Kod ishlaydi, lekin natija noto'g'ri. Birinchi navbatda nima qilish kerak?",
       "options": [
-        "Kodni butunlay o'chirib, boshidan yozish",
+        "Kodni butunlay o'chirib tashlab, boshidan yozib chiqish",
         "Kutilgan natijani aniqlab, kodni qator-qator kuzatish",
         "Tasodifiy qatorlarni o'zgartirib ko'rish"
       ],

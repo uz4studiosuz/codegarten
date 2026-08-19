@@ -46,9 +46,9 @@
     {
       "question": "Robot o'ngga qaragan, keyin bir marta buriladi. \"oldinga\" endi qayoqqa harakat qiladi?",
       "options": [
-        "Yana o'ngga",
+        "Burilishdan oldingi o'ng yo'nalishga",
         "Burilgandan keyingi yangi yo'nalishga",
-        "Boshlang'ich yo'nalishga"
+        "Dastur boshidagi boshlang'ich yo'nalishga"
       ],
       "correctIndex": 1,
       "explanation": "\"oldinga\" har doim robot ayni damda qaragan yo'nalishga harakat qiladi."

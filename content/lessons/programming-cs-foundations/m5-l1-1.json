@@ -48,9 +48,9 @@
     {
       "question": "O'zgaruvchi nima uchun kodni tushunarli qiladi?",
       "options": [
-        "Kodni qisqartiradi",
+        "Kod qatorlarini ancha qisqartirib beradi",
         "Nom qiymatning ma'nosini aytib turadi",
-        "Xotirani tozalaydi"
+        "Keraksiz xotirani tozalab turadi"
       ],
       "correctIndex": 1,
       "explanation": "soliq_foizi kabi mazmunli nom 0.2 sonidan ancha tushunarli."

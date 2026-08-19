@@ -49,9 +49,9 @@
     {
       "question": "Murakkab shartda qavs qo'yishning foydasi nima?",
       "options": [
-        "Kod qisqaradi",
+        "Kod qatorlari sezilarli qisqaradi",
         "Tekshirish tartibi aniq bo'ladi",
-        "Tezroq ishlaydi"
+        "Dastur tezroq ishlaydigan bo'ladi"
       ],
       "correctIndex": 1,
       "explanation": "Qavs amallarning bajarilish tartibini aniq belgilaydi va noaniqlikni yo'qotadi."

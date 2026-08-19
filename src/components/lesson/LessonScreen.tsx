@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { LessonRunner } from "./LessonRunner";
 import { resolveGame } from "@/games/resolve";
 import type { GameMatchInput } from "@/games/resolve";
+import { gameVariantOrdinal } from "@/games/ordinal";
 import { useProgress } from "@/context/ProgressContext";
 import type { LessonContent } from "@/types/lessonContent";
 
@@ -53,6 +54,11 @@ export function LessonScreen({
   }, [completeLesson, moduleId, lessonId]);
 
   const game = resolveGame(gameMatch);
+  /**
+   * Which of the game's puzzles this lesson gets. Without it, two lessons sharing
+   * a game could pose the same task while other puzzles were never seen.
+   */
+  const gameVariant = useMemo(() => gameVariantOrdinal(lessonId), [lessonId]);
 
   return (
     <LessonRunner
@@ -62,6 +68,7 @@ export function LessonScreen({
       levelTitle={levelTitle}
       content={content}
       game={game}
+      gameVariant={gameVariant}
       xpReward={xpReward}
       exitHref={`/courses/${moduleId}`}
       nextHref={nextHref}

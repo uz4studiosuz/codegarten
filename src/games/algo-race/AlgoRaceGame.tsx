@@ -3,8 +3,7 @@
 import React, { useMemo, useState } from "react";
 import { IconMinus, IconPlus, IconSearch } from "@tabler/icons-react";
 import type { GameProps } from "../types";
-import { GameBoard, GameNote, GameShell, useGameCheck } from "../shared";
-import { pickVariant } from "../shared/seed";
+import { GameBoard, GameNote, GameShell, pickVariant, useGameCheck } from "../shared";
 
 /**
  * Count the steps
@@ -58,6 +57,38 @@ const PUZZLES: Puzzle[] = [
     why:
       "Element oxirida bo'lsa, chiziqli qidiruv butun ro'yxatni ko'rib chiqadi — 6 elementga 6 qadam. Bu O(N) ning eng yomon holati.",
   },
+  {
+    strategy: "linear",
+    items: [2, 6, 11, 15, 19, 24, 28],
+    target: 6,
+    hint: "Eng yaxshi holat — kerakli element boshida turganda.",
+    why:
+      "Element boshida bo'lsa, chiziqli qidiruv 2 qadamda topadi. O(N) — bu eng yomon holat bahosi, har doimgi qadam soni emas.",
+  },
+  {
+    strategy: "binary",
+    items: [3, 7, 10, 14, 18, 23, 29, 35],
+    target: 14,
+    hint: "8 element bor. O'rtadagi katak birinchi tekshiriladi.",
+    why:
+      "Birinchi tekshiruv o'rtaga tushdi va darrov topdi. Binary search ba'zan omadli bo'ladi, lekin kafolati 3 qadam: 8 → 4 → 2 → 1.",
+  },
+  {
+    strategy: "binary",
+    items: [1, 2, 5, 8, 12, 16, 20, 25, 30, 36, 42, 49],
+    target: 1,
+    hint: "Kerakli element eng chapda — binary search esa o'rtadan boshlaydi.",
+    why:
+      "Chetdagi elementga yetish uchun binary search har qadamda yarmini tashlab bordi. Chetda turishi ham qadam sonini ko'paytirmaydi — u faqat log N ga bog'liq.",
+  },
+  {
+    strategy: "linear",
+    items: [8, 13, 17, 22],
+    target: 17,
+    hint: "Qisqa ro'yxatda ham qadamlarni sanash mumkin.",
+    why:
+      "Qisqa ro'yxatda chiziqli qidiruv ham tez ishlaydi — 4 elementga ko'pi bilan 4 qadam. Farq ro'yxat uzayganda seziladi.",
+  },
 ];
 
 /** The cells the strategy actually inspects, in order. */
@@ -101,8 +132,11 @@ export function AlgoRaceGame(props: GameProps) {
       : /chiziqli|linear/.test(context)
       ? "linear"
       : undefined;
-    return pickVariant(PUZZLES, props.seed, wanted ? (p) => p.strategy === wanted : undefined);
-  }, [props.seed, props.context]);
+    return pickVariant(PUZZLES, props.seed, {
+      prefer: wanted ? (p) => p.strategy === wanted : undefined,
+      ordinal: props.variant,
+    });
+  }, [props.seed, props.context, props.variant]);
   const visits = useMemo(() => visitOrder(puzzle), [puzzle]);
 
   const [guess, setGuess] = useState(1);
@@ -119,7 +153,10 @@ export function AlgoRaceGame(props: GameProps) {
     setGuess((prev) => Math.max(1, Math.min(puzzle.items.length, prev + delta)));
   };
 
-  const revealed = status !== "idle";
+  // The replay is what makes the number concrete, so it is the reward for
+  // getting the number right — showing it after a wrong guess would hand over
+  // the answer and leave nothing to work out on the next attempt.
+  const revealed = status === "success";
   const visitIndexOf = (index: number) => visits.indexOf(index);
 
   return (
@@ -130,8 +167,8 @@ export function AlgoRaceGame(props: GameProps) {
       successText={puzzle.why}
       failText={
         guess < visits.length
-          ? "Bundan ko'proq tekshiruv kerak bo'ldi. Pastda algoritm qaysi kataklarga qaraganini ko'rasiz."
-          : "Algoritm bundan kamroq tekshiruvda topdi. Qaralgan kataklar tartibiga e'tibor bering."
+          ? "Bundan ko'proq tekshiruv kerak bo'ldi. Algoritm qaysi katakdan boshlashini o'ylab, qadamlarni barmoq bilan sanab chiqing."
+          : "Algoritm bundan kamroq tekshiruvda topdi. Har qadam nechta variantni chetga surib qo'yishini hisobga oling."
       }
       footer={
         revealed ? (

@@ -44,9 +44,9 @@
     {
       "question": "Control flow nima?",
       "options": [
-        "Kod hajmi",
+        "Kod hajmi va qator soni",
         "Kodning bajarilish yo'li",
-        "Xotira miqdori"
+        "Ishlatilgan xotira miqdori"
       ],
       "correctIndex": 1,
       "explanation": "Control flow — qaysi qatorlar qanday tartibda bajarilishini bildiradi."
@@ -54,7 +54,7 @@
     {
       "question": "AND amali qachon rost qiymat beradi?",
       "options": [
-        "Kamida bittasi rost bo'lsa",
+        "Kamida bittasi rost bo'lgan taqdirda",
         "Barcha shartlar rost bo'lsa",
         "Hech biri rost bo'lmasa"
       ],

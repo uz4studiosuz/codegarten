@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "content:check": "node scripts/validate-lesson-content.mjs",
+    "writer:check": "node scripts/check-writer-export.mjs",
     "predev": "node scripts/build-curriculum.mjs",
     "prebuild": "node scripts/build-curriculum.mjs",
     "curriculum:build": "node scripts/build-curriculum.mjs"

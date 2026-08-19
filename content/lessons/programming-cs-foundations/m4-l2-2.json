@@ -49,9 +49,9 @@
     {
       "question": "if bloki shartida false chiqsa nima bo'ladi?",
       "options": [
-        "Xato yuzaga keladi",
+        "Xato yuzaga keladi va dastur butunlay to'xtaydi",
         "Blok o'tkazib yuboriladi, dastur davom etadi",
-        "Dastur to'xtaydi"
+        "Blok bir marta baribir bajarib yuboriladi"
       ],
       "correctIndex": 1,
       "explanation": "Shart yolg'on bo'lsa blok bajarilmaydi, lekin dastur keyingi qatorlardan davom etadi."

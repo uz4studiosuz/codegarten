@@ -53,9 +53,9 @@
     {
       "question": "Funksiya bilan sikl orasidagi asosiy farq nima?",
       "options": [
-        "Funksiya tezroq ishlaydi",
+        "Funksiya siklga qaraganda ancha tezroq bajariladi",
         "Funksiyani dasturning istalgan joyida qayta chaqirish mumkin",
-        "Sikl faqat sonlar bilan ishlaydi"
+        "Sikl faqat sonlar bilan ishlaydi, funksiya esa har qanday qiymat bilan"
       ],
       "correctIndex": 1,
       "explanation": "Sikl kodni bir joyda ketma-ket takrorlaydi, funksiya esa istalgan joydan chaqirilishi mumkin."

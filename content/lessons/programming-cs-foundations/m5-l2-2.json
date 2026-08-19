@@ -52,9 +52,9 @@
     {
       "question": "Ikki qiymatni almashtirish uchun nima kerak?",
       "options": [
-        "Faqat ikki qatorlik kod",
+        "Faqat ikki qatorlik oddiy almashtirish kodi",
         "Vaqtinchalik uchinchi o'zgaruvchi",
-        "Sikl"
+        "Ro'yxat ichidagi qidiruv sikli"
       ],
       "correctIndex": 1,
       "explanation": "Birinchi qiymatni saqlab qo'ymasa u yo'qoladi. Shuning uchun vaqtinchalik o'zgaruvchi kerak."

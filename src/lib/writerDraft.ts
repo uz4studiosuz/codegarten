@@ -1,13 +1,24 @@
-import type { LessonContent } from "@/types/lessonContent";
+import type {
+  ContentSection,
+  KeyTerm,
+  LessonContent,
+  LessonImage,
+  LessonStep,
+  QuizQuestion,
+} from "@/types/lessonContent";
 
 /**
  * Writer draft model
  * ------------------
  * Mirrors exactly what ships in the ZIP: one module file, one content file per
- * lesson, and — when the author defines a new track — the tracks file. Keeping
- * the draft shaped like the output means export is a serialisation step, not a
- * translation, so nothing can drift between the preview and the files that land
- * in the project.
+ * lesson, uploaded images as real files under public/, and — when the author
+ * defines a new track — the tracks file. Keeping the draft shaped like the output
+ * means export is a serialisation step, not a translation, so nothing can drift
+ * between the preview and the files that land in the project.
+ *
+ * Lesson bodies are always held as an ordered `steps` list here, even when the
+ * imported file used the older pools, so the editor has exactly one shape to work
+ * on. See src/lib/lessonSteps.ts for the reading side.
  */
 
 export type LessonKind = "concept" | "exercise" | "challenge" | "review";
@@ -85,20 +96,78 @@ export const KIND_LABELS: Record<LessonKind, string> = {
 
 export const KIND_HINTS: Record<LessonKind, string> = {
   concept: "Tushuntirish va savollar — o'yin qo'shilmaydi",
-  exercise: "Tushuntirish, savollar va oxirida interaktiv o'yin",
-  challenge: "Qiyinroq mashq — oxirida interaktiv o'yin",
+  exercise: "Tushuntirish, savollar va interaktiv o'yin",
+  challenge: "Qiyinroq mashq — interaktiv o'yin bilan",
   review: "Bosqich takrori — savollar bilan yakunlanadi",
 };
 
+export type StepKind = LessonStep["kind"];
+
+export const STEP_LABELS: Record<Exclude<StepKind, "goal">, string> = {
+  section: "Bo'lim",
+  terms: "Kalit so'zlar",
+  quiz: "Savol",
+  challenge: "Interaktiv o'yin",
+};
+
+/** Only exercise and challenge lessons end hands-on. */
+export function kindHasGame(kind: LessonKind): boolean {
+  return kind === "exercise" || kind === "challenge";
+}
+
 // ── Empty shapes ────────────────────────────────────────────────────────────
 
+export function emptySection(): ContentSection {
+  return { heading: "", body: [""] };
+}
+
+export function emptyQuestion(): QuizQuestion {
+  return { question: "", options: ["", "", ""], correctIndex: 0, explanation: "" };
+}
+
+export function emptyTerm(): KeyTerm {
+  return { en: "", uz: "", note: "" };
+}
+
+export function emptyStep(kind: Exclude<StepKind, "goal">): LessonStep {
+  if (kind === "section") return { kind: "section", section: emptySection() };
+  if (kind === "terms") return { kind: "terms", terms: [emptyTerm()] };
+  if (kind === "quiz") return { kind: "quiz", question: emptyQuestion() };
+  return { kind: "challenge" };
+}
+
 export function emptyContent(): LessonContent {
+  return { goal: "", steps: [emptyStep("section"), emptyStep("quiz")] };
+}
+
+/**
+ * Turns any lesson content into the steps shape the editor works on. Module files
+ * imported from the project may still carry the older pools.
+ */
+export function toDraftContent(content: LessonContent | undefined): LessonContent {
+  if (!content) return emptyContent();
+  if (content.steps && content.steps.length > 0) {
+    return {
+      goal: content.goal ?? "",
+      steps: content.steps.filter((step) => step.kind !== "goal"),
+    };
+  }
+
+  const steps: LessonStep[] = [];
+  for (const section of content.sections ?? []) steps.push({ kind: "section", section });
+  if ((content.terms ?? []).length > 0) {
+    steps.push({ kind: "terms", terms: content.terms! });
+  }
+  for (const question of content.quiz ?? []) steps.push({ kind: "quiz", question });
+
   return {
-    goal: "",
-    sections: [{ heading: "", body: [""] }],
-    terms: [],
-    quiz: [],
+    goal: content.goal ?? "",
+    steps: steps.length > 0 ? steps : emptyContent().steps,
   };
+}
+
+export function draftSteps(content: LessonContent): LessonStep[] {
+  return content.steps ?? [];
 }
 
 /**
@@ -216,11 +285,45 @@ export function countLessons(draft: DraftModule): number {
   return draft.levels.reduce((sum, level) => sum + level.lessons.length, 0);
 }
 
+// ── Images ──────────────────────────────────────────────────────────────────
+
+const DATA_URI = /^data:(image\/[a-z0-9.+-]+);base64,([A-Za-z0-9+/=]+)$/i;
+
+const IMAGE_EXTENSIONS: Record<string, string> = {
+  "image/png": "png",
+  "image/jpeg": "jpg",
+  "image/jpg": "jpg",
+  "image/webp": "webp",
+  "image/gif": "gif",
+  "image/svg+xml": "svg",
+};
+
+/** Uploads are kept inline while drafting; only export turns them into files. */
+export function isUploadedImage(src: string): boolean {
+  return DATA_URI.test(src.trim());
+}
+
+/** Roughly how many bytes a base64 data URI occupies once decoded. */
+export function dataUriBytes(src: string): number {
+  const match = DATA_URI.exec(src.trim());
+  if (!match) return 0;
+  const base64 = match[2];
+  const padding = base64.endsWith("==") ? 2 : base64.endsWith("=") ? 1 : 0;
+  return Math.floor((base64.length * 3) / 4) - padding;
+}
+
+export const MAX_IMAGE_BYTES = 2 * 1024 * 1024;
+/** Above this, the browser's storage quota becomes a real risk for a draft. */
+export const LARGE_IMAGE_BYTES = 500 * 1024;
+
 // ── Export ──────────────────────────────────────────────────────────────────
 
 export interface ExportFile {
   path: string;
-  contents: string;
+  /** Text payload — JSON files and the README. */
+  contents?: string;
+  /** Base64 payload — uploaded images, written into the ZIP as binary. */
+  base64?: string;
 }
 
 /** Strips writer-only fields so the module file matches what the app expects. */
@@ -252,53 +355,96 @@ export function moduleFileFor(draft: DraftModule) {
   };
 }
 
+function tidyImage(
+  image: LessonImage | undefined,
+  rewrite: (src: string) => string
+): { image: LessonImage } | Record<string, never> {
+  const src = image?.src.trim();
+  if (!image || !src) return {};
+  return {
+    image: {
+      src: rewrite(src),
+      alt: image.alt.trim() || image.caption?.trim() || "Dars rasmi",
+      ...(image.caption?.trim() ? { caption: image.caption.trim() } : {}),
+    },
+  };
+}
+
+function tidySection(
+  section: ContentSection,
+  rewrite: (src: string) => string
+): ContentSection {
+  return {
+    heading: section.heading.trim(),
+    body: section.body.map((b) => b.trim()).filter(Boolean),
+    ...tidyImage(section.image, rewrite),
+    ...(section.code && section.code.lines.filter(Boolean).length > 0
+      ? {
+          code: {
+            ...(section.code.caption?.trim()
+              ? { caption: section.code.caption.trim() }
+              : {}),
+            lines: section.code.lines,
+          },
+        }
+      : {}),
+    ...(section.callout?.trim() ? { callout: section.callout.trim() } : {}),
+  };
+}
+
 /**
- * Drops empty optional fields so exported content stays clean.
- *
  * Blank options are removed, which shifts the positions after them — so the
  * answer index is remapped rather than copied. Copying it (as this used to do)
  * exported the wrong answer key whenever an empty line sat above the right
  * answer, and nothing downstream could detect it.
  */
-export function tidyContent(content: LessonContent): LessonContent {
-  return {
-    goal: content.goal.trim(),
-    sections: content.sections.map((section) => ({
-      heading: section.heading.trim(),
-      body: section.body.map((b) => b.trim()).filter(Boolean),
-      ...(section.code && section.code.lines.filter(Boolean).length > 0
-        ? {
-            code: {
-              ...(section.code.caption?.trim()
-                ? { caption: section.code.caption.trim() }
-                : {}),
-              lines: section.code.lines,
-            },
-          }
-        : {}),
-      ...(section.callout?.trim() ? { callout: section.callout.trim() } : {}),
-    })),
-    terms: content.terms
-      .filter((t) => t.en.trim())
-      .map((t) => ({ en: t.en.trim(), uz: t.uz.trim(), note: t.note.trim() })),
-    quiz: content.quiz
-      .filter((q) => q.question.trim())
-      .map((q) => {
-        const kept = q.options
-          .map((option, index) => ({ option: option.trim(), index }))
-          .filter((entry) => entry.option.length > 0);
-        const correctIndex = kept.findIndex((entry) => entry.index === q.correctIndex);
+function tidyQuestion(question: QuizQuestion): QuizQuestion {
+  const kept = question.options
+    .map((option, index) => ({ option: option.trim(), index }))
+    .filter((entry) => entry.option.length > 0);
+  const correctIndex = kept.findIndex((entry) => entry.index === question.correctIndex);
 
-        return {
-          question: q.question.trim(),
-          options: kept.map((entry) => entry.option),
-          // -1 only happens when the marked answer was itself blank, which
-          // validation reports as an error before export is allowed.
-          correctIndex: correctIndex === -1 ? 0 : correctIndex,
-          explanation: q.explanation.trim(),
-        };
-      }),
+  return {
+    question: question.question.trim(),
+    options: kept.map((entry) => entry.option),
+    // -1 only happens when the marked answer was itself blank, which validation
+    // reports as an error before export is allowed.
+    correctIndex: correctIndex === -1 ? 0 : correctIndex,
+    explanation: question.explanation.trim(),
   };
+}
+
+/**
+ * Drops empty steps and blank optional fields so exported content stays clean.
+ * `rewriteImage` maps an inline upload to the path it will live at in the project.
+ */
+export function tidyContent(
+  content: LessonContent,
+  rewriteImage: (src: string) => string = (src) => src
+): LessonContent {
+  const steps: LessonStep[] = [];
+
+  for (const step of draftSteps(content)) {
+    if (step.kind === "section") {
+      const section = tidySection(step.section, rewriteImage);
+      const empty =
+        !section.heading && section.body.length === 0 && !section.image && !section.code;
+      if (!empty) steps.push({ kind: "section", section });
+    } else if (step.kind === "terms") {
+      const terms = step.terms
+        .filter((t) => t.en.trim())
+        .map((t) => ({ en: t.en.trim(), uz: t.uz.trim(), note: t.note.trim() }));
+      if (terms.length > 0) steps.push({ kind: "terms", terms });
+    } else if (step.kind === "quiz") {
+      if (step.question.question.trim()) {
+        steps.push({ kind: "quiz", question: tidyQuestion(step.question) });
+      }
+    } else if (step.kind === "challenge") {
+      steps.push({ kind: "challenge" });
+    }
+  }
+
+  return { goal: content.goal.trim(), steps };
 }
 
 const README = `Codegarten - modul o'rnatish
@@ -309,6 +455,7 @@ tashlang. Fayllar mavjud papkalarga qo'shiladi:
 
   content/modules/<kurs-papka>/<modul>.json    - modul tuzilishi
   content/lessons/<kurs-papka>/<dars>.json     - har darsning matni
+  public/images/lessons/...                    - yuklangan rasmlar (bo'lsa)
   content/tracks.json                          - FAQAT yangi yo'nalish qo'shganda
 
 So'ng loyihada:
@@ -335,10 +482,25 @@ export function buildExportFiles(
 
   for (const level of draft.levels) {
     for (const lesson of level.lessons) {
+      /*
+       * Inline uploads become real files. Numbering per lesson keeps the names
+       * stable across exports as long as the images themselves do not move.
+       */
+      const assets: ExportFile[] = [];
+      const rewrite = (src: string): string => {
+        const match = DATA_URI.exec(src.trim());
+        if (!match) return src.trim();
+        const extension = IMAGE_EXTENSIONS[match[1].toLowerCase()] ?? "png";
+        const name = `${lesson.id}-${assets.length + 1}.${extension}`;
+        assets.push({ path: `public/images/lessons/${name}`, base64: match[2] });
+        return `/images/lessons/${name}`;
+      };
+
       files.push({
         path: `content/lessons/${trackFolder}/${lesson.id}.json`,
-        contents: JSON.stringify(tidyContent(lesson.content), null, 2) + "\n",
+        contents: JSON.stringify(tidyContent(lesson.content, rewrite), null, 2) + "\n",
       });
+      files.push(...assets);
     }
   }
 
@@ -347,10 +509,7 @@ export function buildExportFiles(
   if (draft.newTrack && draft.newTrack.id === draft.trackId) {
     const tracks = [
       ...existingTracks.filter((t) => t.id !== draft.newTrack!.id),
-      {
-        ...draft.newTrack,
-        isSoon: draft.newTrack.isSoon ?? false,
-      },
+      { ...draft.newTrack, isSoon: draft.newTrack.isSoon ?? false },
     ];
     files.push({
       path: "content/tracks.json",
@@ -495,47 +654,124 @@ export function validateDraft(
       if (!lesson.title.trim()) err(`${label}: nomi bo'sh`, target);
       if (!lesson.content.goal.trim()) err(`${label}: maqsad yozilmagan`, target);
 
-      const sections = lesson.content.sections.filter(
-        (s) => s.heading.trim() || s.body.some((b) => b.trim())
-      );
-      if (sections.length === 0) err(`${label}: kamida bitta bo'lim kerak`, target);
-      sections.forEach((section, si) => {
-        if (!section.heading.trim()) {
-          err(`${label}: ${si + 1}-bo'lim sarlavhasi bo'sh`, target);
-        }
-        if (!section.body.some((b) => b.trim())) {
-          err(`${label}: ${si + 1}-bo'lim matni bo'sh`, target);
+      const steps = draftSteps(lesson.content);
+      if (steps.length === 0) err(`${label}: qadamlar qo'shilmagan`, target);
+
+      let sectionCount = 0;
+      let quizCount = 0;
+      let challengeCount = 0;
+
+      steps.forEach((step, si) => {
+        const at = `${label}: ${si + 1}-qadam`;
+
+        if (step.kind === "section") {
+          sectionCount += 1;
+          const { section } = step;
+          if (!section.heading.trim()) err(`${at} (bo'lim) sarlavhasi bo'sh`, target);
+          if (
+            !section.body.some((b) => b.trim()) &&
+            !section.image?.src.trim() &&
+            !(section.code?.lines ?? []).some((l) => l.trim())
+          ) {
+            err(`${at} (bo'lim) bo'sh — matn, rasm yoki kod kerak`, target);
+          }
+          const src = section.image?.src.trim();
+          if (src) {
+            if (!section.image?.alt.trim()) {
+              warn(`${at}: rasmning izohli nomi (alt) yozilmagan`, target);
+            }
+            if (isUploadedImage(src)) {
+              const bytes = dataUriBytes(src);
+              if (bytes > MAX_IMAGE_BYTES) {
+                err(
+                  `${at}: yuklangan rasm juda katta (${Math.round(
+                    bytes / 1024
+                  )} KB) — 2 MB dan kichik bo'lishi kerak`,
+                  target
+                );
+              } else if (bytes > LARGE_IMAGE_BYTES) {
+                warn(
+                  `${at}: rasm ${Math.round(
+                    bytes / 1024
+                  )} KB — brauzerdagi qoralama uchun kattaroq, siqib yuklash tavsiya etiladi`,
+                  target
+                );
+              }
+            } else if (!/^(\/|https?:\/\/)/.test(src)) {
+              err(
+                `${at}: rasm manzili "/" bilan boshlanadigan yo'l yoki http(s) havola bo'lishi kerak`,
+                target
+              );
+            }
+          }
+        } else if (step.kind === "terms") {
+          const filled = step.terms.filter((t) => t.en.trim());
+          if (filled.length === 0) {
+            err(`${at} (kalit so'zlar) bo'sh — atama qo'shing yoki qadamni o'chiring`, target);
+          }
+          filled.forEach((t, ti) => {
+            if (!t.uz.trim()) {
+              err(`${at}: ${ti + 1}-atamaning o'zbekchasi yozilmagan`, target);
+            }
+          });
+        } else if (step.kind === "quiz") {
+          quizCount += 1;
+          const q = step.question;
+          if (!q.question.trim()) err(`${at} (savol) matni bo'sh`, target);
+          const options = q.options.filter((o) => o.trim());
+          if (options.length < 2) err(`${at}: kamida 2 variant kerak`, target);
+          // The marked answer must survive the blank-line cleanup that export does.
+          if (!q.options[q.correctIndex]?.trim()) {
+            err(`${at}: to'g'ri javob bo'sh variantga qo'yilgan`, target);
+          }
+          if (!q.explanation.trim()) warn(`${at}: savol izohi bo'sh`, target);
+
+          /*
+           * Testers worked out that the longest option was the answer. A length
+           * check here is crude but it catches the habit while it is being formed.
+           */
+          const trimmed = q.options.map((o) => o.trim()).filter(Boolean);
+          const answer = q.options[q.correctIndex]?.trim() ?? "";
+          const others = trimmed.filter((o) => o !== answer);
+          if (answer && others.length > 0) {
+            const longest = Math.max(...trimmed.map((o) => o.length));
+            const avgOther = others.reduce((sum, o) => sum + o.length, 0) / others.length;
+            if (answer.length === longest && answer.length > avgOther * 1.4) {
+              warn(
+                `${at}: to'g'ri javob boshqa variantlardan sezilarli uzun — o'quvchi mazmunga qaramay uzunini tanlab qo'yadi`,
+                target
+              );
+            }
+          }
+        } else if (step.kind === "challenge") {
+          challengeCount += 1;
+          if (!kindHasGame(lesson.kind)) {
+            err(
+              `${at}: "${KIND_LABELS[lesson.kind]}" turidagi darsda o'yin ishlatilmaydi — qadamni o'chiring yoki dars turini o'zgartiring`,
+              target
+            );
+          }
         }
       });
 
-      const quiz = lesson.content.quiz.filter((q) => q.question.trim());
-      if (quiz.length === 0) err(`${label}: kamida bitta savol kerak`, target);
-      quiz.forEach((q, qi) => {
-        const options = q.options.filter((o) => o.trim());
-        if (options.length < 2) {
-          err(`${label}: ${qi + 1}-savolda kamida 2 variant kerak`, target);
-        }
-        // The marked answer must survive the blank-line cleanup that export does.
-        const markedIsBlank = !q.options[q.correctIndex]?.trim();
-        if (markedIsBlank) {
-          err(`${label}: ${qi + 1}-savolda to'g'ri javob bo'sh variantga qo'yilgan`, target);
-        }
-        if (!q.explanation.trim()) {
-          warn(`${label}: ${qi + 1}-savol izohi bo'sh`, target);
-        }
-      });
+      if (sectionCount === 0) err(`${label}: kamida bitta bo'lim kerak`, target);
+      if (quizCount === 0) err(`${label}: kamida bitta savol kerak`, target);
+      if (challengeCount > 1) {
+        err(`${label}: o'yin qadami faqat bitta bo'lishi mumkin`, target);
+      }
+      if (kindHasGame(lesson.kind) && challengeCount === 0) {
+        warn(
+          `${label}: o'yin qadami qo'yilmagan — o'yin darsning oxiriga qo'shiladi`,
+          target
+        );
+      }
 
-      if (lesson.content.terms.length === 0) {
+      if (steps.every((step) => step.kind !== "terms")) {
         warn(
           `${label}: kalit so'zlar yo'q — lug'atga saqlanadigan atama bo'lmaydi`,
           target
         );
       }
-      lesson.content.terms.forEach((t, ti) => {
-        if (t.en.trim() && !t.uz.trim()) {
-          err(`${label}: ${ti + 1}-atamaning o'zbekchasi yozilmagan`, target);
-        }
-      });
 
       if (lesson.xp <= 0) err(`${label}: XP noldan katta bo'lishi kerak`, target);
       if (lesson.estMinutes <= 0) {

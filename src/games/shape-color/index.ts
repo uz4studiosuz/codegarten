@@ -5,7 +5,7 @@ export const shapeColorGame: GameDefinition = {
   id: "shape-color",
   name: "Shakllarni bo'yash",
   description:
-    "Kod bloklaridagi rang parametrini o'zgartirib, barcha shakllarni sariq qilish.",
+    "Chaqiruvlarning rang argumentini to'ldirib, rasmni namunadagi ko'rinishga keltirish.",
   suits: ["exercise", "challenge"],
   topics: ["geometry", "functions"],
   keywords: ["shakl", "rang", "bo'ya", "chiz", "kvadrat", "parametr"],

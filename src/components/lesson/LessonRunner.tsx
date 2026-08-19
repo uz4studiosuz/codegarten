@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import {
   IconX,
   IconBolt,
+  IconArrowLeft,
   IconArrowRight,
   IconCircleCheckFilled,
   IconAlertCircle,
@@ -15,25 +16,25 @@ import {
   IconBookmarkFilled,
   IconVolume,
   IconVolumeOff,
+  IconPlayerPlayFilled,
   IconPlayerStopFilled,
 } from "@tabler/icons-react";
 import type { GameDefinition } from "@/games/types";
 import { useVocabulary } from "@/context/VocabularyContext";
 import { useSpeech } from "@/context/SpeechContext";
-import {
-  ContentSection,
-  KeyTerm,
-  LessonContent,
-  QuizQuestion,
-} from "@/types/lessonContent";
+import { lessonSteps } from "@/lib/lessonSteps";
+import { hashSeed } from "@/games/shared/seed";
+import type { LessonContent, LessonStep, QuizQuestion } from "@/types/lessonContent";
 
 interface LessonRunnerProps {
   lessonId: string;
   lessonTitle: string;
   levelTitle: string;
   content: LessonContent;
-  /** Interactive game appended as the final step of an exercise lesson. */
+  /** Interactive game the lesson ends (or breaks) on. */
   game?: GameDefinition;
+  /** Which puzzle of that game this lesson gets. See src/games/ordinal.ts. */
+  gameVariant?: number;
   xpReward: number;
   /** Where the exit dialog sends the learner. */
   exitHref: string;
@@ -54,30 +55,26 @@ interface LessonRunnerProps {
   onRestart?: () => void;
 }
 
-type Step =
-  | { kind: "goal" }
-  | { kind: "section"; section: ContentSection }
-  | { kind: "terms"; terms: KeyTerm[] }
-  | { kind: "quiz"; question: QuizQuestion; index: number }
-  | { kind: "challenge" };
-
 /**
- * Authored content tends to park the right answer in the same slot, which
- * teaches position instead of the concept. Options are reordered with a hash of
- * the question text as the seed: varied across questions, stable for any given
- * one, so a reload never moves the answer under the learner.
+ * Options are reordered on every visit
+ * ------------------------------------
+ * Authored content parks the right answer in the same slot, which teaches
+ * position rather than the concept — and testers noticed the longest option was
+ * usually right, so a fresh order per visit is only half the fix (the other half
+ * is balanced option lengths in the content itself).
+ *
+ * The order is seeded from a salt drawn once per mount rather than rolled inline,
+ * so editing a question in the writer's preview does not shuffle the options under
+ * the author's cursor on every keystroke.
  */
-function shuffleQuestion(question: QuizQuestion): QuizQuestion {
-  let seed = 2166136261;
-  for (let i = 0; i < question.question.length; i++) {
-    seed = ((seed ^ question.question.charCodeAt(i)) * 16777619) >>> 0;
-  }
-
+function shuffleQuestion(question: QuizQuestion, salt: string): QuizQuestion {
+  let state = hashSeed(`${salt}:${question.question}`);
   const order = question.options.map((_, i) => i);
+
   for (let i = order.length - 1; i > 0; i--) {
-    seed = (seed * 1103515245 + 12345) >>> 0;
+    state = (state * 1103515245 + 12345) >>> 0;
     // High bits: an LCG's low bits cycle badly and skew short shuffles.
-    const j = (seed >>> 16) % (i + 1);
+    const j = (state >>> 16) % (i + 1);
     [order[i], order[j]] = [order[j], order[i]];
   }
 
@@ -94,6 +91,7 @@ export function LessonRunner({
   levelTitle,
   content,
   game,
+  gameVariant,
   xpReward,
   exitHref,
   nextHref,
@@ -109,16 +107,21 @@ export function LessonRunner({
   // `speaking` toggles and narrate the same step twice.
   const { speakAuto, stop: stopSpeech } = speech;
 
-  const steps = useMemo<Step[]>(() => {
-    const list: Step[] = [{ kind: "goal" }];
-    content.sections.forEach((section) => list.push({ kind: "section", section }));
-    if (content.terms.length > 0) list.push({ kind: "terms", terms: content.terms });
-    content.quiz.forEach((question, index) =>
-      list.push({ kind: "quiz", question: shuffleQuestion(question), index })
-    );
-    if (game) list.push({ kind: "challenge" });
-    return list;
-  }, [content, game]);
+  /** Drawn once per visit, so every visit orders the options differently. */
+  const [shuffleSalt] = useState(() => Math.random().toString(36).slice(2));
+
+  const steps = useMemo<LessonStep[]>(
+    () =>
+      lessonSteps(content, Boolean(game)).map((step) =>
+        step.kind === "quiz"
+          ? { ...step, question: shuffleQuestion(step.question, shuffleSalt) }
+          : step
+      ),
+    [content, game, shuffleSalt]
+  );
+
+  /** Question numbering ("Savol 2 / 3") counts only the quiz steps. */
+  const quizSteps = useMemo(() => steps.filter((s) => s.kind === "quiz"), [steps]);
 
   const [stepIndex, setStepIndex] = useState(0);
   const [showExitDialog, setShowExitDialog] = useState(false);
@@ -132,12 +135,22 @@ export function LessonRunner({
   // Challenge state, driven from the footer button
   const [challengeReady, setChallengeReady] = useState(false);
   const [challengeSolved, setChallengeSolved] = useState(false);
-  const [challengeStatus, setChallengeStatus] = useState<"idle" | "success" | "fail">("idle");
+  const [challengeStatus, setChallengeStatus] = useState<"idle" | "success" | "fail">(
+    "idle"
+  );
   const checkRef = useRef<(() => void) | null>(null);
+  /**
+   * Going back re-mounts the game with a clean slate, so it can report a solve a
+   * second time. XP is awarded for the lesson, not per solve.
+   */
+  const xpAwarded = useRef(false);
 
   const step = steps[stepIndex];
   const isLastStep = stepIndex === steps.length - 1;
-  const progressPercent = Math.round(((stepIndex + (isFinished ? 1 : 0)) / steps.length) * 100);
+  const canGoBack = stepIndex > 0 && !isFinished;
+  const progressPercent = Math.round(
+    ((stepIndex + (isFinished ? 1 : 0)) / steps.length) * 100
+  );
 
   /**
    * What the narrator reads for the current step. Code samples are skipped —
@@ -147,7 +160,12 @@ export function LessonRunner({
     if (!step) return "";
     if (step.kind === "goal") return `${lessonTitle}. ${content.goal}`;
     if (step.kind === "section") {
-      return [step.section.heading, ...step.section.body, step.section.callout ?? ""]
+      return [
+        step.section.heading,
+        ...step.section.body,
+        step.section.image?.caption ?? "",
+        step.section.callout ?? "",
+      ]
         .filter(Boolean)
         .join(". ");
     }
@@ -178,23 +196,44 @@ export function LessonRunner({
   const handleChallengeSolved = useCallback(() => {
     setChallengeSolved(true);
     setChallengeStatus("success");
+    if (xpAwarded.current) return;
+    xpAwarded.current = true;
     setEarnedXp((prev) => prev + xpReward);
   }, [xpReward]);
 
-  const goNext = () => {
-    if (isLastStep) {
-      // Non-challenge lessons award their XP on completion.
-      if (!game) setEarnedXp(xpReward);
-      setIsFinished(true);
-      onFinished();
-      return;
-    }
+  /** Everything that belongs to one screen and must not leak into the next. */
+  const clearStepState = () => {
     setPicked(null);
     setRevealed(false);
     setChallengeStatus("idle");
     setChallengeSolved(false);
     setChallengeReady(false);
+  };
+
+  const goNext = () => {
+    if (isLastStep) {
+      // Non-challenge lessons award their XP on completion.
+      if (!game && !xpAwarded.current) {
+        xpAwarded.current = true;
+        setEarnedXp(xpReward);
+      }
+      setIsFinished(true);
+      onFinished();
+      return;
+    }
+    clearStepState();
     setStepIndex((i) => i + 1);
+  };
+
+  /**
+   * Stepping back is not undo: the previous screen opens fresh. XP already
+   * earned stays earned, which is why `xpAwarded` is a ref and not state.
+   */
+  const goBack = () => {
+    if (!canGoBack) return;
+    stopSpeech();
+    clearStepState();
+    setStepIndex((i) => Math.max(0, i - 1));
   };
 
   // ── Footer button state per step kind ────────────────────────────────────
@@ -232,12 +271,10 @@ export function LessonRunner({
   let frameTone = "border-gray-200 dark:border-[#26262a]";
 
   if (step?.kind === "quiz" && revealed) {
-    const isCorrect = picked === step.question.correctIndex;
-    if (isCorrect) {
-      frameTone = "border-[#26B54F] shadow-[0_6px_0_0_#26B54F]";
-    } else {
-      frameTone = "border-amber-500 shadow-[0_6px_0_0_#F59E0B]";
-    }
+    frameTone =
+      picked === step.question.correctIndex
+        ? "border-[#26B54F] shadow-[0_6px_0_0_#26B54F]"
+        : "border-amber-500 shadow-[0_6px_0_0_#F59E0B]";
   } else if (step?.kind === "challenge") {
     if (challengeSolved || challengeStatus === "success") {
       frameTone = "border-[#26B54F] shadow-[0_6px_0_0_#26B54F]";
@@ -245,6 +282,8 @@ export function LessonRunner({
       frameTone = "border-amber-500 shadow-[0_6px_0_0_#F59E0B]";
     }
   }
+
+  const muted = !speech.settings.enabled;
 
   return (
     <div
@@ -254,7 +293,7 @@ export function LessonRunner({
     >
 
       {/* ═══ Top bar ═══ */}
-      <header className="flex items-center gap-4 sm:gap-8 px-5 sm:px-10 py-5">
+      <header className="flex items-center gap-2.5 sm:gap-5 px-4 sm:px-10 py-5">
         <button
           type="button"
           onClick={() => setShowExitDialog(true)}
@@ -265,43 +304,59 @@ export function LessonRunner({
           <IconX size={24} stroke={2} />
         </button>
 
-        {/* Read-aloud: plays the current step, or stops if already reading */}
-        {speech.supported && narration && (
-          <button
-            type="button"
-            onClick={() =>
-              speech.settings.enabled ? speech.toggle(narration) : speech.setEnabled(true)
-            }
-            aria-label={
-              !speech.settings.enabled
-                ? "Ovozni yoqish"
-                : speech.speaking
-                ? "O'qishni to'xtatish"
-                : "Matnni o'qib berish"
-            }
-            title={
-              !speech.settings.enabled
-                ? "Ovoz o'chirilgan — yoqish"
-                : speech.speaking
-                ? "To'xtatish"
-                : "Matnni o'qib berish"
-            }
-            className={`shrink-0 w-9 h-9 rounded-full flex items-center justify-center border transition-colors cursor-pointer ${
-              !speech.settings.enabled
-                ? "border-gray-200 dark:border-[#3a3a41] text-gray-400 dark:text-[#6d6d74] hover:text-gray-600 dark:hover:text-[#a1a1aa]"
-                : speech.speaking
-                ? "border-[#26B54F] bg-[#26B54F]/15 text-[#26B54F] dark:text-[#4ADE80]"
-                : "border-gray-200 dark:border-[#3a3a41] text-gray-500 dark:text-[#8b8b93] hover:text-black dark:hover:text-white hover:border-gray-300 dark:hover:border-[#55555f]"
-            }`}
-          >
-            {!speech.settings.enabled ? (
-              <IconVolumeOff size={17} />
-            ) : speech.speaking ? (
-              <IconPlayerStopFilled size={14} />
-            ) : (
-              <IconVolume size={17} />
+        {/* A lesson is not one-way: re-reading the page before a question is the
+            normal thing to want, and the only way used to be starting over. */}
+        <button
+          type="button"
+          onClick={goBack}
+          disabled={!canGoBack}
+          aria-label="Oldingi qadamga qaytish"
+          title="Oldingi qadam"
+          className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center border border-gray-200 dark:border-[#3a3a41] text-gray-500 dark:text-[#8b8b93] enabled:hover:text-black enabled:hover:border-gray-300 dark:enabled:hover:text-white dark:enabled:hover:border-[#55555f] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+        >
+          <IconArrowLeft size={17} stroke={2.2} />
+        </button>
+
+        {/* Sound: one control mutes the lesson outright, the other plays or stops
+            the current screen. Before, the only button stopped the utterance and
+            autoplay simply spoke again on the next step. */}
+        {speech.supported && (
+          <div className="shrink-0 flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => speech.setEnabled(muted)}
+              aria-pressed={muted}
+              aria-label={muted ? "Ovozni yoqish" : "Ovozni o'chirish"}
+              title={muted ? "Ovoz o'chirilgan — yoqish" : "Ovozni o'chirish"}
+              className={`w-9 h-9 rounded-full flex items-center justify-center border transition-colors cursor-pointer ${
+                muted
+                  ? "border-amber-500/60 bg-amber-500/10 text-amber-600 dark:text-amber-400"
+                  : "border-gray-200 dark:border-[#3a3a41] text-gray-500 dark:text-[#8b8b93] hover:text-black dark:hover:text-white hover:border-gray-300 dark:hover:border-[#55555f]"
+              }`}
+            >
+              {muted ? <IconVolumeOff size={17} /> : <IconVolume size={17} />}
+            </button>
+
+            {!muted && narration && (
+              <button
+                type="button"
+                onClick={() => speech.toggle(narration)}
+                aria-label={speech.speaking ? "O'qishni to'xtatish" : "Matnni o'qib berish"}
+                title={speech.speaking ? "To'xtatish" : "Matnni o'qib berish"}
+                className={`w-9 h-9 rounded-full flex items-center justify-center border transition-colors cursor-pointer ${
+                  speech.speaking
+                    ? "border-[#26B54F] bg-[#26B54F]/15 text-[#26B54F] dark:text-[#4ADE80]"
+                    : "border-gray-200 dark:border-[#3a3a41] text-gray-500 dark:text-[#8b8b93] hover:text-black dark:hover:text-white hover:border-gray-300 dark:hover:border-[#55555f]"
+                }`}
+              >
+                {speech.speaking ? (
+                  <IconPlayerStopFilled size={13} />
+                ) : (
+                  <IconPlayerPlayFilled size={13} />
+                )}
+              </button>
             )}
-          </button>
+          </div>
         )}
 
         <div className="flex-1 flex items-center justify-center gap-3 sm:gap-4 min-w-0">
@@ -320,7 +375,9 @@ export function LessonRunner({
 
         <div
           className={`shrink-0 flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 transition-colors duration-300 ${
-            earnedXp > 0 ? "border-[#26B54F] bg-[#26B54F]/15" : "border-gray-200 dark:border-[#3a3a41] bg-gray-50 dark:bg-[#16161a]"
+            earnedXp > 0
+              ? "border-[#26B54F] bg-[#26B54F]/15"
+              : "border-gray-200 dark:border-[#3a3a41] bg-gray-50 dark:bg-[#16161a]"
           }`}
         >
           <span className="font-mono text-[15px] font-bold text-gray-900 dark:text-white">
@@ -338,7 +395,9 @@ export function LessonRunner({
       </header>
 
       {/* ═══ Lesson frame ═══ */}
-      <main className={`flex-1 flex flex-col items-center rounded-[26px] border-2 mx-4 sm:mx-8 lg:mx-[68px] mb-8 px-5 sm:px-8 py-10 transition-all duration-300 ${frameTone}`}>
+      <main
+        className={`flex-1 flex flex-col items-center rounded-[26px] border-2 mx-4 sm:mx-8 lg:mx-[68px] mb-8 px-5 sm:px-8 py-10 transition-all duration-300 ${frameTone}`}
+      >
         <div className="flex-1 w-full flex flex-col items-center justify-center">
           <div className="w-full max-w-[680px]">
 
@@ -381,6 +440,25 @@ export function LessonRunner({
                     {paragraph}
                   </p>
                 ))}
+
+                {step.section.image?.src && (
+                  <figure className="rounded-[16px] border border-gray-200 dark:border-[#26262a] bg-gray-50 dark:bg-[#141416] overflow-hidden">
+                    {/* Plain <img>: sources are authored freely — a path in
+                        public/, a remote URL, or a data: URI from the writer —
+                        and next/image would need every host configured. */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={step.section.image.src}
+                      alt={step.section.image.alt}
+                      className="w-full max-h-[380px] object-contain bg-white dark:bg-[#0d0d0f]"
+                    />
+                    {step.section.image.caption && (
+                      <figcaption className="px-4 py-2.5 border-t border-gray-200 dark:border-[#26262a] text-[13px] text-gray-500 dark:text-[#8b8b93]">
+                        {step.section.image.caption}
+                      </figcaption>
+                    )}
+                  </figure>
+                )}
 
                 {step.section.code && (
                   <div className="rounded-[16px] border border-gray-200 dark:border-[#26262a] bg-gray-50 dark:bg-[#141416] overflow-hidden">
@@ -472,14 +550,18 @@ export function LessonRunner({
                 </div>
 
                 <p className="text-[13px] text-gray-500 dark:text-[#6d6d74]">
-                  Saqlangan atamalar <span className="text-gray-700 dark:text-[#8b8b93] font-semibold">Lug&apos;at</span> bo&apos;limida to&apos;planadi.
+                  Saqlangan atamalar{" "}
+                  <span className="text-gray-700 dark:text-[#8b8b93] font-semibold">
+                    Lug&apos;at
+                  </span>{" "}
+                  bo&apos;limida to&apos;planadi.
                 </p>
               </div>
             ) : step?.kind === "quiz" ? (
               /* ── Quiz ── */
               <div className="flex flex-col gap-5">
                 <div className="text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-gray-500 dark:text-[#6d6d74]">
-                  Savol {step.index + 1} / {content.quiz.length}
+                  Savol {quizSteps.indexOf(step) + 1} / {quizSteps.length}
                 </div>
                 <h2 className="text-[20px] sm:text-[24px] font-bold leading-snug">
                   {step.question.question}
@@ -489,15 +571,24 @@ export function LessonRunner({
                   {step.question.options.map((option, i) => {
                     const isPicked = picked === i;
                     const isCorrect = i === step.question.correctIndex;
+                    /*
+                     * A wrong attempt marks only what the learner chose. Lighting
+                     * up the right answer next to it ended the thinking: the
+                     * second attempt was a copy, not a reconsideration.
+                     */
+                    const gotItRight = revealed && picked === step.question.correctIndex;
 
                     let tone =
                       "border-gray-300 dark:border-[#2b2b31] bg-white dark:bg-[#141416] hover:border-gray-400 dark:hover:border-[#3d3d45] text-gray-800 dark:text-[#d4d4d8]";
-                    if (revealed && isCorrect) {
-                      tone = "border-[#26B54F] bg-[#26B54F]/10 text-[#177F37] dark:text-white shadow-[0_4px_0_0_#26B54F]";
+                    if (revealed && isPicked && isCorrect) {
+                      tone =
+                        "border-[#26B54F] bg-[#26B54F]/10 text-[#177F37] dark:text-white shadow-[0_4px_0_0_#26B54F]";
                     } else if (revealed && isPicked) {
-                      tone = "border-amber-500 bg-amber-500/10 text-amber-700 dark:text-white shadow-[0_4px_0_0_#F59E0B]";
+                      tone =
+                        "border-amber-500 bg-amber-500/10 text-amber-700 dark:text-white shadow-[0_4px_0_0_#F59E0B]";
                     } else if (revealed) {
-                      tone = "border-gray-200 dark:border-[#2b2b31] bg-gray-50 dark:bg-[#141416] text-gray-400 dark:text-[#6d6d74]";
+                      tone =
+                        "border-gray-200 dark:border-[#2b2b31] bg-gray-50 dark:bg-[#141416] text-gray-400 dark:text-[#6d6d74]";
                     } else if (isPicked) {
                       tone = "border-[#A78BFA] bg-[#A78BFA]/10 text-[#A78BFA]";
                     }
@@ -513,8 +604,11 @@ export function LessonRunner({
                         }`}
                       >
                         <span>{option}</span>
-                        {revealed && isCorrect && (
-                          <IconCircleCheckFilled size={20} className="shrink-0 text-[#26B54F]" />
+                        {gotItRight && isPicked && (
+                          <IconCircleCheckFilled
+                            size={20}
+                            className="shrink-0 text-[#26B54F]"
+                          />
                         )}
                         {revealed && isPicked && !isCorrect && (
                           <IconAlertCircle size={20} className="shrink-0 text-amber-500" />
@@ -524,33 +618,33 @@ export function LessonRunner({
                   })}
                 </div>
 
-                {revealed && (
-                  <div
-                    className={`flex items-start gap-3 rounded-[16px] border px-4 py-3.5 ${
-                      picked === step.question.correctIndex
-                        ? "border-[#26B54F]/30 bg-[#26B54F]/[0.08]"
-                        : "border-amber-500/30 bg-amber-500/[0.08]"
-                    }`}
-                  >
-                    <IconBulb
-                      size={19}
-                      className={`shrink-0 mt-0.5 ${
-                        picked === step.question.correctIndex
-                          ? "text-[#4ADE80]"
-                          : "text-amber-400"
-                      }`}
-                    />
-                    <p className="text-[15px] leading-relaxed text-gray-700 dark:text-[#d4d4d8]">
-                      {step.question.explanation}
-                    </p>
-                  </div>
-                )}
+                {revealed &&
+                  (picked === step.question.correctIndex ? (
+                    <div className="flex items-start gap-3 rounded-[16px] border border-[#26B54F]/30 bg-[#26B54F]/[0.08] px-4 py-3.5">
+                      <IconBulb size={19} className="shrink-0 mt-0.5 text-[#4ADE80]" />
+                      <p className="text-[15px] leading-relaxed text-gray-700 dark:text-[#d4d4d8]">
+                        {step.question.explanation}
+                      </p>
+                    </div>
+                  ) : (
+                    /* The explanation states the answer, so it waits until the
+                       learner has actually found it. */
+                    <div className="flex items-start gap-3 rounded-[16px] border border-amber-500/30 bg-amber-500/[0.08] px-4 py-3.5">
+                      <IconAlertCircle size={19} className="shrink-0 mt-0.5 text-amber-400" />
+                      <p className="text-[15px] leading-relaxed text-gray-700 dark:text-[#d4d4d8]">
+                        Bu javob to&apos;g&apos;ri emas. Savolni yana bir marta o&apos;qib,
+                        boshqa variantni tanlab ko&apos;ring — kerak bo&apos;lsa orqaga
+                        qaytib, tushuntirishni qayta ko&apos;rish mumkin.
+                      </p>
+                    </div>
+                  ))}
               </div>
             ) : step?.kind === "challenge" && game ? (
               /* ── Interactive game, resolved from the registry ── */
               <game.Component
                 seed={lessonId}
                 context={`${lessonTitle} ${levelTitle}`.toLowerCase()}
+                variant={gameVariant}
                 onSolved={handleChallengeSolved}
                 onReadyChange={setChallengeReady}
                 registerCheck={registerCheck}

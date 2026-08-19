@@ -49,9 +49,9 @@
     {
       "question": "repeat (4) { oldinga(10) } buyrug'i nima qiladi?",
       "options": [
-        "Bir marta 40 masofaga yuradi",
+        "Bir marta 40 masofaga yurib boradi",
         "oldinga(10) ni 4 marta bajaradi",
-        "4 masofaga yuradi"
+        "4 masofaga bir marta yuradi"
       ],
       "correctIndex": 1,
       "explanation": "Sikl tanasi 4 marta bajariladi, ya'ni har biri 10 masofadan 4 marta harakat bo'ladi."

@@ -50,9 +50,9 @@
     {
       "question": "Chiziqli qidiruvning afzalligi nima?",
       "options": [
-        "Juda tez ishlaydi",
+        "Katta ro'yxatda ham juda tez ishlab beradi",
         "Ro'yxat tartiblangan bo'lishi shart emas",
-        "Xotira sarflamaydi"
+        "Qo'shimcha xotira umuman sarflamaydi"
       ],
       "correctIndex": 1,
       "explanation": "Chiziqli qidiruv har qanday ro'yxatda ishlaydi, lekin O(n) — sekin."

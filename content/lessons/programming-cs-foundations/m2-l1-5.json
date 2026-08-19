@@ -28,9 +28,9 @@
     {
       "question": "Sikl tanasi (loop body) nima?",
       "options": [
-        "Siklning nomi",
+        "Siklga berilgan nom va uning e'lon qatori",
         "Sikl ichidagi, har aylanishda bajariladigan kod",
-        "Sikl necha marta aylanishi"
+        "Sikl necha marta aylanishini belgilab bergan son"
       ],
       "correctIndex": 1,
       "explanation": "Sikl tanasi — qavs ichidagi kod. U har aylanishda to'liq qaytadan bajariladi."

@@ -49,9 +49,9 @@
     {
       "question": "Sikl ichidagi shart nima uchun kuchli?",
       "options": [
-        "Kod qisqaradi",
+        "Kod qatorlari soni sezilarli darajada qisqaradi",
         "Har aylanishda vaziyat qaytadan tekshiriladi",
-        "Tezroq ishlaydi"
+        "Dastur bir necha barobar tezroq bajariladi"
       ],
       "correctIndex": 1,
       "explanation": "Har aylanishda shart yangidan hisoblanadi, shuning uchun dastur o'zgaruvchi vaziyatga moslashadi."

@@ -44,9 +44,9 @@
     {
       "question": "DRY tamoyili nimani talab qiladi?",
       "options": [
-        "Kodni qisqa yozishni",
+        "Kodni imkon qadar qisqa yozib ketishni",
         "Bir xil kodni ko'chirib yozmaslikni",
-        "Izohlar yozmaslikni"
+        "Izohlarni umuman yozmaslikni"
       ],
       "correctIndex": 1,
       "explanation": "DRY (Don't Repeat Yourself) — mantiq bir joyda saqlanishi kerakligini bildiradi."
@@ -54,9 +54,9 @@
     {
       "question": "Sikl cheksiz bo'lib qolmasligi uchun nima shart?",
       "options": [
-        "Sikl tanasi qisqa bo'lishi",
+        "Sikl tanasidagi kodning imkon qadar qisqa va sodda bo'lishi",
         "Hisoblagich har aylanishda tugash shartiga yaqinlashishi",
-        "Sikl 10 martadan oshmasligi"
+        "Aylanishlar soni o'ndan oshmasligini tekshirish"
       ],
       "correctIndex": 1,
       "explanation": "Hisoblagich o'zgarmasa yoki shartdan uzoqlashsa, sikl hech qachon to'xtamaydi."

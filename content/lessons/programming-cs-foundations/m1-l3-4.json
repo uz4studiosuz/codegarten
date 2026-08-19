@@ -44,9 +44,9 @@
     {
       "question": "Bo'laklash (decomposition) nima uchun kerak?",
       "options": [
-        "Kodni uzunroq qilish uchun",
+        "Kodni uzunroq va batafsilroq yozib chiqish uchun kerak bo'ladi",
         "Katta vazifani bajariladigan qadamlarga ajratish uchun",
-        "Xatolarni yashirish uchun"
+        "Xatolarni ko'rinmas qilib yashirib qo'yish uchun"
       ],
       "correctIndex": 1,
       "explanation": "Bo'laklash katta, tushunarsiz vazifani aniq va bajariladigan qadamlarga aylantiradi."
@@ -54,9 +54,9 @@
     {
       "question": "Kompyuter noaniq buyruqni qanday bajaradi?",
       "options": [
-        "Taxmin qilib to'ldiradi",
+        "Yetmagan qadamlarni taxmin qilib to'ldiradi",
         "Bajarmaydi yoki kutilmagan natija beradi",
-        "Dasturchidan so'raydi"
+        "Dasturchidan aniqlik so'rab kutib turadi"
       ],
       "correctIndex": 1,
       "explanation": "Kompyuter taxmin qilmaydi. Aniqlik dasturchining vazifasi."

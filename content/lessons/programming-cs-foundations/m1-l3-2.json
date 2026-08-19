@@ -47,9 +47,9 @@
     {
       "question": "Choy damlashda qaysi ikki qadam o'rnini almashtirish mumkin emas?",
       "options": [
-        "Choynakni chayqash va choy solish",
+        "Choynakni chayqash va choy solish qadamlari",
         "Suvni qaynatish va qaynoq suv quyish",
-        "Kutish va ichish"
+        "Kutib turish va piyolaga quyish"
       ],
       "correctIndex": 1,
       "explanation": "Suv qaynamasa, qaynoq suv quyish mumkin emas — bu bog'liq qadamlar."

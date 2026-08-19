@@ -34,9 +34,9 @@
     {
       "question": "Funksiyaga ajratish (extract function) qachon kerak bo'ladi?",
       "options": [
-        "Kod juda qisqa bo'lganda",
+        "Kod juda qisqa bo'lsa va faqat bir joyda ishlatilgan bo'lsa",
         "Kod bo'lagi takrorlansa va unga nom berish mumkin bo'lsa",
-        "Har 10 qatordan keyin"
+        "Har o'n qatordan keyin, faqat uzunligiga qarab"
       ],
       "correctIndex": 1,
       "explanation": "Takrorlanish va nom berish imkoniyati — funksiyaga ajratishning asosiy belgilari."
@@ -44,9 +44,9 @@
     {
       "question": "return nima qiladi?",
       "options": [
-        "Faqat ekranga chiqaradi",
+        "Natijani faqat ekranga chiqarib ko'rsatib beradi",
         "Natijani qaytaradi va funksiyani tugatadi",
-        "Funksiyani qaytadan boshlaydi"
+        "Funksiyani boshidan qaytadan boshlaydi"
       ],
       "correctIndex": 1,
       "explanation": "return qiymatni tashqariga uzatib, funksiya ishini darhol to'xtatadi."
@@ -54,9 +54,9 @@
     {
       "question": "Kompozitsiya (composition) nima?",
       "options": [
-        "Funksiyani o'chirish",
+        "Ikki funksiyani bitta umumiy nom bilan atash",
         "Bir funksiya natijasini boshqasiga uzatish",
-        "Ikki funksiyani bitta nom bilan atash"
+        "Keraksiz funksiyani dasturdan o'chirish"
       ],
       "correctIndex": 1,
       "explanation": "Kompozitsiya kichik funksiyalardan murakkabroq mantiq qurish usuli."

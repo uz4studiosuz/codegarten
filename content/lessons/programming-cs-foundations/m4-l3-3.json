@@ -51,9 +51,9 @@
     {
       "question": "else if zanjirida ball = 95 bo'lsa qaysi blok bajariladi?",
       "options": [
-        "Barcha rost shartlar",
+        "Rost bo'lgan barcha bloklar ketma-ket",
         "Faqat birinchi rost topilgan blok",
-        "Oxirgi blok"
+        "Zanjirdagi eng oxirgi blok"
       ],
       "correctIndex": 1,
       "explanation": "Birinchi rost shart bajariladi, qolganlari umuman tekshirilmaydi."

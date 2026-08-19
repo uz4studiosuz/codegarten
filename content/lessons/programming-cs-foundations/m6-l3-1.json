@@ -48,9 +48,9 @@
     {
       "question": "Tartiblangan ro'yxatda eng katta elementni topish necha qadam oladi?",
       "options": [
-        "n qadam",
+        "n qadam — hammasini ko'rish",
         "1 qadam — oxirgi element",
-        "log n qadam"
+        "log n qadam — yarmilab"
       ],
       "correctIndex": 1,
       "explanation": "O'sish tartibida tartiblangan bo'lsa, eng katta element oxirida turadi."

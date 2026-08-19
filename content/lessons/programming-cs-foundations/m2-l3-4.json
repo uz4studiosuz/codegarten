@@ -48,9 +48,9 @@
     {
       "question": "Ichki siklning chegarasi tashqi hisoblagichga bog'liq bo'lsa nima yuzaga keladi?",
       "options": [
-        "Cheksiz sikl",
+        "To'xtamay ishlaydigan cheksiz sikl yuzaga keladi",
         "Har qatorda element soni o'zgaradigan naqsh",
-        "Xato"
+        "Har qatorda bir xil element soni chiqadi"
       ],
       "correctIndex": 1,
       "explanation": "Bu uchburchak va zinapoya kabi o'sib boruvchi naqshlar yasashning standart usuli."

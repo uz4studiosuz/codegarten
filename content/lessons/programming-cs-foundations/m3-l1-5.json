@@ -28,9 +28,9 @@
     {
       "question": "Qora quti tamoyili nimani bildiradi?",
       "options": [
-        "Funksiya kodini o'chirish kerak",
+        "Funksiya kodini boshqa fayllardan yashirish kerakligini",
         "Funksiyani ishlatish uchun ichini bilish shart emas",
-        "Funksiya qora rangda yozilishi kerak"
+        "Funksiya nomini qora rangda yozib qo'yish kerak"
       ],
       "correctIndex": 1,
       "explanation": "Nomi va vazifasini bilish yetarli — bu abstraksiya tamoyili."
@@ -38,9 +38,9 @@
     {
       "question": "Funksiyani e'lon qilish nima qiladi?",
       "options": [
-        "Kodni darhol bajaradi",
+        "Kodni o'sha zahotiyoq bajarib, natijani qaytarib beradi",
         "Faqat yozib qo'yadi — bajarish uchun chaqirish kerak",
-        "Xotirani tozalaydi"
+        "Funksiya egallagan xotirani tozalab qo'yadi"
       ],
       "correctIndex": 1,
       "explanation": "E'lon retsept yozishga o'xshaydi; chaqiruv esa uni tayyorlashga."

@@ -196,3 +196,89 @@ export function GameReset({ onClick, disabled }: { onClick: () => void; disabled
     </button>
   );
 }
+
+/**
+ * Numbered how-to, shown above a board that needs more than one kind of move.
+ * Children trying the games could see the pieces but not what was expected of
+ * them; two short imperative lines fixed that better than any longer hint.
+ */
+export function GameHowTo({ steps }: { steps: string[] }) {
+  return (
+    <ol className="flex flex-col gap-1.5">
+      {steps.map((step, i) => (
+        <li key={i} className="flex items-start gap-2.5">
+          <span className="mt-[1px] shrink-0 w-[19px] h-[19px] rounded-full bg-[#7C5CE0]/15 text-[#7C5CE0] dark:text-[#c4b5fd] text-[11px] font-bold flex items-center justify-center">
+            {i + 1}
+          </span>
+          <span className="text-[13px] leading-snug text-gray-600 dark:text-[#a1a1aa]">
+            {step}
+          </span>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+/**
+ * A slot a block can be dropped into. `index` becomes the `data-drop-index` the
+ * drag hook looks for, so slots stay declarative.
+ */
+export function DropSlot({
+  index,
+  active,
+  filled,
+  tone = "violet",
+  className = "",
+  children,
+}: {
+  index: number;
+  /** The pointer is over this slot right now. */
+  active?: boolean;
+  /** Something already sits here, so the dashed outline is dropped. */
+  filled?: boolean;
+  tone?: "violet" | "green";
+  className?: string;
+  children?: React.ReactNode;
+}) {
+  const accent = tone === "green" ? "#26B54F" : "#7C5CE0";
+
+  return (
+    <div
+      data-drop-index={index}
+      style={active ? { borderColor: accent, backgroundColor: `${accent}14` } : undefined}
+      className={`min-h-[44px] rounded-[12px] flex items-center transition-colors ${
+        filled
+          ? "border-2 border-transparent"
+          : `border-2 border-dashed ${
+              active ? "" : "border-gray-300 dark:border-[#3a3a41]"
+            }`
+      } ${className}`}
+    >
+      {children}
+    </div>
+  );
+}
+
+/** The block that follows the pointer while dragging. */
+export function DragGhost({
+  x,
+  y,
+  children,
+}: {
+  x: number;
+  y: number;
+  children: React.ReactNode;
+}) {
+  return (
+    <div
+      className="fixed z-50 pointer-events-none -translate-x-1/2 -translate-y-1/2 opacity-90 scale-105"
+      style={{ left: x, top: y }}
+    >
+      {children}
+    </div>
+  );
+}
+
+/** Marks a block as pick-up-able, so the affordance is identical everywhere. */
+export const grabClass =
+  "cursor-grab active:cursor-grabbing select-none touch-none";

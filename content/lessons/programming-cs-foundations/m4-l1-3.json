@@ -47,9 +47,9 @@
     {
       "question": "O'tish bali 60. ball >= 60 va ball > 60 shartlari qachon farq qiladi?",
       "options": [
-        "Hech qachon",
+        "Hech qachon farq qilmaydi",
         "ball aynan 60 bo'lganda",
-        "ball 100 bo'lganda"
+        "ball 100 dan oshganda"
       ],
       "correctIndex": 1,
       "explanation": "ball = 60 da birinchisi true, ikkinchisi false beradi. Chegara qiymati muhim."

@@ -48,9 +48,9 @@
     {
       "question": "Toza funksiya (pure function) nimasi bilan ajralib turadi?",
       "options": [
-        "Juda qisqa bo'ladi",
+        "Kodi har doim juda qisqa yozilgan bo'ladi",
         "Bir xil kirish har doim bir xil natija beradi",
-        "Faqat sonlar bilan ishlaydi"
+        "Faqat sonlar bilan ishlay oladi, matn bilan yo'q"
       ],
       "correctIndex": 1,
       "explanation": "Toza funksiya tashqi holatga bog'liq emas va uni o'zgartirmaydi."

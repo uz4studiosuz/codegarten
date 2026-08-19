@@ -28,9 +28,9 @@
     {
       "question": "O(1) murakkablik nimani bildiradi?",
       "options": [
-        "Bir sekundda ishlaydi",
+        "Amal aynan bir sekundda bajarilib bo'ladi degani",
         "Qadamlar soni ma'lumot hajmiga bog'liq emas",
-        "Faqat bitta element bilan ishlaydi"
+        "Faqat bitta element bilan ishlay oladi"
       ],
       "correctIndex": 1,
       "explanation": "O(1) — ma'lumot qanchalik katta bo'lsa ham qadamlar soni o'zgarmaydi."

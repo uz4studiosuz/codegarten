@@ -44,9 +44,9 @@
     {
       "question": "Binary search nima uchun tez ishlaydi?",
       "options": [
-        "Ko'p xotira ishlatadi",
+        "Barcha elementlarni bir vaqtning o'zida tekshiradi",
         "Har qadamda ro'yxatning yarmini tashlab yuboradi",
-        "Barcha elementni bir vaqtda tekshiradi"
+        "Ko'p xotira ishlatib, natijani eslab qoladi"
       ],
       "correctIndex": 1,
       "explanation": "Hajmni har qadamda yarmiga qisqartirish O(log n) tezlikni beradi."
@@ -54,9 +54,9 @@
     {
       "question": "Eng tez algoritm har doim to'g'ri tanlovmi?",
       "options": [
-        "Ha, har doim",
+        "Ha, tezlik har doim asosiy mezon bo'lib qoladi",
         "Yo'q — hajm, chastota va murakkablik ham hisobga olinadi",
-        "Faqat kichik ma'lumotda"
+        "Faqat juda kichik ma'lumot hajmida boshqacha bo'lib qoladi"
       ],
       "correctIndex": 1,
       "explanation": "Bu muhandislik qarori: tartiblash narxi, kod murakkabligi va foydalanish chastotasi ham muhim."

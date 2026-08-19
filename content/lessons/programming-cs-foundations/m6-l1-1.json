@@ -48,7 +48,7 @@
     {
       "question": "Algoritm tezligini nima uchun sekundda o'lchamaymiz?",
       "options": [
-        "Sekund juda katta o'lchov",
+        "Sekund juda katta va qo'pol o'lchov",
         "Sekund kompyuter kuchiga bog'liq",
         "Sekundni o'lchash qiyin"
       ],

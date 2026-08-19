@@ -47,9 +47,9 @@
     {
       "question": "Boshqaruv oqimi (control flow) nimani bildiradi?",
       "options": [
-        "Kodning uzunligini",
+        "Kodning umumiy uzunligi va qatorlar sonini",
         "Kodning bajarilish yo'li va tartibini",
-        "Xotira hajmini"
+        "Dastur egallagan xotira hajmini"
       ],
       "correctIndex": 1,
       "explanation": "Control flow — qaysi qatorlar bajarilib, qaysilari o'tkazib yuborilishini belgilaydi."

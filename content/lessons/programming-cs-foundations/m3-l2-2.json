@@ -52,7 +52,7 @@
     {
       "question": "ko'pburchak(qirralar) funksiyasiga 0 uzatilsa nima muammo yuzaga keladi?",
       "options": [
-        "Hech qanday muammo yo'q",
+        "Hech qanday muammo yuzaga kelmaydi",
         "360 / 0 — nolga bo'lish xatosi",
         "Funksiya tezroq ishlaydi"
       ],

@@ -46,9 +46,9 @@
     {
       "question": "Ro'yxat (array) nima uchun ishlatiladi?",
       "options": [
-        "Faqat sonlarni saqlash uchun",
+        "Faqat sonlardan iborat qiymatlarni saqlash uchun",
         "Bitta nom ostida ko'p qiymatni tartib bilan saqlash uchun",
-        "Kodni tezlashtirish uchun"
+        "Dastur ishlashini bir necha barobar tezlashtirib berish uchun"
       ],
       "correctIndex": 1,
       "explanation": "Ro'yxat ko'p bog'liq qiymatni yagona nom bilan boshqarish imkonini beradi."

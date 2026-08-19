@@ -48,9 +48,9 @@
     {
       "question": "Qadam yetarlicha mayda bo'lganini qanday bilamiz?",
       "options": [
-        "Bir qatorga sig'sa",
+        "Qadam matni bir qatorga sig'ib qolgan bo'lsa",
         "\"Buni qanday qilaman?\" degan savol qolmasa",
-        "Uzunligi 10 so'zdan kam bo'lsa"
+        "Qadam uzunligi o'n so'zdan oshmaganda"
       ],
       "correctIndex": 1,
       "explanation": "Agar qadamni bajarish uchun yana tushuntirish kerak bo'lsa, u hali ham katta hisoblanadi."

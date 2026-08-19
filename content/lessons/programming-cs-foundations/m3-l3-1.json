@@ -48,9 +48,9 @@
     {
       "question": "return bajarilgandan keyin funksiyadagi qolgan qatorlar nima bo'ladi?",
       "options": [
-        "Ular ham bajariladi",
+        "Ular ham navbat bilan bajariladi",
         "Ular hech qachon bajarilmaydi",
-        "Xato yuzaga keladi"
+        "Ularda xato yuzaga keladi"
       ],
       "correctIndex": 1,
       "explanation": "return funksiyani darhol tugatadi, shuning uchun undan keyingi kod yetib bo'lmaydigan kod bo'lib qoladi."

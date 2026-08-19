@@ -51,9 +51,9 @@
     {
       "question": "for (i = 1; i <= 4; i++) { chiz_chiziq(i) } nima chizadi?",
       "options": [
-        "4 ta bir xil uzunlikdagi chiziq",
+        "Bir xil uzunlikdagi 4 ta parallel chiziq",
         "Uzunligi 1,2,3,4 bo'lgan 4 ta chiziq",
-        "Bitta uzun chiziq"
+        "Uzunligi 4 bo'lgan bitta chiziq"
       ],
       "correctIndex": 1,
       "explanation": "Har aylanishda i qiymati oshadi, shuning uchun chiziqlar uzunligi ham oshib boradi."

@@ -51,9 +51,9 @@
     {
       "question": "Cheksiz siklning eng ko'p uchraydigan sababi nima?",
       "options": [
-        "Sikl tanasi juda uzun",
+        "Sikl tanasining juda uzun yozilgani",
         "Hisoblagichni oshirish unutilgan",
-        "Shart juda murakkab"
+        "Shart juda murakkab tuzilgan"
       ],
       "correctIndex": 1,
       "explanation": "Hisoblagich o'zgarmasa shart hech qachon bajarilmaydi va sikl to'xtamaydi."

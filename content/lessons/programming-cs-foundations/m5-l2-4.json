@@ -28,9 +28,9 @@
     {
       "question": "2 + 3 va \"2\" + \"3\" natijalari nima uchun farq qiladi?",
       "options": [
-        "Farq qilmaydi",
+        "Farq qilmaydi, natija ikkalasida ham bir xil",
         "Turlari boshqa: sonlar qo'shiladi, matnlar ulanadi",
-        "Ikkinchisi xato"
+        "Ikkinchisi xato beradi, chunki matnlarni qo'shib bo'lmaydi"
       ],
       "correctIndex": 1,
       "explanation": "+ amali turga qarab boshqa ish bajaradi."
@@ -38,9 +38,9 @@
     {
       "question": "Vaqtinchalik o'zgaruvchi nima uchun kerak?",
       "options": [
-        "Kodni chiroyli qilish uchun",
+        "Kodni chiroyli va tartibli ko'rinishga keltirish uchun",
         "Qiymat ustiga yozilishidan oldin uni saqlash uchun",
-        "Xotirani tejash uchun"
+        "Dastur ishlatadigan xotirani tejash uchun"
       ],
       "correctIndex": 1,
       "explanation": "Aks holda birinchi qiymat yo'qoladi va tiklanmaydi."

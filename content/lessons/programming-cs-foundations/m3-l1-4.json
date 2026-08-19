@@ -51,9 +51,9 @@
     {
       "question": "Funksiya nomi \"hisobla_va_chiqar\" bo'lsa, bu nimani bildiradi?",
       "options": [
-        "Nom juda yaxshi",
+        "Nom yetarlicha aniq, o'zgartirishning hojati yo'q",
         "Funksiya ikki vazifa bajaradi — bo'lish kerak",
-        "Nom qisqartirish kerak"
+        "Nom uzun — qisqartirib yozish kerak bo'ladi"
       ],
       "correctIndex": 1,
       "explanation": "Nomdagi \"va\" ikki mas'uliyat borligini ko'rsatadi. Har birini alohida funksiyaga ajratish yaxshi."

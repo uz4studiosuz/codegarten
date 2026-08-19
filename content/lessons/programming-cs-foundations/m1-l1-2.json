@@ -46,9 +46,9 @@
     {
       "question": "oldinga(50) buyrug'ida 50 nima vazifasini bajaradi?",
       "options": [
-        "Buyruq nomi",
+        "Buyruq nomining ikkinchi qismi bo'ladi",
         "Parametr — masofani belgilaydi",
-        "Xato kodi"
+        "Xato kodi — nosozlik raqami"
       ],
       "correctIndex": 1,
       "explanation": "50 — parametr. U buyruqqa \"qancha?\" degan savolga javob beradi."

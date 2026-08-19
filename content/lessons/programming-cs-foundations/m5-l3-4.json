@@ -44,9 +44,9 @@
     {
       "question": "Ma'lumot turi (data type) nimani belgilaydi?",
       "options": [
-        "Faqat xotira hajmini",
+        "Faqat qiymatning xotirada egallaydigan hajmini",
         "Qiymat bilan qanday amallar mumkinligini",
-        "O'zgaruvchi nomini"
+        "O'zgaruvchiga beriladigan nomni"
       ],
       "correctIndex": 1,
       "explanation": "Tur amallarning ma'nosini belgilaydi — masalan + sonlarda qo'shadi, matnlarda ulaydi."

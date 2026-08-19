@@ -39,8 +39,8 @@
       "question": "4 marta ketma-ket o'ngga burilish nimaga olib keladi?",
       "options": [
         "Robot boshlang'ich yo'nalishga qaytadi",
-        "Robot orqaga qaraydi",
-        "Xato yuz beradi"
+        "Robot boshlang'ich nuqtaga qaytib keladi",
+        "Robot orqaga qaragan holda to'xtaydi"
       ],
       "correctIndex": 0,
       "explanation": "4 x 90 = 360 daraja, ya'ni to'liq aylanish. Yo'nalish o'zgarmaydi — bu ortiqcha kod."

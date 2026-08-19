@@ -1,17 +1,39 @@
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { GameProps } from "../types";
 import {
-  IconStarFilled,
   IconArrowUp,
-  IconRotateClockwise,
+  IconGripVertical,
   IconRotate,
-  IconRotate2,
+  IconRotateClockwise,
+  IconStarFilled,
   IconX,
 } from "@tabler/icons-react";
+import type { GameProps, GameStatus } from "../types";
+import {
+  DragGhost,
+  DropSlot,
+  GameBoard,
+  GameHowTo,
+  GameReset,
+  GameShell,
+  grabClass,
+  pickVariant,
+  useBlockDrag,
+} from "../shared";
 
-/** The commands a learner can drag into the program. */
+/**
+ * Drive the robot
+ * ---------------
+ * A program is written before it runs, and then it runs exactly as written. The
+ * learner assembles the whole program, presses check once, and watches the robot
+ * walk it step by step — which is where the difference between what they meant
+ * and what they wrote becomes visible.
+ *
+ * Checking is not `useGameCheck`, because the verdict only arrives after the walk
+ * animation; the status is driven by hand instead.
+ */
+
 type Command = "forward" | "right" | "left";
 
 interface CommandSpec {
@@ -26,53 +48,117 @@ const COMMANDS: CommandSpec[] = [
     id: "forward",
     label: "oldinga",
     Icon: IconArrowUp,
-    tone: "bg-[#26B54F] hover:bg-[#2ac457] shadow-[0_4px_0_0_#177F37]",
+    tone: "bg-[#26B54F] shadow-[0_4px_0_0_#177F37]",
   },
   {
     id: "right",
     label: "o'ngga",
     Icon: IconRotateClockwise,
-    tone: "bg-[#7C5CE0] hover:bg-[#8a6bea] shadow-[0_4px_0_0_#563DA6]",
+    tone: "bg-[#7C5CE0] shadow-[0_4px_0_0_#563DA6]",
   },
   {
     id: "left",
     label: "chapga",
     Icon: IconRotate,
-    tone: "bg-[#E0A13C] hover:bg-[#eaad4a] shadow-[0_4px_0_0_#A87526]",
+    tone: "bg-[#E0A13C] shadow-[0_4px_0_0_#A87526]",
   },
 ];
 
 const COMMAND_BY_ID = new Map(COMMANDS.map((c) => [c.id, c]));
 
-// ── Puzzle definition ───────────────────────────────────────────────────────
-
-const GRID = 4;
-const START = { x: 0, y: 0 };
-const TARGET = { x: 2, y: 1 };
-const SLOT_COUNT = 4;
-
 type Facing = "up" | "right" | "down" | "left";
 const CLOCKWISE: Facing[] = ["up", "right", "down", "left"];
 
-interface RobotState {
+const FACING_ROTATION: Record<Facing, number> = {
+  up: 0,
+  right: 90,
+  down: 180,
+  left: 270,
+};
+
+interface Cell {
   x: number;
   y: number;
+}
+
+interface Puzzle {
+  grid: number;
+  start: Cell;
+  facing: Facing;
+  target: Cell;
+  /** How many program rows the learner gets — part of the puzzle. */
+  slots: number;
+  hint: string;
+}
+
+const PUZZLES: Puzzle[] = [
+  {
+    grid: 4,
+    start: { x: 0, y: 0 },
+    facing: "right",
+    target: { x: 2, y: 1 },
+    slots: 4,
+    hint: "Robot o'ngga qarab turadi. Burilish uni faqat aylantiradi, joyidan qo'zg'atmaydi.",
+  },
+  {
+    grid: 4,
+    start: { x: 0, y: 0 },
+    facing: "right",
+    target: { x: 3, y: 0 },
+    slots: 3,
+    hint: "Bu safar burilish kerak emas — qadamlarni sanash yetarli.",
+  },
+  {
+    grid: 4,
+    start: { x: 3, y: 3 },
+    facing: "up",
+    target: { x: 1, y: 2 },
+    slots: 4,
+    hint: "Robot yuqoriga qarab turadi. Chapga burilsa, qaysi tomonga yuradi?",
+  },
+  {
+    grid: 5,
+    start: { x: 0, y: 2 },
+    facing: "right",
+    target: { x: 3, y: 4 },
+    slots: 5,
+    hint: "Katta maydonda ham qoida bir xil: avval yo'nalish, keyin qadam.",
+  },
+  {
+    grid: 4,
+    start: { x: 0, y: 3 },
+    facing: "up",
+    target: { x: 2, y: 0 },
+    slots: 5,
+    hint: "Ikki tomonga yurish kerak — orada bir marta burilish bo'ladi.",
+  },
+  {
+    grid: 5,
+    start: { x: 2, y: 2 },
+    facing: "down",
+    target: { x: 0, y: 3 },
+    slots: 4,
+    hint: "Robot pastga qarab turadi. Kerakli tomonga qaysi burilish olib boradi?",
+  },
+];
+
+interface RobotState extends Cell {
   facing: Facing;
 }
 
 /** Runs the program and returns the state after each command, for animation. */
-function simulate(program: (Command | null)[]): RobotState[] {
-  const frames: RobotState[] = [{ ...START, facing: "right" }];
-  let current: RobotState = { ...START, facing: "right" };
+function simulate(puzzle: Puzzle, program: (Command | null)[]): RobotState[] {
+  let current: RobotState = { ...puzzle.start, facing: puzzle.facing };
+  const frames: RobotState[] = [current];
 
   for (const command of program) {
     if (!command) continue;
     const next = { ...current };
 
     if (command === "forward") {
-      if (next.facing === "right") next.x = Math.min(GRID - 1, next.x + 1);
+      if (next.facing === "right") next.x = Math.min(puzzle.grid - 1, next.x + 1);
       if (next.facing === "left") next.x = Math.max(0, next.x - 1);
-      if (next.facing === "down") next.y = Math.min(GRID - 1, next.y + 1);
+      if (next.facing === "down") next.y = Math.min(puzzle.grid - 1, next.y + 1);
       if (next.facing === "up") next.y = Math.max(0, next.y - 1);
     } else {
       const turn = command === "right" ? 1 : 3;
@@ -86,245 +172,211 @@ function simulate(program: (Command | null)[]): RobotState[] {
   return frames;
 }
 
-const FACING_ROTATION: Record<Facing, number> = {
-  up: 0,
-  right: 90,
-  down: 180,
-  left: 270,
-};
-
-type RobotGridGameProps = GameProps;
-
 export function RobotGridGame({
   onSolved,
   onReadyChange,
   registerCheck,
   onStatusChange,
-}: RobotGridGameProps) {
-  const [slots, setSlots] = useState<(Command | null)[]>(
-    Array(SLOT_COUNT).fill(null)
+  seed,
+  variant,
+}: GameProps) {
+  const puzzle = useMemo(
+    () => pickVariant(PUZZLES, seed, { ordinal: variant }),
+    [seed, variant]
+  );
+
+  const [slots, setSlots] = useState<(Command | null)[]>(() =>
+    Array(puzzle.slots).fill(null)
   );
   const [runFrame, setRunFrame] = useState<number | null>(null);
-  const [verdict, setVerdict] = useState<"idle" | "success" | "fail">("idle");
-
-  // Pointer drag state — pointer events cover mouse and touch alike.
-  const [drag, setDrag] = useState<{
-    command: Command;
-    x: number;
-    y: number;
-    moved: boolean;
-    fromIndex?: number;
-  } | null>(null);
-  const dragOrigin = useRef<{ x: number; y: number } | null>(null);
+  const [status, setStatus] = useState<GameStatus>("idle");
 
   const filledCount = slots.filter(Boolean).length;
-  const frames = useMemo(() => simulate(slots), [slots]);
+  const frames = useMemo(() => simulate(puzzle, slots), [puzzle, slots]);
   const robot = frames[runFrame ?? 0] ?? frames[0];
   const finalState = frames[frames.length - 1];
+  const isRunning = runFrame !== null;
 
-  const reported = useRef(false);
-
-  useEffect(() => {
-    onReadyChange(filledCount > 0 && runFrame === null);
-  }, [filledCount, runFrame, onReadyChange]);
+  const solved = useRef(false);
+  const timer = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    onStatusChange?.(verdict);
-  }, [verdict, onStatusChange]);
+    onReadyChange(filledCount > 0 && !isRunning && !solved.current);
+  }, [filledCount, isRunning, onReadyChange]);
+
+  useEffect(() => {
+    onStatusChange?.(status);
+  }, [status, onStatusChange]);
+
+  // A run left half-finished must not keep ticking after the step changes.
+  useEffect(() => () => {
+    if (timer.current) clearInterval(timer.current);
+  }, []);
 
   const runProgram = useCallback(() => {
-    if (filledCount === 0) return;
-    setVerdict("idle");
-    onStatusChange?.("idle");
+    if (filledCount === 0 || isRunning) return;
+    setStatus("idle");
     setRunFrame(0);
 
-    // Step through the frames so the learner can see what their program does.
     let frame = 0;
-    const timer = setInterval(() => {
+    timer.current = setInterval(() => {
       frame += 1;
       if (frame >= frames.length) {
-        clearInterval(timer);
+        if (timer.current) clearInterval(timer.current);
         const last = frames[frames.length - 1];
-        const won = last.x === TARGET.x && last.y === TARGET.y;
-        const newVerdict = won ? "success" : "fail";
-        setVerdict(newVerdict);
-        onStatusChange?.(newVerdict);
+        const won = last.x === puzzle.target.x && last.y === puzzle.target.y;
+        setStatus(won ? "success" : "fail");
         setRunFrame(null);
-        if (won && !reported.current) {
-          reported.current = true;
+        if (won && !solved.current) {
+          solved.current = true;
           onSolved();
         }
         return;
       }
       setRunFrame(frame);
     }, 420);
-  }, [frames, filledCount, onSolved, onStatusChange]);
+  }, [frames, filledCount, isRunning, onSolved, puzzle.target]);
 
   useEffect(() => {
     registerCheck(runProgram);
   }, [registerCheck, runProgram]);
 
-  // ── Slot mutation ────────────────────────────────────────────────────────
+  // ── Program edits ────────────────────────────────────────────────────────
 
-  const placeAt = (index: number, command: Command) => {
-    setVerdict("idle");
+  const drop = (command: Command, slot: number, from?: number) => {
+    if (isRunning) return;
+    setStatus("idle");
     setSlots((prev) => {
       const next = [...prev];
-      next[index] = command;
+      if (from !== undefined) {
+        next[from] = next[slot];
+        next[slot] = command;
+      } else {
+        next[slot] = command;
+      }
       return next;
     });
   };
 
-  const appendCommand = (command: Command) => {
-    const firstEmpty = slots.findIndex((s) => s === null);
-    if (firstEmpty === -1) return;
-    placeAt(firstEmpty, command);
+  const append = (command: Command, from?: number) => {
+    if (from !== undefined || isRunning) return;
+    const free = slots.indexOf(null);
+    if (free === -1) return;
+    drop(command, free);
   };
 
-  const clearSlot = (index: number) => {
-    setVerdict("idle");
-    setSlots((prev) => {
-      const next = [...prev];
-      next[index] = null;
-      return next;
-    });
+  const clearSlot = (slot: number) => {
+    setStatus("idle");
+    setSlots((prev) => prev.map((value, i) => (i === slot ? null : value)));
   };
+
+  const drag = useBlockDrag<Command>({
+    onDrop: drop,
+    onDropOutside: (_command, from) => {
+      if (from !== undefined) clearSlot(from);
+    },
+    onTap: append,
+    disabled: isRunning,
+  });
 
   const resetAll = () => {
-    setVerdict("idle");
+    setStatus("idle");
     setRunFrame(null);
-    reported.current = false;
-    setSlots(Array(SLOT_COUNT).fill(null));
+    solved.current = false;
+    setSlots(Array(puzzle.slots).fill(null));
   };
 
-  // ── Drag handlers ────────────────────────────────────────────────────────
-
-  const startDrag = (command: Command, fromIndex?: number) => (e: React.PointerEvent) => {
-    if (runFrame !== null) return;
-    dragOrigin.current = { x: e.clientX, y: e.clientY };
-    setDrag({ command, x: e.clientX, y: e.clientY, moved: false, fromIndex });
-    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
-  };
-
-  const moveDrag = (e: React.PointerEvent) => {
-    if (!drag || !dragOrigin.current) return;
-    const dx = e.clientX - dragOrigin.current.x;
-    const dy = e.clientY - dragOrigin.current.y;
-    const moved = drag.moved || Math.hypot(dx, dy) > 6;
-    setDrag({ ...drag, x: e.clientX, y: e.clientY, moved });
-  };
-
-  const endDrag = (e: React.PointerEvent) => {
-    if (!drag) return;
-
-    if (!drag.moved) {
-      // Treated as a tap: drop it into the first free slot if from palette.
-      if (drag.fromIndex === undefined) {
-        appendCommand(drag.command);
-      }
-      // If tapped on an existing slot, do nothing (they can use the X button)
-    } else {
-      // Find the slot under the pointer without relying on HTML5 drop events,
-      // which never fire on touch devices.
-      const el = document.elementFromPoint(e.clientX, e.clientY);
-      const slotEl = el?.closest("[data-slot-index]") as HTMLElement | null;
-      const targetSlot = slotEl ? Number(slotEl.dataset.slotIndex) : -1;
-
-      if (targetSlot !== -1) {
-        if (drag.fromIndex !== undefined) {
-          // Moving between slots
-          setVerdict("idle");
-          setSlots((prev) => {
-            const next = [...prev];
-            // Swap if target is occupied, otherwise just move
-            const temp = next[targetSlot];
-            next[targetSlot] = drag.command;
-            next[drag.fromIndex!] = temp;
-            return next;
-          });
-        } else {
-          // New from palette
-          placeAt(targetSlot, drag.command);
-        }
-      } else if (drag.fromIndex !== undefined) {
-        // Dragged outside of any slot -> remove it
-        clearSlot(drag.fromIndex);
-      }
-    }
-
-    dragOrigin.current = null;
-    setDrag(null);
-  };
-
-  const isRunning = runFrame !== null;
-  const cellSize = 100 / GRID;
+  const cellSize = 100 / puzzle.grid;
 
   return (
-    <div className="w-full flex flex-col items-center">
-      <h2 className="text-center text-[20px] sm:text-[24px] font-semibold leading-snug text-gray-900 dark:text-white">
-        Robotni yulduz turgan katakka olib boring.
-      </h2>
-      <p className="mt-2 text-center text-[14px] text-gray-500 dark:text-[#8b8b93] max-w-[420px]">
-        Bloklarni pastdan ushlab, qatorlarga tashlang — yoki ustiga bosing.
-      </p>
+    <GameShell
+      task="Robotni yulduz turgan katakka olib boring."
+      hint={puzzle.hint}
+      status={status}
+      successText="Ajoyib! Dastur aynan yozilganidek bajarildi va robot yulduzga yetdi."
+      failText={`Robot ${finalState.x + 1}-ustun, ${
+        finalState.y + 1
+      }-qatorda to'xtadi. Har buyruqni birma-bir barmoq bilan kuzatib, qaysi qadamda yo'ldan chiqqanini toping.`}
+      footer={
+        <div className="flex items-center justify-between">
+          <span className="text-[12px] text-gray-500 dark:text-[#6d6d74]">
+            {filledCount}/{puzzle.slots} qator to&apos;ldirildi
+          </span>
+          <GameReset onClick={resetAll} disabled={isRunning || filledCount === 0} />
+        </div>
+      }
+    >
+      <div className="mb-3">
+        <GameHowTo
+          steps={[
+            "Pastdagi buyruqni ushlab, dastur qatoriga tashlang.",
+            "Qatordagi buyruqni maydondan tashqariga tashlab, olib tashlaysiz.",
+            "«Tekshirish» ni bosganda robot dasturni qatorma-qator bajaradi.",
+          ]}
+        />
+      </div>
 
-      <div className="mt-7 w-full max-w-[460px] rounded-[20px] border border-gray-200 dark:border-[#26262a] bg-gray-50 dark:bg-[#141416] overflow-hidden">
+      {/* ── Grid ── */}
+      <GameBoard label="Maydon">
+        <div className="relative w-full aspect-square max-w-[300px] mx-auto">
+          <div
+            className="absolute inset-0 grid gap-1.5"
+            style={{
+              gridTemplateColumns: `repeat(${puzzle.grid}, minmax(0, 1fr))`,
+              gridTemplateRows: `repeat(${puzzle.grid}, minmax(0, 1fr))`,
+            }}
+          >
+            {Array.from({ length: puzzle.grid * puzzle.grid }).map((_, i) => (
+              <div key={i} className="rounded-[8px] bg-gray-100 dark:bg-[#1c1c20]" />
+            ))}
+          </div>
 
-        {/* ── Grid ── */}
-        <div className="p-4 sm:p-6 bg-white dark:bg-[#101013]">
-          <div className="relative w-full aspect-square max-w-[300px] mx-auto">
-            {/* Cells */}
-            <div className="absolute inset-0 grid grid-cols-4 grid-rows-4 gap-1.5">
-              {Array.from({ length: GRID * GRID }).map((_, i) => (
-                <div key={i} className="rounded-[8px] bg-gray-100 dark:bg-[#1c1c20]" />
-              ))}
-            </div>
+          {/* Target */}
+          <div
+            className="absolute flex items-center justify-center"
+            style={{
+              left: `${puzzle.target.x * cellSize}%`,
+              top: `${puzzle.target.y * cellSize}%`,
+              width: `${cellSize}%`,
+              height: `${cellSize}%`,
+            }}
+          >
+            <IconStarFilled size={26} className="text-[#E0A13C]" />
+          </div>
 
-            {/* Target */}
+          {/* Robot */}
+          <div
+            className="absolute p-1.5 transition-all duration-[380ms] ease-out"
+            style={{
+              left: `${robot.x * cellSize}%`,
+              top: `${robot.y * cellSize}%`,
+              width: `${cellSize}%`,
+              height: `${cellSize}%`,
+            }}
+          >
             <div
-              className="absolute flex items-center justify-center transition-all duration-300"
-              style={{
-                left: `${TARGET.x * cellSize}%`,
-                top: `${TARGET.y * cellSize}%`,
-                width: `${cellSize}%`,
-                height: `${cellSize}%`,
-              }}
+              className={`w-full h-full rounded-[8px] flex items-center justify-center transition-[transform,background-color] duration-300 ${
+                status === "success"
+                  ? "bg-[#26B54F]"
+                  : status === "fail"
+                  ? "bg-[#E0A13C]"
+                  : "bg-[#3B82F6]"
+              }`}
+              style={{ transform: `rotate(${FACING_ROTATION[robot.facing]}deg)` }}
             >
-              <IconStarFilled size={26} className="text-[#E0A13C]" />
-            </div>
-
-            {/* Robot */}
-            <div
-              className="absolute p-1.5 transition-all duration-[380ms] ease-out"
-              style={{
-                left: `${robot.x * cellSize}%`,
-                top: `${robot.y * cellSize}%`,
-                width: `${cellSize}%`,
-                height: `${cellSize}%`,
-              }}
-            >
-              <div
-                className={`w-full h-full rounded-[8px] flex items-center justify-center transition-[transform,background-color] duration-300 ${
-                  verdict === "success"
-                    ? "bg-[#26B54F]"
-                    : verdict === "fail"
-                    ? "bg-[#E0A13C]"
-                    : "bg-[#3B82F6]"
-                }`}
-                style={{ transform: `rotate(${FACING_ROTATION[robot.facing]}deg)` }}
-              >
-                <IconArrowUp size={22} stroke={3} className="text-white" />
-              </div>
+              <IconArrowUp size={22} stroke={3} className="text-white" />
             </div>
           </div>
         </div>
+      </GameBoard>
 
-        {/* ── Program slots ── */}
-        <div className="px-4 sm:px-5 py-4 border-t border-gray-200 dark:border-[#26262a]">
+      {/* ── Program ── */}
+      <div className="mt-3">
+        <GameBoard label="Dastur">
           <div className="flex flex-col gap-2">
             {slots.map((command, index) => {
               const spec = command ? COMMAND_BY_ID.get(command) : undefined;
-              const isCurrent = isRunning && runFrame !== null && index < runFrame;
+              const alreadyRun = isRunning && runFrame !== null && index < runFrame;
 
               return (
                 <div key={index} className="flex items-center gap-3">
@@ -332,31 +384,38 @@ export function RobotGridGame({
                     {index + 1}
                   </span>
 
-                  <div
-                    data-slot-index={index}
-                    className={`flex-1 min-w-0 h-[46px] rounded-[12px] flex items-center transition-colors ${
-                      spec
-                        ? "border-2 border-transparent"
-                        : `border-2 border-dashed ${
-                            drag?.moved ? "border-[#26B54F]/70 bg-[#26B54F]/[0.06]" : "border-gray-300 dark:border-[#3a3a41]"
-                          }`
-                    }`}
+                  <DropSlot
+                    index={index}
+                    filled={Boolean(spec)}
+                    active={drag.overSlot === index}
+                    tone="green"
+                    className="flex-1 min-w-0 h-[46px]"
                   >
-                    {spec ? (
+                    {spec && command && (
                       <div
-                        className={`w-full h-full rounded-[10px] flex items-center gap-2.5 px-3.5 text-white font-bold text-[14px] ${spec.tone} ${
-                          isCurrent ? "ring-2 ring-white/40" : ""
-                        } ${!isRunning ? "cursor-grab touch-none" : ""}`}
-                        onPointerDown={!isRunning ? startDrag(spec.id, index) : undefined}
-                        onPointerMove={!isRunning ? moveDrag : undefined}
-                        onPointerUp={!isRunning ? endDrag : undefined}
-                        onPointerCancel={!isRunning ? endDrag : undefined}
+                        {...drag.bind(command, index)}
+                        className={`w-full h-full rounded-[10px] flex items-center gap-2.5 px-3 text-white font-bold text-[14px] ${
+                          spec.tone
+                        } ${alreadyRun ? "ring-2 ring-white/40" : ""} ${
+                          isRunning ? "" : grabClass
+                        }`}
                       >
-                        <spec.Icon size={17} stroke={2.6} className="shrink-0 pointer-events-none" />
-                        <span className="font-mono truncate pointer-events-none">{spec.label}</span>
+                        <IconGripVertical
+                          size={15}
+                          className="shrink-0 text-white/60 pointer-events-none"
+                        />
+                        <spec.Icon
+                          size={17}
+                          stroke={2.6}
+                          className="shrink-0 pointer-events-none"
+                        />
+                        <span className="font-mono truncate pointer-events-none">
+                          {spec.label}
+                        </span>
                         {!isRunning && (
                           <button
                             type="button"
+                            data-no-drag
                             onClick={() => clearSlot(index)}
                             aria-label={`${index + 1}-qatorni tozalash`}
                             className="ml-auto shrink-0 w-6 h-6 rounded-full bg-black/25 hover:bg-black/40 flex items-center justify-center transition-colors cursor-pointer"
@@ -365,97 +424,50 @@ export function RobotGridGame({
                           </button>
                         )}
                       </div>
-                    ) : null}
-                  </div>
+                    )}
+                  </DropSlot>
                 </div>
               );
             })}
           </div>
-        </div>
-
-        {/* ── Palette ── */}
-        <div className="px-4 sm:px-5 py-4 border-t border-gray-200 dark:border-[#26262a] bg-gray-50 dark:bg-[#17171a]">
-          <div className="text-[11px] font-mono font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-[#6d6d74] mb-2.5">
-            Bloklar
-          </div>
-
-          <div className="flex flex-wrap gap-2.5">
-            {COMMANDS.map((spec) => (
-              <button
-                key={spec.id}
-                type="button"
-                disabled={isRunning}
-                onPointerDown={startDrag(spec.id)}
-                onPointerMove={moveDrag}
-                onPointerUp={endDrag}
-                onPointerCancel={endDrag}
-                className={`select-none touch-none rounded-[12px] px-3.5 py-2.5 flex items-center gap-2 text-white font-bold text-[14px] transition-all active:translate-y-[3px] active:shadow-none disabled:opacity-40 disabled:cursor-not-allowed ${spec.tone} ${
-                  isRunning ? "" : "cursor-grab"
-                }`}
-              >
-                <spec.Icon size={17} stroke={2.6} />
-                <span className="font-mono">{spec.label}</span>
-              </button>
-            ))}
-          </div>
-
-          <div className="mt-3 flex items-center justify-between gap-3">
-            <span className="text-[12px] text-gray-500 dark:text-[#6d6d74]">
-              {filledCount}/{SLOT_COUNT} qator to&apos;ldirildi
-            </span>
-            <button
-              type="button"
-              onClick={resetAll}
-              disabled={isRunning}
-              className="flex items-center gap-1.5 font-mono text-[13px] text-gray-400 dark:text-[#6f6f77] hover:text-gray-600 dark:hover:text-[#a1a1aa] disabled:opacity-40 transition-colors cursor-pointer"
-            >
-              <IconRotate2 size={14} stroke={2} />
-              <span>Start over</span>
-            </button>
-          </div>
-        </div>
+        </GameBoard>
       </div>
 
-      {/* ── Verdict ── */}
-      {verdict !== "idle" && (
-        <div className="mt-6 flex flex-col items-center gap-1.5">
-          <p
-            className={`text-[15px] font-semibold ${
-              verdict === "success" ? "text-[#4ADE80]" : "text-amber-400"
-            }`}
-          >
-            {verdict === "success"
-              ? "Ajoyib! Yulduz qo'lga kiritildi."
-              : "Robot yulduzga yetib bormadi."}
-          </p>
-          {verdict === "fail" && (
-            <p className="max-w-[420px] text-center text-[13px] text-gray-500 dark:text-[#8b8b93]">
-              Robot {finalState.x + 1}-ustun, {finalState.y + 1}-qatorda to&apos;xtadi.
-              Yulduz 3-ustun, 2-qatorda — qadamlarni qayta hisoblang.
-            </p>
-          )}
-        </div>
-      )}
+      {/* ── Palette ── */}
+      <div className="mt-3">
+        <GameBoard label="Buyruqlar" className="flex flex-wrap gap-2.5">
+          {COMMANDS.map((spec) => (
+            <div
+              key={spec.id}
+              {...drag.bind(spec.id)}
+              title={`${spec.label} — dastur qatoriga tashlang`}
+              className={`rounded-[12px] pl-2 pr-3.5 py-2.5 flex items-center gap-1.5 text-white font-bold text-[14px] ${
+                spec.tone
+              } ${isRunning ? "opacity-40" : grabClass}`}
+            >
+              <IconGripVertical size={14} className="shrink-0 text-white/60" />
+              <spec.Icon size={17} stroke={2.6} />
+              <span className="font-mono">{spec.label}</span>
+            </div>
+          ))}
+        </GameBoard>
+      </div>
 
-      {/* Drag ghost follows the pointer */}
-      {drag?.moved && (
-        <div
-          className="fixed z-50 pointer-events-none -translate-x-1/2 -translate-y-1/2"
-          style={{ left: drag.x, top: drag.y }}
-        >
+      {drag.isDragging && drag.drag && (
+        <DragGhost x={drag.drag.x} y={drag.drag.y}>
           {(() => {
-            const spec = COMMAND_BY_ID.get(drag.command)!;
+            const spec = COMMAND_BY_ID.get(drag.drag.payload)!;
             return (
               <div
-                className={`rounded-[12px] px-3.5 py-2.5 flex items-center gap-2 text-white font-bold text-[14px] opacity-90 ${spec.tone}`}
+                className={`rounded-[12px] px-3.5 py-2.5 flex items-center gap-2 text-white font-bold text-[14px] shadow-lg ${spec.tone}`}
               >
                 <spec.Icon size={17} stroke={2.6} />
                 <span className="font-mono">{spec.label}</span>
               </div>
             );
           })()}
-        </div>
+        </DragGhost>
       )}
-    </div>
+    </GameShell>
   );
 }

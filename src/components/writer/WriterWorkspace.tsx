@@ -24,6 +24,7 @@ import {
   emptyModule,
   emptyTrack,
   renumberIds,
+  toDraftContent,
   validateDraft,
 } from "@/lib/writerDraft";
 import type { LessonContent } from "@/types/lessonContent";
@@ -40,6 +41,24 @@ const LEGACY_STORAGE_KEY = "codegarten_writer_draft_v1";
 type Pane = "tree" | "edit" | "preview";
 
 /**
+ * Lesson bodies are edited as an ordered step list. A draft saved before that
+ * existed still carries the old pools, so it is converted on the way in — the
+ * editor never has to handle two shapes.
+ */
+function normalise(draft: DraftModule): DraftModule {
+  return {
+    ...draft,
+    levels: draft.levels.map((level) => ({
+      ...level,
+      lessons: level.lessons.map((lesson) => ({
+        ...lesson,
+        content: toDraftContent(lesson.content),
+      })),
+    })),
+  };
+}
+
+/**
  * Writer workspace
  * ----------------
  * Three panes, one selection: the outline says what exists, the middle pane
@@ -54,6 +73,7 @@ export function WriterWorkspace() {
   const [stage, setStage] = useState<PreviewStage>("modules");
   const [pane, setPane] = useState<Pane>("edit");
   const [status, setStatus] = useState<string | null>(null);
+  const [saveFailed, setSaveFailed] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // ── What already exists in the project, for collision checks and preview ──
@@ -102,8 +122,8 @@ export function WriterWorkspace() {
         localStorage.getItem(STORAGE_KEY) ?? localStorage.getItem(LEGACY_STORAGE_KEY);
       if (raw) {
         const parsed = JSON.parse(raw) as Partial<DraftModule>;
-        // Older drafts predate topics and the new-track fields.
-        setDraft({ ...emptyModule(), ...parsed, topics: parsed.topics ?? [] });
+        // Older drafts predate topics, the new-track fields and step lists.
+        setDraft(normalise({ ...emptyModule(), ...parsed, topics: parsed.topics ?? [] }));
       } else {
         setDraft(emptyModule({ num: project.moduleIds.length + 1 }));
       }
@@ -119,8 +139,14 @@ export function WriterWorkspace() {
     if (!hydrated) return;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
+      setSaveFailed(false);
     } catch {
-      // Draft too large or storage blocked — editing still works in-session.
+      /*
+       * Almost always the storage quota, and almost always an uploaded image.
+       * Failing silently meant an author could lose a long session to a refresh
+       * without ever being told the draft had stopped saving.
+       */
+      setSaveFailed(true);
     }
   }, [draft, hydrated]);
 
@@ -280,7 +306,10 @@ export function WriterWorkspace() {
     const JSZip = (await import("jszip")).default;
     const zip = new JSZip();
     for (const file of buildExportFiles(draft, project.trackFiles)) {
-      zip.file(file.path, file.contents);
+      // Uploaded images arrive base64-encoded and have to enter the ZIP as binary,
+      // otherwise the exported PNG is a text file full of base64.
+      if (file.base64 !== undefined) zip.file(file.path, file.base64, { base64: true });
+      else zip.file(file.path, file.contents ?? "");
     }
     const blob = await zip.generateAsync({ type: "blob" });
 
@@ -320,7 +349,7 @@ export function WriterWorkspace() {
             ...emptyLesson(level.id, i),
             ...lesson,
             gameId: (lesson as DraftLesson).gameId ?? "",
-            content: (lesson as DraftLesson).content ?? emptyModule().levels[0].lessons[0].content,
+            content: toDraftContent((lesson as DraftLesson).content),
           })),
         })),
       };
@@ -385,7 +414,7 @@ export function WriterWorkspace() {
                 {warnings.length} ogohlantirish
               </span>
             )}
-            {hydrated && (
+            {hydrated && !saveFailed && (
               <span
                 title="Qoralama brauzerda avtomatik saqlanadi"
                 className="hidden md:inline-flex items-center gap-1 text-[12px] text-gray-400 dark:text-zinc-500"
@@ -429,9 +458,17 @@ export function WriterWorkspace() {
           </div>
         </div>
 
-        {status && (
+        {(status || saveFailed) && (
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 pb-2.5">
-            <p className="text-[12px] text-[#1a8a3c] dark:text-[#4ADE80]">{status}</p>
+            {status && (
+              <p className="text-[12px] text-[#1a8a3c] dark:text-[#4ADE80]">{status}</p>
+            )}
+            {saveFailed && (
+              <p className="text-[12px] text-red-500">
+                Qoralama brauzerda saqlanmadi - joy yetmadi. Katta rasmlarni siqib
+                yuklang yoki ZIP holatida yuklab oling.
+              </p>
+            )}
           </div>
         )}
 

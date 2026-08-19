@@ -48,9 +48,9 @@
     {
       "question": "20 marta ko'chirilgan kodda qiymatni o'zgartirish kerak. Asosiy xavf nima?",
       "options": [
-        "Kod chiroyli ko'rinmaydi",
+        "Kod ko'rinishining chiroyli bo'lmay qolishi",
         "Bir joyni unutib qoldirish va xato yuzaga kelishi",
-        "Kompyuter sekinlashadi"
+        "Kompyuterning sezilarli darajada sekinlashib qolishi"
       ],
       "correctIndex": 1,
       "explanation": "Qo'lda ko'p joyni o'zgartirishda bittasini unutish juda oson — bu tipik xato manbai."

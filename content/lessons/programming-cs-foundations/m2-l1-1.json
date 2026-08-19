@@ -49,9 +49,9 @@
     {
       "question": "Kodda bir xil ikki qator 5 marta ketma-ket kelsa, bu nimani bildiradi?",
       "options": [
-        "Kod to'g'ri yozilgan",
+        "Kod to'g'ri va tartibli yozilganini bildiradi",
         "Bu yerda naqsh bor — sikl ishlatish mumkin",
-        "Kodni o'chirish kerak"
+        "Ortiqcha qatorlarni o'chirib tashlash kerakligini"
       ],
       "correctIndex": 1,
       "explanation": "Takrorlanish — sikl uchun signal. Naqshni ajratib, siklga o'rash mumkin."

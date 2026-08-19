@@ -40,7 +40,7 @@
       "options": [
         "Shart rost bo'lganda",
         "Shart yolg'on bo'lganda",
-        "Har doim"
+        "Har doim, shartdan qat'i nazar"
       ],
       "correctIndex": 1,
       "explanation": "else — shart bajarilmagan holat uchun ikkinchi yo'l."

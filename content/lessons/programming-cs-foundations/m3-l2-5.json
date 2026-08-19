@@ -28,9 +28,9 @@
     {
       "question": "Parametr va argument orasidagi farq nima?",
       "options": [
-        "Farq yo'q",
+        "Ikkisi bir narsa — faqat nomlanishi boshqacha",
         "Parametr — e'londagi nom, argument — uzatilgan qiymat",
-        "Argument faqat sonlar bo'ladi"
+        "Argument faqat son bo'ladi, parametr esa faqat matn bo'ladi"
       ],
       "correctIndex": 1,
       "explanation": "Parametr bo'sh joy, argument esa unga qo'yilgan aniq qiymat."
@@ -38,9 +38,9 @@
     {
       "question": "Parametrli funksiyaning asosiy foydasi nima?",
       "options": [
-        "Kod qisqaradi",
+        "Kod qatorlari soni sezilarli qisqaradi",
         "Bir mantiq bilan turli natija olish mumkin",
-        "Tezroq ishlaydi"
+        "Dastur ancha tezroq ishlaydigan bo'lib qoladi"
       ],
       "correctIndex": 1,
       "explanation": "Parametr funksiyani turli holatlarga moslashtiradi."

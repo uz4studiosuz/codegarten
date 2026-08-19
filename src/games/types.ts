@@ -42,6 +42,13 @@ export interface GameProps {
    * lesson should not be handed the linear-search puzzle.
    */
   context?: string;
+  /**
+   * This lesson's position among all lessons that end in this game. Passing it
+   * to `pickVariant` walks the puzzle pool round-robin, so two lessons sharing a
+   * game never pose the same task while unseen puzzles remain. See
+   * src/games/ordinal.ts.
+   */
+  variant?: number;
 }
 
 export interface GameDefinition {

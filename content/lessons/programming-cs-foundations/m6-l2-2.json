@@ -51,7 +51,7 @@
     {
       "question": "Binary search ishlashi uchun qanday shart bajarilishi kerak?",
       "options": [
-        "Ro'yxat kichik bo'lishi",
+        "Ro'yxat juda kichik bo'lishi kerak",
         "Ro'yxat tartiblangan bo'lishi",
         "Elementlar son bo'lishi"
       ],

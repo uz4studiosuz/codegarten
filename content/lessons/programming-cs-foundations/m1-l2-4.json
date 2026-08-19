@@ -46,9 +46,9 @@
     {
       "question": "Labirint masalasini yechishda birinchi qadam nima?",
       "options": [
-        "Darhol kod yozishni boshlash",
+        "Darhol kod yozib, yo'lni yurib ko'rgan holda tuzatish",
         "Yo'lni rejalashtirib, burilish nuqtalarini belgilash",
-        "Barcha yo'nalishlarni tasodifiy sinash"
+        "Barcha yo'nalishlarni birma-bir tasodifiy sinash"
       ],
       "correctIndex": 1,
       "explanation": "Reja tuzmasdan yozilgan kod ko'p urinish talab qiladi. Avval yo'lni aniqlang."

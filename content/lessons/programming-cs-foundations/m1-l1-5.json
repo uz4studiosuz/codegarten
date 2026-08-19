@@ -38,9 +38,9 @@
     {
       "question": "Dasturda xato bo'lsa, bu nimani bildiradi?",
       "options": [
-        "Dasturchi qobiliyatsiz",
+        "Dasturchi ishni yaxshi bilmaganini ko'rsatib turadi",
         "Bu odatiy hol — tuzatish jarayonning bir qismi",
-        "Kodni tashlab yuborish kerak"
+        "Kodni tashlab, boshqatdan yozish kerakligini"
       ],
       "correctIndex": 1,
       "explanation": "Xato — normal hol. Dasturlashning katta qismi aynan xatolarni topib tuzatishdan iborat."

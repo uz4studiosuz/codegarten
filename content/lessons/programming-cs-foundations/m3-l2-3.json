@@ -53,9 +53,9 @@
     {
       "question": "to'rtburchak(100, 50) va to'rtburchak(50, 100) bir xil natija beradimi?",
       "options": [
-        "Ha, sonlar bir xil",
+        "Ha, ikkala chaqiruvda ham sonlar bir xil",
         "Yo'q, tartib natijani o'zgartiradi",
-        "Faqat kvadratda bir xil"
+        "Faqat kvadrat chizilganda bir xil"
       ],
       "correctIndex": 1,
       "explanation": "Parametrlar tartibi ma'noga ega: birinchisi kenglik, ikkinchisi balandlik."

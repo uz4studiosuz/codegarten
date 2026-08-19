@@ -50,9 +50,9 @@
     {
       "question": "1 000 000 element uchun O(n kvadrat) va O(n log n) orasidagi farq qanday?",
       "options": [
-        "Sezilmaydi",
+        "Sezilmaydigan kichik farq",
         "Soatlar va sekundlar farqi",
-        "Ikki barobar"
+        "Taxminan ikki barobardek farq"
       ],
       "correctIndex": 1,
       "explanation": "O(n kvadrat) trillion amal, O(n log n) esa 20 million amal talab qiladi — bu amalda ishlaydi va ishlamaydi degani."

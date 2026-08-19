@@ -15,6 +15,7 @@ import {
   IconPlayerPlayFilled,
 } from "@tabler/icons-react";
 import { AppNavbar } from "@/components/dashboard/AppNavbar";
+import { ModuleCompleteCard } from "@/components/courses/ModuleCompleteCard";
 import {
   Lesson,
   Level,
@@ -117,22 +118,30 @@ export default function ModulePathPage() {
 
   const module = getModule(moduleId);
 
+  /**
+   * Set when the learner landed here by finishing a lesson. Read once from the
+   * URL rather than on every render, so the celebration cannot re-fire.
+   */
+  const [justCompletedId, setJustCompletedId] = React.useState<string | null>(null);
+
   React.useEffect(() => {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
     const fromQuery = params.get("justCompleted");
+    setJustCompletedId(fromQuery);
+
     const fromHash = window.location.hash.replace("#lesson-", "");
     const targetId = fromQuery || fromHash;
+    if (!targetId) return;
 
-    if (targetId) {
-      const timer = setTimeout(() => {
-        const el = document.getElementById(`lesson-${targetId}`);
-        if (el) {
-          el.scrollIntoView({ behavior: "smooth", block: "center" });
-        }
-      }, 250);
-      return () => clearTimeout(timer);
-    }
+    // Scrolling waits a beat for the path to lay out; the completion card wins
+    // over the lesson disc, since that is the thing asking for a decision.
+    const timer = setTimeout(() => {
+      const finished = document.getElementById("module-complete");
+      const el = fromQuery && finished ? finished : document.getElementById(`lesson-${targetId}`);
+      el?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 250);
+    return () => clearTimeout(timer);
   }, []);
 
   if (!module) {
@@ -364,6 +373,15 @@ export default function ModulePathPage() {
                 </section>
               );
             })}
+
+            {/* Closes the module out and offers the next one */}
+            {progress.isFinished && (
+              <ModuleCompleteCard
+                module={module}
+                justCompleted={Boolean(justCompletedId)}
+                themeColor={themeColor}
+              />
+            )}
           </div>
 
         </div>

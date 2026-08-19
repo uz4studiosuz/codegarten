@@ -38,9 +38,9 @@
     {
       "question": "Dastur holati (program state) nima?",
       "options": [
-        "Kod uzunligi",
+        "Dastur kodining umumiy uzunligi, qator va belgilar soni",
         "Barcha o'zgaruvchilarning ayni damdagi qiymatlari",
-        "Xotira hajmi"
+        "Dastur egallab turgan xotiraning umumiy hajmi"
       ],
       "correctIndex": 1,
       "explanation": "Holat — dasturning ayni damdagi barcha qiymatlari to'plami."

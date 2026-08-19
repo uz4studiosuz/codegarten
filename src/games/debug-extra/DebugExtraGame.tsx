@@ -3,8 +3,7 @@
 import React, { useMemo, useState } from "react";
 import { IconBug } from "@tabler/icons-react";
 import type { GameProps } from "../types";
-import { GameBoard, GameNote, GameShell, useGameCheck } from "../shared";
-import { pickVariant } from "../shared/seed";
+import { GameBoard, GameNote, GameShell, pickVariant, useGameCheck } from "../shared";
 
 /**
  * Find the broken line
@@ -53,10 +52,48 @@ const PUZZLES: Puzzle[] = [
     badIndex: 2,
     why: "a = b qatoridan keyin 5 raqami hech qayerda qolmaydi — avval vaqtinchalik qutiga saqlash kerak.",
   },
+  {
+    goal: "Uchburchak chizilishi kerak edi, lekin shakl noto'g'ri chiqdi.",
+    hint: "Uchburchakda uchta tomon bo'ladi.",
+    lines: ["chiz(80)", "burl(120)", "chiz(80)", "burl(120)", "chiz(80)", "chiz(80)"],
+    badIndex: 5,
+    why: "Oxirgi chiz(80) ortiqcha — uch tomon allaqachon chizilgan va shakl yopilgan edi.",
+  },
+  {
+    goal: "Ro'yxatdagi har bir sonni ekranga chiqarish kerak edi, lekin faqat bittasi chiqdi.",
+    hint: "Chiqarish buyrug'i sikl ichida turishi kerak.",
+    lines: ["sonlar = [4, 7, 9]", "har son uchun:", "  hisobla(son)", "chiqar(son)"],
+    badIndex: 3,
+    why: "chiqar(son) sikldan tashqarida — shuning uchun u faqat bir marta, oxirgi qiymat bilan ishladi.",
+  },
+  {
+    goal: "Foydalanuvchi 18 yoshdan katta bo'lsa ruxsat berilishi kerak edi.",
+    hint: "Tenglikni tekshirish va solishtirish — ikki xil amal.",
+    lines: ["yosh = 25", "agar yosh = 18:", "  ruxsat_ber()", "aks holda:", "  rad_et()"],
+    badIndex: 1,
+    why: "Shart faqat aynan 18 yoshni tekshiradi. \"Katta yoki teng\" (>=) kerak edi, aks holda 25 yosh ham rad etiladi.",
+  },
+  {
+    goal: "Kvadratning yuzini hisoblash kerak edi.",
+    hint: "Yuza — tomonni tomonga ko'paytirish.",
+    lines: ["tomon = 5", "yuza = tomon + tomon", "chiqar(yuza)"],
+    badIndex: 1,
+    why: "Qo'shish perimetrning yarmini beradi. Yuza uchun ko'paytirish kerak: tomon * tomon.",
+  },
+  {
+    goal: "Robot to'rt marta signal berishi kerak edi, lekin jim qoldi.",
+    hint: "Sikl necha marta aylanishini boshlang'ich qiymat belgilaydi.",
+    lines: ["son = 4", "toki son > 4:", "  signal()", "  son = son - 1"],
+    badIndex: 1,
+    why: "son 4 ga teng bo'lgani uchun \"son > 4\" birinchi tekshiruvda yolg'on chiqdi va sikl umuman ishlamadi.",
+  },
 ];
 
 export function DebugExtraGame(props: GameProps) {
-  const puzzle = useMemo(() => pickVariant(PUZZLES, props.seed), [props.seed]);
+  const puzzle = useMemo(
+    () => pickVariant(PUZZLES, props.seed, { ordinal: props.variant }),
+    [props.seed, props.variant]
+  );
   const [picked, setPicked] = useState<number | null>(null);
 
   const { status, reset } = useGameCheck(props, {

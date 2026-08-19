@@ -134,6 +134,35 @@ export function nextLessonAfter(
   return all[idx + 1];
 }
 
+/**
+ * The module a learner moves on to after finishing this one: the next module in
+ * the same track, or the first module of the next active track when a track ends.
+ * Undefined only when there is genuinely nothing left.
+ */
+export function nextModuleAfter(moduleId: string): CourseModule | undefined {
+  for (let t = 0; t < allTracks.length; t++) {
+    const track = allTracks[t];
+    const index = track.modules.findIndex((m) => m.id === moduleId);
+    if (index === -1) continue;
+
+    const sameTrack = track.modules[index + 1];
+    if (sameTrack) return sameTrack;
+
+    for (let n = t + 1; n < allTracks.length; n++) {
+      const next = allTracks[n];
+      if (next.isSoon) continue;
+      if (next.modules.length > 0) return next.modules[0];
+    }
+    return undefined;
+  }
+  return undefined;
+}
+
+/** Which track a module belongs to, for breadcrumbs and theming. */
+export function trackOf(moduleId: string): Track | undefined {
+  return allTracks.find((t) => t.modules.some((m) => m.id === moduleId));
+}
+
 export function moduleStats(module: CourseModule) {
   const lessons = moduleLessons(module);
   return {
