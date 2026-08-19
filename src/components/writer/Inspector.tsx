@@ -175,29 +175,12 @@ function ModuleForm({
           />
         </Field>
 
-        <div className="grid grid-cols-2 gap-3">
-          <Field label="Rasm yo'li" hint="public/ ichidagi fayl">
-            <TextInput
-              value={draft.imageSrc}
-              onChange={(e) => actions.patchModule({ imageSrc: e.target.value })}
-            />
-          </Field>
-          <Field label="Asosiy rang">
-            <div className="flex items-center gap-2">
-              <input
-                type="color"
-                value={/^#[0-9a-fA-F]{6}$/.test(draft.accent) ? draft.accent : "#22C55E"}
-                onChange={(e) => actions.patchModule({ accent: e.target.value })}
-                className="w-10 h-10 rounded-[10px] border-2 border-gray-200 dark:border-[#27272a] bg-transparent cursor-pointer"
-                aria-label="Asosiy rang"
-              />
-              <TextInput
-                value={draft.accent}
-                onChange={(e) => actions.patchModule({ accent: e.target.value })}
-              />
-            </div>
-          </Field>
-        </div>
+        <Field label="Rasm yo'li" hint="public/ ichidagi fayl">
+          <TextInput
+            value={draft.imageSrc}
+            onChange={(e) => actions.patchModule({ imageSrc: e.target.value })}
+          />
+        </Field>
       </Section>
 
       {/* Topics drive which interactive game each lesson ends with. */}
@@ -326,6 +309,16 @@ function ModuleForm({
                 />
               </div>
             </Field>
+
+            <label className="flex items-center gap-2.5 cursor-pointer select-none text-[13px] text-gray-700 dark:text-zinc-300">
+              <input
+                type="checkbox"
+                checked={Boolean(draft.newTrack.isSoon)}
+                onChange={(e) => actions.patchNewTrack({ isSoon: e.target.checked })}
+                className="w-4 h-4 rounded text-[#26B54F] focus:ring-0 cursor-pointer"
+              />
+              <span>Tez kunda (Locked / Yaqinda chiqadi)</span>
+            </label>
 
             <p className="text-[11.5px] leading-relaxed text-gray-500 dark:text-zinc-400">
               Eksportda <span className="font-mono">content/tracks.json</span> fayli ham

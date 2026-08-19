@@ -39,6 +39,7 @@ export interface DraftTrack {
   titleEn: string;
   description: string;
   colorTheme: string;
+  isSoon?: boolean;
 }
 
 export interface DraftModule {
@@ -169,6 +170,7 @@ export function emptyTrack(): DraftTrack {
     titleEn: "",
     description: "",
     colorTheme: "#22C55E",
+    isSoon: false,
   };
 }
 
@@ -232,7 +234,6 @@ export function moduleFileFor(draft: DraftModule) {
     description: draft.description,
     tagline: draft.tagline,
     imageSrc: draft.imageSrc,
-    accent: draft.accent,
     ...(draft.topics.length > 0 ? { topics: draft.topics } : {}),
     levels: draft.levels.map((level) => ({
       id: level.id,
@@ -306,11 +307,9 @@ const README = `Codegarten - modul o'rnatish
 Bu arxivdagi papkalarni loyiha ildiziga (package.json turgan joyga) ko'chirib
 tashlang. Fayllar mavjud papkalarga qo'shiladi:
 
-  content/modules/<modul>.json    - modul tuzilishi (bosqichlar, darslar)
-  content/lessons/<dars>.json     - har darsning matni
-  content/tracks.json             - FAQAT yangi yo'nalish qo'shganda chiqadi
-                                    (mavjud yo'nalishlar ham ichida - eski
-                                    faylni shu bilan almashtirsangiz bo'ladi)
+  content/modules/<kurs-papka>/<modul>.json    - modul tuzilishi
+  content/lessons/<kurs-papka>/<dars>.json     - har darsning matni
+  content/tracks.json                          - FAQAT yangi yo'nalish qo'shganda
 
 So'ng loyihada:
 
@@ -319,12 +318,6 @@ So'ng loyihada:
 Shu bilan modul avtomatik ro'yxatga qo'shiladi - TypeScript faylni tahrirlash
 kerak emas. Kurrikulum "npm run dev" va "npm run build" oldidan qayta
 yig'iladi.
-
-Tekshirish:
-
-  npm run content:check
-
-Bu buyruq yo'q, ortiqcha yoki xato formatdagi dars fayllarini topadi.
 `;
 
 export function buildExportFiles(
@@ -332,9 +325,10 @@ export function buildExportFiles(
   /** Existing tracks, needed when the draft introduces a new one. */
   existingTracks: readonly DraftTrack[] = []
 ): ExportFile[] {
+  const trackFolder = draft.trackId || "programming-cs-foundations";
   const files: ExportFile[] = [
     {
-      path: `content/modules/${draft.id}.json`,
+      path: `content/modules/${trackFolder}/${draft.id}.json`,
       contents: JSON.stringify(moduleFileFor(draft), null, 2) + "\n",
     },
   ];
@@ -342,7 +336,7 @@ export function buildExportFiles(
   for (const level of draft.levels) {
     for (const lesson of level.lessons) {
       files.push({
-        path: `content/lessons/${lesson.id}.json`,
+        path: `content/lessons/${trackFolder}/${lesson.id}.json`,
         contents: JSON.stringify(tidyContent(lesson.content), null, 2) + "\n",
       });
     }
@@ -353,7 +347,10 @@ export function buildExportFiles(
   if (draft.newTrack && draft.newTrack.id === draft.trackId) {
     const tracks = [
       ...existingTracks.filter((t) => t.id !== draft.newTrack!.id),
-      draft.newTrack,
+      {
+        ...draft.newTrack,
+        isSoon: draft.newTrack.isSoon ?? false,
+      },
     ];
     files.push({
       path: "content/tracks.json",
