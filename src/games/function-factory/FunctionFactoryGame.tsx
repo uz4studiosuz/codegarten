@@ -16,11 +16,11 @@ import { pickVariant } from "../shared/seed";
 
 type Colour = "g" | "v" | "a" | "b";
 
-const COLOURS: Record<Colour, { label: string; className: string }> = {
-  g: { label: "yashil", className: "bg-[#26B54F]" },
-  v: { label: "binafsha", className: "bg-[#7C5CE0]" },
-  a: { label: "sariq", className: "bg-[#E0A13C]" },
-  b: { label: "ko'k", className: "bg-[#3B82F6]" },
+const COLOURS: Record<Colour, { label: string; className: string; hex: string }> = {
+  g: { label: "yashil", className: "bg-[#26B54F]", hex: "#26B54F" },
+  v: { label: "binafsha", className: "bg-[#7C5CE0]", hex: "#7C5CE0" },
+  a: { label: "sariq", className: "bg-[#E0A13C]", hex: "#E0A13C" },
+  b: { label: "ko'k", className: "bg-[#3B82F6]", hex: "#3B82F6" },
 };
 
 interface Target {
@@ -183,14 +183,15 @@ export function FunctionFactoryGame(props: GameProps) {
                   }`}
                 >
                   {/* Reference strip the call has to reproduce */}
-                  <div className="flex items-center gap-2.5">
+                  <div className="flex items-center gap-2.5 min-h-[24px]">
                     <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-gray-400 dark:text-[#6d6d74] w-[58px] shrink-0">
                       namuna
                     </span>
-                    <div className="flex gap-1">
+                    <div className="flex gap-1 items-center">
                       {Array.from({ length: target.length }).map((_, k) => (
                         <span
                           key={k}
+                          style={{ backgroundColor: COLOURS[target.colour].hex }}
                           className={`w-5 h-5 rounded-[5px] ${COLOURS[target.colour].className}`}
                         />
                       ))}
@@ -233,6 +234,7 @@ export function FunctionFactoryGame(props: GameProps) {
                           onClick={() => patch(i, { colour })}
                           title={COLOURS[colour].label}
                           aria-label={COLOURS[colour].label}
+                          style={{ backgroundColor: COLOURS[colour].hex }}
                           className={`w-7 h-7 rounded-[8px] transition-all cursor-pointer ${
                             COLOURS[colour].className
                           } ${
@@ -248,15 +250,16 @@ export function FunctionFactoryGame(props: GameProps) {
                   </div>
 
                   {/* What the call actually produced */}
-                  <div className="mt-2.5 flex items-center gap-2.5">
+                  <div className="mt-2.5 flex items-center gap-2.5 min-h-[24px]">
                     <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-gray-400 dark:text-[#6d6d74] w-[58px] shrink-0">
                       natija
                     </span>
-                    <div className="flex gap-1 min-h-[20px]">
+                    <div className="flex gap-1 min-h-[20px] items-center">
                       {call.colour
                         ? Array.from({ length: call.length }).map((_, k) => (
                             <span
                               key={k}
+                              style={{ backgroundColor: COLOURS[call.colour!].hex }}
                               className={`w-5 h-5 rounded-[5px] ${COLOURS[call.colour!].className}`}
                             />
                           ))

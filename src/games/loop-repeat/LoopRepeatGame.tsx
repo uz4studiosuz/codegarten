@@ -17,11 +17,11 @@ import { pickVariant } from "../shared/seed";
 
 type Tile = "g" | "v" | "a" | "b";
 
-const TILES: Record<Tile, { label: string; className: string }> = {
-  g: { label: "yashil", className: "bg-[#26B54F]" },
-  v: { label: "binafsha", className: "bg-[#7C5CE0]" },
-  a: { label: "sariq", className: "bg-[#E0A13C]" },
-  b: { label: "ko'k", className: "bg-[#3B82F6]" },
+const TILES: Record<Tile, { label: string; className: string; hex: string }> = {
+  g: { label: "yashil", className: "bg-[#26B54F]", hex: "#26B54F" },
+  v: { label: "binafsha", className: "bg-[#7C5CE0]", hex: "#7C5CE0" },
+  a: { label: "sariq", className: "bg-[#E0A13C]", hex: "#E0A13C" },
+  b: { label: "ko'k", className: "bg-[#3B82F6]", hex: "#3B82F6" },
 };
 
 interface Puzzle {
@@ -132,11 +132,12 @@ export function LoopRepeatGame(props: GameProps) {
       }
     >
       <GameBoard label="Kerakli naqsh">
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-wrap gap-1.5 min-h-[32px] items-center">
           {puzzle.target.map((tile, i) => (
             <span
               key={i}
               title={TILES[tile].label}
+              style={{ backgroundColor: TILES[tile].hex }}
               className={`w-8 h-8 rounded-[8px] ${TILES[tile].className}`}
             />
           ))}
@@ -191,6 +192,7 @@ export function LoopRepeatGame(props: GameProps) {
                     type="button"
                     onClick={() => removeAt(i)}
                     aria-label={TILES[tile].label + " katakni olib tashlash"}
+                    style={{ backgroundColor: TILES[tile].hex }}
                     className={`relative w-8 h-8 rounded-[8px] group cursor-pointer ${TILES[tile].className}`}
                   >
                     <span className="absolute inset-0 rounded-[8px] bg-black/0 group-hover:bg-black/30 flex items-center justify-center transition-colors">
@@ -212,6 +214,7 @@ export function LoopRepeatGame(props: GameProps) {
                   type="button"
                   disabled={body.length >= MAX_BODY}
                   onClick={() => addTile(tile)}
+                  style={{ backgroundColor: TILES[tile].hex }}
                   className={`w-9 h-9 rounded-[10px] border-2 border-transparent flex items-center justify-center transition-all active:translate-y-[2px] disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer ${TILES[tile].className}`}
                   title={TILES[tile].label + " qo'shish"}
                 >
@@ -236,6 +239,7 @@ export function LoopRepeatGame(props: GameProps) {
                 return (
                   <span
                     key={i}
+                    style={{ backgroundColor: TILES[tile].hex }}
                     className={`w-8 h-8 rounded-[8px] ${TILES[tile].className} ${
                       status === "fail" && !matches
                         ? "ring-2 ring-amber-500 ring-offset-1 dark:ring-offset-[#141416]"
