@@ -97,7 +97,13 @@ export type LessonStep =
   | { kind: "section"; section: ContentSection }
   | { kind: "terms"; terms: KeyTerm[] }
   | { kind: "quiz"; question: QuizQuestion }
-  | { kind: "challenge" };
+  | {
+      kind: "challenge";
+      /** Specific game to use. When empty or omitted, matches by topic/auto. */
+      gameId?: string;
+      /** Specific puzzle/variant of the game (0-indexed). When omitted, picked round-robin/by seed. */
+      variant?: number;
+    };
 
 export interface LessonContent {
   /** One line stating what the learner will be able to do afterwards. */

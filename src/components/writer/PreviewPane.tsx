@@ -1,22 +1,24 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import {
   IconChevronRight,
   IconLockFilled,
-  IconStarFilled,
-  IconBarbell,
   IconEye,
   IconRefresh,
+  IconMaximize,
+  IconMinimize,
 } from "@tabler/icons-react";
 import { LessonRunner } from "@/components/lesson/LessonRunner";
 import { resolveGame } from "@/games/resolve";
 import { getGame } from "@/games/registry";
 import type { CourseModule } from "@/data/curriculum";
-import { DraftModule, KIND_LABELS } from "@/lib/writerDraft";
+import { DraftModule, countLessons } from "@/lib/writerDraft";
 import { hasReadableBody } from "@/lib/lessonSteps";
 import type { Selection } from "./selection";
+import type { LessonStep } from "@/types/lessonContent";
 
 /**
  * Live preview
@@ -50,60 +52,121 @@ export function PreviewPane({
   stage: PreviewStage;
   onStageChange: (stage: PreviewStage) => void;
 }) {
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const lessonSelection = selection.kind === "lesson" ? selection : undefined;
   const level = lessonSelection ? draft.levels[lessonSelection.levelIndex] : undefined;
   const lesson = level?.lessons[lessonSelection?.lessonIndex ?? -1];
 
-  return (
-    <div className="rounded-[15px] border-2 border-gray-200 dark:border-[#27272a] overflow-hidden flex flex-col h-full">
-      {/* ── Header: what a learner would be looking at ── */}
-      <div className="px-3.5 py-2.5 border-b border-gray-100 dark:border-[#27272a] flex items-center gap-2">
-        <IconEye size={14} className="shrink-0 text-gray-400" />
-        <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-zinc-400 shrink-0">
-          Jonli ko&apos;rinish
-        </span>
+  useEffect(() => {
+    if (!isFullscreen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsFullscreen(false);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isFullscreen]);
 
-        <nav className="ml-auto flex items-center gap-1 min-w-0 text-[11.5px]">
-          <button
-            type="button"
-            onClick={() => onStageChange("modules")}
-            className={`px-2 py-1 rounded-full font-bold transition-colors cursor-pointer ${
-              stage === "modules"
-                ? "bg-[#26B54F]/15 text-[#1a8a3c] dark:text-[#4ADE80]"
-                : "text-gray-500 dark:text-zinc-400 hover:text-black dark:hover:text-white"
-            }`}
-          >
-            Modullar
-          </button>
-          <IconChevronRight size={12} className="text-gray-300 dark:text-zinc-600 shrink-0" />
-          <button
-            type="button"
-            onClick={() => onStageChange("path")}
-            className={`px-2 py-1 rounded-full font-bold max-w-[110px] truncate transition-colors cursor-pointer ${
-              stage === "path"
-                ? "bg-[#26B54F]/15 text-[#1a8a3c] dark:text-[#4ADE80]"
-                : "text-gray-500 dark:text-zinc-400 hover:text-black dark:hover:text-white"
-            }`}
-          >
-            {draft.title || "Modul"}
-          </button>
-          <IconChevronRight size={12} className="text-gray-300 dark:text-zinc-600 shrink-0" />
-          <button
-            type="button"
-            onClick={() => onStageChange("lesson")}
-            disabled={!lesson}
-            className={`px-2 py-1 rounded-full font-bold max-w-[110px] truncate transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer ${
-              stage === "lesson"
-                ? "bg-[#26B54F]/15 text-[#1a8a3c] dark:text-[#4ADE80]"
-                : "text-gray-500 dark:text-zinc-400 hover:text-black dark:hover:text-white"
-            }`}
-          >
-            {lesson?.title || "Dars"}
-          </button>
-        </nav>
-      </div>
+  useEffect(() => {
+    if (isFullscreen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isFullscreen]);
 
-      <div className="flex-1 overflow-y-auto">
+  const content = (
+    <div
+      className={
+        isFullscreen
+          ? "fixed inset-0 z-[9999] bg-white dark:bg-[#0c0c0e] flex flex-col overflow-hidden animate-fadeIn w-screen h-screen"
+          : "rounded-[15px] border-2 border-gray-200 dark:border-[#27272a] overflow-hidden flex flex-col h-full bg-white dark:bg-[#121215]"
+      }
+    >
+      {/* Floating minimize button in Fullscreen mode */}
+      {isFullscreen && (
+        <button
+          type="button"
+          onClick={() => setIsFullscreen(false)}
+          title="Kichraytirish (Esc)"
+          aria-label="Kichraytirish"
+          className="fixed top-4 right-5 z-[10000] inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 dark:bg-[#18181b]/90 backdrop-blur-md border border-gray-200 dark:border-[#333339] shadow-xl text-[12.5px] font-bold text-gray-700 dark:text-zinc-300 hover:text-black dark:hover:text-white hover:border-gray-400 dark:hover:border-zinc-500 transition-all cursor-pointer group"
+        >
+          <IconMinimize size={15} className="text-gray-500 group-hover:text-black dark:group-hover:text-white" />
+          <span>Kichraytirish</span>
+          <span className="text-[10.5px] font-mono text-gray-400 dark:text-zinc-500 bg-gray-100 dark:bg-[#27272a] px-1.5 py-0.5 rounded">
+            Esc
+          </span>
+        </button>
+      )}
+
+      {/* ── Header: visible only in normal (non-fullscreen) mode ── */}
+      {!isFullscreen && (
+        <div className="px-3.5 py-2.5 border-b border-gray-100 dark:border-[#27272a] flex items-center gap-2 shrink-0 bg-white dark:bg-[#121215]">
+          <IconEye size={14} className="shrink-0 text-gray-400" />
+          <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-zinc-400 shrink-0">
+            Jonli ko&apos;rinish
+          </span>
+
+          <nav className="ml-auto flex items-center gap-1 min-w-0 text-[11.5px]">
+            <button
+              type="button"
+              onClick={() => onStageChange("modules")}
+              className={`px-2 py-1 rounded-full font-bold transition-colors cursor-pointer ${
+                stage === "modules"
+                  ? "bg-[#26B54F]/15 text-[#1a8a3c] dark:text-[#4ADE80]"
+                  : "text-gray-500 dark:text-zinc-400 hover:text-black dark:hover:text-white"
+              }`}
+            >
+              Modullar
+            </button>
+            <IconChevronRight size={12} className="text-gray-300 dark:text-zinc-600 shrink-0" />
+            <button
+              type="button"
+              onClick={() => onStageChange("path")}
+              className={`px-2 py-1 rounded-full font-bold max-w-[110px] truncate transition-colors cursor-pointer ${
+                stage === "path"
+                  ? "bg-[#26B54F]/15 text-[#1a8a3c] dark:text-[#4ADE80]"
+                  : "text-gray-500 dark:text-zinc-400 hover:text-black dark:hover:text-white"
+              }`}
+            >
+              {draft.title || "Modul"}
+            </button>
+            <IconChevronRight size={12} className="text-gray-300 dark:text-zinc-600 shrink-0" />
+            <button
+              type="button"
+              onClick={() => onStageChange("lesson")}
+              disabled={!lesson}
+              className={`px-2 py-1 rounded-full font-bold max-w-[110px] truncate transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer ${
+                stage === "lesson"
+                  ? "bg-[#26B54F]/15 text-[#1a8a3c] dark:text-[#4ADE80]"
+                  : "text-gray-500 dark:text-zinc-400 hover:text-black dark:hover:text-white"
+              }`}
+            >
+              {lesson?.title || "Dars"}
+            </button>
+          </nav>
+
+          {/* Fullscreen toggle button */}
+          <button
+            type="button"
+            onClick={() => setIsFullscreen(true)}
+            title="To'liq ekran ko'rinishi"
+            aria-label="To'liq ekran"
+            className="ml-1 p-1.5 rounded-full border border-gray-200 dark:border-[#333339] text-gray-500 dark:text-zinc-400 hover:text-[#26B54F] hover:border-[#26B54F]/50 transition-colors cursor-pointer"
+          >
+            <IconMaximize size={14} />
+          </button>
+        </div>
+      )}
+
+      <div
+        className={`flex-1 overflow-y-auto ${
+          isFullscreen ? "w-full h-full" : ""
+        }`}
+      >
         {stage === "modules" && (
           <ModulesStage
             draft={draft}
@@ -125,10 +188,36 @@ export function PreviewPane({
           />
         )}
 
-        {stage === "lesson" && <LessonStage draft={draft} selection={selection} />}
+        {stage === "lesson" && (
+          <LessonStage
+            draft={draft}
+            selection={selection}
+            isFullscreen={isFullscreen}
+          />
+        )}
       </div>
     </div>
   );
+
+  if (isFullscreen && typeof document !== "undefined") {
+    return (
+      <>
+        <div className="rounded-[15px] border-2 border-dashed border-gray-200 dark:border-[#27272a] h-full flex flex-col items-center justify-center p-6 text-center text-gray-400 text-xs">
+          <p>To&apos;liq ekranda ko&apos;rilmoqda</p>
+          <button
+            type="button"
+            onClick={() => setIsFullscreen(false)}
+            className="mt-2 text-[#26B54F] font-bold hover:underline cursor-pointer"
+          >
+            Kichraytirish (Esc)
+          </button>
+        </div>
+        {createPortal(content, document.body)}
+      </>
+    );
+  }
+
+  return content;
 }
 
 // ── Stage 1: the module strip ───────────────────────────────────────────────
@@ -141,105 +230,62 @@ function ModulesStage({
 }: {
   draft: DraftModule;
   trackTitle: string;
+  /** Modules already in the chosen track, shown around the draft. */
   trackModules: readonly CourseModule[];
   onOpenDraft: () => void;
 }) {
-  const lessonCount = draft.levels.reduce((sum, l) => sum + l.lessons.length, 0);
-
-  /** Existing modules plus the draft, ordered the way the catalog would. */
-  const strip = [
-    ...trackModules.map((module) => ({ kind: "existing" as const, module })),
-    { kind: "draft" as const },
-  ].sort((a, b) => {
-    const numA = a.kind === "draft" ? draft.num : a.module.num;
-    const numB = b.kind === "draft" ? draft.num : b.module.num;
-    return numA - numB;
-  });
+  const levelsCount = draft.levels.length;
+  const lessonsCount = countLessons(draft);
 
   return (
-    <div className="p-4">
-      <h3 className="text-[15px] font-extrabold text-black dark:text-white tracking-tight">
-        {trackTitle}
-      </h3>
-      <p className="mt-0.5 text-[12px] text-gray-500 dark:text-zinc-400">
-        Katalogdagi modullar qatori — yangi modulingiz o&apos;z tartib raqamida turadi.
-      </p>
-
-      <div
-        className="mt-4 flex gap-3 overflow-x-auto scrollbar-none pb-2"
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-      >
-        {strip.map((entry) =>
-          entry.kind === "existing" ? (
-            <div
-              key={entry.module.id}
-              className="shrink-0 w-[132px] rounded-[15px] border border-gray-200 dark:border-zinc-700/60 p-3 flex flex-col opacity-55"
-            >
-              <span className="font-mono text-[10.5px] font-bold text-gray-300 dark:text-zinc-600">
-                {String(entry.module.num).padStart(2, "0")}
-              </span>
-              <div className="my-2 flex justify-center">
-                <Image
-                  src={entry.module.imageSrc}
-                  alt={entry.module.title}
-                  width={52}
-                  height={52}
-                  className="w-[52px] h-[52px] object-contain"
-                />
-              </div>
-              <p className="text-[11.5px] font-bold text-black dark:text-white text-center leading-snug line-clamp-2 min-h-[30px]">
-                {entry.module.title}
-              </p>
-              <span className="mt-1.5 text-[10px] text-center text-gray-400 dark:text-zinc-500">
-                loyihada bor
-              </span>
-            </div>
-          ) : (
-            <button
-              key="draft"
-              type="button"
-              onClick={onOpenDraft}
-              className="shrink-0 w-[132px] rounded-[15px] border-2 border-[#26B54F] bg-[#26B54F]/[0.06] p-3 flex flex-col text-left hover:bg-[#26B54F]/[0.12] transition-colors cursor-pointer"
-            >
-              <div className="flex items-center justify-between">
-                <span className="font-mono text-[10.5px] font-bold text-[#26B54F]">
-                  {String(draft.num).padStart(2, "0")}
-                </span>
-                <span className="rounded-full bg-[#26B54F] px-1.5 py-0.5 text-[9px] font-bold text-white uppercase">
-                  yangi
-                </span>
-              </div>
-              <div className="my-2 flex justify-center">
-                {draft.imageSrc ? (
-                  <Image
-                    src={draft.imageSrc}
-                    alt={draft.title || "Yangi modul"}
-                    width={52}
-                    height={52}
-                    className="w-[52px] h-[52px] object-contain"
-                  />
-                ) : (
-                  <div className="w-[52px] h-[52px] rounded-[12px] bg-gray-100 dark:bg-[#232327]" />
-                )}
-              </div>
-              <p className="text-[11.5px] font-bold text-black dark:text-white text-center leading-snug line-clamp-2 min-h-[30px]">
-                {draft.title || "(nomsiz modul)"}
-              </p>
-              <span className="mt-1.5 text-[10px] text-center text-gray-500 dark:text-zinc-400">
-                {lessonCount} dars · {draft.levels.length} bosqich
-              </span>
-            </button>
-          )
-        )}
+    <div className="p-4 flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <span className="text-[12px] font-bold uppercase tracking-wider text-[#26B54F]">
+          {trackTitle}
+        </span>
+        <span className="text-[12px] text-gray-400 dark:text-zinc-500">
+          {trackModules.length + 1} ta modul
+        </span>
       </div>
 
-      <button
-        type="button"
-        onClick={onOpenDraft}
-        className="mt-3 w-full rounded-full bg-[#26B54F] py-2.5 text-[13px] font-bold text-white hover:bg-[#1ea94f] transition-colors cursor-pointer"
-      >
-        Modul yo&apos;lini ochish
-      </button>
+      <div className="grid grid-cols-1 gap-3">
+        {/* The draft being edited, highlighted */}
+        <div
+          onClick={onOpenDraft}
+          className="rounded-[16px] border-2 border-[#26B54F] bg-[#26B54F]/[0.06] p-4 flex items-center justify-between gap-3 cursor-pointer hover:bg-[#26B54F]/10 transition-colors"
+        >
+          <div className="min-w-0">
+            <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#26B54F] text-white mb-1.5">
+              Tahrirlanayotgan modul
+            </span>
+            <h3 className="font-extrabold text-[16px] text-gray-900 dark:text-white truncate">
+              {draft.title || "(Nomsiz modul)"}
+            </h3>
+            <p className="text-[12px] text-gray-500 dark:text-zinc-400 mt-0.5">
+              {levelsCount} bosqich · {lessonsCount} dars
+            </p>
+          </div>
+          <IconChevronRight size={18} className="text-[#26B54F] shrink-0" />
+        </div>
+
+        {/* Existing modules, dimmed */}
+        {trackModules.map((m) => (
+          <div
+            key={m.id}
+            className="rounded-[16px] border border-gray-200 dark:border-[#27272a] bg-white dark:bg-[#16161a] p-4 flex items-center justify-between gap-3 opacity-60"
+          >
+            <div className="min-w-0">
+              <h3 className="font-bold text-[15px] text-gray-700 dark:text-zinc-300 truncate">
+                {m.title}
+              </h3>
+              <p className="text-[12px] text-gray-400 dark:text-zinc-500 mt-0.5">
+                {m.levels.length} bosqich · {m.levels.reduce((s, l) => s + l.lessons.length, 0)} dars
+              </p>
+            </div>
+            <IconLockFilled size={15} className="text-gray-300 dark:text-zinc-600 shrink-0" />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -257,127 +303,102 @@ function PathStage({
   onOpenLesson: (levelIndex: number, lessonIndex: number) => void;
   onOpenLevel: (levelIndex: number) => void;
 }) {
-  /** The path a learner walks: the first lesson is open, the rest follow it. */
-  let position = 0;
-
   return (
-    <div className="p-4">
-      <div className="rounded-[15px] border border-gray-200 dark:border-[#2b2b31] bg-[#F8F9FA] dark:bg-[#101013] p-4">
-        <div className="flex items-center gap-3">
-          {draft.imageSrc && (
-            <Image
-              src={draft.imageSrc}
-              alt={draft.title || "Modul"}
-              width={44}
-              height={44}
-              className="w-11 h-11 object-contain shrink-0"
-            />
-          )}
-          <div className="min-w-0">
-            <h3 className="text-[15px] font-bold text-black dark:text-white truncate">
-              {draft.title || "(nomsiz modul)"}
-            </h3>
-            <p className="text-[12px] text-gray-500 dark:text-[#8b8b93] line-clamp-2">
-              {draft.description || "Tavsif yozilmagan"}
-            </p>
-          </div>
-        </div>
+    <div className="p-4 flex flex-col gap-5">
+      <div className="flex flex-col gap-1 border-b border-gray-100 dark:border-[#27272a] pb-3">
+        <h2 className="text-[18px] font-extrabold text-gray-900 dark:text-white">
+          {draft.title || "Modul yo'li"}
+        </h2>
+        {draft.description && (
+          <p className="text-[13px] text-gray-500 dark:text-zinc-400">{draft.description}</p>
+        )}
       </div>
 
-      {draft.levels.map((level, li) => (
-        <section key={`${level.id}-${li}`} className="mt-5">
-          <button
-            type="button"
-            onClick={() => onOpenLevel(li)}
-            className="w-full px-4 py-2.5 rounded-[16px] flex flex-col cursor-pointer transition-colors hover:bg-[#26B54F]/[0.06]"
-            style={{
-              outline: "2px solid #26B54F",
-              outlineOffset: "-2px",
-              boxShadow: "inset 0px -5px 0px 0px #26B54F",
-            }}
+      {draft.levels.map((level, li) => {
+        const isSelectedLevel = selection.kind === "level" && selection.levelIndex === li;
+        return (
+          <div
+            key={li}
+            className={`rounded-[16px] border-2 p-3.5 flex flex-col gap-3 transition-colors ${
+              isSelectedLevel
+                ? "border-[#26B54F] bg-[#26B54F]/[0.04]"
+                : "border-gray-100 dark:border-[#222226] bg-gray-50/50 dark:bg-[#16161a]"
+            }`}
           >
-            <span className="text-center text-[10px] font-mono font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400">
-              Level {li + 1}
-            </span>
-            <span className="text-center text-[13px] text-black dark:text-white">
-              {level.title || "(nomsiz bosqich)"}
-            </span>
-          </button>
+            <div
+              onClick={() => onOpenLevel(li)}
+              className="flex items-center justify-between cursor-pointer group"
+            >
+              <div className="min-w-0">
+                <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#26B54F]">
+                  {li + 1}-bosqich
+                </span>
+                <h4 className="font-bold text-[14.5px] text-gray-900 dark:text-zinc-100 truncate group-hover:text-[#26B54F] transition-colors">
+                  {level.title || "(Nomsiz bosqich)"}
+                </h4>
+              </div>
+              <span className="text-[11.5px] text-gray-400 dark:text-zinc-500 shrink-0">
+                {level.lessons.length} dars
+              </span>
+            </div>
 
-          <div className="mt-4 flex flex-col gap-3">
-            {level.lessons.map((lesson, i) => {
-              const isFirst = position === 0;
-              position += 1;
-              const selected =
-                selection.kind === "lesson" &&
-                selection.levelIndex === li &&
-                selection.lessonIndex === i;
+            <div className="flex flex-col gap-1.5 pl-2 border-l-2 border-gray-200 dark:border-[#2a2a30]">
+              {level.lessons.map((lesson, lei) => {
+                const isSelectedLesson =
+                  selection.kind === "lesson" &&
+                  selection.levelIndex === li &&
+                  selection.lessonIndex === lei;
 
-              return (
-                <button
-                  key={`${lesson.id}-${i}`}
-                  type="button"
-                  onClick={() => onOpenLesson(li, i)}
-                  className={`group flex items-center gap-3 rounded-[14px] border-2 px-3 py-2.5 text-left transition-colors cursor-pointer ${
-                    selected
-                      ? "border-[#26B54F] bg-[#26B54F]/[0.08]"
-                      : "border-transparent hover:bg-gray-50 dark:hover:bg-[#1c1c20]"
-                  }`}
-                >
-                  {/* The disc a learner taps on the real path */}
-                  <span
-                    className={`shrink-0 w-12 h-11 rounded-full flex items-center justify-center transition-transform group-active:translate-y-[3px] ${
-                      isFirst
-                        ? "bg-[#F0B03C] shadow-[0px_4px_0px_0px_#C0851F]"
-                        : "bg-neutral-200 dark:bg-neutral-700 shadow-[0px_4px_0px_0px_rgba(150,150,150,0.6)]"
+                return (
+                  <button
+                    key={lei}
+                    type="button"
+                    onClick={() => onOpenLesson(li, lei)}
+                    className={`flex items-center justify-between p-2 rounded-[10px] text-left transition-colors cursor-pointer ${
+                      isSelectedLesson
+                        ? "bg-[#26B54F] text-white font-bold"
+                        : "hover:bg-gray-100 dark:hover:bg-[#202025] text-gray-700 dark:text-zinc-300 font-medium"
                     }`}
                   >
-                    {isFirst ? (
-                      <IconStarFilled size={20} className="text-white" />
-                    ) : lesson.kind === "review" ? (
-                      <IconBarbell size={19} className="text-neutral-400" />
-                    ) : (
-                      <IconLockFilled size={17} className="text-neutral-400" />
-                    )}
-                  </span>
-
-                  <span className="min-w-0 flex-1">
-                    <span className="block text-[13.5px] font-semibold text-gray-800 dark:text-[#d4d4d8] truncate">
-                      {lesson.title || "(nomsiz dars)"}
+                    <span className="text-[13px] truncate">
+                      {lei + 1}. {lesson.title || "(Nomsiz dars)"}
                     </span>
-                    <span className="block text-[11px] text-gray-500 dark:text-[#6d6d74]">
-                      {KIND_LABELS[lesson.kind]} · {lesson.xp} XP · {lesson.estMinutes} daq
+                    <span
+                      className={`text-[11px] font-mono px-1.5 py-0.5 rounded ${
+                        isSelectedLesson
+                          ? "bg-white/20 text-white"
+                          : "bg-gray-200/60 dark:bg-[#25252a] text-gray-500 dark:text-zinc-400"
+                      }`}
+                    >
+                      {lesson.xp} XP
                     </span>
-                  </span>
-                </button>
-              );
-            })}
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        </section>
-      ))}
-
-      <p className="mt-5 text-[11.5px] leading-relaxed text-gray-400 dark:text-zinc-500">
-        Yo&apos;lda faqat birinchi dars ochiq turadi — qolganlari o&apos;quvchi
-        oldingisini yakunlagach ochiladi.
-      </p>
+        );
+      })}
     </div>
   );
 }
 
-// ── Stage 3: the lesson itself ──────────────────────────────────────────────
+// ── Stage 3: full lesson screen ─────────────────────────────────────────────
 
 function LessonStage({
   draft,
   selection,
+  isFullscreen = false,
 }: {
   draft: DraftModule;
   selection: Selection;
+  isFullscreen?: boolean;
 }) {
-  const [restartKey, setRestartKey] = React.useState(0);
+  const [restartKey, setRestartKey] = useState(0);
 
   if (selection.kind !== "lesson") {
     return (
-      <Placeholder text="Chapdagi ro'yxatdan dars tanlang — uning ko'rinishi shu yerda paydo bo'ladi." />
+      <Placeholder text="Chapdagi tuzilmadan darsni tanlang — uning to'liq dars jarayoni shu yerda ko'rinadi." />
     );
   }
 
@@ -404,8 +425,11 @@ function LessonStage({
   }
 
   // The same resolution the app uses, so the preview ends in the real game.
+  const challengeStep = lesson.content.steps?.find(
+    (s): s is Extract<LessonStep, { kind: "challenge" }> => s.kind === "challenge"
+  );
   const game =
-    getGame(lesson.gameId) ??
+    getGame(challengeStep?.gameId || lesson.gameId) ??
     resolveGame({
       kind: lesson.kind,
       lessonTitle: lesson.title,
@@ -415,22 +439,30 @@ function LessonStage({
     });
 
   return (
-    <div className="flex flex-col">
-      <div className="px-3.5 py-2 border-b border-gray-100 dark:border-[#27272a] flex items-center justify-between gap-2">
-        <span className="text-[11.5px] text-gray-500 dark:text-zinc-400 truncate">
-          {game ? `Oxirida o'yin: ${game.name}` : "O'yinsiz dars"}
-        </span>
-        <button
-          type="button"
-          onClick={() => setRestartKey((k) => k + 1)}
-          className="shrink-0 inline-flex items-center gap-1.5 text-[11.5px] font-bold text-[#26B54F] hover:underline cursor-pointer"
-        >
-          <IconRefresh size={13} />
-          Boshidan
-        </button>
-      </div>
+    <div className={`flex flex-col ${isFullscreen ? "h-full" : ""}`}>
+      {!isFullscreen && (
+        <div className="px-3.5 py-2 border-b border-gray-100 dark:border-[#27272a] flex items-center justify-between gap-2">
+          <span className="text-[11.5px] text-gray-500 dark:text-zinc-400 truncate">
+            {game
+              ? `O'yin: ${game.name}${
+                  challengeStep?.variant !== undefined
+                    ? ` (${challengeStep.variant + 1}-masala)`
+                    : ""
+                }`
+              : "O'yinsiz dars"}
+          </span>
+          <button
+            type="button"
+            onClick={() => setRestartKey((k) => k + 1)}
+            className="shrink-0 inline-flex items-center gap-1.5 text-[11.5px] font-bold text-[#26B54F] hover:underline cursor-pointer"
+          >
+            <IconRefresh size={13} />
+            Boshidan
+          </button>
+        </div>
+      )}
 
-      <div className="min-h-[560px]">
+      <div className={isFullscreen ? "flex-1 w-full" : "min-h-[560px]"}>
         <LessonRunner
           key={`${lesson.id}-${restartKey}`}
           embedded

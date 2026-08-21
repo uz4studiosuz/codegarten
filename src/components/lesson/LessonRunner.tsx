@@ -21,6 +21,7 @@ import {
   IconCheck,
 } from "@tabler/icons-react";
 import type { GameDefinition } from "@/games/types";
+import { getGame } from "@/games/registry";
 import { useVocabulary } from "@/context/VocabularyContext";
 import { useSpeech } from "@/context/SpeechContext";
 import { lessonSteps, sectionBlocks } from "@/lib/lessonSteps";
@@ -94,21 +95,19 @@ function shuffleQuestion(question: QuizQuestion, salt: string): QuizQuestion {
 /** Interactive inline choice block embedded directly in teaching screens. */
 function InlineChoiceBlockView({
   block,
+  selected,
+  isRevealed,
+  onSelect,
 }: {
   block: Extract<SectionBlock, { kind: "choice" }>;
+  selected: number | null;
+  isRevealed: boolean;
+  onSelect: (index: number) => void;
 }) {
-  const [selected, setSelected] = useState<number | null>(null);
-  const [isAnswered, setIsAnswered] = useState(false);
-
   // If all options are short (<= 16 chars), use 2 columns grid; otherwise 1 column list
   const isCompact = useMemo(() => {
     return block.options.every((opt) => opt.trim().length <= 16);
   }, [block.options]);
-
-  const handleSelect = (index: number) => {
-    setSelected(index);
-    setIsAnswered(true);
-  };
 
   const isCorrect = selected === block.correctIndex;
 
@@ -130,8 +129,8 @@ function InlineChoiceBlockView({
         {block.options.map((option, idx) => {
           const isSelected = selected === idx;
           const isRightAnswer = idx === block.correctIndex;
-          const showSuccess = isAnswered && isSelected && isRightAnswer;
-          const showWrong = isAnswered && isSelected && !isRightAnswer;
+          const showSuccess = isRevealed && isSelected && isRightAnswer;
+          const showWrong = isRevealed && isSelected && !isRightAnswer;
 
           let tone =
             "border-gray-200 dark:border-[#2b2b31] bg-white dark:bg-[#141416] hover:border-gray-300 dark:hover:border-[#3d3d45] text-gray-800 dark:text-[#d4d4d8]";
@@ -151,7 +150,7 @@ function InlineChoiceBlockView({
             <button
               key={idx}
               type="button"
-              onClick={() => handleSelect(idx)}
+              onClick={() => onSelect(idx)}
               className={`relative rounded-[12px] border-2 px-4 py-3 text-left transition-all duration-150 cursor-pointer ${
                 isCompact ? "text-center font-mono font-bold text-[14.5px]" : "text-[14.5px] font-medium"
               } ${tone}`}
@@ -168,13 +167,13 @@ function InlineChoiceBlockView({
         })}
       </div>
 
-      {isAnswered && !isCorrect && (
+      {isRevealed && !isCorrect && (
         <p className="text-[12.5px] text-amber-600 dark:text-amber-400 font-medium">
           Qaytadan urinib ko&apos;ring.
         </p>
       )}
 
-      {isAnswered && isCorrect && block.explanation && (
+      {isRevealed && isCorrect && block.explanation && (
         <p className="text-[13px] text-green-700 dark:text-[#4ADE80] bg-[#26B54F]/10 border border-[#26B54F]/30 rounded-[10px] px-3 py-2 leading-relaxed">
           {block.explanation}
         </p>
@@ -184,7 +183,19 @@ function InlineChoiceBlockView({
 }
 
 /** One authored block of a teaching screen. */
-function SectionBlockView({ block }: { block: SectionBlock }) {
+function SectionBlockView({
+  block,
+  blockIndex,
+  choiceSelected,
+  choiceRevealed,
+  onChoiceSelect,
+}: {
+  block: SectionBlock;
+  blockIndex: number;
+  choiceSelected?: number | null;
+  choiceRevealed?: boolean;
+  onChoiceSelect?: (optionIndex: number) => void;
+}) {
   if (block.kind === "text") {
     return (
       <p className="text-[16px] leading-[1.75] text-gray-700 dark:text-[#c9c9d0]">
@@ -194,7 +205,14 @@ function SectionBlockView({ block }: { block: SectionBlock }) {
   }
 
   if (block.kind === "choice") {
-    return <InlineChoiceBlockView block={block} />;
+    return (
+      <InlineChoiceBlockView
+        block={block}
+        selected={choiceSelected ?? null}
+        isRevealed={choiceRevealed ?? false}
+        onSelect={(optIdx) => onChoiceSelect?.(optIdx)}
+      />
+    );
   }
 
   if (block.kind === "image") {
@@ -304,6 +322,10 @@ export function LessonRunner({
   const [picked, setPicked] = useState<number | null>(null);
   const [revealed, setRevealed] = useState(false);
 
+  // Choice state for section step
+  const [choiceSelections, setChoiceSelections] = useState<Record<number, number | null>>({});
+  const [choiceRevealed, setChoiceRevealed] = useState(false);
+
   // Challenge state, driven from the footer button
   const [challengeReady, setChallengeReady] = useState(false);
   const [challengeSolved, setChallengeSolved] = useState(false);
@@ -316,6 +338,9 @@ export function LessonRunner({
    * second time. XP is awarded for the lesson, not per solve.
    */
   const xpAwarded = useRef(false);
+
+  const [embeddedMuted, setEmbeddedMuted] = useState(true);
+  const muted = embedded ? embeddedMuted : !speech.settings.enabled;
 
   const step = steps[stepIndex];
   const isLastStep = stepIndex === steps.length - 1;
@@ -356,10 +381,10 @@ export function LessonRunner({
     return "";
   }, [step, lessonTitle, content.goal]);
 
-  // Narrate each step as it opens, when the learner has autoplay on.
+  // Narrate each step as it opens, when the learner has autoplay on (and not muted).
   useEffect(() => {
-    if (narration) speakAuto(narration);
-  }, [narration, speakAuto]);
+    if (narration && !muted) speakAuto(narration);
+  }, [narration, speakAuto, muted]);
 
   // Never let narration continue after the lesson screen goes away.
   useEffect(() => () => stopSpeech(), [stopSpeech]);
@@ -380,6 +405,8 @@ export function LessonRunner({
   const clearStepState = () => {
     setPicked(null);
     setRevealed(false);
+    setChoiceSelections({});
+    setChoiceRevealed(false);
     setChallengeStatus("idle");
     setChallengeSolved(false);
     setChallengeReady(false);
@@ -411,6 +438,28 @@ export function LessonRunner({
     setStepIndex((i) => Math.max(0, i - 1));
   };
 
+  const sectionChoiceEntries = useMemo(() => {
+    if (step?.kind !== "section") return [];
+    return sectionBlocks(step.section)
+      .map((block, index) => ({ block, index }))
+      .filter(
+        (entry): entry is { block: Extract<SectionBlock, { kind: "choice" }>; index: number } =>
+          entry.block.kind === "choice"
+      );
+  }, [step]);
+
+  const hasChoiceInStep = sectionChoiceEntries.length > 0;
+  const allChoicesSelected =
+    hasChoiceInStep &&
+    sectionChoiceEntries.every(
+      ({ index }) => choiceSelections[index] !== null && choiceSelections[index] !== undefined
+    );
+  const allChoicesCorrect =
+    hasChoiceInStep &&
+    sectionChoiceEntries.every(
+      ({ block, index }) => choiceSelections[index] === block.correctIndex
+    );
+
   // ── Footer button state per step kind ────────────────────────────────────
   let footerLabel = "Davom etish";
   let footerEnabled = true;
@@ -431,6 +480,22 @@ export function LessonRunner({
             setRevealed(false);
           };
     }
+  } else if (step?.kind === "section" && hasChoiceInStep) {
+    if (!choiceRevealed) {
+      footerLabel = "Tekshirish";
+      footerEnabled = allChoicesSelected;
+      footerAction = () => setChoiceRevealed(true);
+    } else {
+      if (allChoicesCorrect) {
+        footerLabel = "Davom etish";
+        footerEnabled = true;
+        footerAction = goNext;
+      } else {
+        footerLabel = "Qaytadan tekshirish";
+        footerEnabled = allChoicesSelected;
+        footerAction = () => setChoiceRevealed(true);
+      }
+    }
   } else if (step?.kind === "challenge") {
     if (challengeSolved) {
       footerLabel = "Davom etish";
@@ -450,6 +515,10 @@ export function LessonRunner({
       picked === step.question.correctIndex
         ? "border-[#26B54F] shadow-[0_6px_0_0_#26B54F]"
         : "border-amber-500 shadow-[0_6px_0_0_#F59E0B]";
+  } else if (step?.kind === "section" && hasChoiceInStep && choiceRevealed) {
+    frameTone = allChoicesCorrect
+      ? "border-[#26B54F] shadow-[0_6px_0_0_#26B54F]"
+      : "border-amber-500 shadow-[0_6px_0_0_#F59E0B]";
   } else if (step?.kind === "challenge") {
     if (challengeSolved || challengeStatus === "success") {
       frameTone = "border-[#26B54F] shadow-[0_6px_0_0_#26B54F]";
@@ -457,8 +526,6 @@ export function LessonRunner({
       frameTone = "border-amber-500 shadow-[0_6px_0_0_#F59E0B]";
     }
   }
-
-  const muted = !speech.settings.enabled;
 
   return (
     <div
@@ -480,13 +547,21 @@ export function LessonRunner({
         </button>
 
         {/* Sound: one control mutes the lesson outright, the other plays or stops
-            the current screen. Before, the only button stopped the utterance and
-            autoplay simply spoke again on the next step. */}
+            the current screen. */}
         {speech.supported && (
           <div className="shrink-0 flex items-center gap-1.5">
             <button
               type="button"
-              onClick={() => speech.setEnabled(muted)}
+              onClick={() => {
+                if (embedded) {
+                  setEmbeddedMuted((m) => {
+                    if (!m) stopSpeech();
+                    return !m;
+                  });
+                } else {
+                  speech.setEnabled(muted);
+                }
+              }}
               aria-pressed={muted}
               aria-label={muted ? "Ovozni yoqish" : "Ovozni o'chirish"}
               title={muted ? "Ovoz o'chirilgan — yoqish" : "Ovozni o'chirish"}
@@ -598,7 +673,17 @@ export function LessonRunner({
                 </h2>
 
                 {sectionBlocks(step.section).map((block, i) => (
-                  <SectionBlockView key={i} block={block} />
+                  <SectionBlockView
+                    key={i}
+                    block={block}
+                    blockIndex={i}
+                    choiceSelected={choiceSelections[i]}
+                    choiceRevealed={choiceRevealed}
+                    onChoiceSelect={(optIdx) => {
+                      setChoiceSelections((prev) => ({ ...prev, [i]: optIdx }));
+                      if (choiceRevealed) setChoiceRevealed(false);
+                    }}
+                  />
                 ))}
               </div>
             ) : step?.kind === "terms" ? (
@@ -756,17 +841,24 @@ export function LessonRunner({
                     </div>
                   ))}
               </div>
-            ) : step?.kind === "challenge" && game ? (
-              /* ── Interactive game, resolved from the registry ── */
-              <game.Component
-                seed={lessonId}
-                context={`${lessonTitle} ${levelTitle}`.toLowerCase()}
-                variant={gameVariant}
-                onSolved={handleChallengeSolved}
-                onReadyChange={setChallengeReady}
-                registerCheck={registerCheck}
-                onStatusChange={setChallengeStatus}
-              />
+            ) : step?.kind === "challenge" && (step.gameId ? getGame(step.gameId) : game) ? (
+              /* ── Interactive game, resolved from the registry or step ── */
+              (() => {
+                const activeGame = (step.gameId ? getGame(step.gameId) : game)!;
+                const activeVariant = step.variant !== undefined ? step.variant : gameVariant;
+                return (
+                  <activeGame.Component
+                    key={`${activeGame.id}:${activeVariant ?? "auto"}`}
+                    seed={lessonId}
+                    context={`${lessonTitle} ${levelTitle}`.toLowerCase()}
+                    variant={activeVariant}
+                    onSolved={handleChallengeSolved}
+                    onReadyChange={setChallengeReady}
+                    registerCheck={registerCheck}
+                    onStatusChange={setChallengeStatus}
+                  />
+                );
+              })()
             ) : null}
 
           </div>

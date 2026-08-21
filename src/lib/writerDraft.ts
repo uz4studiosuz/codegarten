@@ -197,7 +197,7 @@ export function emptyStep(kind: Exclude<StepKind, "goal">): LessonStep {
   if (kind === "section") return { kind: "section", section: emptySection() };
   if (kind === "terms") return { kind: "terms", terms: [emptyTerm()] };
   if (kind === "quiz") return { kind: "quiz", question: emptyQuestion() };
-  return { kind: "challenge" };
+  return { kind: "challenge", gameId: "", variant: undefined };
 }
 
 export function emptyContent(): LessonContent {
@@ -415,14 +415,20 @@ export function moduleFileFor(draft: DraftModule) {
       num: level.num,
       title: level.title,
       summary: level.summary,
-      lessons: level.lessons.map((lesson) => ({
-        id: lesson.id,
-        title: lesson.title,
-        kind: lesson.kind,
-        xp: lesson.xp,
-        estMinutes: lesson.estMinutes,
-        ...(lesson.gameId ? { gameId: lesson.gameId } : {}),
-      })),
+      lessons: level.lessons.map((lesson) => {
+        const challengeStep = lesson.content.steps?.find(
+          (s): s is Extract<LessonStep, { kind: "challenge" }> => s.kind === "challenge"
+        );
+        const resolvedGameId = challengeStep?.gameId || lesson.gameId || "";
+        return {
+          id: lesson.id,
+          title: lesson.title,
+          kind: lesson.kind,
+          xp: lesson.xp,
+          estMinutes: lesson.estMinutes,
+          ...(resolvedGameId ? { gameId: resolvedGameId } : {}),
+        };
+      }),
     })),
   };
 }
@@ -537,7 +543,11 @@ export function tidyContent(
         steps.push({ kind: "quiz", question: tidyQuestion(step.question) });
       }
     } else if (step.kind === "challenge") {
-      steps.push({ kind: "challenge" });
+      steps.push({
+        kind: "challenge",
+        ...(step.gameId?.trim() ? { gameId: step.gameId.trim() } : {}),
+        ...(step.variant !== undefined && step.variant >= 0 ? { variant: step.variant } : {}),
+      });
     }
   }
 

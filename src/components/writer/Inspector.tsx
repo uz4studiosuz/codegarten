@@ -14,7 +14,8 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import { ALL_TOPICS, TOPIC_LABELS, type GameTopic } from "@/games/topics";
-import { listGames } from "@/games/registry";
+import { getGame, listGames } from "@/games/registry";
+import { getGamePuzzles } from "@/games/puzzles";
 import { resolveGame } from "@/games/resolve";
 import {
   BLOCK_HINTS,
@@ -583,55 +584,6 @@ function LessonForm({
             </Field>
           </div>
         </div>
-
-        <div className="rounded-[10px] bg-gray-50 dark:bg-[#1c1c20] px-3 py-2.5 flex items-center justify-between gap-3">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400 dark:text-zinc-500">
-            Dars id
-          </span>
-          <span className="font-mono text-[12px] text-gray-600 dark:text-zinc-300 truncate">
-            {lesson.id}
-          </span>
-        </div>
-
-        <Field
-          label="Interaktiv o'yin"
-          hint={
-            kindHasGame(lesson.kind)
-              ? "Bo'sh qoldirilsa, mavzuga qarab avtomatik tanlanadi"
-              : "Bu turdagi darsda o'yin ishlatilmaydi"
-          }
-        >
-          <Select
-            value={lesson.gameId}
-            onChange={(e) => patch({ gameId: e.target.value })}
-            disabled={!kindHasGame(lesson.kind)}
-          >
-            <option value="">— avtomatik (mavzuga qarab) —</option>
-            {games.map((g) => (
-              <option key={g.id} value={g.id}>
-                {g.name}
-              </option>
-            ))}
-          </Select>
-        </Field>
-
-        {kindHasGame(lesson.kind) && (
-          <p className="text-[12px] leading-relaxed text-gray-500 dark:text-zinc-400 -mt-1">
-            {lesson.gameId ? (
-              games.find((g) => g.id === lesson.gameId)?.description
-            ) : autoGame ? (
-              <>
-                Avtomatik tanlanadi:{" "}
-                <span className="font-semibold text-[#26B54F] dark:text-[#4ADE80]">
-                  {autoGame.name}
-                </span>{" "}
-                — {autoGame.description}
-              </>
-            ) : (
-              "Mos o'yin topilmadi — modul mavzusini tanlang."
-            )}
-          </p>
-        )}
       </Section>
 
       <Section title="Maqsad" badge={badgeFor(lessonIssues, (m) => /maqsad/.test(m))}>
@@ -673,7 +625,7 @@ function LessonForm({
           const stepSummary = getStepSummary(
             step,
             autoGame?.name,
-            games.find((g) => g.id === lesson.gameId)?.name
+            games
           );
 
           return (
@@ -688,7 +640,6 @@ function LessonForm({
               summary={stepSummary}
               onMove={(direction) => {
                 moveStep(index, direction);
-                // Also update collapsed states
                 const target = index + direction;
                 if (target >= 0 && target < steps.length) {
                   setCollapsedSteps((prev) => ({
@@ -719,15 +670,20 @@ function LessonForm({
                 />
               )}
               {step.kind === "challenge" && (
-                <p className="text-[12.5px] leading-relaxed text-gray-500 dark:text-zinc-400">
-                  Shu joyda interaktiv o&apos;yin ochiladi
-                  {lesson.gameId
-                    ? `: ${games.find((g) => g.id === lesson.gameId)?.name ?? lesson.gameId}`
-                    : autoGame
-                    ? `: ${autoGame.name} (avtomatik)`
-                    : ""}
-                  . O&apos;yinni tanlash yuqoridagi «Dars» bo&apos;limida.
-                </p>
+                <ChallengeStepEditor
+                  step={step}
+                  lessonKind={lesson.kind}
+                  moduleTopics={draft.topics}
+                  lessonTitle={lesson.title}
+                  levelTitle={level.title}
+                  lessonId={lesson.id}
+                  onChange={(updated) => {
+                    replaceStep(index, updated);
+                    if (updated.gameId !== undefined) {
+                      patch({ gameId: updated.gameId });
+                    }
+                  }}
+                />
               )}
             </StepCard>
           );
@@ -752,7 +708,11 @@ function LessonForm({
   );
 }
 
-function getStepSummary(step: LessonStep, autoGameName?: string, pinnedGameName?: string): string {
+function getStepSummary(
+  step: LessonStep,
+  autoGameName?: string,
+  gamesList: readonly { id: string; name: string }[] = []
+): string {
   if (step.kind === "section") {
     const blocksCount = draftBlocks(step.section).length;
     return `${step.section.heading || "(Sarlavhasiz bo'lim)"} · ${blocksCount} ta blok`;
@@ -768,7 +728,9 @@ function getStepSummary(step: LessonStep, autoGameName?: string, pinnedGameName?
     return `${count} ta atama${names ? ` (${names})` : ""}`;
   }
   if (step.kind === "challenge") {
-    return pinnedGameName ? pinnedGameName : autoGameName ? `${autoGameName} (avtomatik)` : "Interaktiv o'yin";
+    const gName = step.gameId ? gamesList.find((g) => g.id === step.gameId)?.name : autoGameName;
+    const vText = step.variant !== undefined ? ` (${step.variant + 1}-masala)` : "";
+    return `${gName ?? "Interaktiv o'yin"}${vText}`;
   }
   return "";
 }
@@ -1654,3 +1616,145 @@ function QuizStepEditor({
     </>
   );
 }
+
+function ChallengeStepEditor({
+  step,
+  lessonKind,
+  moduleTopics,
+  lessonTitle,
+  levelTitle,
+  lessonId,
+  onChange,
+}: {
+  step: Extract<LessonStep, { kind: "challenge" }>;
+  lessonKind: LessonKind;
+  moduleTopics: string[];
+  lessonTitle: string;
+  levelTitle: string;
+  lessonId: string;
+  onChange: (step: Extract<LessonStep, { kind: "challenge" }>) => void;
+}) {
+  const games = listGames();
+  const autoGame = resolveGame({
+    kind: lessonKind,
+    lessonTitle,
+    levelTitle,
+    moduleTopics,
+    seed: lessonId,
+  });
+
+  const activeGameId = step.gameId || autoGame?.id || "";
+  const activeGame = getGame(activeGameId) || autoGame;
+  const puzzles = getGamePuzzles(activeGameId);
+
+  return (
+    <div className="flex flex-col gap-3.5">
+      <Field
+        label="O'yin turi"
+        hint={
+          step.gameId
+            ? "O'zingiz tanlagan o'yin"
+            : autoGame
+            ? `Avtomatik tanlangan: ${autoGame.name}`
+            : "Avtomatik tanlanadi"
+        }
+      >
+        <Select
+          value={step.gameId ?? ""}
+          onChange={(e) => {
+            const newGameId = e.target.value;
+            onChange({
+              ...step,
+              gameId: newGameId,
+              variant: undefined,
+            });
+          }}
+        >
+          <option value="">
+            — Avtomatik tanlash {autoGame ? `(${autoGame.name})` : ""} —
+          </option>
+          {games.map((g) => (
+            <option key={g.id} value={g.id}>
+              {g.name}
+            </option>
+          ))}
+        </Select>
+      </Field>
+
+      {activeGame && (
+        <div className="rounded-[10px] bg-gray-50 dark:bg-[#1c1c20] p-3 flex flex-col gap-1.5 border border-gray-200/70 dark:border-[#2a2a30]">
+          <div className="flex items-center justify-between">
+            <span className="text-[12.5px] font-bold text-gray-800 dark:text-zinc-200">
+              {activeGame.name}
+            </span>
+            {!step.gameId ? (
+              <span className="text-[10px] font-bold uppercase tracking-wider bg-[#26B54F]/15 text-[#177F37] dark:text-[#4ADE80] px-2 py-0.5 rounded-full">
+                Avtomatik
+              </span>
+            ) : (
+              <span className="text-[10px] font-bold uppercase tracking-wider bg-[#3B82F6]/15 text-[#2563EB] dark:text-[#60A5FA] px-2 py-0.5 rounded-full">
+                Qo&apos;lda tanlangan
+              </span>
+            )}
+          </div>
+          <p className="text-[12px] leading-relaxed text-gray-500 dark:text-zinc-400">
+            {activeGame.description}
+          </p>
+        </div>
+      )}
+
+      {/* ── Puzzle / Variant selector ── */}
+      {puzzles.length > 0 && (
+        <div className="flex flex-col gap-2 pt-1 border-t border-gray-200 dark:border-[#26262a]">
+          <Field
+            label="Masala / Qiyinchilik darajasi (Variant)"
+            hint="Darsda o'quvchiga tushadigan aniq topshiriqni tanlang"
+          >
+            <Select
+              value={step.variant !== undefined ? String(step.variant) : ""}
+              onChange={(e) => {
+                const val = e.target.value;
+                onChange({
+                  ...step,
+                  variant: val === "" ? undefined : Number(val),
+                });
+              }}
+            >
+              <option value="">
+                — Avtomatik (tavsiya etiladi — dars tartibi bo&apos;yicha) —
+              </option>
+              {puzzles.map((p) => (
+                <option key={p.variant} value={p.variant}>
+                  {p.variant + 1}-masala: {p.title} ({p.difficulty ?? "O'rta"})
+                </option>
+              ))}
+            </Select>
+          </Field>
+
+          {step.variant !== undefined && puzzles[step.variant] && (
+            <div className="rounded-[10px] border border-[#26B54F]/30 bg-[#26B54F]/[0.06] p-3 flex flex-col gap-1 text-[12px]">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-green-900 dark:text-[#4ADE80]">
+                  {step.variant + 1}-masala: {puzzles[step.variant].title}
+                </span>
+                {puzzles[step.variant].difficulty && (
+                  <span className="text-[10.5px] font-bold px-2 py-0.5 rounded-full bg-white dark:bg-[#1a1a1e] border border-gray-200 dark:border-[#2a2a30] text-gray-700 dark:text-zinc-200">
+                    {puzzles[step.variant].difficulty}
+                  </span>
+                )}
+              </div>
+              <p className="text-gray-600 dark:text-zinc-300">
+                {puzzles[step.variant].hint}
+              </p>
+            </div>
+          )}
+
+          <p className="text-[11.5px] text-gray-400 dark:text-zinc-500">
+            Tanlangan o&apos;yin va masala o&apos;ng tomondagi jonli ko&apos;rinishda (Preview) darhol aks etadi.
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+

@@ -54,7 +54,7 @@ export function lessonSteps(content: LessonContent, hasGame: boolean): LessonSte
 
   for (const step of body) {
     if (step.kind === "challenge") {
-      if (!hasGame || placedChallenge) continue;
+      if ((!hasGame && !step.gameId) || placedChallenge) continue;
       placedChallenge = true;
     }
     steps.push(step);
