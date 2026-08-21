@@ -1,0 +1,114 @@
+{
+  "goal": "Katta vazifani qismlarga bo'lib, har qismga qaysi vosita kerakligini aniqlashni o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Katta vazifa — kichik qadamlar",
+      "body": [
+        "Butun vazifani birdan kod qilib yozish qiyin. Avval u kichik, har biri alohida tushunarli qadamlarga bo'linadi. Bu usul decomposition (qismlarga bo'lish) deb ataladi.",
+        "Qadamlar avval oddiy so'zlar bilan yoziladi — bu psevdokod. Kod keyin yoziladi, chunki qadamlar aniq bo'lgach kod yozish mexanik ishga aylanadi."
+      ],
+      "code": {
+        "caption": "Avval so'z bilan, keyin kod bilan",
+        "lines": [
+          "// Vazifa: 80 dan yuqori ballar sonini aytish",
+          "// 1. ballar ro'yxatini olish",
+          "// 2. hisoblagichni nolga qo'yish",
+          "// 3. har ballni ko'rib chiqish",
+          "// 4. agar 80 dan katta bo'lsa, hisoblagichni oshirish",
+          "// 5. hisoblagichni chiqarish"
+        ]
+      }
+    },
+    {
+      "heading": "Har qismga o'z vositasi",
+      "body": [
+        "Qadamlar aniq bo'lgach, har biriga mos vosita tanlanadi. Bir nechta qiymat — ro'yxat. Har birini ko'rib chiqish — sikl. Tanlov qilish — shart. Bir ishni ko'p joyda takrorlash — funksiya.",
+        "Bu tanlov o'ylab topilmaydi: qadamning o'zi qaysi vosita kerakligini aytib turadi."
+      ],
+      "code": {
+        "caption": "Qadamlar kodga aylandi",
+        "lines": [
+          "ballar = [92, 70, 85, 60]",
+          "soni = 0",
+          "har ball uchun ballar:",
+          "  agar ball > 80:",
+          "    soni = soni + 1",
+          "chiqar(soni)",
+          "",
+          "// chiqadi: 2"
+        ]
+      }
+    },
+    {
+      "heading": "Funksiyaga o'rash",
+      "body": [
+        "Agar bir xil hisob turli ro'yxatlar uchun kerak bo'lsa, u funksiyaga o'raladi. Ro'yxat va chegara parametr bo'ladi, javob esa return orqali qaytariladi.",
+        "Shundan keyin bitta yozilgan hisob istalgancha ishlatiladi — vazifaning eng oxirgi qadami odatda shu bo'ladi."
+      ],
+      "code": {
+        "caption": "Bir marta yozilgan hisob",
+        "lines": [
+          "funksiya sanab_ber(ro'yxat, chegara):",
+          "  soni = 0",
+          "  har son uchun ro'yxat:",
+          "    agar son > chegara:",
+          "      soni = soni + 1",
+          "  return soni",
+          "",
+          "chiqar(sanab_ber([92, 70, 85, 60], 80))   // 2",
+          "chiqar(sanab_ber([50, 55], 80))           // 0"
+        ]
+      },
+      "callout": "Avval qadamlarni so'z bilan yoz, keyin har qadamga vosita tanla."
+    }
+  ],
+  "terms": [
+    {
+      "en": "decomposition",
+      "uz": "qismlarga bo'lish",
+      "note": "Katta vazifani mustaqil, kichik qadamlarga ajratish."
+    },
+    {
+      "en": "pseudocode",
+      "uz": "psevdokod",
+      "note": "Algoritmni oddiy so'zlar bilan, til sintaksisisiz yozish."
+    },
+    {
+      "en": "accumulator",
+      "uz": "yig'uvchi",
+      "note": "Sikl aylanishlari natijasini o'zida to'plab boruvchi o'zgaruvchi."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Vazifani qismlarga bo'lish nima uchun kod yozishdan oldin bajariladi?",
+      "options": [
+        "Qadamlar aniq bo'lgach kod yozish osonlashadi",
+        "Kompyuter psevdokodni kod bilan birga o'qib bajaradi",
+        "Bo'lmasa dastur ishga tushmaydi va xato beradi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Psevdokod — o'ylash uchun. Qadamlar aniqlangach kod yozish mexanik ishga aylanadi."
+    },
+    {
+      "question": "\"Har bir elementni ko'rib chiqish\" qadami uchun qaysi vosita kerak?",
+      "options": [
+        "Sikl",
+        "Shart",
+        "Funksiya"
+      ],
+      "correctIndex": 0,
+      "explanation": "Har elementni birma-bir ko'rib chiqish — aynan siklning ishi."
+    },
+    {
+      "question": "sanab_ber([92, 70, 85, 60], 80) nima qaytaradi?",
+      "options": [
+        "2",
+        "4",
+        "80 dan katta bo'lgan ballarning o'zini ro'yxat qilib"
+      ],
+      "correctIndex": 0,
+      "explanation": "92 va 85 chegaradan katta, shuning uchun hisoblagich 2 ga yetadi."
+    }
+  ]
+}

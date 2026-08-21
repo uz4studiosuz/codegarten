@@ -1,0 +1,98 @@
+{
+  "goal": "Ro'yxatni sikl bilan aylanib o'tib yig'indi va o'rtachani hisoblashni o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Yig'uvchi o'zgaruvchi",
+      "body": [
+        "Ro'yxatdagi sonlar yig'indisini olish uchun uch narsa kerak: natijani saqlovchi o'zgaruvchi, ro'yxatni aylanib chiquvchi sikl va har aylanishda qo'shish amali.",
+        "har ball uchun ballar: qatori ballar ro'yxatidagi elementlarni birma-bir olib, har birini ball nomi bilan beradi. Ichkariga surilgan qator har element uchun qayta bajariladi."
+      ],
+      "code": {
+        "caption": "Yig'indi",
+        "lines": [
+          "ballar = [85, 92, 78, 95]",
+          "jami = 0",
+          "",
+          "har ball uchun ballar:",
+          "  jami = jami + ball",
+          "",
+          "chiqar(jami)   // 350"
+        ]
+      }
+    },
+    {
+      "heading": "Noldan boshlash",
+      "body": [
+        "Yig'uvchini 0 dan boshlash muhim: 0 natijaga hech narsa qo'shmaydi. Boshlang'ich qiymat noto'g'ri bo'lsa, yig'indi ham noto'g'ri chiqadi.",
+        "Yig'indi va uzunlik birgalikda o'rtachani beradi. Bo'lish uchun elementlar soni kerak, uni uzunlik() beradi."
+      ],
+      "code": {
+        "caption": "O'rtacha",
+        "lines": [
+          "jami = 0",
+          "",
+          "har ball uchun ballar:",
+          "  jami = jami + ball",
+          "",
+          "o'rtacha = jami / uzunlik(ballar)",
+          "chiqar(o'rtacha)   // 87.5"
+        ]
+      },
+      "callout": "Ro'yxat, sikl va yig'uvchi o'zgaruvchi bitta natija beradi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "accumulator",
+      "uz": "yig'uvchi",
+      "note": "Sikl davomida natijani to'plab boruvchi o'zgaruvchi."
+    },
+    {
+      "en": "sum",
+      "uz": "yig'indi",
+      "note": "Barcha elementlarning qo'shilgan natijasi."
+    },
+    {
+      "en": "average",
+      "uz": "o'rtacha",
+      "note": "Yig'indining elementlar soniga bo'linishi."
+    },
+    {
+      "en": "initial value",
+      "uz": "boshlang'ich qiymat",
+      "note": "Sikldan oldin o'zgaruvchiga berilgan qiymat."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "sonlar = [2, 5, 3] uchun jami = 0 dan boshlanib sikl bilan qo'shildi. chiqar(jami) nima chiqaradi?",
+      "options": [
+        "10",
+        "8",
+        "3"
+      ],
+      "correctIndex": 0,
+      "explanation": "2 + 5 + 3 = 10. Har element navbat bilan yig'uvchiga qo'shiladi."
+    },
+    {
+      "question": "Yig'uvchi o'zgaruvchi nima uchun 0 dan boshlanadi?",
+      "options": [
+        "0 natijaga hech narsa qo'shmaydi",
+        "Nol xotirada eng kam joy egallaydigan son hisoblanadi",
+        "Chunki indeks ham 0 dan boshlanadi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Bo'sh yig'indi 0 ga teng, shuning uchun 0 dan boshlash natijani buzmaydi."
+    },
+    {
+      "question": "O'rtachani topish uchun yig'indi nimaga bo'linadi?",
+      "options": [
+        "Ro'yxat uzunligiga",
+        "Ro'yxatdagi eng katta son bilan uzunlikning yig'indisiga",
+        "Oxirgi indeksga, ya'ni uzunlik - 1 ga"
+      ],
+      "correctIndex": 0,
+      "explanation": "O'rtacha — yig'indining elementlar soniga bo'linishi, ya'ni uzunlik(ro'yxat) ga."
+    }
+  ]
+}

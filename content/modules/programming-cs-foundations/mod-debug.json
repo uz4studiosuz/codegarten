@@ -1,45 +1,45 @@
 {
-  "id": "mod-4",
-  "num": 3,
+  "id": "mod-debug",
+  "num": 7,
   "trackId": "programming-cs-foundations",
-  "title": "Shartlar va Mantiqiy Tarmoqlar",
-  "titleEn": "Conditionals & Boolean Logic",
-  "description": "If/Else mantiqiy qarorlar qabul qilish va tarmoqlanuvchi dasturlar yozish.",
-  "tagline": "Dastur qanday qaror qabul qiladi",
-  "imageSrc": "/images/conditions.png",
+  "title": "Xatoni topish va Yakuniy sinov",
+  "titleEn": "Debugging & Final Challenge",
+  "description": "Boshqa odam yozgan kodni o'qib natijasini oldindan aytish, xatoni topish va bitta belgini o'zgartirib tuzatish.",
+  "tagline": "Kod nima chiqarishini oldindan bilish",
+  "imageSrc": "/images/algorithmic.png",
   "topics": [
-    "conditionals"
+    "debugging"
   ],
   "levels": [
     {
-      "id": "m4-l1",
+      "id": "m8-l1",
       "num": 1,
-      "title": "To'g'ri yoki Yolg'on",
-      "summary": "Kompyuter dunyosida har savolning javobi rost yoki yolg'on.",
+      "title": "Kodni o'qish va natijani aytish",
+      "summary": "Kodni ishga tushirmasdan, qator-qator o'qib natijasini aytish.",
       "lessons": [
         {
-          "id": "m4-l1-1",
-          "title": "Mantiqiy qiymatlar",
+          "id": "m8-l1-1",
+          "title": "Kompyuter kabi o'qish",
           "kind": "concept",
           "xp": 10,
           "estMinutes": 3
         },
         {
-          "id": "m4-l1-2",
-          "title": "Taqqoslash amallari",
+          "id": "m8-l1-2",
+          "title": "Sikl aylanishlarini kuzatish",
           "kind": "exercise",
           "xp": 15,
           "estMinutes": 5
         },
         {
-          "id": "m4-l1-3",
-          "title": "Shart tuzish",
+          "id": "m8-l1-3",
+          "title": "Shart va ro'yxatni kuzatish",
           "kind": "exercise",
           "xp": 15,
           "estMinutes": 5
         },
         {
-          "id": "m4-l1-4",
+          "id": "m8-l1-4",
           "title": "Bosqich takrori",
           "kind": "review",
           "xp": 30,
@@ -48,41 +48,41 @@
       ]
     },
     {
-      "id": "m4-l2",
+      "id": "m8-l2",
       "num": 2,
-      "title": "if va else",
-      "summary": "Yo'l ikkiga ajralganda dastur qaysi tomonga buriladi.",
+      "title": "Xatoni topish va tuzatish",
+      "summary": "Noto'g'ri belgi, bitta ortiq aylanish va joyi almashgan qator.",
       "lessons": [
         {
-          "id": "m4-l2-1",
-          "title": "Tarmoqlanish",
+          "id": "m8-l2-1",
+          "title": "Uch xil odatiy xato",
           "kind": "concept",
           "xp": 10,
           "estMinutes": 3
         },
         {
-          "id": "m4-l2-2",
-          "title": "if bloki",
+          "id": "m8-l2-2",
+          "title": "Noto'g'ri taqqoslash belgisi",
           "kind": "exercise",
           "xp": 15,
           "estMinutes": 5
         },
         {
-          "id": "m4-l2-3",
-          "title": "else bilan tanlov",
+          "id": "m8-l2-3",
+          "title": "Sikl chegarasidagi bir xato",
           "kind": "exercise",
           "xp": 15,
           "estMinutes": 5
         },
         {
-          "id": "m4-l2-4",
-          "title": "Robot to'siqdan o'tadi",
+          "id": "m8-l2-4",
+          "title": "Qator noto'g'ri joyda",
           "kind": "challenge",
           "xp": 25,
           "estMinutes": 8
         },
         {
-          "id": "m4-l2-5",
+          "id": "m8-l2-5",
           "title": "Bosqich takrori",
           "kind": "review",
           "xp": 30,
@@ -91,34 +91,34 @@
       ]
     },
     {
-      "id": "m4-l3",
+      "id": "m8-l3",
       "num": 3,
-      "title": "Murakkab shartlar",
-      "summary": "Bir nechta shartni VA / YOKI orqali birlashtirish.",
+      "title": "Yakuniy sinov",
+      "summary": "Butun trekdagi bilim bitta masalada birlashadi.",
       "lessons": [
         {
-          "id": "m4-l3-1",
-          "title": "VA / YOKI mantiqi",
+          "id": "m8-l3-1",
+          "title": "Vazifani qismlarga bo'lish",
           "kind": "concept",
           "xp": 10,
           "estMinutes": 3
         },
         {
-          "id": "m4-l3-2",
-          "title": "Ko'p shartli tanlov",
+          "id": "m8-l3-2",
+          "title": "Ro'yxat, shart va funksiya birga",
           "kind": "exercise",
           "xp": 15,
           "estMinutes": 5
         },
         {
-          "id": "m4-l3-3",
-          "title": "Qaror daraxti",
+          "id": "m8-l3-3",
+          "title": "Yakuniy vazifa",
           "kind": "challenge",
           "xp": 25,
           "estMinutes": 8
         },
         {
-          "id": "m4-l3-4",
+          "id": "m8-l3-4",
           "title": "Bosqich takrori",
           "kind": "review",
           "xp": 30,

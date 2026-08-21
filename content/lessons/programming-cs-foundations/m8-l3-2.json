@@ -1,0 +1,107 @@
+{
+  "goal": "Ro'yxat, shart va funksiyani bitta masalada birga ishlatishni mashq qilasiz.",
+  "sections": [
+    {
+      "heading": "Uchta vosita bitta masalada",
+      "body": [
+        "Ro'yxat qiymatlarni saqlaydi, sikl ularni birma-bir olib beradi, shart qaysi biri kerakligini tanlaydi, funksiya esa butun hisobni bir nom ostiga yig'adi.",
+        "Quyidagi funksiya ro'yxatdagi eng katta sonni topadi. Boshlang'ich qiymat sikldan oldin, birinchi elementdan olinadi."
+      ],
+      "code": {
+        "caption": "Eng katta sonni topish",
+        "lines": [
+          "funksiya eng_katta(ro'yxat):",
+          "  eng = ro'yxat[0]",
+          "  har son uchun ro'yxat:",
+          "    agar son > eng:",
+          "      eng = son",
+          "  return eng",
+          "",
+          "chiqar(eng_katta([4, 9, 6]))    // 9"
+        ]
+      }
+    },
+    {
+      "heading": "Nol bilan boshlash nima uchun xato",
+      "body": [
+        "Boshlang'ich qiymatni nolga qo'ysa, funksiya faqat musbat sonlar uchun to'g'ri ishlaydi. Barcha sonlar noldan kichik bo'lsa, javob nol bo'lib chiqadi — ro'yxatda esa bunday son yo'q.",
+        "Shuning uchun boshlang'ich qiymat ro'yxatning o'zidan olinadi. Bu chegara holatini oldindan o'ylab ko'rishning tipik namunasi."
+      ],
+      "code": {
+        "caption": "Ikki boshlang'ich qiymatning farqi",
+        "lines": [
+          "// eng = 0 bo'lsa:",
+          "// [-4, -9, -6] uchun javob 0 chiqadi - xato",
+          "",
+          "// eng = ro'yxat[0] bo'lsa:",
+          "// [-4, -9, -6] uchun javob -4 chiqadi - to'g'ri"
+        ]
+      }
+    },
+    {
+      "heading": "Ikki hisobni birlashtirish",
+      "body": [
+        "Bir funksiya bir ishni bajarsa, uni tushunish ham, tekshirish ham oson. Ikki xil javob kerak bo'lsa, ikki funksiya yoziladi va biri ikkinchisini chaqiradi.",
+        "Quyida o'rtachadan yuqori ballar sanaladi: avval yig'indi, keyin o'rtacha, keyin sanash."
+      ],
+      "code": {
+        "caption": "Funksiya funksiyani chaqiradi",
+        "lines": [
+          "funksiya yigindi(ro'yxat):",
+          "  jami = 0",
+          "  har son uchun ro'yxat:",
+          "    jami = jami + son",
+          "  return jami",
+          "",
+          "funksiya ortachadan_yuqori(ballar):",
+          "  ortacha = yigindi(ballar) / uzunlik(ballar)",
+          "  soni = 0",
+          "  har ball uchun ballar:",
+          "    agar ball > ortacha:",
+          "      soni = soni + 1",
+          "  return soni",
+          "",
+          "chiqar(ortachadan_yuqori([60, 80, 100]))   // 1"
+        ]
+      },
+      "callout": "Bir funksiya - bir ish. Murakkab javob kichik funksiyalardan yig'iladi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "edge case",
+      "uz": "chegara holati",
+      "note": "Dastur odatdan tashqari qiymatlarda qanday ishlashini sinovchi holat."
+    },
+    {
+      "en": "helper function",
+      "uz": "yordamchi funksiya",
+      "note": "Boshqa funksiya ichida chaqirilib, uning bir qismini bajaruvchi funksiya."
+    },
+    {
+      "en": "single responsibility",
+      "uz": "bitta vazifa",
+      "note": "Har funksiya faqat bitta ishni bajarishi tamoyili."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "eng_katta([4, 9, 6]) nima qaytaradi?",
+      "options": ["9", "6", "19"],
+      "correctIndex": 0,
+      "explanation": "9 barcha elementlardan katta, shuning uchun sikl oxirida eng 9 bo'lib qoladi."
+    },
+    {
+      "question": "eng = 0 deb boshlangan funksiya [-4, -9, -6] ro'yxatida nima qaytaradi?",
+      "options": ["0", "-4", "-9"],
+      "correctIndex": 0,
+      "explanation": "Hech bir son noldan katta emas, shuning uchun eng boshlang'ich holida - nol - qoladi."
+    },
+    {
+      "question": "ortachadan_yuqori([60, 80, 100]) nima qaytaradi?",
+      "options": ["1", "2", "o'rtachaning o'zini, ya'ni 80 sonini"],
+      "correctIndex": 0,
+      "explanation": "O'rtacha 80. Faqat 100 undan katta, shuning uchun hisoblagich 1 da to'xtaydi."
+    }
+  ]
+}

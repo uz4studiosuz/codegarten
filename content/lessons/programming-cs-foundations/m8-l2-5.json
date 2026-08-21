@@ -1,0 +1,65 @@
+{
+  "goal": "Xatoni topish va tuzatish bo'yicha bosqichni takrorlaysiz.",
+  "sections": [
+    {
+      "heading": "Bosqich xulosasi",
+      "body": [
+        "Xatoni topishning birinchi qadami — dastur nima qilishi kerakligini aniq aytib olish. Maqsad noaniq bo'lsa, xato ham ko'rinmaydi.",
+        "Taqqoslash belgisi xatosi: > va >= o'rtasidagi farq faqat chegaradagi qiymatda ko'rinadi. Shuning uchun tekshirishda aynan chegarani sinash kerak.",
+        "Bir birlik xatosi (off-by-one): sikl chegarasi bir ortiq yoki bir kam bo'lsa, dastur ishlaydi-yu, natija noto'g'ri chiqadi.",
+        "Qator noto'g'ri joyda: har bir qator uchun bitta savol beriladi — bu qator bir marta bajarilishi kerakmi yoki har aylanishda?",
+        "Xatoni tuzatish ko'pincha qatorni o'chirish emas, undagi bitta belgini yoki qatorning joyini o'zgartirishdir."
+      ],
+      "callout": "Xatoni topish — kod yozishning yarmi, taxmin qilishning esa aksi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "off-by-one error",
+      "uz": "bir birlik xato",
+      "note": "Chegara bir ortiq yoki bir kam olinganda yuzaga keladigan xato."
+    },
+    {
+      "en": "comparison operator",
+      "uz": "taqqoslash amali",
+      "note": "Ikki qiymatni solishtiruvchi belgi: >, <, >=, <=, ==."
+    },
+    {
+      "en": "boundary value",
+      "uz": "chegara qiymati",
+      "note": "Shart rost va yolg'on bo'lishi ayriladigan aniq qiymat."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "agar ball > 90: sharti yozilgan. Ball aynan 90 bo'lsa nima bo'ladi?",
+      "options": [
+        "Shart yolg'on bo'ladi",
+        "Shart rost bo'ladi va ichidagi qator bajariladi",
+        "Dastur xato beradi va to'xtaydi"
+      ],
+      "correctIndex": 0,
+      "explanation": "90 > 90 yolg'on. Chegarani ham qamrash kerak bo'lsa >= yozilishi kerak edi."
+    },
+    {
+      "question": "har i uchun 1 dan 4 gacha: sikli nechta aylanadi?",
+      "options": [
+        "4",
+        "3",
+        "5"
+      ],
+      "correctIndex": 0,
+      "explanation": "1, 2, 3 va 4 — jami to'rt aylanish. Chegaralar sanashga qo'shiladi."
+    },
+    {
+      "question": "jami = 0 qatori sikl ichida turgani xato. Uni qanday tuzatish kerak?",
+      "options": [
+        "Sikldan yuqoriga ko'chirish",
+        "O'chirib tashlab, uning o'rniga sikl oxiriga chiqar qo'shish",
+        "Sikl ichida qoldirib, chekinishini bir daraja oshirish"
+      ],
+      "correctIndex": 0,
+      "explanation": "Boshlang'ich qiymat bir marta, sikl boshlanishidan oldin berilishi kerak."
+    }
+  ]
+}

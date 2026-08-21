@@ -26,7 +26,7 @@ src/games/
 ## The topic rule
 
 A game must practise the idea its lesson just taught — a loops lesson ending in
-a geometry puzzle teaches nothing about loops. Matching happens on meaning, in
+a drawing puzzle teaches nothing about loops. Matching happens on meaning, in
 this order (see `resolve.ts`):
 
 1. `gameId` authored on the lesson wins outright.
@@ -108,6 +108,10 @@ export const myGame: GameDefinition = {
   suits: ["exercise", "challenge"],
   topics: ["loops"],                   // from topics.ts — this is what matches
   keywords: ["sikl", "takror"],        // words in lesson titles that mean "me"
+  // Your pool, in pool order — this is what the writer's picker shows an author.
+  puzzles: [
+    { variant: 0, title: "Birinchi masala", hint: "Bir qatorda nima so'ralishi", difficulty: "Oson" },
+  ],
   Component: MyGame,
 };
 ```
@@ -176,16 +180,24 @@ const drag = useBlockDrag<Tile>({
 )}
 ```
 
+## The puzzle pool
+
+A game holds several puzzles and picks one per lesson (see `shared/seed.ts`). It
+also declares them on its `GameDefinition.puzzles`, which is what the writer's
+picker shows an author. Keep the two in step — that list used to live in a table
+of its own and drifted, promising a sorting puzzle for a game that only ever
+counted search steps.
+
 ## Registered games
 
 | id | topics | what the learner does |
 |---|---|---|
 | `sequence-order` | sequencing | Drags shuffled steps into the one correct order, swapping rows to reorder. |
-| `robot-grid` | sequencing | Drags command blocks into slots to walk a robot to the star. |
-| `debug-extra` | debugging | Reads a short program against its goal and marks the broken line. |
-| `loop-repeat` | loops | Drags colours into a loop body and sets the repeat count to rebuild a pattern. |
-| `function-factory` | functions | Drags number and colour arguments into three calls of one ready-made function. |
-| `shape-color` | geometry, functions | Fills in each call's colour argument until the drawing matches the sample. |
+| `robot-grid` | sequencing | Drags command blocks into slots to walk a robot to the star, routing around walls. |
+| `debug-extra` | debugging | Marks the line that breaks a program's goal — and in later puzzles picks its replacement. |
+| `loop-repeat` | loops | Builds a loop body and its bound, or the stopping condition of a `toki` loop, with the counter visible. |
+| `function-factory` | functions | Assembles the body of a function, then watches that one body run against every call. |
+| `list-walk` | lists | Points at a cell by index, predicts what a walk prints, and fills in the loop body that computes a result. |
 | `condition-branch` | conditionals | Assembles a rule — plain `agar` first, `aks holda` in later puzzles — and runs it against every test case. |
-| `variable-trace` | variables | Predicts what each variable holds after the program runs. |
-| `algo-race` | efficiency | Counts how many checks a search strategy needs, then sees the actual visits. |
+| `variable-trace` | variables | Predicts what each box holds after the program runs — numbers, text or true/false. |
+| `algo-race` | efficiency | Counts how many checks a search strategy needs, then sees the actual visits. Belongs to the algorithms track, not the foundations one. |

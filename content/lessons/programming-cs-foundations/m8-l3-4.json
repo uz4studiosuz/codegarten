@@ -1,0 +1,65 @@
+{
+  "goal": "Yakuniy bosqichni va butun trekni takrorlaysiz.",
+  "sections": [
+    {
+      "heading": "Bosqich xulosasi",
+      "body": [
+        "Katta vazifa avval so'z bilan qadamlarga bo'linadi, keyin har qadamga vosita tanlanadi. Kod eng oxirida yoziladi.",
+        "Bir nechta qiymat kerak bo'lsa — ro'yxat. Har birini ko'rib chiqish kerak bo'lsa — sikl. Tanlov qilish kerak bo'lsa — shart. Bir ishni ko'p joyda ishlatish kerak bo'lsa — funksiya.",
+        "Yig'uvchi va hisoblagich sikldan oldin, bir marta boshlang'ich qiymat oladi. Eng katta yoki eng kichikni izlaganda boshlang'ich qiymat ro'yxatning o'zidan olinadi.",
+        "Chegara qiymati alohida tekshiriladi: >= va > o'rtasidagi farq faqat shu nuqtada ko'rinadi.",
+        "Bir funksiya bitta ishni bajarsa, uni tushunish ham, xatosini topish ham oson bo'ladi."
+      ],
+      "callout": "Yetti modul o'tildi: buyruq, o'zgaruvchi, shart, sikl, ro'yxat, funksiya va xatoni topish. Bular bilan haqiqiy dastur yozish mumkin."
+    }
+  ],
+  "terms": [
+    {
+      "en": "decomposition",
+      "uz": "qismlarga bo'lish",
+      "note": "Katta vazifani mustaqil, kichik qadamlarga ajratish."
+    },
+    {
+      "en": "accumulator",
+      "uz": "yig'uvchi",
+      "note": "Sikl aylanishlari natijasini o'zida to'plab boruvchi o'zgaruvchi."
+    },
+    {
+      "en": "edge case",
+      "uz": "chegara holati",
+      "note": "Dastur odatdan tashqari qiymatlarda qanday ishlashini sinovchi holat."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Yig'indi hisoblaydigan o'zgaruvchi qayerda boshlang'ich qiymat olishi kerak?",
+      "options": [
+        "Sikldan oldin",
+        "Sikl ichida, birinchi qatorda",
+        "Sikl tugagandan keyin, chiqarishdan oldin"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sikl ichida bo'lsa har aylanishda qaytadan tiklanadi va oldingi natija yo'qoladi."
+    },
+    {
+      "question": "Eng katta sonni izlashda eng o'zgaruvchisi nimadan boshlanishi kerak?",
+      "options": [
+        "Ro'yxatning birinchi elementidan",
+        "Noldan, chunki nol eng kichik son hisoblanadi",
+        "Ro'yxatning uzunligidan"
+      ],
+      "correctIndex": 0,
+      "explanation": "Noldan boshlansa, barcha sonlar manfiy bo'lgan ro'yxatda javob nol bo'lib chiqadi — bunday son esa ro'yxatda yo'q."
+    },
+    {
+      "question": "\"50 va undan yuqori\" shartini qaysi belgi to'g'ri ifodalaydi?",
+      "options": [
+        "ball >= 50",
+        "ball > 50",
+        "ball == 50 yoki undan katta bo'lgan barcha holatlar"
+      ],
+      "correctIndex": 0,
+      "explanation": "\"Va undan yuqori\" chegaraning o'zini ham qamraydi, shuning uchun >= kerak."
+    }
+  ]
+}

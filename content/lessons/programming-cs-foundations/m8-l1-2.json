@@ -1,0 +1,100 @@
+{
+  "goal": "Sikl necha marta aylanishini va har aylanishdan keyingi qiymatni aniqlashni mashq qilasiz.",
+  "sections": [
+    {
+      "heading": "Har aylanishni alohida yozish",
+      "body": [
+        "toki shart: yozuvi shart rost bo'lgan vaqtda sikl tanasini qayta-qayta bajaradi. Shart yolg'on bo'lishi bilan sikl tugaydi.",
+        "Siklni kuzatishda bitta qoida bor: har aylanish uchun alohida qator yozing. Uch aylanish — uch qator."
+      ],
+      "code": {
+        "caption": "1 dan 3 gacha sonlar yig'indisi",
+        "lines": [
+          "i = 1",
+          "jami = 0",
+          "toki i <= 3:",
+          "  jami = jami + i",
+          "  i = i + 1",
+          "chiqar(jami)",
+          "",
+          "// 1-aylanish: jami 1, i 2",
+          "// 2-aylanish: jami 3, i 3",
+          "// 3-aylanish: jami 6, i 4",
+          "// shart yolg'on -> chiqadi: 6"
+        ]
+      }
+    },
+    {
+      "heading": "Ro'yxat bo'ylab aylanish",
+      "body": [
+        "har son uchun sonlar: yozuvi sonlar ro'yxatidagi elementlarni birma-bir son ga beradi. Aylanishlar soni ro'yxat uzunligiga teng.",
+        "Bu yerda hisoblagichni o'zingiz oshirmaysiz — ro'yxat tugashi bilan sikl to'xtaydi."
+      ],
+      "code": {
+        "caption": "Uchta element, uchta aylanish",
+        "lines": [
+          "sonlar = [4, 7, 9]",
+          "jami = 0",
+          "har son uchun sonlar:",
+          "  jami = jami + son",
+          "chiqar(jami)",
+          "",
+          "// son 4 -> jami 4",
+          "// son 7 -> jami 11",
+          "// son 9 -> jami 20",
+          "// chiqadi: 20"
+        ]
+      },
+      "callout": "Aylanishlar sonini avval aniqlang, keyin qiymatlarni kuzating."
+    }
+  ],
+  "terms": [
+    {
+      "en": "iteration",
+      "uz": "aylanish",
+      "note": "Sikl tanasining bir marta bajarilishi."
+    },
+    {
+      "en": "loop condition",
+      "uz": "sikl sharti",
+      "note": "Sikl davom etishini belgilovchi tekshiruv."
+    },
+    {
+      "en": "infinite loop",
+      "uz": "cheksiz sikl",
+      "note": "Sharti hech qachon yolg'on bo'lmagani uchun to'xtamaydigan sikl."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "i = 1; toki i <= 4: chiqar(i); i = i + 2. Ekranda nima ko'rinadi?",
+      "options": [
+        "1, 2, 3, 4",
+        "1 va 3",
+        "1, 3, 5"
+      ],
+      "correctIndex": 1,
+      "explanation": "i qiymatlari 1, 3, keyin 5 bo'ladi. 5 shartdan o'tmaydi, shuning uchun chiqmaydi."
+    },
+    {
+      "question": "sonlar = [2, 5] bo'lsa, har son uchun sonlar: jami = jami + son sikli necha marta aylanadi?",
+      "options": [
+        "1",
+        "2",
+        "3"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ro'yxatda ikki element bor, shuning uchun sikl tanasi ikki marta bajariladi."
+    },
+    {
+      "question": "toki i <= 3: sikli ichida i = i + 1 qatori yozilmasa nima bo'ladi?",
+      "options": [
+        "Sikl bir marta aylanadi va keyin o'zi to'xtab qoladi",
+        "Sikl to'xtamaydi",
+        "Sikl umuman ishga tushmay o'tib ketadi"
+      ],
+      "correctIndex": 1,
+      "explanation": "i o'zgarmasa shart doim rost qoladi — bu cheksiz sikl."
+    }
+  ]
+}

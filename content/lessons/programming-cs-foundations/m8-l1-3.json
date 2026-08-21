@@ -1,0 +1,107 @@
+{
+  "goal": "Sikl ichidagi shartni kuzatib, hisoblagich va eng katta qiymat qanday to'planishini aniqlaysiz.",
+  "sections": [
+    {
+      "heading": "Shart har aylanishda qaytadan tekshiriladi",
+      "body": [
+        "Sikl ichidagi agar sharti bir marta emas, har aylanishda yangi element uchun qaytadan tekshiriladi.",
+        "Shuning uchun kuzatishda ikki ustun kerak: joriy element va hisoblagichning qiymati."
+      ],
+      "code": {
+        "caption": "60 va undan yuqori ballarni sanash",
+        "lines": [
+          "ballar = [45, 80, 60, 30]",
+          "o'tdi = 0",
+          "har ball uchun ballar:",
+          "  agar ball >= 60:",
+          "    o'tdi = o'tdi + 1",
+          "chiqar(o'tdi)",
+          "",
+          "// 45 -> shart yolg'on, o'tdi 0",
+          "// 80 -> shart rost,   o'tdi 1",
+          "// 60 -> shart rost,   o'tdi 2",
+          "// 30 -> shart yolg'on, o'tdi 2",
+          "// chiqadi: 2"
+        ]
+      }
+    },
+    {
+      "heading": "aks holda ham har aylanishda ishlaydi",
+      "body": [
+        "agar ... aks holda ... juftligida har element aynan bitta yo'lga tushadi. Ya'ni to'rt element uchun to'rtta natija chiqadi.",
+        "Eng katta qiymatni izlashda esa taqqoslash natijasi saqlanadi: yangi qiymat kattaroq bo'lsa, u eslab qolinadi."
+      ],
+      "code": {
+        "caption": "Eng katta sonni topish",
+        "lines": [
+          "sonlar = [3, 8, 5]",
+          "eng = sonlar[0]      // eng: 3",
+          "har son uchun sonlar:",
+          "  agar son > eng:",
+          "    eng = son",
+          "chiqar(eng)",
+          "",
+          "// 3 > 3 yolg'on -> eng 3",
+          "// 8 > 3 rost    -> eng 8",
+          "// 5 > 8 yolg'on -> eng 8",
+          "// chiqadi: 8"
+        ]
+      },
+      "callout": "Sikl ichidagi shart har element uchun alohida javob beradi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "counter",
+      "uz": "hisoblagich",
+      "note": "Shart bajarilgan hollarni sanab boruvchi o'zgaruvchi."
+    },
+    {
+      "en": "accumulator",
+      "uz": "yig'uvchi",
+      "note": "Aylanishlar natijasini o'zida to'plab boruvchi o'zgaruvchi."
+    },
+    {
+      "en": "condition",
+      "uz": "shart",
+      "note": "Rost yoki yolg'on javob beruvchi tekshiruv."
+    },
+    {
+      "en": "index",
+      "uz": "indeks",
+      "note": "Ro'yxatdagi element o'rnini bildiruvchi son, 0 dan boshlanadi."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "ballar = [45, 80, 60, 30] va shart agar ball > 60: bo'lsa, hisoblagich qanday qiymat bilan tugaydi?",
+      "options": [
+        "1",
+        "2",
+        "3"
+      ],
+      "correctIndex": 0,
+      "explanation": "Faqat 80 shartdan o'tadi. 60 esa o'tmaydi, chunki > belgisi tenglikni qabul qilmaydi."
+    },
+    {
+      "question": "ballar = [45, 80, 60, 30] uchun agar ball >= 60: chiqar(\"o'tdi\") aks holda: chiqar(\"yiqildi\") nima tartibda chiqadi?",
+      "options": [
+        "Avval barcha o'tdi natijalari, keyin barcha yiqildi natijalari chiqadi",
+        "yiqildi, o'tdi, o'tdi, yiqildi",
+        "o'tdi, o'tdi, yiqildi, yiqildi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Elementlar ro'yxat tartibida o'qiladi: 45, 80, 60, 30. Natija ham shu tartibda chiqadi."
+    },
+    {
+      "question": "sonlar = [7, 2, 9, 4] bo'lsa, eng = sonlar[0] dan boshlangan eng katta sonni izlash sikli nima chiqaradi?",
+      "options": [
+        "7",
+        "4",
+        "9"
+      ],
+      "correctIndex": 2,
+      "explanation": "eng 7 dan boshlanadi, 9 kattaroq bo'lgani uchun almashadi, 4 esa uni o'zgartirmaydi."
+    }
+  ]
+}

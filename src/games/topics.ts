@@ -15,8 +15,8 @@ export type GameTopic =
   | "functions"
   | "conditionals"
   | "variables"
-  | "efficiency"
-  | "geometry";
+  | "lists"
+  | "efficiency";
 
 export const TOPIC_LABELS: Record<GameTopic, string> = {
   sequencing: "Ketma-ketlik",
@@ -25,8 +25,8 @@ export const TOPIC_LABELS: Record<GameTopic, string> = {
   functions: "Funksiyalar",
   conditionals: "Shartlar",
   variables: "O'zgaruvchilar",
+  lists: "Ro'yxatlar",
   efficiency: "Samaradorlik",
-  geometry: "Shakl va parametr",
 };
 
 export const ALL_TOPICS = Object.keys(TOPIC_LABELS) as GameTopic[];

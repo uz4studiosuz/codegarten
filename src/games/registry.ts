@@ -3,10 +3,10 @@ import { algoRaceGame } from "./algo-race";
 import { conditionBranchGame } from "./condition-branch";
 import { debugExtraGame } from "./debug-extra";
 import { functionFactoryGame } from "./function-factory";
+import { listWalkGame } from "./list-walk";
 import { loopRepeatGame } from "./loop-repeat";
 import { robotGridGame } from "./robot-grid";
 import { sequenceOrderGame } from "./sequence-order";
-import { shapeColorGame } from "./shape-color";
 import { variableTraceGame } from "./variable-trace";
 
 /**
@@ -21,9 +21,9 @@ const GAMES: GameDefinition[] = [
   debugExtraGame,
   loopRepeatGame,
   functionFactoryGame,
-  shapeColorGame,
   conditionBranchGame,
   variableTraceGame,
+  listWalkGame,
   algoRaceGame,
 ];
 

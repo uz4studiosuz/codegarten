@@ -1,0 +1,95 @@
+{
+  "goal": "Ro'yxatda shartga mos elementlarni sanashni va ularni alohida yig'ishni o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Hisoblagich va shart",
+      "body": [
+        "Sanash yig'indiga o'xshaydi, lekin qo'shiladigan narsa element emas, balki 1. Va qo'shish faqat shart rost bo'lganda bajariladi.",
+        "Hisoblagich 0 dan boshlanadi, chunki sikl boshida hech narsa sanalmagan. Bu yerda ro'yxat, sikl va shart bir joyda ishlaydi."
+      ],
+      "code": {
+        "caption": "60 dan yuqori ballarni sanash",
+        "lines": [
+          "ballar = [85, 52, 78, 40, 95]",
+          "o'tganlar = 0",
+          "",
+          "har ball uchun ballar:",
+          "  agar ball >= 60:",
+          "    o'tganlar = o'tganlar + 1",
+          "",
+          "chiqar(o'tganlar)   // 3"
+        ]
+      }
+    },
+    {
+      "heading": "Sanash va ajratib olish",
+      "body": [
+        "Ba'zan son yetmaydi — mos kelgan elementlarning o'zi ham kerak bo'ladi. Buning uchun bo'sh ro'yxat yaratiladi va shart rost bo'lganda unga element qo'shiladi.",
+        "Natijada ikki ma'lumot qo'lda bo'ladi: mos elementlarning o'zi va uzunlik() orqali ularning soni."
+      ],
+      "code": {
+        "caption": "Mos elementlarni yangi ro'yxatga yig'ish",
+        "lines": [
+          "past_ballar = []",
+          "",
+          "har ball uchun ballar:",
+          "  agar ball < 60:",
+          "    qo'sh(past_ballar, ball)",
+          "",
+          "chiqar(past_ballar)            // [52, 40]",
+          "chiqar(uzunlik(past_ballar))   // 2"
+        ]
+      },
+      "callout": "Sanashda 1 qo'shiladi, yig'ishda elementning o'zi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "counter",
+      "uz": "hisoblagich",
+      "note": "Shartga mos hollarni birma-bir sanab boruvchi o'zgaruvchi."
+    },
+    {
+      "en": "condition",
+      "uz": "shart",
+      "note": "Rost yoki yolg'on bo'ladigan tekshiruv."
+    },
+    {
+      "en": "filter",
+      "uz": "saralash",
+      "note": "Shartga mos elementlarni alohida ro'yxatga ajratib olish."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "sonlar = [4, 11, 7, 2] da 5 dan katta elementlar sanaldi. Natija nima?",
+      "options": [
+        "1",
+        "2",
+        "3"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 dan katta elementlar 11 va 7 — hisoblagich 2 ga yetadi."
+    },
+    {
+      "question": "Sanashda hisoblagichga nima qo'shiladi?",
+      "options": [
+        "Har mos element uchun 1",
+        "Mos kelgan elementning qiymati, keyin u uzunlikka bo'linadi",
+        "Elementning indeksi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sanash elementning qiymatiga bog'liq emas — har mos hol uchun 1 qo'shiladi."
+    },
+    {
+      "question": "Mos elementlarni yangi ro'yxatga yig'ishning foydasi nima?",
+      "options": [
+        "Ularning soni ham, o'zlari ham qoladi",
+        "Asl ro'yxatdan mos kelmagan barcha elementlarni butunlay o'chirib tashlaydi",
+        "Faqat oxirgi mos element saqlanadi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Yangi ro'yxatdan uzunlik ham olinadi, elementlarning o'zi ham keyin ishlatiladi."
+    }
+  ]
+}

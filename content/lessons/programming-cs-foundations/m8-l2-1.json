@@ -1,0 +1,114 @@
+{
+  "goal": "Boshlang'ich dasturchi eng ko'p yo'l qo'yadigan uch xil xatoni tanib olishni o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Birinchi xil: noto'g'ri taqqoslash belgisi",
+      "body": [
+        "Kod xatosiz ishga tushadi, lekin chegaradagi bitta qiymat uchun noto'g'ri javob beradi. Sababi — > belgisi >= o'rniga yozilgan.",
+        "Bunday xato ko'zga eng kam tashlanadigan turi, chunki qolgan barcha qiymatlar uchun natija to'g'ri chiqadi."
+      ],
+      "code": {
+        "caption": "18 yoshdagi odam ham ruxsat olishi kerak edi",
+        "lines": [
+          "agar yosh > 18:        // xato",
+          "  chiqar(\"ruxsat\")",
+          "",
+          "agar yosh >= 18:       // to'g'ri",
+          "  chiqar(\"ruxsat\")"
+        ]
+      }
+    },
+    {
+      "heading": "Ikkinchi xil: sikl chegarasida bir xato",
+      "body": [
+        "Sikl kerakli sondan bir marta kam yoki bir marta ko'p aylanadi. Bu off-by-one (bir birlik xato) deb ataladi.",
+        "Tekshirish usuli oddiy: sikl birinchi va oxirgi qanday qiymat bilan aylanishini qo'lda yozib chiqing."
+      ],
+      "code": {
+        "caption": "1 dan 5 gacha kerak edi, 4 tagacha chiqdi",
+        "lines": [
+          "i = 1",
+          "toki i < 5:            // xato: 4 marta",
+          "  chiqar(i)",
+          "  i = i + 1",
+          "",
+          "toki i <= 5:           // to'g'ri: 5 marta"
+        ]
+      }
+    },
+    {
+      "heading": "Uchinchi xil: qator noto'g'ri joyda",
+      "body": [
+        "Qatorning o'zi to'g'ri yozilgan, lekin o'rni xato: sikl ichida turadi, holbuki tashqarida turishi kerak edi.",
+        "Xatoni tuzatish deyarli har doim qatorni o'chirish emas — belgini yoki qatorning joyini o'zgartirishdir."
+      ],
+      "code": {
+        "caption": "chiqar sikl ichida qolib ketgan",
+        "lines": [
+          "sonlar = [4, 7, 9]",
+          "jami = 0",
+          "har son uchun sonlar:",
+          "  jami = jami + son",
+          "  chiqar(jami)         // xato: 4, 11, 20",
+          "",
+          "// to'g'risi: chiqar(jami) sikldan keyin, bir marta"
+        ]
+      },
+      "callout": "Xatoni tuzatish ko'pincha bitta belgini yoki bitta qatorning joyini o'zgartirish."
+    }
+  ],
+  "terms": [
+    {
+      "en": "off-by-one error",
+      "uz": "bir birlik xato",
+      "note": "Sikl kerakligidan bir marta kam yoki ko'p aylanishi."
+    },
+    {
+      "en": "boundary value",
+      "uz": "chegara qiymati",
+      "note": "Shart rostdan yolg'onga o'tadigan joydagi qiymat."
+    },
+    {
+      "en": "comparison operator",
+      "uz": "taqqoslash belgisi",
+      "note": "Ikki qiymatni solishtiruvchi belgi: >, >=, <, <=."
+    },
+    {
+      "en": "fix",
+      "uz": "tuzatish",
+      "note": "Xatoni yo'qotadigan eng kichik o'zgartirish."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "18 yoshdagi odam ham ruxsat olishi kerak. agar yosh > 18: qatorini qanday tuzatasiz?",
+      "options": [
+        "agar yosh > 17 yoki yosh = 18:",
+        "agar yosh >= 18:",
+        "agar yosh > 19:"
+      ],
+      "correctIndex": 1,
+      "explanation": ">= belgisi 18 ni ham qabul qiladi. Bu eng kichik va eng aniq tuzatish."
+    },
+    {
+      "question": "i = 1; toki i < 5: chiqar(i); i = i + 1. Sikl necha marta aylanadi?",
+      "options": [
+        "5",
+        "4",
+        "3"
+      ],
+      "correctIndex": 1,
+      "explanation": "i qiymatlari 1, 2, 3, 4 bo'ladi. 5 shartdan o'tmaydi, shuning uchun 4 aylanish."
+    },
+    {
+      "question": "chiqar(jami) qatori sikl ichida qolib ketsa, qanday belgi paydo bo'ladi?",
+      "options": [
+        "Natija umuman chiqmaydi, chunki sikl ichidagi qatorlar tashqariga ko'rinmaydi",
+        "Natija har aylanishda chiqadi",
+        "Natija noto'g'ri son bilan bir marta chiqadi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Sikl ichidagi qator har aylanishda bajariladi, shuning uchun bitta emas, bir necha natija chiqadi."
+    }
+  ]
+}

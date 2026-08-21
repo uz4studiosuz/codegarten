@@ -57,6 +57,23 @@ export interface GameProps {
   config?: any;
 }
 
+/**
+ * One puzzle of a game, described for the writer's picker so an author can see
+ * which task a learner will actually be given.
+ *
+ * A game declares these itself (see each game's `index.ts`). They used to live in
+ * a separate hand-kept table, which drifted: it still advertised sorting and
+ * hash-map puzzles for a game whose pool only ever counted search steps, so the
+ * writer promised one task and the lesson delivered another.
+ */
+export interface GamePuzzleInfo {
+  /** Index into the game's own puzzle pool. */
+  variant: number;
+  title: string;
+  hint: string;
+  difficulty?: "Oson" | "O'rta" | "Qiyin";
+}
+
 export interface GameDefinition {
   /** Stable id referenced by `gameId` in content/modules/*.json. */
   id: string;
@@ -76,5 +93,10 @@ export interface GameDefinition {
    * is the right ending for it. Uzbek and English both, since titles mix them.
    */
   keywords?: string[];
+  /**
+   * The game's own puzzle pool, in pool order, for the writer's picker. Declared
+   * here so it cannot drift away from the puzzles the game actually holds.
+   */
+  puzzles?: GamePuzzleInfo[];
   Component: React.ComponentType<GameProps>;
 }

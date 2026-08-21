@@ -27,6 +27,13 @@ import {
  * Steps are dragged into the program and can be dragged between rows to swap
  * them — reordering is the whole point of the exercise, and doing it by removing
  * and re-adding made that invisible. Tapping still works for whoever tries it.
+ *
+ * The pool used to be household chores end to end, and after two or three plays
+ * it read as a logic-card game for much younger children rather than as
+ * programming. Two everyday sequences stay as the first rungs — they are what
+ * makes "order matters" obvious without any computing vocabulary — and the rest
+ * are now sequences a computer actually runs: a file's lifetime, the edit-run-fix
+ * loop, a request being served, finding a maximum, swapping two boxes.
  */
 
 interface Puzzle {
@@ -37,6 +44,11 @@ interface Puzzle {
 }
 
 const PUZZLES: Puzzle[] = [
+  {
+    task: "Velosipedda yo'lga chiqish qadamlarini joylang.",
+    hint: "Xavfsizlik qadamlari yurishdan oldin keladi.",
+    steps: ["shlemni kiy", "shinani tekshir", "velosipedga min", "pedalni bos"],
+  },
   {
     task: "Choy damlash algoritmini to'g'ri tartibda tuzing.",
     hint: "Qadamlar to'g'ri, lekin tartib buzilgan. Kompyuter yozilgan tartibda bajaradi.",
@@ -49,55 +61,52 @@ const PUZZLES: Puzzle[] = [
     ],
   },
   {
-    task: "Robot eshikdan chiqishi uchun qadamlarni tartibga soling.",
-    hint: "Har bir buyruq oldingisining natijasiga tayanadi.",
-    steps: ["eshik oldiga bor", "eshikni och", "oldinga yur", "eshikni yop"],
-  },
-  {
-    task: "Kompyuterga rasm chizishni o'rgatish tartibini tuzing.",
-    hint: "Avval tayyorgarlik, keyin chizish, oxirida saqlash.",
-    steps: ["qalamni tanla", "rangni tanla", "chiziq chiz", "rasmni saqla"],
-  },
-  {
-    task: "Xabar yuborish algoritmini to'g'ri tartibda joylang.",
-    hint: "Qabul qiluvchini tanlamasdan xabar yuborilmaydi.",
+    task: "Dastur fayl bilan ishlash tartibini tuzing.",
+    hint: "Yopilgan faylni o'qib ham, o'zgartirib ham bo'lmaydi.",
     steps: [
-      "ilovani och",
-      "kimga yuborishni tanla",
-      "matnni yoz",
-      "yuborish tugmasini bos",
+      "faylni och",
+      "ichidagini o'qi",
+      "matnni o'zgartir",
+      "faylni saqla",
+      "faylni yop",
     ],
   },
   {
-    task: "Non yopish algoritmini tartibga soling.",
-    hint: "Xamir tayyor bo'lmasa, tandirga solib bo'lmaydi.",
-    steps: ["unni elab ol", "xamir qor", "xamirni tindir", "tandirga sol", "nonni ol"],
-  },
-  {
-    task: "Velosipedda yo'lga chiqish qadamlarini joylang.",
-    hint: "Xavfsizlik qadamlari yurishdan oldin keladi.",
-    steps: ["shlemni kiy", "shinani tekshir", "velosipedga min", "pedalni bos"],
-  },
-  {
-    task: "Fayl saqlash algoritmini to'g'ri tartibda tuzing.",
-    hint: "Papka tanlanmasa, fayl qayerga saqlanishi noaniq.",
+    task: "Xatoni tuzatish tartibini to'g'ri joylang.",
+    hint: "Xato borligini dasturni ishga tushirmaguncha bilib bo'lmaydi.",
     steps: [
-      "faylni tahrirla",
-      "saqlash tugmasini bos",
-      "papkani tanla",
-      "nom ber",
-      "tasdiqla",
+      "kodni yoz",
+      "dasturni ishga tushir",
+      "xato xabarini o'qi",
+      "xatoni tuzat",
+      "qayta ishga tushir",
     ],
   },
   {
-    task: "Kalkulyatorda ikki sonni qo'shish tartibini tuzing.",
-    hint: "Amal belgisi ikki sonning orasida turadi.",
+    task: "Server so'rovga qanday javob berishini tartibga soling.",
+    hint: "Ma'lumot faqat tekshiruvdan o'tgan foydalanuvchiga beriladi.",
+    steps: ["so'rov keldi", "parolni tekshir", "ma'lumotni yukla", "javobni yubor"],
+  },
+  {
+    task: "Kodni umumiy loyihaga qo'shish tartibini tuzing.",
+    hint: "Tekshirilmagan kod boshqalarning ishini buzadi.",
+    steps: ["kodni o'zgartir", "testlarni ishga tushir", "commit qil", "serverga push qil"],
+  },
+  {
+    task: "Ro'yxatdan eng katta sonni topish algoritmini tuzing.",
+    hint: "Solishtirish uchun avval biror sonni \"hozircha eng katta\" deb olish kerak.",
     steps: [
-      "birinchi sonni kirit",
-      "qo'shish belgisini bos",
-      "ikkinchi sonni kirit",
-      "natijani ko'r",
+      "eng katta = birinchi son",
+      "keyingi sonni ol",
+      "eng katta bilan solishtir",
+      "kattaroq bo'lsa yangila",
+      "eng kattani chiqar",
     ],
+  },
+  {
+    task: "Ikki qutidagi qiymatni almashtirish tartibini tuzing.",
+    hint: "Bir qutiga yangi qiymat solinsa, eskisi o'chadi — shuning uchun vaqtinchalik quti kerak.",
+    steps: ["vaqtinchalik quti ol", "a ni vaqtga nusxala", "b ni a ga yoz", "vaqtdagini b ga yoz"],
   },
 ];
 

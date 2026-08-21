@@ -1,0 +1,65 @@
+{
+  "goal": "3-bosqich: ro'yxat bilan hisoblash bo'yicha takrorlash.",
+  "sections": [
+    {
+      "heading": "Bosqich xulosasi",
+      "body": [
+        "Ro'yxat bilan hisoblashning naqshi bitta: natija o'zgaruvchisini boshlash, sikl bilan aylanib chiqish, har elementda natijani yangilash.",
+        "Yig'indi uchun yig'uvchi 0 dan boshlanadi va har element unga qo'shiladi.",
+        "Eng katta yoki eng kichik uchun boshlang'ich qiymat — ro'yxatning birinchi elementi, 0 emas.",
+        "Sanash uchun hisoblagich 0 dan boshlanadi va shart rost bo'lganda 1 qo'shiladi.",
+        "Bir sikl ichida bir nechta o'zgaruvchini yangilash mumkin — shartli o'rtacha shunday hisoblanadi."
+      ],
+      "callout": "Ro'yxat, sikl va shart birga ishlaganda haqiqiy hisob boshlanadi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "accumulator",
+      "uz": "yig'uvchi",
+      "note": "Sikl davomida natijani to'plab boruvchi o'zgaruvchi."
+    },
+    {
+      "en": "counter",
+      "uz": "hisoblagich",
+      "note": "Shartga mos hollar sonini saqlovchi o'zgaruvchi."
+    },
+    {
+      "en": "running maximum",
+      "uz": "hozirgi eng katta",
+      "note": "Sikl shu paytgacha ko'rgan elementlarning eng kattasi."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "sonlar = [6, 1, 9] uchun jami va eng_katta hisoblandi. chiqar(jami - eng_katta) nima chiqaradi?",
+      "options": [
+        "7",
+        "9",
+        "16"
+      ],
+      "correctIndex": 0,
+      "explanation": "Yig'indi 6 + 1 + 9 = 16, eng katta 9, ayirma 7."
+    },
+    {
+      "question": "Eng kichik elementni izlashda boshlang'ich qiymat qanday olinadi?",
+      "options": [
+        "Ro'yxatning birinchi elementi",
+        "Nol, chunki har qanday son nol bilan taqqoslanishi mumkin",
+        "Ro'yxat uzunligi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Birinchi element ro'yxatda aniq bor, shuning uchun taqqoslash to'g'ri boshlanadi."
+    },
+    {
+      "question": "Sanash bilan yig'ish o'rtasidagi farq nima?",
+      "options": [
+        "Sanashda 1, yig'ishda element qo'shiladi",
+        "Sanash ro'yxatni boshidan, yig'ish esa oxiridan aylanib chiqadi",
+        "Farqi yo'q, ikkisi bir xil"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sanash element qiymatiga qaramaydi, yig'indi esa aynan qiymatlarga bog'liq."
+    }
+  ]
+}

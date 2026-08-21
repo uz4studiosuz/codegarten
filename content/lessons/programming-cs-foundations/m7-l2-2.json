@@ -1,0 +1,94 @@
+{
+  "goal": "Ro'yxatdan element o'chirishni va qolgan indekslar qanday siljishini o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Indeks bilan o'chirish",
+      "body": [
+        "o'chir(ro'yxat, indeks) berilgan o'rindagi elementni ro'yxatdan chiqaradi. Ro'yxat qisqaradi — uzunlik bittaga kamayadi.",
+        "O'chirilgan elementdan keyingi barcha elementlar bir qadam chapga siljiydi. Ya'ni ularning indeksi o'zgaradi."
+      ],
+      "code": {
+        "caption": "O'rtadan o'chirish",
+        "lines": [
+          "ranglar = [\"qizil\", \"yashil\", \"ko'k\", \"sariq\"]",
+          "//            0         1         2        3",
+          "",
+          "o'chir(ranglar, 1)",
+          "",
+          "chiqar(ranglar)            // [\"qizil\", \"ko'k\", \"sariq\"]",
+          "chiqar(ranglar[1])         // ko'k — ilgari 2-o'rinda edi",
+          "chiqar(uzunlik(ranglar))   // 3"
+        ]
+      }
+    },
+    {
+      "heading": "Siljish nima uchun muhim",
+      "body": [
+        "Indeksni oldin saqlab qo'yib, keyin o'chirish xatoga olib keladi: o'chirishdan keyin o'sha indeks boshqa elementni ko'rsatadi.",
+        "Shuning uchun o'chirishdan keyin ro'yxatni yangi holatida o'ylash kerak. Eski indekslar endi to'g'ri emas."
+      ],
+      "code": {
+        "caption": "Eskirgan indeks",
+        "lines": [
+          "sonlar = [10, 20, 30]",
+          "oxirgi = 2",
+          "",
+          "o'chir(sonlar, 0)",
+          "",
+          "chiqar(sonlar)            // [20, 30]",
+          "chiqar(sonlar[oxirgi])    // XATO — endi 2-o'rin yo'q"
+        ]
+      },
+      "callout": "O'chirish qolgan elementlarning indeksini o'zgartiradi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "remove",
+      "uz": "o'chirish",
+      "note": "Elementni ro'yxatdan chiqarish."
+    },
+    {
+      "en": "shift",
+      "uz": "siljish",
+      "note": "O'chirishdan keyin keyingi elementlarning chapga surilishi."
+    },
+    {
+      "en": "stale index",
+      "uz": "eskirgan indeks",
+      "note": "O'zgarishdan keyin to'g'ri elementni ko'rsatmay qolgan indeks."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "sonlar = [4, 8, 15, 16] va o'chir(sonlar, 0) bajarildi. chiqar(sonlar[0]) nima chiqaradi?",
+      "options": [
+        "4",
+        "8",
+        "15"
+      ],
+      "correctIndex": 1,
+      "explanation": "Birinchi element chiqarildi, qolganlari chapga siljidi — 0-o'rinda endi 8 turadi."
+    },
+    {
+      "question": "o'chir(ranglar, 1) dan keyin ro'yxat uzunligi qanday o'zgaradi?",
+      "options": [
+        "Bittaga kamayadi",
+        "O'zgarmaydi, chunki o'chirilgan element o'rnida bo'sh joy saqlanib qoladi",
+        "Bittaga ortadi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Element ro'yxatdan butunlay chiqadi, shuning uchun uzunlik bittaga kamayadi."
+    },
+    {
+      "question": "Nima uchun o'chirishdan keyin eski indeksga ishonib bo'lmaydi?",
+      "options": [
+        "Keyingi elementlar chapga siljiydi",
+        "Ro'yxat barcha elementlarini tasodifiy tartibda qaytadan joylashtiradi",
+        "Ro'yxat nomi o'zgaradi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Siljish tufayli bir xil indeks o'chirishdan oldin va keyin boshqa elementni ko'rsatadi."
+    }
+  ]
+}

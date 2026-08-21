@@ -1,0 +1,121 @@
+{
+  "goal": "To'g'ri yozilgan qatorning noto'g'ri joyda turganini aniqlab, uni kerakli o'ringa ko'chirishni mashq qilasiz.",
+  "sections": [
+    {
+      "heading": "Nol qayerda turishi kerak",
+      "body": [
+        "Bu koddagi har bir qator alohida olganda to'g'ri. Muammo faqat joyda: jami = 0 qatori sikl ichida qolib ketgan.",
+        "Natijada har aylanish boshida yig'indi nolga tushadi va oxirida faqat oxirgi element saqlanib qoladi."
+      ],
+      "code": {
+        "caption": "Yig'indi har aylanishda nolga tushadi",
+        "lines": [
+          "sonlar = [2, 4, 6]",
+          "har son uchun sonlar:",
+          "  jami = 0            // xato: joyi",
+          "  jami = jami + son",
+          "chiqar(jami)",
+          "",
+          "// son 2 -> jami 0, keyin 2",
+          "// son 4 -> jami 0, keyin 4",
+          "// son 6 -> jami 0, keyin 6",
+          "// chiqadi: 6, kutilgan: 12"
+        ]
+      }
+    },
+    {
+      "heading": "Chekinish qatorning joyini belgilaydi",
+      "body": [
+        "Qator qancha chekinish bilan yozilgani uning qaysi blok ichida turganini bildiradi. Bir daraja chekinish farqi butun mantiqni o'zgartiradi.",
+        "Quyidagi kodda hisoblagich shart ichida emas, shart tashqarisida turadi — shuning uchun u har element uchun oshadi."
+      ],
+      "code": {
+        "caption": "Hisoblagich shartga bo'ysunmayapti",
+        "lines": [
+          "ballar = [70, 90]",
+          "soni = 0",
+          "har ball uchun ballar:",
+          "  agar ball >= 80:",
+          "    chiqar(\"yaxshi\")",
+          "  soni = soni + 1     // xato: chekinish kam",
+          "chiqar(soni)",
+          "",
+          "// chiqadi: 2, kutilgan: 1"
+        ]
+      }
+    },
+    {
+      "heading": "Tekshirish usuli",
+      "body": [
+        "Har bir qator uchun bitta savol bering: bu qator bir marta bajarilishi kerakmi yoki har aylanishda?",
+        "Bir marta bajarilishi kerak bo'lgan qator sikldan tashqarida turadi. Quyidagi koddagi xato aynan shunday."
+      ],
+      "code": {
+        "caption": "Boshlang'ich qiymat qayta-qayta tiklanadi",
+        "lines": [
+          "sonlar = [3, 8, 5]",
+          "har son uchun sonlar:",
+          "  eng = sonlar[0]     // xato: joyi",
+          "  agar son > eng:",
+          "    eng = son",
+          "chiqar(eng)",
+          "",
+          "// son 3 -> eng 3",
+          "// son 8 -> eng 3, keyin 8",
+          "// son 5 -> eng 3, keyin 5",
+          "// chiqadi: 5, kutilgan: 8"
+        ]
+      },
+      "callout": "Bir marta kerak bo'lgan qator sikldan tashqarida, har aylanishda kerak bo'lgani ichida turadi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "initialization",
+      "uz": "boshlang'ich qiymat berish",
+      "note": "O'zgaruvchiga sikldan oldin dastlabki qiymat berish."
+    },
+    {
+      "en": "indentation",
+      "uz": "chekinish",
+      "note": "Qatorning qaysi blok ichida turganini ko'rsatuvchi bo'sh joy."
+    },
+    {
+      "en": "loop body",
+      "uz": "sikl tanasi",
+      "note": "Har aylanishda qaytariladigan qatorlar to'plami."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "sonlar = [2, 4, 6] va jami = 0 qatori sikl ichida turgan bo'lsa, chiqar(jami) nima chiqaradi?",
+      "options": [
+        "6",
+        "12",
+        "0"
+      ],
+      "correctIndex": 0,
+      "explanation": "Har aylanish boshida jami nolga tushadi, oxirida esa faqat 6 qo'shilib qoladi."
+    },
+    {
+      "question": "sonlar = [3, 8, 5] va eng = sonlar[0] qatori sikl ichida turgan bo'lsa, natija nima bo'ladi?",
+      "options": [
+        "3",
+        "5",
+        "8"
+      ],
+      "correctIndex": 1,
+      "explanation": "Oxirgi aylanishda eng qaytadan 3 bo'ladi, keyin 5 > 3 sharti bajarilib eng 5 ga o'tadi."
+    },
+    {
+      "question": "Yig'indini to'g'ri hisoblash uchun jami = 0 qatori bilan nima qilish kerak?",
+      "options": [
+        "jami = 0 qatorini o'chirib, uning o'rniga sikl ichiga chiqar qo'shish kerak",
+        "jami = 0 qatorini sikldan yuqoriga ko'chirish",
+        "jami = 0 qatorini sikl oxiriga ko'chirish"
+      ],
+      "correctIndex": 1,
+      "explanation": "Boshlang'ich qiymat bir marta, sikl boshlanishidan oldin berilishi kerak."
+    }
+  ]
+}

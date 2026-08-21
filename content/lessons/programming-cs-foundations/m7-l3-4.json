@@ -1,0 +1,95 @@
+{
+  "goal": "Bir sikl ichida ham sanab, ham yig'ib, shartli o'rtachani hisoblashni o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Bitta sikl, ikki o'zgaruvchi",
+      "body": [
+        "Ro'yxatni ikki marta aylanib chiqish shart emas. Bir sikl ichida bir nechta o'zgaruvchini birga to'ldirish mumkin.",
+        "60 dan yuqori ballarning o'rtachasini topish uchun ikki narsa kerak: shu ballarning yig'indisi va ularning soni. Ikkisi ham bitta shart ichida yangilanadi."
+      ],
+      "code": {
+        "caption": "Shartli o'rtacha",
+        "lines": [
+          "ballar = [85, 52, 78, 40, 95]",
+          "jami = 0",
+          "soni = 0",
+          "",
+          "har ball uchun ballar:",
+          "  agar ball >= 60:",
+          "    jami = jami + ball",
+          "    soni = soni + 1",
+          "",
+          "chiqar(jami)          // 258",
+          "chiqar(soni)          // 3",
+          "chiqar(jami / soni)   // 86"
+        ]
+      }
+    },
+    {
+      "heading": "Bo'lishdan oldin tekshirish",
+      "body": [
+        "Agar hech bir element shartga mos kelmasa, soni 0 bo'lib qoladi. Nolga bo'lish esa xato beradi va dastur to'xtaydi.",
+        "Shuning uchun bo'lishdan oldin soni 0 emasligini tekshirish kerak. Bu tekshiruv siklning tashqarisida, u tugaganidan keyin turadi."
+      ],
+      "code": {
+        "caption": "Nolga bo'lishdan saqlanish",
+        "lines": [
+          "agar soni > 0:",
+          "  chiqar(jami / soni)",
+          "aks holda:",
+          "  chiqar(\"shartga mos ball yo'q\")"
+        ]
+      },
+      "callout": "Har natijaga o'z o'zgaruvchisi, lekin aylanish bitta."
+    }
+  ],
+  "terms": [
+    {
+      "en": "conditional average",
+      "uz": "shartli o'rtacha",
+      "note": "Faqat shartga mos elementlar bo'yicha hisoblangan o'rtacha."
+    },
+    {
+      "en": "division by zero",
+      "uz": "nolga bo'lish",
+      "note": "Natijasi aniqlanmagan va xatoga olib keladigan amal."
+    },
+    {
+      "en": "guard",
+      "uz": "himoya sharti",
+      "note": "Xavfli amaldan oldin qo'yiladigan tekshiruv."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "ballar = [85, 52, 78, 40, 95] da 60 dan katta yoki teng ballarning o'rtachasi qancha?",
+      "options": [
+        "71",
+        "86",
+        "70"
+      ],
+      "correctIndex": 1,
+      "explanation": "85 + 78 + 95 = 258, mos ballar soni 3, 258 / 3 = 86."
+    },
+    {
+      "question": "Nima uchun bo'lishdan oldin soni tekshiriladi?",
+      "options": [
+        "Soni 0 bo'lsa, nolga bo'lish xatosi chiqadi",
+        "Aks holda o'rtacha butun songa yaxlitlanib, aniqligini yo'qotib qo'yadi",
+        "Soni manfiy bo'lishi mumkin"
+      ],
+      "correctIndex": 0,
+      "explanation": "Hech bir element shartga mos kelmasa soni 0 qoladi, nolga bo'lish esa xato."
+    },
+    {
+      "question": "Bir siklda ikki natija olish nimani talab qiladi?",
+      "options": [
+        "Har natija uchun alohida o'zgaruvchi",
+        "Ro'yxatni ikki marta boshidan oxirigacha aylanib chiqishni",
+        "Ro'yxatni oldin saralab olishni"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ikki o'zgaruvchi bitta aylanishda mustaqil yangilanadi — ikkinchi sikl kerak emas."
+    }
+  ]
+}

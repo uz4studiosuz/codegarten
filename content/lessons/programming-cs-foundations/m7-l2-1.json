@@ -1,0 +1,93 @@
+{
+  "goal": "Ro'yxatga yangi element qo'shishni va uzunlik qanday o'zgarishini o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Ro'yxat yopiq emas",
+      "body": [
+        "Ro'yxat yaratilgandan keyin ham o'zgaradi. Unga yangi element qo'shish uchun butun ro'yxatni qaytadan yozish shart emas.",
+        "qo'sh(ro'yxat, qiymat) yangi qiymatni ro'yxat oxiriga yozadi. Eski elementlar joyida qoladi, ularning indekslari o'zgarmaydi."
+      ],
+      "code": {
+        "caption": "Oxiriga qo'shish",
+        "lines": [
+          "ballar = [85, 92, 78]",
+          "chiqar(uzunlik(ballar))   // 3",
+          "",
+          "qo'sh(ballar, 64)",
+          "chiqar(ballar)            // [85, 92, 78, 64]",
+          "chiqar(uzunlik(ballar))   // 4"
+        ]
+      }
+    },
+    {
+      "heading": "Bo'sh ro'yxatdan boshlash",
+      "body": [
+        "Ko'p hollarda ro'yxat bo'sh holda yaratiladi va keyin to'ldiriladi. Bo'sh ro'yxatning uzunligi 0 ga teng.",
+        "Sikl bilan to'ldirish ham shu tarzda ishlaydi: har aylanishda kerakli element qo'shiladi."
+      ],
+      "code": {
+        "caption": "Sikl bilan to'ldirish",
+        "lines": [
+          "juftlar = []",
+          "",
+          "har son uchun [1, 2, 3, 4, 5, 6]:",
+          "  agar son juft:",
+          "    qo'sh(juftlar, son)",
+          "",
+          "chiqar(juftlar)            // [2, 4, 6]",
+          "chiqar(uzunlik(juftlar))   // 3"
+        ]
+      },
+      "callout": "Qo'shilgan element ro'yxat oxiriga tushadi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "append",
+      "uz": "oxiriga qo'shish",
+      "note": "Yangi elementni ro'yxat oxiriga yozish."
+    },
+    {
+      "en": "empty list",
+      "uz": "bo'sh ro'yxat",
+      "note": "Elementi yo'q ro'yxat, uzunligi 0."
+    },
+    {
+      "en": "mutable",
+      "uz": "o'zgaruvchan",
+      "note": "Yaratilgandan keyin ham o'zgartirish mumkin bo'lgan tuzilma."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "qo'sh(ballar, 64) bajarilganda ro'yxatda nima o'zgaradi?",
+      "options": [
+        "Oxiriga bitta element qo'shiladi",
+        "Barcha elementlar bir qadam o'ngga siljiydi va indekslar qaytadan hisoblanadi",
+        "64 soni birinchi o'ringa yoziladi"
+      ],
+      "correctIndex": 0,
+      "explanation": "qo'sh yangi qiymatni oxiriga yozadi, eski elementlar joyida qoladi."
+    },
+    {
+      "question": "ro'yxat = [3, 5] va qo'sh(ro'yxat, 9) bajarildi. chiqar(uzunlik(ro'yxat)) nima chiqaradi?",
+      "options": [
+        "2",
+        "3",
+        "9"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ikki element bor edi, bittasi qo'shildi — uzunlik 3 bo'ldi."
+    },
+    {
+      "question": "Nima uchun ro'yxat ko'pincha bo'sh holda yaratiladi?",
+      "options": [
+        "Natijalarni sikl davomida birma-bir qo'shish uchun",
+        "Bo'sh ro'yxat xotirada joy egallamaydi va dasturni bir necha barobar tezlashtiradi",
+        "Bo'sh ro'yxatda indeks 1 dan boshlanadi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Natija oldindan ma'lum bo'lmaganda bo'sh ro'yxat yaratilib, sikl uni to'ldiradi."
+    }
+  ]
+}

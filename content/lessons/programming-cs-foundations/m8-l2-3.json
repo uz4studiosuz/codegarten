@@ -1,0 +1,95 @@
+{
+  "goal": "Sikl bir marta kam yoki bir marta ko'p aylanayotganini aniqlab, chegarani to'g'rilashni mashq qilasiz.",
+  "sections": [
+    {
+      "heading": "Bir marta kam aylandi",
+      "body": [
+        "Vazifa: 1 dan 5 gacha sonlarni chiqarish. Kod esa 4 tagacha yetib to'xtayapti.",
+        "Sababi sikl shartida: i < 5 yozuvi 5 ni qamramaydi. Bu bir birlik xato (off-by-one) ning eng sof ko'rinishi."
+      ],
+      "code": {
+        "caption": "5 chiqmay qoldi",
+        "lines": [
+          "i = 1",
+          "toki i < 5:          // xato",
+          "  chiqar(i)",
+          "  i = i + 1",
+          "",
+          "// chiqadi:  1, 2, 3, 4",
+          "// kutilgan: 1, 2, 3, 4, 5",
+          "// tuzatish: toki i <= 5:"
+        ]
+      }
+    },
+    {
+      "heading": "Bir marta ko'p aylandi",
+      "body": [
+        "Ro'yxat indekslari 0 dan boshlanadi. Uch elementli ro'yxatda indekslar 0, 1 va 2 — 3-indeks mavjud emas.",
+        "Shu sababli qoida shunday: hisoblagich 0 dan boshlansa < ishlatiladi, 1 dan boshlansa <= ishlatiladi."
+      ],
+      "code": {
+        "caption": "Mavjud bo'lmagan elementga murojaat",
+        "lines": [
+          "ro'yxat = [10, 20, 30]",
+          "i = 0",
+          "toki i <= 3:              // xato: 4 aylanish",
+          "  chiqar(ro'yxat[i])",
+          "  i = i + 1",
+          "",
+          "// tuzatish: toki i < 3:",
+          "// yaxshiroq: toki i < ro'yxat.uzunlik:"
+        ]
+      },
+      "callout": "Chegarani tekshirishning yo'li — birinchi va oxirgi aylanishni qo'lda yozib chiqish."
+    }
+  ],
+  "terms": [
+    {
+      "en": "off-by-one error",
+      "uz": "bir birlik xato",
+      "note": "Sikl chegarasidagi bir marta kam yoki ko'p aylanish."
+    },
+    {
+      "en": "index out of range",
+      "uz": "indeks chegaradan tashqarida",
+      "note": "Ro'yxatda mavjud bo'lmagan o'ringa murojaat qilish."
+    },
+    {
+      "en": "length",
+      "uz": "uzunlik",
+      "note": "Ro'yxatdagi elementlar soni; oxirgi indeks undan bir kam."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "i = 0; toki i < 3: chiqar(i); i = i + 1. Sikl necha marta aylanadi?",
+      "options": [
+        "2",
+        "3",
+        "4"
+      ],
+      "correctIndex": 1,
+      "explanation": "i qiymatlari 0, 1, 2 bo'ladi — uch aylanish. 0 dan boshlanganda < belgisi to'g'ri chegara beradi."
+    },
+    {
+      "question": "ro'yxat = [5, 8, 1, 9] bo'lsa, mavjud indekslar qaysilar?",
+      "options": [
+        "1 dan 4 gacha",
+        "0 dan 3 gacha",
+        "0 dan 4 gacha"
+      ],
+      "correctIndex": 1,
+      "explanation": "Uzunlik 4, indekslar 0 dan boshlanadi, shuning uchun oxirgi indeks 3 bo'ladi."
+    },
+    {
+      "question": "i = 0 dan boshlanuvchi sikl ro'yxatning barcha elementini bir marta o'qishi uchun shart qanday bo'lishi kerak?",
+      "options": [
+        "toki i <= ro'yxat.uzunlik va i > 0:",
+        "toki i < ro'yxat.uzunlik:",
+        "toki i <= 3:"
+      ],
+      "correctIndex": 1,
+      "explanation": "Uzunlikdan kichik indekslar mavjud elementlarga to'g'ri keladi va sikl ro'yxatdan chiqib ketmaydi."
+    }
+  ]
+}

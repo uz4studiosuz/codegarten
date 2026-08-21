@@ -1,0 +1,130 @@
+{
+  "id": "mod-lists",
+  "num": 5,
+  "trackId": "programming-cs-foundations",
+  "title": "Ro'yxatlar va To'plamlar",
+  "titleEn": "Lists & Collections",
+  "description": "Bir nechta qiymatni bitta nom ostida saqlash, indeks orqali murojaat va sikl bilan aylanib chiqish.",
+  "tagline": "Bitta nom, ko'p qiymat",
+  "imageSrc": "/images/variables.png",
+  "topics": [
+    "lists"
+  ],
+  "levels": [
+    {
+      "id": "m5-l3",
+      "num": 1,
+      "title": "Ro'yxatlar",
+      "summary": "Bitta nom ostida ko'p qiymatni saqlash va aylanib chiqish.",
+      "lessons": [
+        {
+          "id": "m5-l3-1",
+          "title": "Ro'yxat tushunchasi",
+          "kind": "concept",
+          "xp": 10,
+          "estMinutes": 3
+        },
+        {
+          "id": "m5-l3-2",
+          "title": "Elementga murojaat",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m5-l3-3",
+          "title": "Ro'yxatni aylanib chiqish",
+          "kind": "challenge",
+          "xp": 25,
+          "estMinutes": 8
+        },
+        {
+          "id": "m5-l3-4",
+          "title": "Bosqich takrori",
+          "kind": "review",
+          "xp": 30,
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m7-l2",
+      "num": 2,
+      "title": "Ro'yxatni o'zgartirish",
+      "summary": "Element qo'shish, o'chirish va uzunlik bilan chegarani kuzatish.",
+      "lessons": [
+        {
+          "id": "m7-l2-1",
+          "title": "Element qo'shish",
+          "kind": "concept",
+          "xp": 10,
+          "estMinutes": 3
+        },
+        {
+          "id": "m7-l2-2",
+          "title": "Elementni o'chirish",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m7-l2-3",
+          "title": "Uzunlik va chegara",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m7-l2-4",
+          "title": "Bosqich takrori",
+          "kind": "review",
+          "xp": 30,
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "m7-l3",
+      "num": 3,
+      "title": "Ro'yxat bilan hisoblash",
+      "summary": "Ro'yxatni aylanib o'tib yig'indi, eng katta qiymat va sonni topish.",
+      "lessons": [
+        {
+          "id": "m7-l3-1",
+          "title": "Yig'indini hisoblash",
+          "kind": "concept",
+          "xp": 10,
+          "estMinutes": 3
+        },
+        {
+          "id": "m7-l3-2",
+          "title": "Eng katta va eng kichik",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m7-l3-3",
+          "title": "Shartga mos elementlarni sanash",
+          "kind": "exercise",
+          "xp": 15,
+          "estMinutes": 5
+        },
+        {
+          "id": "m7-l3-4",
+          "title": "Ikki natijani bir aylanishda",
+          "kind": "challenge",
+          "xp": 25,
+          "estMinutes": 8
+        },
+        {
+          "id": "m7-l3-5",
+          "title": "Bosqich takrori",
+          "kind": "review",
+          "xp": 30,
+          "estMinutes": 10
+        }
+      ]
+    }
+  ]
+}

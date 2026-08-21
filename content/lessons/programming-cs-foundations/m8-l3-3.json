@@ -1,0 +1,120 @@
+{
+  "goal": "Butun trekdagi vositalarni bitta masalada birga ishlatib, yechimni qadam-baqadam qurasiz.",
+  "sections": [
+    {
+      "heading": "Vazifa",
+      "body": [
+        "Sinf ballari ro'yxati berilgan. Uchta javob kerak: nechta o'quvchi o'tgan (50 va undan yuqori), eng yuqori ball qancha, va o'rtacha balldan yuqori ballar soni.",
+        "Bu masalada trekdagi hamma vosita ishlatiladi: o'zgaruvchi, shart, sikl, ro'yxat va funksiya."
+      ],
+      "code": {
+        "caption": "Berilgan ma'lumot",
+        "lines": [
+          "ballar = [45, 78, 92, 50, 63]",
+          "",
+          "// kerak:  o'tganlar soni, eng yuqori ball,",
+          "//         o'rtachadan yuqori ballar soni"
+        ]
+      }
+    },
+    {
+      "heading": "Qadamlarga bo'lish",
+      "body": [
+        "Uch javobning uchtasi ham bir xil shaklda: ro'yxatni aylanib chiqish va yo'lda bir qiymatni yangilab borish. Farq faqat nimani yangilashda.",
+        "O'tganlarni sanashda hisoblagich oshiriladi. Eng yuqorini topishda eng katta qiymat saqlanadi. O'rtachani hisoblashda yig'indi to'planadi."
+      ],
+      "code": {
+        "caption": "Uch funksiya, bitta shakl",
+        "lines": [
+          "funksiya otganlar(ballar):",
+          "  soni = 0",
+          "  har ball uchun ballar:",
+          "    agar ball >= 50:",
+          "      soni = soni + 1",
+          "  return soni",
+          "",
+          "funksiya eng_yuqori(ballar):",
+          "  eng = ballar[0]",
+          "  har ball uchun ballar:",
+          "    agar ball > eng:",
+          "      eng = ball",
+          "  return eng"
+        ]
+      }
+    },
+    {
+      "heading": "Ehtiyot bo'lish kerak bo'lgan joylar",
+      "body": [
+        "O'tish sharti 50 va undan yuqori bo'lsa, >= yoziladi. > yozilsa, aynan 50 ball olgan o'quvchi o'tmagan hisoblanadi.",
+        "Eng yuqorini topishda boshlang'ich qiymat ro'yxatning birinchi elementidan olinadi, noldan emas.",
+        "Yig'uvchi va hisoblagichlar sikldan oldin, bir marta boshlang'ich qiymat oladi — sikl ichida emas."
+      ],
+      "code": {
+        "caption": "To'liq yechim",
+        "lines": [
+          "ballar = [45, 78, 92, 50, 63]",
+          "",
+          "chiqar(otganlar(ballar))      // 4",
+          "chiqar(eng_yuqori(ballar))    // 92",
+          "",
+          "jami = 0",
+          "har ball uchun ballar:",
+          "  jami = jami + ball",
+          "ortacha = jami / uzunlik(ballar)   // 328 / 5 = 65,6",
+          "",
+          "soni = 0",
+          "har ball uchun ballar:",
+          "  agar ball > ortacha:",
+          "    soni = soni + 1",
+          "chiqar(soni)                  // 2"
+        ]
+      },
+      "callout": "Katta masala — bir necha kichik masala. Har birini alohida tekshirib, keyin birlashtiring."
+    }
+  ],
+  "terms": [
+    {
+      "en": "aggregate",
+      "uz": "umumlashtirish",
+      "note": "Ro'yxatdagi ko'p qiymatdan bitta javob hosil qilish."
+    },
+    {
+      "en": "average",
+      "uz": "o'rtacha",
+      "note": "Yig'indini elementlar soniga bo'lish natijasi."
+    },
+    {
+      "en": "inclusive bound",
+      "uz": "chegarani qamrash",
+      "note": "Chegara qiymatining o'zi ham shartga kirishi, ya'ni >= yoki <=."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "ballar = [45, 78, 92, 50, 63] uchun otganlar(ballar) nima qaytaradi?",
+      "options": ["4", "3", "5"],
+      "correctIndex": 0,
+      "explanation": "78, 92, 50 va 63 — jami to'rttasi 50 dan kichik emas. Faqat 45 o'tmaydi."
+    },
+    {
+      "question": "Shart agar ball >= 50 emas, agar ball > 50 bo'lsa, javob qanday o'zgaradi?",
+      "options": [
+        "3 bo'ladi",
+        "4 bo'lib qoladi",
+        "Har bir ball bittaga kamayadi va shu sababli natija ham o'zgaradi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Aynan 50 ball olgan o'quvchi endi hisobga kirmaydi, shuning uchun 4 emas 3 chiqadi."
+    },
+    {
+      "question": "O'rtacha 65,6 bo'lsa, o'rtachadan yuqori ballar soni qancha?",
+      "options": [
+        "2",
+        "3",
+        "Hammasi, chunki o'rtacha eng kichik balldan katta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Faqat 78 va 92 sonlari 65,6 dan katta. 63 esa undan kichik."
+    }
+  ]
+}

@@ -25,5 +25,14 @@
     "description": "Mashinaviy ta'lim, vaznlar, aktivatsiya funksiyalari va LLM larni chuqur tushunish.",
     "colorTheme": "#EC4899",
     "isSoon": true
+  },
+  {
+    "id": "data-structures-algorithms",
+    "category": "YUQORI BOSQICH",
+    "title": "Ma'lumotlar Tuzilmalari va Algoritmlar",
+    "titleEn": "Data Structures & Algorithms",
+    "description": "Algoritm tezligini o'lchash, qidiruv va saralash usullarini tanlash.",
+    "colorTheme": "#3B82F6",
+    "isSoon": true
   }
 ]

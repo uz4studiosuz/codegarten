@@ -1,0 +1,100 @@
+{
+  "goal": "Taqqoslash natijasini qutida saqlashni va rost/yolg'on qiymat qachon hisoblanishini o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Uchinchi tur: rost yoki yolg'on",
+      "body": [
+        "Qutida son va matndan tashqari yana bir qiymat turishi mumkin: boolean (mantiqiy qiymat). Uning faqat ikki holati bor — rost yoki yolg'on.",
+        "Bu qiymat qo'lda yozilishi ham, taqqoslash natijasi sifatida hisoblanishi ham mumkin."
+      ],
+      "code": {
+        "caption": "Ikki xil yo'l bilan",
+        "lines": [
+          "ochiq = true            // qo'lda yozilgan",
+          "",
+          "yosh = 20",
+          "katta = yosh >= 18      // taqqoslash natijasi: true",
+          "chiqar(katta)           // true"
+        ]
+      }
+    },
+    {
+      "heading": "Taqqoslash o'sha paytda hisoblanadi",
+      "body": [
+        "Bu qismning eng muhim joyi. katta = yosh >= 18 qatori bajarilganda taqqoslash darhol hisoblanadi va natija qutiga yoziladi.",
+        "Shundan keyin yosh o'zgarsa, katta o'zgarmaydi — u qutiga tushib qolgan javob, tirik bog'lanish emas.",
+        "Bu o'zgaruvchining eng asosiy qoidasi: qutida qiymat turadi, hisob emas."
+      ],
+      "code": {
+        "caption": "Qiymat qutiga tushdi",
+        "lines": [
+          "yosh = 20",
+          "katta = yosh >= 18      // true",
+          "yosh = 10",
+          "",
+          "chiqar(yosh)            // 10",
+          "chiqar(katta)           // true, chunki taqqoslash oldin hisoblangan"
+        ]
+      }
+    },
+    {
+      "heading": "Teskarilash",
+      "body": [
+        "EMAS amali mantiqiy qiymatni teskarilaydi: rost yolg'onga, yolg'on rostga aylanadi.",
+        "U ham hisoblangan payt ishlaydi — keyin asl quti o'zgarsa, teskarilangan natija o'zgarmaydi."
+      ],
+      "code": {
+        "caption": "EMAS bir marta ishlaydi",
+        "lines": [
+          "yopiq = false",
+          "ochiq = EMAS yopiq      // true",
+          "yopiq = true",
+          "",
+          "chiqar(ochiq)           // true, o'zgarmadi"
+        ]
+      },
+      "callout": "Taqqoslash natijasi qutiga bir marta tushadi. Keyin manba o'zgargani unga ta'sir qilmaydi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "boolean",
+      "uz": "mantiqiy qiymat",
+      "note": "Faqat rost yoki yolg'on bo'ladigan tur."
+    },
+    {
+      "en": "comparison",
+      "uz": "taqqoslash",
+      "note": "Ikki qiymatni solishtirib rost yoki yolg'on beradigan amal."
+    },
+    {
+      "en": "negation",
+      "uz": "teskarilash",
+      "note": "Mantiqiy qiymatni qarama-qarshisiga aylantirish."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "yosh = 20, katta = yosh >= 18, keyin yosh = 10. katta nima?",
+      "options": [
+        "true",
+        "false",
+        "Har safar qaytadan hisoblanadi, shuning uchun aniq javob yo'q"
+      ],
+      "correctIndex": 0,
+      "explanation": "Taqqoslash yosh 20 bo'lganda hisoblangan. Natija qutiga tushdi va keyin o'zgarmaydi."
+    },
+    {
+      "question": "yopiq = false, ochiq = EMAS yopiq, keyin yopiq = true. ochiq nima?",
+      "options": ["true", "false", "yopiq bilan bir xil, ya'ni true"],
+      "correctIndex": 0,
+      "explanation": "EMAS yopiq false bo'lgan paytda hisoblandi va true berdi. Keyingi o'zgarish unga tegmaydi."
+    },
+    {
+      "question": "Mantiqiy qiymat nechta holatga ega?",
+      "options": ["Ikki", "Uch", "Cheksiz, chunki har taqqoslash yangi qiymat beradi"],
+      "correctIndex": 0,
+      "explanation": "Faqat rost va yolg'on. Har qanday taqqoslash oxir-oqibat shu ikkisidan biriga aylanadi."
+    }
+  ]
+}

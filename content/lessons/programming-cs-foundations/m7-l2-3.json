@@ -1,0 +1,94 @@
+{
+  "goal": "uzunlik() bilan ro'yxat o'lchamini kuzatishni va chegaradan chiqish xatosidan saqlanishni o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Uzunlik o'zgarib turadi",
+      "body": [
+        "uzunlik(ro'yxat) hozirgi elementlar sonini beradi. Qo'shishdan keyin bu son ortadi, o'chirishdan keyin kamayadi.",
+        "Shuning uchun uzunlikni kodda son bilan yozib qo'ymaslik kerak. 4 emas, uzunlik(ballar) yozilsa, ro'yxat o'zgarganda kod baribir to'g'ri ishlaydi."
+      ],
+      "code": {
+        "caption": "Uzunlik ro'yxat bilan birga o'zgaradi",
+        "lines": [
+          "ballar = [85, 92, 78]",
+          "chiqar(uzunlik(ballar))   // 3",
+          "",
+          "qo'sh(ballar, 64)",
+          "chiqar(uzunlik(ballar))   // 4",
+          "",
+          "o'chir(ballar, 0)",
+          "chiqar(uzunlik(ballar))   // 3"
+        ]
+      }
+    },
+    {
+      "heading": "Oxirgi indeks va chegara",
+      "body": [
+        "To'g'ri indekslar 0 dan uzunlik - 1 gacha. Oxirgi elementni olish uchun sonlar[uzunlik(sonlar) - 1] yoziladi.",
+        "Bu oraliqdan tashqaridagi indeks xato beradi va dastur to'xtaydi. Element qo'shilganda oraliq kengayadi, o'chirilganda torayadi."
+      ],
+      "code": {
+        "caption": "Chegaradan chiqish",
+        "lines": [
+          "sonlar = [10, 20, 30]",
+          "",
+          "chiqar(sonlar[uzunlik(sonlar) - 1])   // 30",
+          "chiqar(sonlar[3])                     // XATO — bunday o'rin yo'q",
+          "",
+          "o'chir(sonlar, 0)",
+          "chiqar(sonlar[2])                     // XATO — endi uzunlik 2"
+        ]
+      },
+      "callout": "Indeks 0 dan uzunlik - 1 oralig'ida bo'lishi shart."
+    }
+  ],
+  "terms": [
+    {
+      "en": "bounds",
+      "uz": "chegara",
+      "note": "To'g'ri indekslarning quyi va yuqori qiymati."
+    },
+    {
+      "en": "last index",
+      "uz": "oxirgi indeks",
+      "note": "Ro'yxatning oxirgi elementi o'rni, uzunlik - 1 ga teng."
+    },
+    {
+      "en": "hard-coded value",
+      "uz": "qattiq yozilgan qiymat",
+      "note": "Kodda son bilan yozilib, o'zgarishga moslashmaydigan qiymat."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "sonlar = [10, 20, 30] va o'chir(sonlar, 0) bajarildi. chiqar(sonlar[uzunlik(sonlar) - 1]) nima chiqaradi?",
+      "options": [
+        "20",
+        "30",
+        "XATO"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ro'yxat [20, 30] bo'lib qoldi, uzunlik 2, oxirgi indeks 1 — u yerda 30 turadi."
+    },
+    {
+      "question": "Uch elementli ro'yxatda sonlar[3] nima beradi?",
+      "options": [
+        "Xato — bunday o'rin yo'q",
+        "Oxirgi elementni beradi, chunki elementlar hisobi 1 dan boshlanadi",
+        "Bo'sh qiymat beradi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Uch elementda indekslar 0, 1, 2 — 3 chegaradan tashqarida."
+    },
+    {
+      "question": "Uzunligi 5 bo'lgan ro'yxatga ikki element qo'shildi va bitta element o'chirildi. Uzunlik qancha?",
+      "options": [
+        "5",
+        "6",
+        "7"
+      ],
+      "correctIndex": 1,
+      "explanation": "5 + 2 - 1 = 6. Har qo'shish uzunlikni oshiradi, har o'chirish kamaytiradi."
+    }
+  ]
+}

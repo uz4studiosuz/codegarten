@@ -1,0 +1,87 @@
+{
+  "goal": "Kodni ishga tushirmasdan, qator-qator o'qib natijasini aytishni o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Qator-qator o'qish",
+      "body": [
+        "Kompyuter kodni yuqoridan pastga, bir qator ketidan bir qator bajaradi. Kodni o'qiyotganda siz ham xuddi shunday harakat qilishingiz kerak.",
+        "Umumiy xato — kodga bir qarab, natijani taxmin qilish. To'g'ri usul boshqa: har qatordan keyin o'zgaruvchining yangi qiymatini yozib qo'yish."
+      ],
+      "code": {
+        "caption": "Har qatordan keyin qiymat o'zgaradi",
+        "lines": [
+          "son = 2          // son: 2",
+          "son = son + 3    // son: 5",
+          "son = son * 2    // son: 10",
+          "chiqar(son)      // 10"
+        ]
+      }
+    },
+    {
+      "heading": "Kuzatish jadvali",
+      "body": [
+        "Kuzatish jadvali (trace table) — qog'ozdagi ikki ustun: chapda qator, o'ngda o'zgaruvchi qiymati. Har qatorni bajarib, o'ng ustunga yangi qiymatni yozasiz.",
+        "Jadval hech qachon yolg'on gapirmaydi. Xotirada saqlashga urinsangiz, uchinchi qatorda chalkashib ketasiz."
+      ],
+      "code": {
+        "caption": "Qiymat qachon o'qilgani muhim",
+        "lines": [
+          "a = 5",
+          "b = a + 2    // b hozir o'qildi: 7",
+          "a = 10       // a o'zgardi, b tegmadi",
+          "chiqar(b)    // 7"
+        ]
+      },
+      "callout": "O'zgaruvchi qiymati faqat unga yangi qiymat berilganda o'zgaradi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "trace table",
+      "uz": "kuzatish jadvali",
+      "note": "Har qatordan keyin o'zgaruvchi qiymati yozib boriladigan jadval."
+    },
+    {
+      "en": "state",
+      "uz": "holat",
+      "note": "Ma'lum bir qatorda barcha o'zgaruvchilarning qiymati."
+    },
+    {
+      "en": "output",
+      "uz": "natija",
+      "note": "Dastur ekranga chiqargan qiymatlar."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "x = 1, keyin x = x + x, keyin yana x = x + x. chiqar(x) nima chiqaradi?",
+      "options": [
+        "4",
+        "2",
+        "8"
+      ],
+      "correctIndex": 0,
+      "explanation": "1 + 1 = 2, keyin 2 + 2 = 4. Har qatorda oldingi qiymat ishlatiladi."
+    },
+    {
+      "question": "narx = 10, jami = narx * 2, narx = 50. chiqar(jami) nima chiqaradi?",
+      "options": [
+        "100",
+        "20",
+        "50"
+      ],
+      "correctIndex": 1,
+      "explanation": "jami ikkinchi qatorda 20 bo'lib hisoblangan. narx keyin o'zgargani jami ga ta'sir qilmaydi."
+    },
+    {
+      "question": "Notanish kodning natijasini aniqlashning eng ishonchli yo'li qaysi?",
+      "options": [
+        "Kodning uzunligiga qarab natija hajmini chamalash, keyin oxirgi qatorga qarash",
+        "Har qatorni bajarib, o'zgaruvchi qiymatini yozib borish",
+        "Faqat chiqar qatoriga qarash va shu yerdan taxmin qilish"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kuzatish jadvali taxminni yo'q qiladi: qiymat qaysi qatorda o'zgarganini ko'rsatadi."
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "goal": "Matn qiymatlarini birlashtirishni va matnli qutining eski qiymati qanday o'chishini ko'rasiz.",
+  "sections": [
+    {
+      "heading": "Matn ham qutida turadi",
+      "body": [
+        "Qutida son turishi shart emas — matn ham turadi. Matn qo'shtirnoq ichida yoziladi, shundan kompyuter uni matn deb biladi.",
+        "Qo'shtirnoqsiz yozilgan so'z esa quti nomi hisoblanadi. Shuning uchun ism va \"ism\" — butunlay boshqa narsa."
+      ],
+      "code": {
+        "caption": "Matn qiymat berish",
+        "lines": [
+          "ism = \"Ali\"",
+          "chiqar(ism)          // Ali",
+          "chiqar(\"ism\")        // ism"
+        ]
+      }
+    },
+    {
+      "heading": "Bitta + , ikki xil ish",
+      "body": [
+        "Sonlar uchun + qo'shadi, matnlar uchun ulaydi. Bu ikki amal emas — bitta amal, qiymat turiga qarab boshqacha ishlaydi.",
+        "Bo'sh joy o'z-o'zidan qo'shilmaydi: kerak bo'lsa uni matnning ichiga yozish kerak."
+      ],
+      "code": {
+        "caption": "Qo'shish va ulash",
+        "lines": [
+          "2 + 3            // 5",
+          "\"2\" + \"3\"        // 23",
+          "",
+          "ism = \"Ali\"",
+          "salom = \"Salom, \" + ism",
+          "chiqar(salom)    // Salom, Ali"
+        ]
+      }
+    },
+    {
+      "heading": "Matnli nusxa ham bog'lanmaydi",
+      "body": [
+        "Matnli qutini nusxalash sonli qutini nusxalashdan farq qilmaydi: nusxa olinadi, ikki quti bog'lanib qolmaydi.",
+        "Shuning uchun asl qutini keyin o'zgartirsangiz, nusxa o'zgarmay qoladi."
+      ],
+      "code": {
+        "caption": "Asl o'zgardi, nusxa qoldi",
+        "lines": [
+          "birinchi = \"Ali\"",
+          "eski = birinchi",
+          "birinchi = \"Vali\"",
+          "",
+          "chiqar(eski)        // Ali",
+          "chiqar(birinchi)    // Vali"
+        ]
+      },
+      "callout": "Matn ham son kabi qutida turadi: yangi qiymat eskisini butunlay o'chiradi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "string",
+      "uz": "matn",
+      "note": "Qo'shtirnoq ichida yoziladigan harflar ketma-ketligi."
+    },
+    {
+      "en": "concatenation",
+      "uz": "birlashtirish",
+      "note": "Ikki matnni + orqali bir matnga ulash."
+    },
+    {
+      "en": "literal",
+      "uz": "yozib qo'yilgan qiymat",
+      "note": "Kodda to'g'ridan-to'g'ri yozilgan qiymat, quti nomi emas."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "\"2\" + \"3\" nima beradi?",
+      "options": ["23", "5", "Xato beradi, chunki matnni qo'shib bo'lmaydi"],
+      "correctIndex": 0,
+      "explanation": "Ikkalasi ham matn, shuning uchun + ularni ulaydi va 23 chiqadi."
+    },
+    {
+      "question": "ism = \"Ali\" bo'lsa, chiqar(\"ism\") nima chiqaradi?",
+      "options": ["ism", "Ali", "Hech narsa, chunki bunday quti yo'q"],
+      "correctIndex": 0,
+      "explanation": "Qo'shtirnoq ichidagi narsa matn sifatida olinadi, quti nomi sifatida emas."
+    },
+    {
+      "question": "birinchi = \"Ali\", eski = birinchi, keyin birinchi = \"Vali\". eski nima?",
+      "options": ["Ali", "Vali", "Ikkalasi ham, chunki qutilar bog'lanib qolgan"],
+      "correctIndex": 0,
+      "explanation": "eski nusxa olgan payt \"Ali\" yozilgan edi. Keyin birinchi o'zgargani eski ga ta'sir qilmaydi."
+    }
+  ]
+}

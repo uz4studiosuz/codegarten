@@ -1,0 +1,99 @@
+{
+  "goal": "Ro'yxatni bir marta aylanib o'tib eng katta va eng kichik elementni topishni o'rganasiz.",
+  "sections": [
+    {
+      "heading": "Hozirgi yetakchi",
+      "body": [
+        "Eng katta elementni topish uchun hozirgacha ko'rilganlarning eng kattasini saqlab borish kerak. Bu o'zgaruvchi ro'yxatning birinchi elementi bilan boshlanadi.",
+        "Sikl har elementni shu qiymat bilan taqqoslaydi. Element kattaroq bo'lsa, yetakchi almashadi. Sikl tugaganda o'zgaruvchida eng katta qiymat qoladi."
+      ],
+      "code": {
+        "caption": "Eng katta",
+        "lines": [
+          "ballar = [85, 92, 78, 95]",
+          "eng_katta = ballar[0]",
+          "",
+          "har ball uchun ballar:",
+          "  agar ball > eng_katta:",
+          "    eng_katta = ball",
+          "",
+          "chiqar(eng_katta)   // 95"
+        ]
+      }
+    },
+    {
+      "heading": "Eng kichik — bir belgi farqi",
+      "body": [
+        "Eng kichikni topish uchun faqat taqqoslash yo'nalishi o'zgaradi: > o'rniga < yoziladi. Qolgan hamma narsa bir xil.",
+        "Boshlang'ich qiymat sifatida 0 olish xato bo'ladi: musbat sonlar ro'yxatida 0 hech qachon almashtirilmaydi va natija 0 bo'lib qoladi. Shuning uchun birinchi element olinadi."
+      ],
+      "code": {
+        "caption": "Eng kichik",
+        "lines": [
+          "eng_kichik = ballar[0]",
+          "",
+          "har ball uchun ballar:",
+          "  agar ball < eng_kichik:",
+          "    eng_kichik = ball",
+          "",
+          "chiqar(eng_kichik)   // 78"
+        ]
+      },
+      "callout": "Boshlang'ich qiymat — ro'yxatning birinchi elementi, 0 emas."
+    }
+  ],
+  "terms": [
+    {
+      "en": "maximum",
+      "uz": "eng katta qiymat",
+      "note": "Ro'yxatdagi barcha elementlardan katta yoki teng element."
+    },
+    {
+      "en": "minimum",
+      "uz": "eng kichik qiymat",
+      "note": "Ro'yxatdagi barcha elementlardan kichik yoki teng element."
+    },
+    {
+      "en": "comparison",
+      "uz": "taqqoslash",
+      "note": "Ikki qiymatni tekshirib, qaysi biri katta ekanini aniqlash."
+    },
+    {
+      "en": "single pass",
+      "uz": "bir aylanish",
+      "note": "Ro'yxatni faqat bir marta boshdan oxirigacha ko'rib chiqish."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "sonlar = [7, 3, 9, 4] uchun eng katta izlanadi. chiqar(eng_katta) nima chiqaradi?",
+      "options": [
+        "7",
+        "9",
+        "4"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yetakchi 7 dan boshlanadi, 9 uni almashtiradi, 4 esa kichik — natija 9."
+    },
+    {
+      "question": "Eng kichikni izlashda boshlang'ich qiymat sifatida 0 olish nima uchun xato?",
+      "options": [
+        "Musbat sonlar ro'yxatida natija 0 bo'lib qoladi",
+        "Sikl ro'yxatning birinchi elementini butunlay o'tkazib yuboradi va xato beradi",
+        "0 soni ro'yxatga qo'shilib qoladi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Hech bir musbat son 0 dan kichik emas, shuning uchun almashtirish sodir bo'lmaydi."
+    },
+    {
+      "question": "Eng kattani izlashda sikl ichidagi shart qanday bo'ladi?",
+      "options": [
+        "agar ball > eng_katta",
+        "agar ball < eng_katta, chunki taqqoslash teskari yo'nalishda boradi",
+        "agar ball = eng_katta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Element hozirgi yetakchidan katta bo'lsa, yetakchi almashadi."
+    }
+  ]
+}

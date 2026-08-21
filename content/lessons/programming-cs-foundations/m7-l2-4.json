@@ -1,0 +1,65 @@
+{
+  "goal": "2-bosqich: ro'yxatni o'zgartirish bo'yicha takrorlash.",
+  "sections": [
+    {
+      "heading": "Bosqich xulosasi",
+      "body": [
+        "qo'sh(ro'yxat, qiymat) yangi elementni oxiriga yozadi va uzunlikni bittaga oshiradi.",
+        "o'chir(ro'yxat, indeks) berilgan o'rindagi elementni chiqaradi, keyingilari bir qadam chapga siljiydi.",
+        "uzunlik(ro'yxat) hozirgi elementlar sonini beradi — u ro'yxat bilan birga o'zgaradi.",
+        "To'g'ri indekslar oralig'i: 0 dan uzunlik - 1 gacha. Undan tashqaridagi indeks xato beradi.",
+        "O'chirishdan oldin saqlab qo'yilgan indeks keyin boshqa elementni ko'rsatishi mumkin."
+      ],
+      "callout": "Keyingi bosqichda ro'yxat, sikl va shart birga ishlaydi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "append",
+      "uz": "oxiriga qo'shish",
+      "note": "Yangi elementni ro'yxat oxiriga yozish."
+    },
+    {
+      "en": "remove",
+      "uz": "o'chirish",
+      "note": "Elementni ro'yxatdan chiqarish, keyingilari siljiydi."
+    },
+    {
+      "en": "bounds",
+      "uz": "chegara",
+      "note": "To'g'ri indekslar oralig'i: 0 dan uzunlik - 1 gacha."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "Uzunligi 4 bo'lgan ro'yxatdan bitta element o'chirildi. To'g'ri indekslar oralig'i qanday?",
+      "options": [
+        "0 dan 3 gacha",
+        "0 dan 2 gacha",
+        "1 dan 3 gacha"
+      ],
+      "correctIndex": 1,
+      "explanation": "Uzunlik 3 bo'lib qoldi, oxirgi indeks uzunlik - 1 = 2."
+    },
+    {
+      "question": "narsalar = [\"non\", \"sut\"], keyin qo'sh(narsalar, \"tuz\") va o'chir(narsalar, 0). chiqar(narsalar) nima chiqaradi?",
+      "options": [
+        "[\"sut\", \"tuz\"]",
+        "[\"non\", \"sut\", \"tuz\"]",
+        "[\"non\", \"tuz\"]"
+      ],
+      "correctIndex": 0,
+      "explanation": "Avval tuz oxiriga qo'shildi, keyin 0-o'rindagi non chiqarildi."
+    },
+    {
+      "question": "Element o'chirilgandan keyin eski indeksni ishlatish nima uchun xavfli?",
+      "options": [
+        "U boshqa elementni ko'rsatib qolishi mumkin",
+        "Ro'yxat o'chirilgan elementni xotirada saqlab turadi va keyin uni qaytaradi",
+        "Indeks har doim 1 ga kamayadi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Siljish tufayli o'sha indeks endi boshqa element ustida turadi yoki chegaradan chiqadi."
+    }
+  ]
+}

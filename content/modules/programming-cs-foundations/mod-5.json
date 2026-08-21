@@ -1,6 +1,6 @@
 {
   "id": "mod-5",
-  "num": 5,
+  "num": 2,
   "trackId": "programming-cs-foundations",
   "title": "O'zgaruvchilar va Xotira",
   "titleEn": "Variables & Memory Storage",
@@ -75,43 +75,21 @@
           "estMinutes": 5
         },
         {
-          "id": "m5-l2-4",
-          "title": "Bosqich takrori",
-          "kind": "review",
-          "xp": 30,
-          "estMinutes": 10
-        }
-      ]
-    },
-    {
-      "id": "m5-l3",
-      "num": 3,
-      "title": "Ro'yxatlar",
-      "summary": "Bitta nom ostida ko'p qiymatni saqlash va aylanib chiqish.",
-      "lessons": [
-        {
-          "id": "m5-l3-1",
-          "title": "Ro'yxat tushunchasi",
-          "kind": "concept",
-          "xp": 10,
-          "estMinutes": 3
-        },
-        {
-          "id": "m5-l3-2",
-          "title": "Elementga murojaat",
+          "id": "m5-l2-5",
+          "title": "Matnlarni birlashtirish",
           "kind": "exercise",
           "xp": 15,
           "estMinutes": 5
         },
         {
-          "id": "m5-l3-3",
-          "title": "Ro'yxatni aylanib chiqish",
+          "id": "m5-l2-6",
+          "title": "Rost va yolg'on qiymatlar",
           "kind": "challenge",
           "xp": 25,
           "estMinutes": 8
         },
         {
-          "id": "m5-l3-4",
+          "id": "m5-l2-4",
           "title": "Bosqich takrori",
           "kind": "review",
           "xp": 30,

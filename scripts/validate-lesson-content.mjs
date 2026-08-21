@@ -24,7 +24,7 @@ const KNOWN_TOPICS = [
   "conditionals",
   "variables",
   "efficiency",
-  "geometry",
+  "lists",
 ];
 
 function findJsonFiles(dir) {

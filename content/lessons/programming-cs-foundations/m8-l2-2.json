@@ -1,0 +1,96 @@
+{
+  "goal": "Chegaradagi qiymat orqali noto'g'ri taqqoslash belgisini topib, uni bitta belgi bilan tuzatishni mashq qilasiz.",
+  "sections": [
+    {
+      "heading": "Xato faqat chegarada ko'rinadi",
+      "body": [
+        "Shart quyidagicha bo'lishi kerak edi: 60 ball va undan yuqori — o'tdi. Kod esa 60 ni yiqilgan deb hisoblayapti.",
+        "Diqqat qiling: 59 va 61 uchun natija to'g'ri chiqadi. Xato faqat aynan 60 da ko'rinadi."
+      ],
+      "code": {
+        "caption": "Chegaradagi 60 noto'g'ri javob oladi",
+        "lines": [
+          "ballar = [59, 60, 61]",
+          "har ball uchun ballar:",
+          "  agar ball > 60:",
+          "    chiqar(\"o'tdi\")",
+          "  aks holda:",
+          "    chiqar(\"yiqildi\")",
+          "",
+          "// chiqadi:   yiqildi, yiqildi, o'tdi",
+          "// kutilgan:  yiqildi, o'tdi, o'tdi",
+          "// tuzatish:  agar ball >= 60:"
+        ]
+      }
+    },
+    {
+      "heading": "Chegarani uch qiymat bilan sinash",
+      "body": [
+        "Har shart uchun uch qiymatni sinang: chegaraning o'zi, undan bir kam va undan bir ko'p. Uch javob to'g'ri bo'lsa, belgi ham to'g'ri.",
+        "Yo'nalish ham xato bo'lishi mumkin. < belgisi > o'rniga yozilsa, dastur teskari ishlaydi va bu darhol ko'zga tashlanadi."
+      ],
+      "code": {
+        "caption": "Ikki xil belgi xatosi",
+        "lines": [
+          "// 0 daraja va undan past — muzlaydi",
+          "agar harorat < 0:      // xato: 0 o'tib ketadi",
+          "agar harorat <= 0:     // to'g'ri",
+          "",
+          "// 100 dan ko'p xarid — chegirma",
+          "agar summa < 100:      // xato: yo'nalish teskari",
+          "agar summa > 100:      // to'g'ri"
+        ]
+      },
+      "callout": "Belgini o'zgartirish — bitta harakat, lekin dastur mantiqini butunlay tuzatadi."
+    }
+  ],
+  "terms": [
+    {
+      "en": "boundary test",
+      "uz": "chegara sinovi",
+      "note": "Shartni chegara qiymati va uning qo'shnilarida tekshirish."
+    },
+    {
+      "en": "inclusive",
+      "uz": "o'zi ham kiradi",
+      "note": ">= va <= belgilarida chegara qiymatining o'zi ham hisobga olinadi."
+    },
+    {
+      "en": "logic error",
+      "uz": "mantiq xatosi",
+      "note": "Kod ishlaydi, lekin noto'g'ri javob beradigan xato."
+    }
+  ],
+  "quiz": [
+    {
+      "question": "ballar = [59, 60, 61] va shart agar ball >= 60: bo'lsa, natija qanday chiqadi?",
+      "options": [
+        "yiqildi, yiqildi, o'tdi",
+        "yiqildi, o'tdi, o'tdi",
+        "o'tdi, o'tdi, o'tdi"
+      ],
+      "correctIndex": 1,
+      "explanation": ">= belgisi 60 ni ham qabul qiladi, shuning uchun ikkinchi va uchinchi ball o'tadi."
+    },
+    {
+      "question": "0 daraja ham muzlash deb hisoblanishi kerak. agar harorat < 0: qatorini qanday tuzatasiz?",
+      "options": [
+        "agar harorat < 0 yoki harorat = 0 bo'lsa:",
+        "agar harorat <= 0:",
+        "agar harorat < 1:"
+      ],
+      "correctIndex": 1,
+      "explanation": "<= belgisi 0 ni ham qamrab oladi. Bu bitta belgi bilan yechiladigan tuzatish."
+    },
+    {
+      "question": "Taqqoslash belgisi to'g'ri yozilganini bilish uchun qaysi qiymatlarni sinash kerak?",
+      "options": [
+        "Ro'yxatdagi barcha qiymatlarni birma-bir, boshidan oxirigacha sinab chiqish kerak",
+        "Chegara qiymati va uning ikki tomonidagi qiymat",
+        "Faqat ro'yxatdagi eng katta qiymatni olish"
+      ],
+      "correctIndex": 1,
+      "explanation": "Belgi xatosi faqat chegarada ko'rinadi, shuning uchun uch qiymatlik sinov yetarli."
+    }
+  ]
+}

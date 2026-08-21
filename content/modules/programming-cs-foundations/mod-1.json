@@ -87,7 +87,8 @@
           "title": "Labirintdan chiqish",
           "kind": "challenge",
           "xp": 25,
-          "estMinutes": 8
+          "estMinutes": 8,
+          "gameId": "robot-grid"
         },
         {
           "id": "m1-l2-5",
