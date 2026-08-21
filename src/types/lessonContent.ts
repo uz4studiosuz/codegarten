@@ -31,6 +31,8 @@ export interface LessonImage {
   /** Read out by screen readers and shown if the image fails to load. */
   alt: string;
   caption?: string;
+  /** Presentation size preset. Defaults to full. */
+  size?: "small" | "medium" | "large" | "full";
 }
 
 /**
@@ -46,7 +48,14 @@ export type SectionBlock =
   | { kind: "text"; text: string }
   | { kind: "code"; caption?: string; lines: string[] }
   | { kind: "image"; image: LessonImage }
-  | { kind: "callout"; text: string };
+  | { kind: "callout"; text: string }
+  | {
+      kind: "choice";
+      question?: string;
+      options: string[];
+      correctIndex: number;
+      explanation?: string;
+    };
 
 export interface ContentSection {
   heading: string;

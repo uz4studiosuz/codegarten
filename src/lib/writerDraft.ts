@@ -109,6 +109,7 @@ export type BlockKind = SectionBlock["kind"];
 export const BLOCK_LABELS: Record<BlockKind, string> = {
   text: "Matn",
   code: "Kod",
+  choice: "Tanlov",
   image: "Rasm",
   callout: "Xulosa",
 };
@@ -116,6 +117,7 @@ export const BLOCK_LABELS: Record<BlockKind, string> = {
 export const BLOCK_HINTS: Record<BlockKind, string> = {
   text: "Bir yoki bir necha xatboshi",
   code: "Kod namunasi — har buyruq alohida qator",
+  choice: "Variantlar tanlovi (to'g'ri/noto'g'ri)",
   image: "Havola yoki yuklangan rasm",
   callout: "Eng muhim fikr, ajratib ko'rsatiladi",
 };
@@ -136,8 +138,17 @@ export function kindHasGame(kind: LessonKind): boolean {
 
 export function emptyBlock(kind: BlockKind): SectionBlock {
   if (kind === "code") return { kind: "code", caption: "", lines: [] };
-  if (kind === "image") return { kind: "image", image: { src: "", alt: "" } };
+  if (kind === "image") return { kind: "image", image: { src: "", alt: "", size: "full" } };
   if (kind === "callout") return { kind: "callout", text: "" };
+  if (kind === "choice") {
+    return {
+      kind: "choice",
+      question: "",
+      options: ["", ""],
+      correctIndex: 0,
+      explanation: "",
+    };
+  }
   return { kind: "text", text: "" };
 }
 
@@ -165,6 +176,12 @@ export function draftBlocks(section: ContentSection): SectionBlock[] {
 export function blockIsEmpty(block: SectionBlock): boolean {
   if (block.kind === "text" || block.kind === "callout") return !block.text.trim();
   if (block.kind === "image") return !block.image.src.trim();
+  if (block.kind === "choice") {
+    return (
+      !block.question?.trim() &&
+      !block.options.some((line) => line.trim())
+    );
+  }
   return !block.lines.some((line) => line.trim());
 }
 
@@ -419,7 +436,25 @@ function tidyImage(
       src: rewrite(image.src.trim()),
       alt: image.alt.trim() || image.caption?.trim() || "Dars rasmi",
       ...(image.caption?.trim() ? { caption: image.caption.trim() } : {}),
+      ...(image.size && image.size !== "full" ? { size: image.size } : {}),
     },
+  };
+}
+
+function tidyChoice(
+  block: Extract<SectionBlock, { kind: "choice" }>
+): Extract<SectionBlock, { kind: "choice" }> {
+  const kept = block.options
+    .map((option, index) => ({ option: option.trim(), index }))
+    .filter((entry) => entry.option.length > 0);
+  const correctIndex = kept.findIndex((entry) => entry.index === block.correctIndex);
+
+  return {
+    kind: "choice",
+    ...(block.question?.trim() ? { question: block.question.trim() } : {}),
+    options: kept.map((entry) => entry.option),
+    correctIndex: correctIndex === -1 ? 0 : correctIndex,
+    ...(block.explanation?.trim() ? { explanation: block.explanation.trim() } : {}),
   };
 }
 
@@ -441,6 +476,11 @@ function tidySection(
           ...(block.caption?.trim() ? { caption: block.caption.trim() } : {}),
           lines,
         });
+      }
+    } else if (block.kind === "choice") {
+      const tidied = tidyChoice(block);
+      if (tidied.options.length > 0 || tidied.question) {
+        blocks.push(tidied);
       }
     } else if (block.image.src.trim()) {
       blocks.push({ kind: "image", ...tidyImage(block.image, rewrite) });
@@ -735,6 +775,16 @@ export function validateDraft(
             const where = `${at}, ${bi + 1}-blok (${BLOCK_LABELS[block.kind]})`;
             if (blockIsEmpty(block)) {
               err(`${where} bo'sh — to'ldiring yoki o'chirib tashlang`, target);
+              return;
+            }
+            if (block.kind === "choice") {
+              const filled = block.options.filter((o) => o.trim());
+              if (filled.length < 2) {
+                err(`${where}: kamida 2 ta variant kerak`, target);
+              }
+              if (!block.options[block.correctIndex]?.trim()) {
+                err(`${where}: to'g'ri javob bo'sh variantga qo'yilgan`, target);
+              }
               return;
             }
             if (block.kind !== "image") return;

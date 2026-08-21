@@ -506,6 +506,26 @@ function LessonForm({
     }
   });
 
+  const [collapsedSteps, setCollapsedSteps] = useState<Record<number, boolean>>({});
+
+  const toggleStepCollapse = (index: number) => {
+    setCollapsedSteps((prev) => ({ ...prev, [index]: !prev[index] }));
+  };
+
+  const allCollapsed = steps.length > 0 && steps.every((_, i) => Boolean(collapsedSteps[i]));
+
+  const toggleAllSteps = () => {
+    if (allCollapsed) {
+      setCollapsedSteps({});
+    } else {
+      const next: Record<number, boolean> = {};
+      steps.forEach((_, i) => {
+        next[i] = true;
+      });
+      setCollapsedSteps(next);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <Section
@@ -632,56 +652,88 @@ function LessonForm({
         title="Qadamlar"
         count={steps.length}
         badge={badgeFor(lessonIssues, (m) => /qadam|blok|bo'lim|savol|variant|javob|atama|rasm/.test(m))}
+        action={
+          steps.length > 1 ? (
+            <button
+              type="button"
+              onClick={toggleAllSteps}
+              className="text-[11.5px] font-semibold text-[#26B54F] hover:underline cursor-pointer"
+            >
+              {allCollapsed ? "Hammasini ochish" : "Hammasini yopish"}
+            </button>
+          ) : undefined
+        }
       >
         <p className="text-[12px] leading-relaxed text-gray-500 dark:text-zinc-400 flex items-start gap-2">
           <IconInfoCircle size={15} className="shrink-0 mt-0.5 text-[#A78BFA]" />
-          Dars shu tartibda ochiladi. Bo&apos;lim, savol va kalit so&apos;zlarni xohlagan
-          joyga qo&apos;yish mumkin — masalan tushuntirishdan keyin darrov savol.
+          Dars shu tartibda ochiladi. Qadamlarni ochish yoki yopish uchun sarlavhasini bosing.
         </p>
 
-        {steps.map((step, index) => (
-          <StepCard
-            key={index}
-            index={index}
-            total={steps.length}
-            step={step}
-            quizNumber={quizNumbers.get(index)}
-            onMove={(direction) => moveStep(index, direction)}
-            onRemove={() => removeStep(index)}
-          >
-            {step.kind === "section" && (
-              <SectionStepEditor
-                section={step.section}
-                onChange={(section) => replaceStep(index, { kind: "section", section })}
-              />
-            )}
-            {step.kind === "terms" && (
-              <TermsStepEditor
-                terms={step.terms}
-                onChange={(terms) => replaceStep(index, { kind: "terms", terms })}
-              />
-            )}
-            {step.kind === "quiz" && (
-              <QuizStepEditor
-                question={step.question}
-                onChange={(question) => replaceStep(index, { kind: "quiz", question })}
-              />
-            )}
-            {step.kind === "challenge" && (
-              <p className="text-[12.5px] leading-relaxed text-gray-500 dark:text-zinc-400">
-                Shu joyda interaktiv o&apos;yin ochiladi
-                {lesson.gameId
-                  ? `: ${games.find((g) => g.id === lesson.gameId)?.name ?? lesson.gameId}`
-                  : autoGame
-                  ? `: ${autoGame.name} (avtomatik)`
-                  : ""}
-                . O&apos;yinni tanlash yuqoridagi «Dars» bo&apos;limida.
-              </p>
-            )}
-          </StepCard>
-        ))}
+        {steps.map((step, index) => {
+          const stepSummary = getStepSummary(
+            step,
+            autoGame?.name,
+            games.find((g) => g.id === lesson.gameId)?.name
+          );
 
-        <div className="flex flex-wrap gap-2">
+          return (
+            <StepCard
+              key={index}
+              index={index}
+              total={steps.length}
+              step={step}
+              quizNumber={quizNumbers.get(index)}
+              isCollapsed={Boolean(collapsedSteps[index])}
+              onToggleCollapse={() => toggleStepCollapse(index)}
+              summary={stepSummary}
+              onMove={(direction) => {
+                moveStep(index, direction);
+                // Also update collapsed states
+                const target = index + direction;
+                if (target >= 0 && target < steps.length) {
+                  setCollapsedSteps((prev) => ({
+                    ...prev,
+                    [index]: prev[target],
+                    [target]: prev[index],
+                  }));
+                }
+              }}
+              onRemove={() => removeStep(index)}
+            >
+              {step.kind === "section" && (
+                <SectionStepEditor
+                  section={step.section}
+                  onChange={(section) => replaceStep(index, { kind: "section", section })}
+                />
+              )}
+              {step.kind === "terms" && (
+                <TermsStepEditor
+                  terms={step.terms}
+                  onChange={(terms) => replaceStep(index, { kind: "terms", terms })}
+                />
+              )}
+              {step.kind === "quiz" && (
+                <QuizStepEditor
+                  question={step.question}
+                  onChange={(question) => replaceStep(index, { kind: "quiz", question })}
+                />
+              )}
+              {step.kind === "challenge" && (
+                <p className="text-[12.5px] leading-relaxed text-gray-500 dark:text-zinc-400">
+                  Shu joyda interaktiv o&apos;yin ochiladi
+                  {lesson.gameId
+                    ? `: ${games.find((g) => g.id === lesson.gameId)?.name ?? lesson.gameId}`
+                    : autoGame
+                    ? `: ${autoGame.name} (avtomatik)`
+                    : ""}
+                  . O&apos;yinni tanlash yuqoridagi «Dars» bo&apos;limida.
+                </p>
+              )}
+            </StepCard>
+          );
+        })}
+
+        <div className="flex flex-wrap gap-2 pt-1">
           <AddButton label={STEP_LABELS.section} onClick={() => addStep("section")} />
           <AddButton label={STEP_LABELS.quiz} onClick={() => addStep("quiz")} />
           <AddButton label={STEP_LABELS.terms} onClick={() => addStep("terms")} />
@@ -698,6 +750,27 @@ function LessonForm({
       </Section>
     </div>
   );
+}
+
+function getStepSummary(step: LessonStep, autoGameName?: string, pinnedGameName?: string): string {
+  if (step.kind === "section") {
+    const blocksCount = draftBlocks(step.section).length;
+    return `${step.section.heading || "(Sarlavhasiz bo'lim)"} · ${blocksCount} ta blok`;
+  }
+  if (step.kind === "quiz") {
+    const count = step.question.options.filter((o) => o.trim()).length;
+    return `${step.question.question || "(Savol yozilmagan)"} · ${count} variant`;
+  }
+  if (step.kind === "terms") {
+    const valid = step.terms.filter((t) => t.en.trim());
+    const count = valid.length || step.terms.length;
+    const names = valid.map((t) => t.en).slice(0, 3).join(", ");
+    return `${count} ta atama${names ? ` (${names})` : ""}`;
+  }
+  if (step.kind === "challenge") {
+    return pinnedGameName ? pinnedGameName : autoGameName ? `${autoGameName} (avtomatik)` : "Interaktiv o'yin";
+  }
+  return "";
 }
 
 /** One step in the run: its header, order controls and its own editor. */
@@ -719,13 +792,13 @@ function MoveControls({
   removeLabel: string;
 }) {
   return (
-    <>
+    <div className="flex items-center gap-0.5">
       <button
         type="button"
         onClick={() => onMove(-1)}
         disabled={index === 0}
         aria-label="Yuqoriga ko'chirish"
-        className="p-1 rounded-full text-gray-300 dark:text-zinc-600 enabled:hover:text-[#26B54F] disabled:opacity-30 transition-colors cursor-pointer"
+        className="p-1 rounded-full text-gray-400 dark:text-zinc-500 enabled:hover:text-[#26B54F] enabled:hover:bg-gray-100 enabled:dark:hover:bg-[#25252a] disabled:opacity-20 transition-colors cursor-pointer"
       >
         <IconChevronUp size={15} />
       </button>
@@ -734,7 +807,7 @@ function MoveControls({
         onClick={() => onMove(1)}
         disabled={index === total - 1}
         aria-label="Pastga ko'chirish"
-        className="p-1 rounded-full text-gray-300 dark:text-zinc-600 enabled:hover:text-[#26B54F] disabled:opacity-30 transition-colors cursor-pointer"
+        className="p-1 rounded-full text-gray-400 dark:text-zinc-500 enabled:hover:text-[#26B54F] enabled:hover:bg-gray-100 enabled:dark:hover:bg-[#25252a] disabled:opacity-20 transition-colors cursor-pointer"
       >
         <IconChevronDown size={15} />
       </button>
@@ -742,11 +815,11 @@ function MoveControls({
         type="button"
         onClick={onRemove}
         aria-label={removeLabel}
-        className="p-1 rounded-full text-gray-300 dark:text-zinc-600 hover:text-red-500 transition-colors cursor-pointer"
+        className="p-1 rounded-full text-gray-400 dark:text-zinc-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors cursor-pointer"
       >
         <IconTrash size={14} />
       </button>
-    </>
+    </div>
   );
 }
 
@@ -755,8 +828,11 @@ function StepCard({
   total,
   step,
   quizNumber,
+  isCollapsed,
+  onToggleCollapse,
   onMove,
   onRemove,
+  summary,
   children,
 }: {
   index: number;
@@ -764,8 +840,11 @@ function StepCard({
   step: LessonStep;
   /** "2-savol", so a question keeps its own numbering inside the run. */
   quizNumber?: number;
+  isCollapsed: boolean;
+  onToggleCollapse: () => void;
   onMove: (direction: -1 | 1) => void;
   onRemove: () => void;
+  summary?: string;
   children: React.ReactNode;
 }) {
   const label =
@@ -777,46 +856,90 @@ function StepCard({
 
   const tone =
     step.kind === "quiz"
-      ? "border-[#A78BFA]/40"
+      ? "border-[#A78BFA]/40 bg-[#A78BFA]/[0.02]"
       : step.kind === "challenge"
-      ? "border-[#26B54F]/40"
+      ? "border-[#26B54F]/40 bg-[#26B54F]/[0.02]"
       : step.kind === "terms"
-      ? "border-amber-500/40"
-      : "border-gray-100 dark:border-[#222226]";
+      ? "border-amber-500/40 bg-amber-500/[0.02]"
+      : "border-gray-200 dark:border-[#222226]";
 
   return (
-    <div className={`rounded-[12px] border-2 ${tone} p-3.5 flex flex-col gap-3`}>
-      <div className="flex items-center gap-1.5">
-        <span className="shrink-0 w-[22px] h-[22px] rounded-full bg-gray-100 dark:bg-[#232327] text-[11px] font-mono font-bold text-gray-500 dark:text-zinc-400 flex items-center justify-center">
-          {index + 1}
-        </span>
-        <span className="min-w-0 flex-1 text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-zinc-400 truncate">
-          {label}
-        </span>
+    <div className={`rounded-[14px] border-2 ${tone} overflow-hidden transition-all flex flex-col`}>
+      <div className="flex items-center gap-2 px-3.5 py-2.5 bg-gray-50/80 dark:bg-[#1a1a1e]/80 border-b border-gray-100 dark:border-[#222226]/80 select-none">
+        <button
+          type="button"
+          onClick={onToggleCollapse}
+          className="flex items-center gap-2 min-w-0 flex-1 text-left cursor-pointer group"
+        >
+          <IconChevronDown
+            size={16}
+            className={`shrink-0 text-gray-400 dark:text-zinc-500 group-hover:text-black dark:group-hover:text-white transition-transform duration-200 ${
+              isCollapsed ? "-rotate-90" : ""
+            }`}
+          />
+          <span className="shrink-0 w-[22px] h-[22px] rounded-[6px] bg-white dark:bg-[#232327] border border-gray-200 dark:border-[#2a2a30] text-[11px] font-mono font-bold text-gray-600 dark:text-zinc-300 flex items-center justify-center shadow-2xs">
+            {index + 1}
+          </span>
+          <span className="shrink-0 text-[11.5px] font-extrabold uppercase tracking-wider text-gray-700 dark:text-zinc-300">
+            {label}
+          </span>
+          {summary && (
+            <span className="min-w-0 flex-1 text-[12px] text-gray-400 dark:text-zinc-500 truncate font-normal">
+              — {summary}
+            </span>
+          )}
+        </button>
 
-        <MoveControls
-          index={index}
-          total={total}
-          onMove={onMove}
-          onRemove={onRemove}
-          removeLabel="Qadamni o'chirish"
-        />
+        <div className="flex items-center gap-1 shrink-0 ml-auto">
+          <MoveControls
+            index={index}
+            total={total}
+            onMove={onMove}
+            onRemove={onRemove}
+            removeLabel="Qadamni o'chirish"
+          />
+        </div>
       </div>
-      {children}
+
+      {!isCollapsed && <div className="p-3.5 flex flex-col gap-3">{children}</div>}
     </div>
   );
 }
 
 // ── Step editors ────────────────────────────────────────────────────────────
 
-const BLOCK_ORDER: BlockKind[] = ["text", "code", "image", "callout"];
+const BLOCK_ORDER: BlockKind[] = ["text", "code", "choice", "image", "callout"];
 
 const BLOCK_TONES: Record<BlockKind, string> = {
-  text: "border-gray-100 dark:border-[#222226]",
-  code: "border-[#A78BFA]/40",
-  image: "border-[#3B82F6]/40",
-  callout: "border-[#26B54F]/40",
+  text: "border-gray-200 dark:border-[#222226]",
+  code: "border-[#A78BFA]/40 bg-[#A78BFA]/[0.02]",
+  choice: "border-[#3B82F6]/40 bg-[#3B82F6]/[0.02]",
+  image: "border-[#3B82F6]/40 bg-[#3B82F6]/[0.02]",
+  callout: "border-[#26B54F]/40 bg-[#26B54F]/[0.02]",
 };
+
+function getBlockSummary(block: SectionBlock): string {
+  if (block.kind === "text") {
+    return block.text ? block.text.slice(0, 45) + (block.text.length > 45 ? "..." : "") : "(Bo'sh matn)";
+  }
+  if (block.kind === "code") {
+    if (block.caption?.trim()) return block.caption;
+    const firstLine = block.lines.find((l) => l.trim());
+    return firstLine ? firstLine.slice(0, 40) : "(Bo'sh kod)";
+  }
+  if (block.kind === "choice") {
+    const q = block.question?.trim();
+    const count = block.options.filter((o) => o.trim()).length;
+    return `${q ? `${q.slice(0, 30)}: ` : ""}${count} ta variant`;
+  }
+  if (block.kind === "image") {
+    return block.image.caption || block.image.alt || block.image.src || "(Rasm)";
+  }
+  if (block.kind === "callout") {
+    return block.text ? block.text.slice(0, 45) : "(Bo'sh xulosa)";
+  }
+  return "";
+}
 
 /**
  * One screen, built block by block
@@ -834,9 +957,15 @@ function SectionStepEditor({
   onChange: (section: ContentSection) => void;
 }) {
   const blocks = draftBlocks(section);
+  const [collapsedBlocks, setCollapsedBlocks] = useState<Record<number, boolean>>({});
+
   const setBlocks = (next: SectionBlock[]) => onChange({ ...section, blocks: next });
   const replace = (index: number, block: SectionBlock) =>
     setBlocks(blocks.map((b, i) => (i === index ? block : b)));
+
+  const toggleBlockCollapse = (index: number) => {
+    setCollapsedBlocks((prev) => ({ ...prev, [index]: !prev[index] }));
+  };
 
   const move = (index: number, direction: -1 | 1) => {
     const target = index + direction;
@@ -844,6 +973,11 @@ function SectionStepEditor({
     const next = [...blocks];
     [next[index], next[target]] = [next[target], next[index]];
     setBlocks(next);
+    setCollapsedBlocks((prev) => ({
+      ...prev,
+      [index]: prev[target],
+      [target]: prev[index],
+    }));
   };
 
   return (
@@ -858,90 +992,123 @@ function SectionStepEditor({
 
       <p className="text-[12px] leading-relaxed text-gray-500 dark:text-zinc-400 flex items-start gap-2">
         <IconInfoCircle size={15} className="shrink-0 mt-0.5 text-[#A78BFA]" />
-        Ekran shu tartibda chiziladi — masalan rasmni qo&apos;yib, uning ostiga kod
-        blokini qo&apos;shsangiz, o&apos;quvchi ham aynan shunday ko&apos;radi.
+        Ekran shu tartibda chiziladi. Bloklarni ochish yoki yopish uchun sarlavhasini bosing.
       </p>
 
-      {blocks.map((block, i) => (
-        <div
-          key={i}
-          className={`rounded-[12px] border-2 ${BLOCK_TONES[block.kind]} p-3 flex flex-col gap-3`}
-        >
-          <div className="flex items-center gap-1.5">
-            <span className="shrink-0 w-[20px] h-[20px] rounded-[6px] bg-gray-100 dark:bg-[#232327] text-[10.5px] font-mono font-bold text-gray-500 dark:text-zinc-400 flex items-center justify-center">
-              {i + 1}
-            </span>
-            <span className="min-w-0 flex-1 text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-zinc-400 truncate">
-              {BLOCK_LABELS[block.kind]}
-            </span>
-            <MoveControls
-              index={i}
-              total={blocks.length}
-              onMove={(direction) => move(i, direction)}
-              onRemove={() => setBlocks(blocks.filter((_, k) => k !== i))}
-              removeLabel="Blokni o'chirish"
-            />
+      {blocks.map((block, i) => {
+        const isCollapsed = Boolean(collapsedBlocks[i]);
+        const summary = getBlockSummary(block);
+
+        return (
+          <div
+            key={i}
+            className={`rounded-[12px] border-2 ${BLOCK_TONES[block.kind]} overflow-hidden flex flex-col transition-all`}
+          >
+            <div className="flex items-center gap-2 px-3 py-2 bg-gray-50/70 dark:bg-[#1c1c20]/70 border-b border-gray-100 dark:border-[#222226]/80 select-none">
+              <button
+                type="button"
+                onClick={() => toggleBlockCollapse(i)}
+                className="flex items-center gap-2 min-w-0 flex-1 text-left cursor-pointer group"
+              >
+                <IconChevronDown
+                  size={15}
+                  className={`shrink-0 text-gray-400 dark:text-zinc-500 group-hover:text-black dark:group-hover:text-white transition-transform duration-200 ${
+                    isCollapsed ? "-rotate-90" : ""
+                  }`}
+                />
+                <span className="shrink-0 w-[20px] h-[20px] rounded-[5px] bg-white dark:bg-[#232327] border border-gray-200 dark:border-[#2a2a30] text-[10.5px] font-mono font-bold text-gray-600 dark:text-zinc-300 flex items-center justify-center">
+                  {i + 1}
+                </span>
+                <span className="shrink-0 text-[11px] font-extrabold uppercase tracking-wider text-gray-700 dark:text-zinc-300">
+                  {BLOCK_LABELS[block.kind]}
+                </span>
+                {summary && (
+                  <span className="min-w-0 flex-1 text-[11.5px] text-gray-400 dark:text-zinc-500 truncate font-normal">
+                    — {summary}
+                  </span>
+                )}
+              </button>
+
+              <MoveControls
+                index={i}
+                total={blocks.length}
+                onMove={(direction) => move(i, direction)}
+                onRemove={() => setBlocks(blocks.filter((_, k) => k !== i))}
+                removeLabel="Blokni o'chirish"
+              />
+            </div>
+
+            {!isCollapsed && (
+              <div className="p-3 flex flex-col gap-3">
+                {block.kind === "text" && (
+                  <Field label="Matn" hint="Har xatboshi — alohida qator">
+                    <TextArea
+                      rows={4}
+                      value={block.text}
+                      placeholder="Sikl bir xil ishni takrorlash uchun kerak."
+                      onChange={(e) => replace(i, { kind: "text", text: e.target.value })}
+                    />
+                  </Field>
+                )}
+
+                {block.kind === "callout" && (
+                  <Field label="Xulosa" hint="Eng muhim fikr bir gapda">
+                    <TextInput
+                      value={block.text}
+                      placeholder="Bir marta yoz, yuz marta ishlat."
+                      onChange={(e) => replace(i, { kind: "callout", text: e.target.value })}
+                    />
+                  </Field>
+                )}
+
+                {block.kind === "choice" && (
+                  <ChoiceBlockEditor
+                    block={block}
+                    onChange={(updated) => replace(i, updated)}
+                  />
+                )}
+
+                {block.kind === "code" && (
+                  <>
+                    <Field label="Kod sarlavhasi (ixtiyoriy)">
+                      <TextInput
+                        value={block.caption ?? ""}
+                        placeholder="oldinga.uz"
+                        onChange={(e) =>
+                          replace(i, { ...block, caption: e.target.value })
+                        }
+                      />
+                    </Field>
+                    <Field label="Kod" hint="Har buyruq — alohida qator">
+                      <TextArea
+                        rows={4}
+                        value={block.lines.join("\n")}
+                        placeholder="oldinga(100)"
+                        onChange={(e) =>
+                          replace(i, { ...block, lines: e.target.value.split("\n") })
+                        }
+                        style={{ fontFamily: "var(--font-mono)" }}
+                      />
+                    </Field>
+                  </>
+                )}
+
+                {block.kind === "image" && (
+                  <ImageField
+                    compact
+                    image={block.image}
+                    onChange={(image) =>
+                      replace(i, { kind: "image", image: image ?? { src: "", alt: "", size: "full" } })
+                    }
+                  />
+                )}
+              </div>
+            )}
           </div>
+        );
+      })}
 
-          {block.kind === "text" && (
-            <Field label="Matn" hint="Har xatboshi — alohida qator">
-              <TextArea
-                rows={4}
-                value={block.text}
-                placeholder="Sikl bir xil ishni takrorlash uchun kerak."
-                onChange={(e) => replace(i, { kind: "text", text: e.target.value })}
-              />
-            </Field>
-          )}
-
-          {block.kind === "callout" && (
-            <Field label="Xulosa" hint="Eng muhim fikr bir gapda">
-              <TextInput
-                value={block.text}
-                placeholder="Bir marta yoz, yuz marta ishlat."
-                onChange={(e) => replace(i, { kind: "callout", text: e.target.value })}
-              />
-            </Field>
-          )}
-
-          {block.kind === "code" && (
-            <>
-              <Field label="Kod sarlavhasi (ixtiyoriy)">
-                <TextInput
-                  value={block.caption ?? ""}
-                  placeholder="oldinga.uz"
-                  onChange={(e) =>
-                    replace(i, { ...block, caption: e.target.value })
-                  }
-                />
-              </Field>
-              <Field label="Kod" hint="Har buyruq — alohida qator">
-                <TextArea
-                  rows={4}
-                  value={block.lines.join("\n")}
-                  placeholder="oldinga(100)"
-                  onChange={(e) =>
-                    replace(i, { ...block, lines: e.target.value.split("\n") })
-                  }
-                  style={{ fontFamily: "var(--font-mono)" }}
-                />
-              </Field>
-            </>
-          )}
-
-          {block.kind === "image" && (
-            <ImageField
-              compact
-              image={block.image}
-              onChange={(image) =>
-                replace(i, { kind: "image", image: image ?? { src: "", alt: "" } })
-              }
-            />
-          )}
-        </div>
-      ))}
-
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2 pt-1">
         {BLOCK_ORDER.map((kind) => (
           <AddButton
             key={kind}
@@ -957,6 +1124,118 @@ function SectionStepEditor({
         )}
       </p>
     </>
+  );
+}
+
+/** Editor for the inline Choice block */
+function ChoiceBlockEditor({
+  block,
+  onChange,
+}: {
+  block: Extract<SectionBlock, { kind: "choice" }>;
+  onChange: (block: Extract<SectionBlock, { kind: "choice" }>) => void;
+}) {
+  const isShort = block.options.every((opt) => opt.trim().length <= 16);
+
+  return (
+    <div className="flex flex-col gap-3">
+      <Field label="Savol yoki ko'rsatma (ixtiyoriy)">
+        <TextInput
+          value={block.question ?? ""}
+          placeholder="To'g'ri variantni tanlang"
+          onChange={(e) => onChange({ ...block, question: e.target.value })}
+        />
+      </Field>
+
+      <Field
+        label="Variantlar"
+        hint="To'g'ri javobni chapdagi doiracha orqali belgilang"
+      >
+        <div className="flex flex-col gap-2">
+          {block.options.map((option, oi) => (
+            <div key={oi} className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => onChange({ ...block, correctIndex: oi })}
+                aria-label={`${oi + 1}-variantni to'g'ri javob deb belgilash`}
+                title="To'g'ri javob"
+                className={`shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors cursor-pointer ${
+                  block.correctIndex === oi
+                    ? "border-[#26B54F] bg-[#26B54F]"
+                    : "border-gray-300 dark:border-zinc-600 hover:border-[#26B54F]"
+                }`}
+              >
+                {block.correctIndex === oi && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-white" />
+                )}
+              </button>
+
+              <TextInput
+                value={option}
+                placeholder={`${oi + 1}-variant`}
+                onChange={(e) =>
+                  onChange({
+                    ...block,
+                    options: block.options.map((o, k) => (k === oi ? e.target.value : o)),
+                  })
+                }
+              />
+
+              <span className="shrink-0 w-7 text-right font-mono text-[11px] text-gray-400 dark:text-zinc-500">
+                {option.trim().length || ""}
+              </span>
+
+              <button
+                type="button"
+                disabled={block.options.length <= 2}
+                onClick={() => {
+                  const options = block.options.filter((_, k) => k !== oi);
+                  const correctIndex =
+                    block.correctIndex === oi
+                      ? 0
+                      : block.correctIndex > oi
+                      ? block.correctIndex - 1
+                      : block.correctIndex;
+                  onChange({ ...block, options, correctIndex });
+                }}
+                aria-label="Variantni o'chirish"
+                className="shrink-0 p-1 rounded-full text-gray-300 dark:text-zinc-600 hover:text-red-500 disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+              >
+                <IconX size={14} />
+              </button>
+            </div>
+          ))}
+
+          <button
+            type="button"
+            onClick={() => onChange({ ...block, options: [...block.options, ""] })}
+            className="self-start inline-flex items-center gap-1 text-[12px] font-bold text-[#26B54F] hover:underline cursor-pointer mt-1"
+          >
+            <IconPlus size={12} /> Variant qo&apos;shish
+          </button>
+        </div>
+      </Field>
+
+      <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-[8px] bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[11.5px]">
+        <IconInfoCircle size={14} className="shrink-0" />
+        <span>
+          {isShort
+            ? "Moslashuvchan ko'rinish: variantlar qisqa bo'lgani uchun 2 ustunda chiqadi."
+            : "Moslashuvchan ko'rinish: variantlar uzunligi sababli 1 ustunli ro'yxat bo'lib chiqadi."}
+        </span>
+      </div>
+
+      <Field
+        label="Izoh (ixtiyoriy)"
+        hint="To'g'ri javob tanlanganda o'quvchiga ko'rinadigan qisqa tushuntirish"
+      >
+        <TextInput
+          value={block.explanation ?? ""}
+          placeholder="Barakalla! Aynan shunday."
+          onChange={(e) => onChange({ ...block, explanation: e.target.value })}
+        />
+      </Field>
+    </div>
   );
 }
 
@@ -1005,6 +1284,7 @@ function ImageField({
       onChange({
         src: String(reader.result),
         alt: image?.alt ?? "",
+        size: image?.size ?? "full",
         ...(image?.caption ? { caption: image.caption } : {}),
       });
     };
@@ -1074,7 +1354,12 @@ function ImageField({
             onChange={(e) =>
               onChange(
                 e.target.value.trim()
-                  ? { src: e.target.value, alt: image?.alt ?? "", ...(image?.caption ? { caption: image.caption } : {}) }
+                  ? {
+                      src: e.target.value,
+                      alt: image?.alt ?? "",
+                      size: image?.size ?? "full",
+                      ...(image?.caption ? { caption: image.caption } : {}),
+                    }
                   : undefined
               )
             }
@@ -1115,6 +1400,45 @@ function ImageField({
               alt={image.alt || "Rasm ko'rinishi"}
               className="w-full max-h-[160px] object-contain"
             />
+          </div>
+
+          {/* Image Size Selector */}
+          <div className="flex flex-col gap-1.5">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-zinc-400">
+              Rasm o&apos;lchami
+            </span>
+            <div className="grid grid-cols-4 gap-1.5">
+              {(
+                [
+                  { key: "small", label: "Kichik", hint: "~280px" },
+                  { key: "medium", label: "O'rtacha", hint: "~440px" },
+                  { key: "large", label: "Katta", hint: "~620px" },
+                  { key: "full", label: "To'liq", hint: "100%" },
+                ] as const
+              ).map(({ key, label, hint }) => {
+                const active = (image.size ?? "full") === key;
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() =>
+                      onChange({
+                        ...image,
+                        size: key,
+                      })
+                    }
+                    className={`flex flex-col items-center justify-center py-1.5 px-2 rounded-[10px] border-2 text-[11.5px] font-bold transition-all cursor-pointer ${
+                      active
+                        ? "border-[#26B54F] bg-[#26B54F]/10 text-[#1a8a3c] dark:text-[#4ADE80]"
+                        : "border-gray-200 dark:border-[#27272a] text-gray-500 dark:text-zinc-400 hover:border-gray-300 dark:hover:border-zinc-600"
+                    }`}
+                  >
+                    <span>{label}</span>
+                    <span className="text-[9.5px] font-normal opacity-70">{hint}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {uploaded && (

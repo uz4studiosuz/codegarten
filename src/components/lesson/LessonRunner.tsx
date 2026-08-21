@@ -18,6 +18,7 @@ import {
   IconVolumeOff,
   IconPlayerPlayFilled,
   IconPlayerStopFilled,
+  IconCheck,
 } from "@tabler/icons-react";
 import type { GameDefinition } from "@/games/types";
 import { useVocabulary } from "@/context/VocabularyContext";
@@ -90,6 +91,98 @@ function shuffleQuestion(question: QuizQuestion, salt: string): QuizQuestion {
   };
 }
 
+/** Interactive inline choice block embedded directly in teaching screens. */
+function InlineChoiceBlockView({
+  block,
+}: {
+  block: Extract<SectionBlock, { kind: "choice" }>;
+}) {
+  const [selected, setSelected] = useState<number | null>(null);
+  const [isAnswered, setIsAnswered] = useState(false);
+
+  // If all options are short (<= 16 chars), use 2 columns grid; otherwise 1 column list
+  const isCompact = useMemo(() => {
+    return block.options.every((opt) => opt.trim().length <= 16);
+  }, [block.options]);
+
+  const handleSelect = (index: number) => {
+    setSelected(index);
+    setIsAnswered(true);
+  };
+
+  const isCorrect = selected === block.correctIndex;
+
+  return (
+    <div className="flex flex-col gap-3 my-1">
+      {block.question && (
+        <p className="text-[15px] font-semibold text-gray-800 dark:text-[#d4d4d8] leading-relaxed">
+          {block.question}
+        </p>
+      )}
+
+      <div
+        className={
+          isCompact
+            ? "grid grid-cols-2 gap-2.5"
+            : "flex flex-col gap-2.5"
+        }
+      >
+        {block.options.map((option, idx) => {
+          const isSelected = selected === idx;
+          const isRightAnswer = idx === block.correctIndex;
+          const showSuccess = isAnswered && isSelected && isRightAnswer;
+          const showWrong = isAnswered && isSelected && !isRightAnswer;
+
+          let tone =
+            "border-gray-200 dark:border-[#2b2b31] bg-white dark:bg-[#141416] hover:border-gray-300 dark:hover:border-[#3d3d45] text-gray-800 dark:text-[#d4d4d8]";
+
+          if (showSuccess) {
+            tone =
+              "border-[#26B54F] bg-[#26B54F]/10 text-[#177F37] dark:text-[#4ADE80]";
+          } else if (showWrong) {
+            tone =
+              "border-amber-500 bg-amber-500/10 text-amber-700 dark:text-amber-300";
+          } else if (isSelected) {
+            tone =
+              "border-[#3B82F6] bg-[#3B82F6]/10 text-[#2563EB] dark:text-[#60A5FA]";
+          }
+
+          return (
+            <button
+              key={idx}
+              type="button"
+              onClick={() => handleSelect(idx)}
+              className={`relative rounded-[12px] border-2 px-4 py-3 text-left transition-all duration-150 cursor-pointer ${
+                isCompact ? "text-center font-mono font-bold text-[14.5px]" : "text-[14.5px] font-medium"
+              } ${tone}`}
+            >
+              <span>{option}</span>
+
+              {showSuccess && (
+                <span className="absolute -top-2.5 -right-2 bg-[#26B54F] text-black w-5 h-5 rounded-[5px] flex items-center justify-center shadow-md">
+                  <IconCheck size={13} strokeWidth={3.5} />
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {isAnswered && !isCorrect && (
+        <p className="text-[12.5px] text-amber-600 dark:text-amber-400 font-medium">
+          Qaytadan urinib ko&apos;ring.
+        </p>
+      )}
+
+      {isAnswered && isCorrect && block.explanation && (
+        <p className="text-[13px] text-green-700 dark:text-[#4ADE80] bg-[#26B54F]/10 border border-[#26B54F]/30 rounded-[10px] px-3 py-2 leading-relaxed">
+          {block.explanation}
+        </p>
+      )}
+    </div>
+  );
+}
+
 /** One authored block of a teaching screen. */
 function SectionBlockView({ block }: { block: SectionBlock }) {
   if (block.kind === "text") {
@@ -100,9 +193,25 @@ function SectionBlockView({ block }: { block: SectionBlock }) {
     );
   }
 
+  if (block.kind === "choice") {
+    return <InlineChoiceBlockView block={block} />;
+  }
+
   if (block.kind === "image") {
+    const size = block.image.size ?? "full";
+    const sizeClasses = {
+      small: "max-w-[280px] max-h-[220px]",
+      medium: "max-w-[440px] max-h-[320px]",
+      large: "max-w-[620px] max-h-[420px]",
+      full: "w-full max-h-[380px]",
+    }[size];
+
     return (
-      <figure className="rounded-[16px] border border-gray-200 dark:border-[#26262a] bg-gray-50 dark:bg-[#141416] overflow-hidden">
+      <figure
+        className={`rounded-[16px] border border-gray-200 dark:border-[#26262a] bg-gray-50 dark:bg-[#141416] overflow-hidden mx-auto ${
+          size !== "full" ? "w-fit" : "w-full"
+        }`}
+      >
         {/* Plain <img>: sources are authored freely — a path in public/, a remote
             URL, or a data: URI from the writer — and next/image would need every
             host configured. */}
@@ -110,10 +219,10 @@ function SectionBlockView({ block }: { block: SectionBlock }) {
         <img
           src={block.image.src}
           alt={block.image.alt}
-          className="w-full max-h-[380px] object-contain bg-white dark:bg-[#0d0d0f]"
+          className={`${sizeClasses} object-contain bg-white dark:bg-[#0d0d0f] block mx-auto`}
         />
         {block.image.caption && (
-          <figcaption className="px-4 py-2.5 border-t border-gray-200 dark:border-[#26262a] text-[13px] text-gray-500 dark:text-[#8b8b93]">
+          <figcaption className="px-4 py-2.5 border-t border-gray-200 dark:border-[#26262a] text-[13px] text-gray-500 dark:text-[#8b8b93] text-center">
             {block.image.caption}
           </figcaption>
         )}
@@ -227,6 +336,8 @@ export function LessonRunner({
       const spoken = sectionBlocks(step.section).flatMap((block) =>
         block.kind === "text" || block.kind === "callout"
           ? [block.text]
+          : block.kind === "choice"
+          ? ([block.question, ...block.options].filter(Boolean) as string[])
           : block.kind === "image"
           ? [block.image.caption ?? block.image.alt]
           : []

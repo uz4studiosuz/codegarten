@@ -126,6 +126,8 @@ export function hasReadableBody(content: LessonContent): boolean {
       sectionBlocks(section).some((block) =>
         block.kind === "text" || block.kind === "callout"
           ? block.text.trim().length > 0
+          : block.kind === "choice"
+          ? block.options.some((opt) => opt.trim().length > 0) || Boolean(block.question?.trim())
           : block.kind === "image"
           ? block.image.src.trim().length > 0
           : block.lines.some((line) => line.trim().length > 0)
