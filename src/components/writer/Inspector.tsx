@@ -22,11 +22,11 @@ import {
   IconWand,
   IconX,
 } from "@tabler/icons-react";
-import { RichTextEditor } from "./RichTextEditor";
+import { GameConfigForm } from "./GameConfigForm";
+import { MarkdownEditor } from "./MarkdownEditor";
 import { ALL_TOPICS, TOPIC_LABELS, type GameTopic } from "@/games/topics";
 import { getGame, listGames } from "@/games/registry";
 import { getGamePuzzles } from "@/games/puzzles";
-import { getGameSample } from "@/games/samples";
 import { resolveGame } from "@/games/resolve";
 import {
   BLOCK_HINTS,
@@ -1168,12 +1168,11 @@ function SectionStepEditor({
 
                 {block.kind === "richtext" && (
                   <Field
-                    label="Rich Matn (Formatlangan)"
-                    hint="Qalin, kursiv, sarlavha, ro'yxat, havola va boshqa boy formatlar"
+                    label="Formatlangan matn"
+                    hint="Qalin, kursiv, sarlavha, ro'yxat, iqtibos va havola"
                   >
-                    <RichTextEditor
+                    <MarkdownEditor
                       value={block.content}
-                      placeholder="Formatlangan matnni bu yerga yozing..."
                       onChange={(content) => replace(i, { kind: "richtext", content })}
                     />
                   </Field>
@@ -2063,66 +2062,16 @@ function ChallengeStepEditor({
         </div>
       )}
 
-      {/* ── Custom Configuration ── */}
+      {/* -- The game's own task -- */}
       <div className="flex flex-col gap-2 pt-2 border-t border-gray-200 dark:border-[#26262a]">
-        <div className="flex items-center justify-between">
-          <span className="text-[12px] font-bold text-gray-700 dark:text-zinc-300">
-            Maxsus konfiguratsiya (JSON)
-          </span>
-          {activeGameId && getGameSample(activeGameId) && (
-            <button
-              type="button"
-              onClick={() => {
-                const s = getGameSample(activeGameId);
-                if (s) {
-                  onChange({ ...step, customConfig: s.sample });
-                }
-              }}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[7px] bg-[#26B54F]/15 hover:bg-[#26B54F]/25 text-[#177F37] dark:text-[#4ADE80] text-[11.5px] font-bold transition-all cursor-pointer shadow-2xs"
-            >
-              <IconWand size={13} />
-              <span>Namuna JSON ni yuklash</span>
-            </button>
-          )}
-        </div>
-
-        {activeGameId && getGameSample(activeGameId) && (
-          <p className="text-[11.5px] text-gray-500 dark:text-zinc-400">
-            💡 <strong className="text-gray-700 dark:text-zinc-300">{getGameSample(activeGameId)?.gameName}:</strong> {getGameSample(activeGameId)?.description}
-          </p>
-        )}
-
-        <TextArea
-          rows={7}
-          placeholder={`{\n  "grid": 5,\n  "start": { "x": 0, "y": 0 },\n  ...\n}`}
-          value={
-            step.customConfig !== undefined
-              ? typeof step.customConfig === "string"
-                ? step.customConfig
-                : JSON.stringify(step.customConfig, null, 2)
-              : ""
-          }
-          onChange={(e) => {
-            const val = e.target.value;
-            if (!val.trim()) {
-              onChange({ ...step, customConfig: undefined });
-              return;
-            }
-            try {
-              // Try to parse to object, but keep as string in state if they are typing
-              const parsed = JSON.parse(val);
-              onChange({ ...step, customConfig: parsed });
-            } catch (err) {
-              // If it's invalid JSON while typing, we just store the string.
-              onChange({ ...step, customConfig: val });
-            }
-          }}
-          className="font-mono text-[12px] leading-relaxed"
+        <span className="text-[12px] font-bold text-gray-700 dark:text-zinc-300">
+          Topshiriqni o&apos;zingiz yozish
+        </span>
+        <GameConfigForm
+          gameId={activeGameId}
+          value={step.customConfig}
+          onChange={(config) => onChange({ ...step, customConfig: config })}
         />
-
-        {typeof step.customConfig === "string" && step.customConfig.trim() !== "" && (
-          <p className="text-[11px] text-red-500 font-bold">⚠️ Xato JSON formati. Qavslar yoki vergullarni tekshiring.</p>
-        )}
       </div>
     </div>
   );

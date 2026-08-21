@@ -4,6 +4,20 @@ import React, { useMemo, useState } from "react";
 import { IconGripVertical } from "@tabler/icons-react";
 import type { GameProps } from "../types";
 import {
+  PALETTE,
+  PALETTE_KEYS,
+  enumList,
+  enumValue,
+  hasConfig,
+  int,
+  numList,
+  objList,
+  str,
+  strList,
+  unique,
+  type PaletteKey,
+} from "../config";
+import {
   DragGhost,
   DropSlot,
   GameBoard,
@@ -30,18 +44,9 @@ import {
  * dragged (or tapped) into them — the slot *is* the parameter.
  */
 
-type Colour = "g" | "v" | "a" | "b";
-
-const COLOURS: Record<Colour, { label: string; hex: string }> = {
-  g: { label: "yashil", hex: "#26B54F" },
-  v: { label: "binafsha", hex: "#7C5CE0" },
-  a: { label: "sariq", hex: "#E0A13C" },
-  b: { label: "ko'k", hex: "#3B82F6" },
-};
-
 interface Target {
   length: number;
-  colour: Colour;
+  colour: PaletteKey;
 }
 
 interface Puzzle {
@@ -49,7 +54,7 @@ interface Puzzle {
   fnName: string;
   params: [string, string];
   hint: string;
-  palette: Colour[];
+  palette: PaletteKey[];
   /** Lengths offered as argument blocks. */
   lengths: number[];
   targets: Target[];
@@ -61,12 +66,12 @@ const PUZZLES: Puzzle[] = [
     fnName: "chiz",
     params: ["uzunlik", "rang"],
     hint: "Funksiya tanasi tayyor — sizga faqat har chaqiruvning argumentlarini joylash qoldi.",
-    palette: ["g", "v", "a"],
+    palette: ["yashil", "binafsha", "sariq"],
     lengths: [1, 2, 3, 4, 5],
     targets: [
-      { length: 2, colour: "g" },
-      { length: 5, colour: "v" },
-      { length: 3, colour: "a" },
+      { length: 2, colour: "yashil" },
+      { length: 5, colour: "binafsha" },
+      { length: 3, colour: "sariq" },
     ],
     why:
       "Bitta funksiya uch xil natija berdi — farq faqat argumentlarda. Shuning uchun kodni uch marta yozish kerak bo'lmadi.",
@@ -75,12 +80,12 @@ const PUZZLES: Puzzle[] = [
     fnName: "ustun",
     params: ["balandlik", "rang"],
     hint: "Argumentni o'zgartirsangiz, natija ham o'zgaradi — funksiya tanasi esa o'zgarmaydi.",
-    palette: ["b", "a", "g"],
+    palette: ["kok", "sariq", "yashil"],
     lengths: [1, 2, 4, 6],
     targets: [
-      { length: 4, colour: "b" },
-      { length: 1, colour: "a" },
-      { length: 6, colour: "b" },
+      { length: 4, colour: "kok" },
+      { length: 1, colour: "sariq" },
+      { length: 6, colour: "kok" },
     ],
     why:
       "Ikkinchi va uchinchi chaqiruvda rang bir xil, uzunlik esa boshqa — parametrlar bir-biridan mustaqil.",
@@ -89,12 +94,12 @@ const PUZZLES: Puzzle[] = [
     fnName: "chizgi",
     params: ["qadam", "rang"],
     hint: "Namunani sanab chiqing: har chizgida nechta katak bor?",
-    palette: ["v", "g", "b"],
+    palette: ["binafsha", "yashil", "kok"],
     lengths: [1, 2, 3, 4],
     targets: [
-      { length: 3, colour: "v" },
-      { length: 3, colour: "g" },
-      { length: 2, colour: "b" },
+      { length: 3, colour: "binafsha" },
+      { length: 3, colour: "yashil" },
+      { length: 2, colour: "kok" },
     ],
     why:
       "Birinchi ikki chaqiruvda uzunlik bir xil bo'lsa ham, rang argumenti natijani boshqa qildi.",
@@ -103,12 +108,12 @@ const PUZZLES: Puzzle[] = [
     fnName: "chiziq",
     params: ["soni", "rang"],
     hint: "Bir xil argumentlar bilan chaqirsangiz, natija ham bir xil bo'ladi.",
-    palette: ["a", "v", "g"],
+    palette: ["sariq", "binafsha", "yashil"],
     lengths: [2, 3, 5, 6],
     targets: [
-      { length: 5, colour: "a" },
-      { length: 2, colour: "v" },
-      { length: 5, colour: "a" },
+      { length: 5, colour: "sariq" },
+      { length: 2, colour: "binafsha" },
+      { length: 5, colour: "sariq" },
     ],
     why:
       "Birinchi va uchinchi chaqiruv bir xil argumentlarni oldi va bir xil natija berdi — funksiya har safar bir xil ishlaydi.",
@@ -117,12 +122,12 @@ const PUZZLES: Puzzle[] = [
     fnName: "bloklar",
     params: ["nechta", "rang"],
     hint: "Uzunliklar tobora ortib boradi — har chaqiruvda faqat birinchi argument o'zgaradi.",
-    palette: ["g", "b", "v"],
+    palette: ["yashil", "kok", "binafsha"],
     lengths: [1, 2, 3, 4],
     targets: [
-      { length: 1, colour: "g" },
-      { length: 2, colour: "g" },
-      { length: 4, colour: "g" },
+      { length: 1, colour: "yashil" },
+      { length: 2, colour: "yashil" },
+      { length: 4, colour: "yashil" },
     ],
     why:
       "Rang argumenti uchta chaqiruvda ham bir xil qoldi. O'zgargan narsa — faqat birinchi argument.",
@@ -131,12 +136,12 @@ const PUZZLES: Puzzle[] = [
     fnName: "polosa",
     params: ["uzunlik", "rang"],
     hint: "To'rt xil rang bor — har chaqiruvga o'zining rangi kerak.",
-    palette: ["g", "v", "a", "b"],
+    palette: ["yashil", "binafsha", "sariq", "kok"],
     lengths: [2, 3, 4],
     targets: [
-      { length: 3, colour: "b" },
-      { length: 2, colour: "a" },
-      { length: 4, colour: "v" },
+      { length: 3, colour: "kok" },
+      { length: 2, colour: "sariq" },
+      { length: 4, colour: "binafsha" },
     ],
     why:
       "Uch chaqiruvning ikkala argumenti ham har xil, natija ham har xil — funksiya esa bitta.",
@@ -145,32 +150,77 @@ const PUZZLES: Puzzle[] = [
     fnName: "qator",
     params: ["katak", "rang"],
     hint: "Eng qisqa va eng uzun namunani solishtiring — farq faqat birinchi argumentda.",
-    palette: ["v", "a", "g"],
+    palette: ["binafsha", "sariq", "yashil"],
     lengths: [1, 3, 6],
     targets: [
-      { length: 6, colour: "v" },
-      { length: 1, colour: "v" },
-      { length: 3, colour: "a" },
+      { length: 6, colour: "binafsha" },
+      { length: 1, colour: "binafsha" },
+      { length: 3, colour: "sariq" },
     ],
     why:
       "Bitta ta'rif 6 katakli ham, 1 katakli ham natija berdi. Funksiyani qayta yozish kerak bo'lmadi.",
   },
 ];
 
+/** The board draws one card per call, and four is as many as fit on a phone. */
+const MAX_CALLS = 4;
+
+/** Builds the puzzle an author configured in the writer, or null if incomplete. */
+function fromConfig(config: unknown): Puzzle | null {
+  if (!hasConfig(config)) return null;
+
+  const rows = objList<Target>(config.targets, (row) => {
+    const length = int(row.length, 1, 12);
+    const colour = enumValue(row.colour, PALETTE_KEYS);
+    return length === undefined || colour === undefined ? undefined : { length, colour };
+  });
+  if (!rows) return null;
+  const targets = rows.slice(0, MAX_CALLS);
+
+  // Whatever the author offered, an argument a call needs must be draggable —
+  // otherwise the puzzle has no solution however carefully the learner reads it.
+  const lengths = unique([
+    ...(numList(config.lengths) ?? []),
+    ...targets.map((target) => target.length),
+  ]).sort((a, b) => a - b);
+  const offered = new Set<PaletteKey>([
+    ...(enumList(config.palette, PALETTE_KEYS) ?? []),
+    ...targets.map((target) => target.colour),
+  ]);
+
+  const params = strList(config.params) ?? [];
+
+  return {
+    fnName: str(config.fnName) ?? "chiz",
+    params: [params[0] ?? "uzunlik", params[1] ?? "rang"],
+    hint:
+      str(config.hint) ??
+      "Funksiya tanasi tayyor — sizga faqat har chaqiruvning argumentlarini joylash qoldi.",
+    palette: PALETTE_KEYS.filter((key) => offered.has(key)),
+    lengths,
+    targets,
+    why: str(config.why) ?? "",
+  };
+}
+
 /** What a drag carries: either a length argument or a colour argument. */
 type Argument =
   | { kind: "length"; value: number }
-  | { kind: "colour"; value: Colour };
+  | { kind: "colour"; value: PaletteKey };
 
 interface Call {
   length: number | null;
-  colour: Colour | null;
+  colour: PaletteKey | null;
 }
 
 export function FunctionFactoryGame(props: GameProps) {
+  const { config, seed, variant } = props;
+
   const puzzle = useMemo(
-    () => pickVariant(PUZZLES, props.seed, { ordinal: props.variant }),
-    [props.seed, props.variant]
+    () =>
+      (hasConfig(config) ? fromConfig(config) : null) ??
+      pickVariant(PUZZLES, seed, { ordinal: variant }),
+    [config, seed, variant]
   );
 
   const [calls, setCalls] = useState<Call[]>(() =>
@@ -232,7 +282,7 @@ export function FunctionFactoryGame(props: GameProps) {
 
   return (
     <GameShell
-      task="Uchta namunani bitta funksiya bilan chizib bering."
+      task={`${puzzle.targets.length} ta namunani bitta funksiya bilan chizib bering.`}
       hint={puzzle.hint}
       status={status}
       successText={puzzle.why}
@@ -309,7 +359,7 @@ export function FunctionFactoryGame(props: GameProps) {
                       {Array.from({ length: target.length }).map((_, k) => (
                         <span
                           key={k}
-                          style={{ backgroundColor: COLOURS[target.colour].hex }}
+                          style={{ backgroundColor: PALETTE[target.colour].hex }}
                           className="w-5 h-5 rounded-[5px]"
                         />
                       ))}
@@ -351,11 +401,11 @@ export function FunctionFactoryGame(props: GameProps) {
                       {call.colour ? (
                         <span className="flex items-center gap-1.5">
                           <span
-                            style={{ backgroundColor: COLOURS[call.colour].hex }}
+                            style={{ backgroundColor: PALETTE[call.colour].hex }}
                             className="w-4 h-4 rounded-[5px] shrink-0"
                           />
                           <span className="text-[11.5px] font-sans text-gray-600 dark:text-[#a1a1aa] truncate">
-                            {COLOURS[call.colour].label}
+                            {PALETTE[call.colour].label}
                           </span>
                         </span>
                       ) : (
@@ -378,7 +428,7 @@ export function FunctionFactoryGame(props: GameProps) {
                         Array.from({ length: call.length }).map((_, k) => (
                           <span
                             key={k}
-                            style={{ backgroundColor: COLOURS[call.colour!].hex }}
+                            style={{ backgroundColor: PALETTE[call.colour!].hex }}
                             className="w-5 h-5 rounded-[5px]"
                           />
                         ))
@@ -424,7 +474,7 @@ export function FunctionFactoryGame(props: GameProps) {
                 <div
                   key={colour}
                   {...drag.bind({ kind: "colour", value: colour })}
-                  title={`${COLOURS[colour].label} — chaqiruvning rang joyiga tashlang`}
+                  title={`${PALETTE[colour].label} — chaqiruvning rang joyiga tashlang`}
                   className={`flex items-center gap-1.5 rounded-[10px] border-2 border-gray-200 dark:border-[#2b2b31] bg-white dark:bg-[#101013] pl-1.5 pr-2.5 h-[38px] hover:border-[#7C5CE0] transition-colors ${grabClass}`}
                 >
                   <IconGripVertical
@@ -432,11 +482,11 @@ export function FunctionFactoryGame(props: GameProps) {
                     className="shrink-0 text-gray-300 dark:text-[#3f3f46]"
                   />
                   <span
-                    style={{ backgroundColor: COLOURS[colour].hex }}
+                    style={{ backgroundColor: PALETTE[colour].hex }}
                     className="w-5 h-5 rounded-[6px] shrink-0"
                   />
                   <span className="text-[12px] text-gray-600 dark:text-[#a1a1aa]">
-                    {COLOURS[colour].label}
+                    {PALETTE[colour].label}
                   </span>
                 </div>
               ))}
@@ -458,7 +508,7 @@ export function FunctionFactoryGame(props: GameProps) {
         <DragGhost x={drag.drag.x} y={drag.drag.y}>
           {drag.drag.payload.kind === "colour" ? (
             <span
-              style={{ backgroundColor: COLOURS[drag.drag.payload.value].hex }}
+              style={{ backgroundColor: PALETTE[drag.drag.payload.value].hex }}
               className="block w-[38px] h-[38px] rounded-[9px] shadow-lg"
             />
           ) : (

@@ -3,6 +3,7 @@
 import React, { useMemo, useState } from "react";
 import { IconGripVertical, IconX } from "@tabler/icons-react";
 import type { GameProps } from "../types";
+import { hasConfig, str, strList } from "../config";
 import {
   DragGhost,
   DropSlot,
@@ -100,16 +101,36 @@ const PUZZLES: Puzzle[] = [
   },
 ];
 
+/** Builds the puzzle an author configured in the writer, or null if incomplete. */
+function fromConfig(config: unknown): Puzzle | null {
+  const raw = config as Record<string, unknown>;
+
+  // Two steps have only one wrong order, which the learner hits by accident as
+  // often as by reasoning.
+  const steps = strList(raw.steps);
+  if (!steps || steps.length < 3) return null;
+
+  return {
+    task: str(raw.task) ?? "Qadamlarni to'g'ri tartibda joylashtiring.",
+    hint: str(raw.hint) ?? "Kompyuter qadamlarni yozilgan tartibda bajaradi.",
+    steps,
+  };
+}
+
 export function SequenceOrderGame(props: GameProps) {
+  const { config, seed, variant } = props;
+
   const puzzle = useMemo(
-    () => pickVariant(PUZZLES, props.seed, { ordinal: props.variant }),
-    [props.seed, props.variant]
+    () =>
+      (hasConfig(config) ? fromConfig(config) : null) ??
+      pickVariant(PUZZLES, seed, { ordinal: variant }),
+    [config, seed, variant]
   );
 
   /** The steps as offered, shuffled out of their correct order. */
   const pool = useMemo(
-    () => seededShuffle(puzzle.steps, `${props.seed ?? ""}-pool`),
-    [puzzle, props.seed]
+    () => seededShuffle(puzzle.steps, `${seed ?? ""}-pool`),
+    [puzzle, seed]
   );
 
   /**

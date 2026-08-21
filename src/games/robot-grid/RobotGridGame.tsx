@@ -10,6 +10,7 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import type { GameProps, GameStatus } from "../types";
+import { enumValue, hasConfig, int, str } from "../config";
 import {
   DragGhost,
   DropSlot,
@@ -142,6 +143,47 @@ const PUZZLES: Puzzle[] = [
   },
 ];
 
+/**
+ * Builds the puzzle an author configured in the writer, or null if incomplete.
+ *
+ * Every coordinate is clamped into the board the author actually asked for: a
+ * grid shrunk after the target was placed would otherwise strand the star off
+ * the edge, where it can never be reached. A start that lands on the target is
+ * refused outright rather than clamped — it is already solved, so there is no
+ * puzzle left to play.
+ */
+function fromConfig(config: unknown): Puzzle | null {
+  if (!hasConfig(config)) return null;
+
+  const grid = int(config.grid, 3, 8);
+  if (grid === undefined) return null;
+
+  const cell = (value: unknown): Cell | undefined => {
+    if (value === null || typeof value !== "object") return undefined;
+    const x = int((value as any).x, 0, grid - 1);
+    const y = int((value as any).y, 0, grid - 1);
+    return x === undefined || y === undefined ? undefined : { x, y };
+  };
+
+  const start = cell(config.start);
+  const target = cell(config.target);
+  if (!start || !target) return null;
+  if (start.x === target.x && start.y === target.y) return null;
+
+  const facing = enumValue(config.facing, CLOCKWISE);
+  const slots = int(config.slots, 2, 12);
+  if (!facing || slots === undefined) return null;
+
+  return {
+    grid,
+    start,
+    target,
+    facing,
+    slots,
+    hint: str(config.hint) ?? "Robotni nishondagi yulduzga olib boring.",
+  };
+}
+
 interface RobotState extends Cell {
   facing: Facing;
 }
@@ -181,20 +223,12 @@ export function RobotGridGame({
   variant,
   config,
 }: GameProps) {
-  const puzzle = useMemo(() => {
-    if (config) {
-      // Validate or fallback to default if missing fields
-      return {
-        grid: config.grid ?? 5,
-        start: config.start ?? { x: 0, y: 0 },
-        facing: config.facing ?? "right",
-        target: config.target ?? { x: 4, y: 4 },
-        slots: config.slots ?? 5,
-        hint: config.hint ?? "Maqsaddagi joyga yetib boring.",
-      } as Puzzle;
-    }
-    return pickVariant(PUZZLES, seed, { ordinal: variant });
-  }, [seed, variant, config]);
+  const puzzle = useMemo(
+    () =>
+      (hasConfig(config) ? fromConfig(config) : null) ??
+      pickVariant(PUZZLES, seed, { ordinal: variant }),
+    [config, seed, variant]
+  );
 
   const [slots, setSlots] = useState<(Command | null)[]>(() =>
     Array(puzzle.slots).fill(null)

@@ -25,6 +25,7 @@ import { getGame } from "@/games/registry";
 import { useVocabulary } from "@/context/VocabularyContext";
 import { useSpeech } from "@/context/SpeechContext";
 import { lessonSteps, sectionBlocks } from "@/lib/lessonSteps";
+import { renderMarkdown } from "@/lib/markdown";
 import { hashSeed } from "@/games/shared/seed";
 import type {
   LessonContent,
@@ -208,7 +209,7 @@ function SectionBlockView({
     return (
       <div
         className="text-[16px] leading-[1.75] text-gray-700 dark:text-[#c9c9d0] space-y-3.5 [&_h1]:text-[22px] [&_h1]:font-extrabold [&_h1]:text-gray-900 [&_h1]:dark:text-white [&_h1]:mt-4 [&_h1]:mb-2 [&_h2]:text-[19px] [&_h2]:font-bold [&_h2]:text-gray-900 [&_h2]:dark:text-white [&_h2]:mt-3 [&_h2]:mb-1.5 [&_h3]:text-[17px] [&_h3]:font-bold [&_h3]:text-gray-800 [&_h3]:dark:text-zinc-200 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1.5 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-1.5 [&_li]:leading-[1.65] [&_blockquote]:border-l-4 [&_blockquote]:border-[#26B54F] [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-gray-600 [&_blockquote]:dark:text-zinc-300 [&_blockquote]:bg-[#26B54F]/[0.05] [&_blockquote]:py-1.5 [&_blockquote]:rounded-r-lg [&_code]:font-mono [&_code]:text-[13.5px] [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded-[6px] [&_code]:bg-gray-100 [&_code]:dark:bg-[#232328] [&_code]:text-[#7C5CE0] [&_code]:dark:text-[#A78BFA] [&_a]:text-[#26B54F] [&_a]:underline [&_a]:underline-offset-2 [&_a]:font-medium [&_mark]:bg-amber-500/20 [&_mark]:text-amber-900 [&_mark]:dark:text-amber-200 [&_mark]:px-1 [&_mark]:rounded [&_strong]:font-bold [&_strong]:text-gray-900 [&_strong]:dark:text-white"
-        dangerouslySetInnerHTML={{ __html: block.content }}
+        dangerouslySetInnerHTML={{ __html: renderMarkdown(block.content) }}
       />
     );
   }

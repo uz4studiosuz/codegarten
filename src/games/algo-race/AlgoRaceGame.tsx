@@ -4,6 +4,7 @@ import React, { useMemo, useState } from "react";
 import { IconMinus, IconPlus, IconSearch } from "@tabler/icons-react";
 import type { GameProps } from "../types";
 import { GameBoard, GameNote, GameShell, pickVariant, useGameCheck } from "../shared";
+import { enumValue, hasConfig, num, numList, str } from "../config";
 
 /**
  * Count the steps
@@ -91,6 +92,39 @@ const PUZZLES: Puzzle[] = [
   },
 ];
 
+/** Builds the puzzle an author configured in the writer, or null if incomplete. */
+function fromConfig(config: unknown): Puzzle | null {
+  if (!hasConfig(config)) return null;
+
+  const strategy = enumValue(config.strategy, ["linear", "binary"] as const);
+  const items = numList(config.items);
+  const target = num(config.target);
+  if (!strategy || !items || items.length < 2 || target === undefined) return null;
+  // The whole answer is the step count, and the count only means something if
+  // the search actually ends on the target.
+  if (!items.includes(target)) return null;
+
+  // Binary search reads a list as sorted. An author typing the values out of
+  // order meant this list, not an unsolvable one.
+  const list = strategy === "binary" ? [...items].sort((a, b) => a - b) : items;
+
+  return {
+    strategy,
+    items: list,
+    target,
+    hint:
+      str(config.hint) ??
+      (strategy === "binary"
+        ? "Binary search har qadamda ro'yxatning o'rtasiga qaraydi va yarmini tashlab yuboradi."
+        : "Chiziqli qidiruv birinchi elementdan boshlab birma-bir tekshiradi."),
+    why:
+      str(config.why) ??
+      (strategy === "binary"
+        ? "Har tekshiruv qolgan variantlar sonini yarmiga qisqartiradi — shuning uchun qadam soni O(log N)."
+        : "Chiziqli qidiruv elementlarni birma-bir ko'rdi. Ro'yxat uzaysa, qadam ham shuncha ko'payadi — bu O(N)."),
+  };
+}
+
 /** The cells the strategy actually inspects, in order. */
 function visitOrder(puzzle: Puzzle): number[] {
   const visits: number[] = [];
@@ -121,22 +155,26 @@ const STRATEGY_LABELS: Record<Strategy, string> = {
 };
 
 export function AlgoRaceGame(props: GameProps) {
+  const { config, seed, context, variant } = props;
   /**
    * A lesson about binary search must not be handed the linear-search puzzle, so
    * the lesson's own title picks the strategy when it names one.
    */
   const puzzle = useMemo(() => {
-    const context = props.context ?? "";
-    const wanted: Strategy | undefined = /binary|ikkil/.test(context)
+    const title = context ?? "";
+    const wanted: Strategy | undefined = /binary|ikkil/.test(title)
       ? "binary"
-      : /chiziqli|linear/.test(context)
+      : /chiziqli|linear/.test(title)
       ? "linear"
       : undefined;
-    return pickVariant(PUZZLES, props.seed, {
-      prefer: wanted ? (p) => p.strategy === wanted : undefined,
-      ordinal: props.variant,
-    });
-  }, [props.seed, props.context, props.variant]);
+    return (
+      (hasConfig(config) ? fromConfig(config) : null) ??
+      pickVariant(PUZZLES, seed, {
+        prefer: wanted ? (p) => p.strategy === wanted : undefined,
+        ordinal: variant,
+      })
+    );
+  }, [config, seed, context, variant]);
   const visits = useMemo(() => visitOrder(puzzle), [puzzle]);
 
   const [guess, setGuess] = useState(1);

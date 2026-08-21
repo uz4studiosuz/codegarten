@@ -4,6 +4,16 @@ import React, { useMemo, useState } from "react";
 import { IconArrowRight, IconGripVertical } from "@tabler/icons-react";
 import type { GameProps } from "../types";
 import {
+  enumList,
+  enumValue,
+  hasConfig,
+  str,
+  unique,
+  PALETTE,
+  PALETTE_KEYS,
+  type PaletteKey,
+} from "../config";
+import {
   DragGhost,
   DropSlot,
   GameBoard,
@@ -30,15 +40,6 @@ import {
  * shown as a picture rather than described in words.
  */
 
-type Colour = "sariq" | "kok" | "yashil" | "qizil";
-
-const COLOURS: Record<Colour, { label: string; hex: string }> = {
-  sariq: { label: "sariq", hex: "#EAB308" },
-  kok: { label: "ko'k", hex: "#3B82F6" },
-  yashil: { label: "yashil", hex: "#22C55E" },
-  qizil: { label: "qizil", hex: "#EF4444" },
-};
-
 const SHAPES = ["doira", "olti_burchak", "uchburchak"] as const;
 type Shape = (typeof SHAPES)[number];
 
@@ -48,14 +49,14 @@ const SHAPE_LABELS: Record<Shape, string> = {
   uchburchak: "uchburchak",
 };
 
-type Palette = Record<Shape, Colour>;
+type Palette = Record<Shape, PaletteKey>;
 
 interface Puzzle {
   hint: string;
   /** The picture the learner has to reproduce. */
   target: Palette;
   /** Colours offered — always at least the ones the target needs. */
-  choices: Colour[];
+  choices: PaletteKey[];
   why: string;
 }
 
@@ -104,6 +105,41 @@ const PUZZLES: Puzzle[] = [
   },
 ];
 
+/** Builds the puzzle an author configured in the writer, or null if incomplete. */
+function fromConfig(config: unknown): Puzzle | null {
+  const raw = config as Record<string, unknown>;
+  const targetRaw = (raw.target ?? {}) as Record<string, unknown>;
+
+  // Every shape needs a colour: a half-filled target draws a grey shape the
+  // learner can never match.
+  const target = {} as Palette;
+  for (const shape of SHAPES) {
+    const colour = enumValue(targetRaw[shape], PALETTE_KEYS);
+    if (!colour) return null;
+    target[shape] = colour;
+  }
+
+  // A target colour the author forgot to offer would leave the picture
+  // unreachable, so the offered set always absorbs it.
+  const offered = unique([
+    ...(enumList(raw.choices, PALETTE_KEYS) ?? []),
+    ...SHAPES.map((shape) => target[shape]),
+  ]);
+  // One colour is not a choice — a single-colour target would otherwise fill
+  // itself in.
+  for (const key of PALETTE_KEYS) {
+    if (offered.length >= 2) break;
+    if (!offered.includes(key)) offered.push(key);
+  }
+
+  return {
+    hint: str(raw.hint) ?? "Har shaklga o'z rangini bering va namuna bilan solishtiring.",
+    target,
+    choices: PALETTE_KEYS.filter((key) => offered.includes(key)),
+    why: str(raw.why) ?? "",
+  };
+}
+
 /** Circle with a hexagon and an inverted triangle inscribed in it. */
 function Drawing({
   colours,
@@ -113,7 +149,7 @@ function Drawing({
   size?: number;
 }) {
   const fill = (shape: Shape) =>
-    colours[shape] ? COLOURS[colours[shape]!].hex : "#E5E7EB";
+    colours[shape] ? PALETTE[colours[shape]!].hex : "#E5E7EB";
 
   return (
     <svg viewBox="-3 -3 136 136" width={size} height={size} className="max-w-full">
@@ -145,9 +181,13 @@ function Drawing({
 }
 
 export function ShapeColorGame(props: GameProps) {
+  const { config, seed, variant } = props;
+
   const puzzle = useMemo(
-    () => pickVariant(PUZZLES, props.seed, { ordinal: props.variant }),
-    [props.seed, props.variant]
+    () =>
+      (hasConfig(config) ? fromConfig(config) : null) ??
+      pickVariant(PUZZLES, seed, { ordinal: variant }),
+    [config, seed, variant]
   );
 
   const [picked, setPicked] = useState<Partial<Palette>>({});
@@ -159,14 +199,14 @@ export function ShapeColorGame(props: GameProps) {
     check: () => SHAPES.every((shape) => picked[shape] === puzzle.target[shape]),
   });
 
-  const assign = (colour: Colour, slot: number) => {
+  const assign = (colour: PaletteKey, slot: number) => {
     const shape = SHAPES[slot];
     if (!shape) return;
     reset();
     setPicked((prev) => ({ ...prev, [shape]: colour }));
   };
 
-  const drag = useBlockDrag<Colour>({
+  const drag = useBlockDrag<PaletteKey>({
     onDrop: (colour, slot) => assign(colour, slot),
     onTap: (colour) => {
       // A tap fills the first line still missing a colour.
@@ -285,11 +325,11 @@ export function ShapeColorGame(props: GameProps) {
                     {colour ? (
                       <span className="flex items-center gap-1.5">
                         <span
-                          style={{ backgroundColor: COLOURS[colour].hex }}
+                          style={{ backgroundColor: PALETTE[colour].hex }}
                           className="w-4 h-4 rounded-[5px] shrink-0 border border-black/20"
                         />
                         <span className="text-[12px] text-gray-700 dark:text-[#d4d4d8]">
-                          {COLOURS[colour].label}
+                          {PALETTE[colour].label}
                         </span>
                       </span>
                     ) : (
@@ -314,7 +354,7 @@ export function ShapeColorGame(props: GameProps) {
             <div
               key={colour}
               {...drag.bind(colour)}
-              title={`${COLOURS[colour].label} — kodning rang joyiga tashlang`}
+              title={`${PALETTE[colour].label} — kodning rang joyiga tashlang`}
               className={`flex items-center gap-2 rounded-[12px] border-2 border-gray-200 dark:border-[#2b2b31] bg-white dark:bg-[#101013] pl-2 pr-3 py-2 hover:border-[#7C5CE0] transition-colors ${grabClass}`}
             >
               <IconGripVertical
@@ -322,11 +362,11 @@ export function ShapeColorGame(props: GameProps) {
                 className="shrink-0 text-gray-300 dark:text-[#3f3f46]"
               />
               <span
-                style={{ backgroundColor: COLOURS[colour].hex }}
+                style={{ backgroundColor: PALETTE[colour].hex }}
                 className="w-6 h-6 rounded-[7px] shrink-0 border border-black/20"
               />
               <span className="text-[12.5px] font-medium text-gray-600 dark:text-[#a1a1aa]">
-                {COLOURS[colour].label}
+                {PALETTE[colour].label}
               </span>
             </div>
           ))}
@@ -345,7 +385,7 @@ export function ShapeColorGame(props: GameProps) {
       {drag.isDragging && drag.drag && (
         <DragGhost x={drag.drag.x} y={drag.drag.y}>
           <span
-            style={{ backgroundColor: COLOURS[drag.drag.payload].hex }}
+            style={{ backgroundColor: PALETTE[drag.drag.payload].hex }}
             className="block w-[38px] h-[38px] rounded-[9px] border border-black/20 shadow-lg"
           />
         </DragGhost>

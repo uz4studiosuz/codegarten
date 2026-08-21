@@ -3,6 +3,7 @@
 import React, { useMemo, useState } from "react";
 import { IconBug } from "@tabler/icons-react";
 import type { GameProps } from "../types";
+import { hasConfig, int, str } from "../config";
 import { GameBoard, GameNote, GameShell, pickVariant, useGameCheck } from "../shared";
 
 /**
@@ -89,10 +90,41 @@ const PUZZLES: Puzzle[] = [
   },
 ];
 
+/** Builds the puzzle an author configured in the writer, or null if incomplete. */
+function fromConfig(config: unknown): Puzzle | null {
+  const raw = config as Record<string, unknown>;
+
+  // Read the lines by hand instead of through `strList`: these programs use
+  // leading spaces to show what sits inside a loop or a condition, and trimming
+  // them would erase the very structure the bug hides in.
+  if (!Array.isArray(raw.lines)) return null;
+  const lines = raw.lines.filter(
+    (line): line is string => typeof line === "string" && line.trim() !== ""
+  );
+  if (lines.length < 2) return null;
+
+  // Clamping an out-of-range answer would mark some innocent line as the bug,
+  // so a config pointing nowhere falls back to the built-in pool instead.
+  const badIndex = int(raw.badIndex);
+  if (badIndex === undefined || badIndex < 0 || badIndex >= lines.length) return null;
+
+  return {
+    goal: str(raw.goal) ?? "Dastur maqsadiga yetmayapti — sabab bitta qatorda.",
+    hint: str(raw.hint) ?? "Har bir qatorni maqsad bilan solishtirib o'qing.",
+    lines,
+    badIndex,
+    why: str(raw.why) ?? "",
+  };
+}
+
 export function DebugExtraGame(props: GameProps) {
+  const { config, seed, variant } = props;
+
   const puzzle = useMemo(
-    () => pickVariant(PUZZLES, props.seed, { ordinal: props.variant }),
-    [props.seed, props.variant]
+    () =>
+      (hasConfig(config) ? fromConfig(config) : null) ??
+      pickVariant(PUZZLES, seed, { ordinal: variant }),
+    [config, seed, variant]
   );
   const [picked, setPicked] = useState<number | null>(null);
 

@@ -4,6 +4,7 @@ import React, { useMemo, useState } from "react";
 import { IconMinus, IconPlus } from "@tabler/icons-react";
 import type { GameProps } from "../types";
 import { GameBoard, GameNote, GameShell, pickVariant, useGameCheck } from "../shared";
+import { enumValue, hasConfig, num, objList, str, strList, unique } from "../config";
 
 /**
  * Trace the boxes
@@ -133,6 +134,39 @@ const PUZZLES: Puzzle[] = [
   },
 ];
 
+/** Builds the puzzle an author configured in the writer, or null if incomplete. */
+function fromConfig(config: unknown): Puzzle | null {
+  if (!hasConfig(config)) return null;
+
+  const declared = strList(config.vars);
+  if (!declared) return null;
+  const vars = unique(declared);
+
+  const program = objList(config.program, (row) => {
+    const target = str(row.target);
+    const kind = enumValue(row.kind, ["set", "copy", "add", "sub", "mul"] as const);
+    if (!target || !kind || !vars.includes(target)) return undefined;
+
+    const asNumber = num(row.value);
+    if (asNumber !== undefined) return { target, kind, value: asNumber };
+    // A name no box carries would quietly read as 0 and teach the wrong lesson.
+    const ref = str(row.value);
+    return ref && vars.includes(ref) ? { target, kind, value: ref } : undefined;
+  });
+  if (!program || program.length < 2) return null;
+
+  return {
+    hint:
+      str(config.hint) ??
+      "Har qatorni yuqoridan pastga bajarib, qutilar ichidagi qiymatni kuzatib boring.",
+    vars,
+    program,
+    why:
+      str(config.why) ??
+      "Har qator o'zidan oldingi natija ustiga ishlaydi — qutida faqat oxirgi qiymat qoladi.",
+  };
+}
+
 const OPS: Record<Kind, (current: number, operand: number) => number> = {
   set: (_current, operand) => operand,
   copy: (_current, operand) => operand,
@@ -172,9 +206,12 @@ function trace(puzzle: Puzzle): Record<string, number>[] {
 }
 
 export function VariableTraceGame(props: GameProps) {
+  const { config, seed, variant } = props;
   const puzzle = useMemo(
-    () => pickVariant(PUZZLES, props.seed, { ordinal: props.variant }),
-    [props.seed, props.variant]
+    () =>
+      (hasConfig(config) ? fromConfig(config) : null) ??
+      pickVariant(PUZZLES, seed, { ordinal: variant }),
+    [config, seed, variant]
   );
   const frames = useMemo(() => trace(puzzle), [puzzle]);
   const final = frames[frames.length - 1];

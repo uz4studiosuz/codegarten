@@ -4,6 +4,14 @@ import React, { useMemo, useState } from "react";
 import { IconGripVertical, IconRepeat, IconX } from "@tabler/icons-react";
 import type { GameProps } from "../types";
 import {
+  PALETTE,
+  PALETTE_KEYS,
+  enumList,
+  hasConfig,
+  str,
+  type PaletteKey,
+} from "../config";
+import {
   DragGhost,
   DropSlot,
   GameBoard,
@@ -31,21 +39,12 @@ import {
  * hidden until they commit to an answer.
  */
 
-type Tile = "g" | "v" | "a" | "b";
-
-const TILES: Record<Tile, { label: string; hex: string }> = {
-  g: { label: "yashil", hex: "#26B54F" },
-  v: { label: "binafsha", hex: "#7C5CE0" },
-  a: { label: "sariq", hex: "#E0A13C" },
-  b: { label: "ko'k", hex: "#3B82F6" },
-};
-
 interface Puzzle {
   hint: string;
   /** The strip the learner has to reproduce. */
-  target: Tile[];
+  target: PaletteKey[];
   /** Colours offered for the loop body. */
-  palette: Tile[];
+  palette: PaletteKey[];
   /** Shown on success — names the pattern that made the loop possible. */
   why: string;
 }
@@ -53,80 +52,107 @@ interface Puzzle {
 const PUZZLES: Puzzle[] = [
   {
     hint: "Naqshni kuzatib, takrorlanadigan eng qisqa bo'lakni sikl ichiga yozing.",
-    target: ["g", "v", "g", "v", "g", "v", "g", "v"],
-    palette: ["g", "v", "a"],
+    target: ["yashil", "binafsha", "yashil", "binafsha", "yashil", "binafsha", "yashil", "binafsha"],
+    palette: ["yashil", "binafsha", "sariq"],
     why: "Takrorlanadigan bo'lak — yashil + binafsha. 8 katak = 4 x 2 katak.",
   },
   {
     hint: "Uch xil rang ketma-ket kelib, yana boshidan takrorlanadi.",
-    target: ["g", "a", "b", "g", "a", "b", "g", "a", "b"],
-    palette: ["g", "a", "b", "v"],
+    target: ["yashil", "sariq", "kok", "yashil", "sariq", "kok", "yashil", "sariq", "kok"],
+    palette: ["yashil", "sariq", "kok", "binafsha"],
     why: "Bo'lak uch katakdan iborat, sikl 3 marta aylandi: 3 x 3 = 9 katak.",
   },
   {
     hint: "Eng qisqa bo'lakni toping — bir katakdan iborat bo'lishi ham mumkin.",
-    target: ["v", "v", "v", "v", "v"],
-    palette: ["v", "g", "a"],
+    target: ["binafsha", "binafsha", "binafsha", "binafsha", "binafsha"],
+    palette: ["binafsha", "yashil", "sariq"],
     why: "Bir katak 5 marta takrorlangan. Sikl aynan shu ish uchun yaratilgan.",
   },
   {
     hint: "Ikki katak bir naqsh hosil qiladi, u esa uch marta qaytariladi.",
-    target: ["a", "b", "a", "b", "a", "b"],
-    palette: ["a", "b", "g"],
+    target: ["sariq", "kok", "sariq", "kok", "sariq", "kok"],
+    palette: ["sariq", "kok", "yashil"],
     why: "Sariq + ko'k bo'lagi 3 marta takrorlanadi: 3 x 2 = 6 katak.",
   },
   {
     hint: "Bo'lak uzunligini ham, takrorlar sonini ham o'zingiz tanlaysiz.",
-    target: ["b", "b", "g", "b", "b", "g"],
-    palette: ["b", "g", "v"],
+    target: ["kok", "kok", "yashil", "kok", "kok", "yashil"],
+    palette: ["kok", "yashil", "binafsha"],
     why: "Bo'lak uch katak: ko'k, ko'k, yashil. U ikki marta takrorlanib 6 katak berdi.",
   },
   {
     hint: "To'rtta rang ketma-ket kelib, ikki marta qaytariladi.",
-    target: ["g", "v", "a", "b", "g", "v", "a", "b"],
-    palette: ["g", "v", "a", "b"],
+    target: ["yashil", "binafsha", "sariq", "kok", "yashil", "binafsha", "sariq", "kok"],
+    palette: ["yashil", "binafsha", "sariq", "kok"],
     why: "To'rt katakli bo'lak 2 marta aylandi: 4 x 2 = 8 katak.",
   },
   {
     hint: "Naqsh qisqa — lekin necha marta takrorlanganini sanashga to'g'ri keladi.",
-    target: ["a", "g", "a", "g", "a", "g", "a", "g", "a", "g"],
-    palette: ["a", "g", "b"],
+    target: ["sariq", "yashil", "sariq", "yashil", "sariq", "yashil", "sariq", "yashil", "sariq", "yashil"],
+    palette: ["sariq", "yashil", "kok"],
     why: "Sariq + yashil bo'lagi 5 marta takrorlanadi: 5 x 2 = 10 katak.",
   },
   {
     hint: "Bir xil rangli uzun zanjir ham sikl bilan yasaladi.",
-    target: ["b", "b", "b", "b", "b", "b", "b"],
-    palette: ["b", "v", "g"],
+    target: ["kok", "kok", "kok", "kok", "kok", "kok", "kok"],
+    palette: ["kok", "binafsha", "yashil"],
     why: "Bitta ko'k katak 7 marta takrorlandi — sikl bir qatorlik ishni ham qisqartiradi.",
   },
   {
     hint: "Bo'lak uchta katakdan iborat, lekin ikkitasi bir xil rangda.",
-    target: ["v", "v", "a", "v", "v", "a", "v", "v", "a"],
-    palette: ["v", "a", "g"],
+    target: ["binafsha", "binafsha", "sariq", "binafsha", "binafsha", "sariq", "binafsha", "binafsha", "sariq"],
+    palette: ["binafsha", "sariq", "yashil"],
     why: "Bo'lak — binafsha, binafsha, sariq. U 3 marta takrorlanib 9 katak berdi.",
   },
   {
     hint: "Naqsh to'rt katakdan iborat va uch marta qaytariladi.",
-    target: ["g", "b", "b", "g", "g", "b", "b", "g", "g", "b", "b", "g"],
-    palette: ["g", "b", "a"],
+    target: ["yashil", "kok", "kok", "yashil", "yashil", "kok", "kok", "yashil", "yashil", "kok", "kok", "yashil"],
+    palette: ["yashil", "kok", "sariq"],
     why: "To'rt katakli bo'lak 3 marta aylandi: 4 x 3 = 12 katak. Naqsh uzun bo'lgani bilan sikl qisqa qoldi.",
   },
 ];
+
+/** Builds the puzzle an author configured in the writer, or null if incomplete. */
+function fromConfig(config: unknown): Puzzle | null {
+  if (!hasConfig(config)) return null;
+
+  // One block repeated is still a pattern; a single cell is not, so two is the
+  // shortest strip worth asking a loop for.
+  const target = enumList(config.target, PALETTE_KEYS);
+  if (!target || target.length < 2) return null;
+
+  // A strip needing a colour the palette withholds cannot be built at all, so
+  // the target's own colours are always on offer alongside the author's.
+  const offered = new Set<PaletteKey>([...(enumList(config.palette, PALETTE_KEYS) ?? []), ...target]);
+
+  return {
+    hint:
+      str(config.hint) ??
+      "Naqshni kuzatib, takrorlanadigan eng qisqa bo'lakni sikl ichiga joylang.",
+    target,
+    palette: PALETTE_KEYS.filter((key) => offered.has(key)),
+    why: str(config.why) ?? "",
+  };
+}
 
 const MAX_BODY = 4;
 const MAX_COUNT = 10;
 
 export function LoopRepeatGame(props: GameProps) {
+  const { config, seed, variant } = props;
+
   const puzzle = useMemo(
-    () => pickVariant(PUZZLES, props.seed, { ordinal: props.variant }),
-    [props.seed, props.variant]
+    () =>
+      (hasConfig(config) ? fromConfig(config) : null) ??
+      pickVariant(PUZZLES, seed, { ordinal: variant }),
+    [config, seed, variant]
   );
 
-  const [body, setBody] = useState<Tile[]>([]);
+  const [body, setBody] = useState<PaletteKey[]>([]);
   const [count, setCount] = useState<number | null>(null);
 
-  const output = useMemo<Tile[]>(() => {
-    const out: Tile[] = [];
+  const output = useMemo<PaletteKey[]>(() => {
+    const out: PaletteKey[] = [];
     for (let i = 0; i < (count ?? 0); i++) out.push(...body);
     return out;
   }, [body, count]);
@@ -140,7 +166,7 @@ export function LoopRepeatGame(props: GameProps) {
 
   // ── Body edits ──────────────────────────────────────────────────────────
 
-  const drop = (tile: Tile, slot: number, from?: number) => {
+  const drop = (tile: PaletteKey, slot: number, from?: number) => {
     reset();
     setBody((prev) => {
       const next = [...prev];
@@ -162,7 +188,7 @@ export function LoopRepeatGame(props: GameProps) {
     });
   };
 
-  const append = (tile: Tile, from?: number) => {
+  const append = (tile: PaletteKey, from?: number) => {
     if (from !== undefined) return;
     reset();
     setBody((prev) => (prev.length >= MAX_BODY ? prev : [...prev, tile]));
@@ -173,7 +199,7 @@ export function LoopRepeatGame(props: GameProps) {
     setBody((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const drag = useBlockDrag<Tile>({
+  const drag = useBlockDrag<PaletteKey>({
     onDrop: drop,
     onDropOutside: (_tile, from) => {
       if (from !== undefined) removeAt(from);
@@ -233,8 +259,8 @@ export function LoopRepeatGame(props: GameProps) {
           {puzzle.target.map((tile, i) => (
             <span
               key={i}
-              title={TILES[tile].label}
-              style={{ backgroundColor: TILES[tile].hex }}
+              title={PALETTE[tile].label}
+              style={{ backgroundColor: PALETTE[tile].hex }}
               className="w-8 h-8 rounded-[8px]"
             />
           ))}
@@ -291,15 +317,15 @@ export function LoopRepeatGame(props: GameProps) {
                 >
                   <div
                     {...drag.bind(tile, i)}
-                    style={{ backgroundColor: TILES[tile].hex }}
-                    title={TILES[tile].label}
+                    style={{ backgroundColor: PALETTE[tile].hex }}
+                    title={PALETTE[tile].label}
                     className={`relative w-[42px] h-[42px] rounded-[9px] group ${grabClass}`}
                   >
                     <button
                       type="button"
                       data-no-drag
                       onClick={() => removeAt(i)}
-                      aria-label={`${TILES[tile].label} katakni olib tashlash`}
+                      aria-label={`${PALETTE[tile].label} katakni olib tashlash`}
                       className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-gray-900/80 dark:bg-black/70 text-white opacity-0 group-hover:opacity-100 focus:opacity-100 flex items-center justify-center transition-opacity cursor-pointer"
                     >
                       <IconX size={11} stroke={3} />
@@ -337,7 +363,7 @@ export function LoopRepeatGame(props: GameProps) {
             <div
               key={tile}
               {...drag.bind(tile)}
-              title={`${TILES[tile].label} — ushlab sikl ichiga tashlang`}
+              title={`${PALETTE[tile].label} — ushlab sikl ichiga tashlang`}
               className={`flex items-center gap-2 rounded-[12px] border-2 border-gray-200 dark:border-[#2b2b31] bg-white dark:bg-[#101013] pl-2 pr-3 py-2 ${grabClass} ${
                 body.length >= MAX_BODY ? "opacity-40" : ""
               }`}
@@ -347,11 +373,11 @@ export function LoopRepeatGame(props: GameProps) {
                 className="shrink-0 text-gray-300 dark:text-[#3f3f46]"
               />
               <span
-                style={{ backgroundColor: TILES[tile].hex }}
+                style={{ backgroundColor: PALETTE[tile].hex }}
                 className="w-6 h-6 rounded-[7px] shrink-0"
               />
               <span className="text-[12.5px] font-medium text-gray-600 dark:text-[#a1a1aa]">
-                {TILES[tile].label}
+                {PALETTE[tile].label}
               </span>
             </div>
           ))}
@@ -367,7 +393,7 @@ export function LoopRepeatGame(props: GameProps) {
               {output.map((tile, i) => (
                 <span
                   key={i}
-                  style={{ backgroundColor: TILES[tile].hex }}
+                  style={{ backgroundColor: PALETTE[tile].hex }}
                   className={`w-8 h-8 rounded-[8px] ${
                     status === "fail" && puzzle.target[i] !== tile
                       ? "ring-2 ring-amber-500 ring-offset-1 dark:ring-offset-[#141416]"
@@ -392,7 +418,7 @@ export function LoopRepeatGame(props: GameProps) {
       {drag.isDragging && drag.drag && (
         <DragGhost x={drag.drag.x} y={drag.drag.y}>
           <span
-            style={{ backgroundColor: TILES[drag.drag.payload].hex }}
+            style={{ backgroundColor: PALETTE[drag.drag.payload].hex }}
             className="block w-[42px] h-[42px] rounded-[9px] shadow-lg"
           />
         </DragGhost>

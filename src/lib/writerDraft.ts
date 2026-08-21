@@ -108,7 +108,7 @@ export type BlockKind = SectionBlock["kind"];
 
 export const BLOCK_LABELS: Record<BlockKind, string> = {
   text: "Matn",
-  richtext: "Rich Matn",
+  richtext: "Formatlangan matn",
   code: "Kod",
   choice: "Tanlov",
   image: "Rasm",
@@ -117,7 +117,7 @@ export const BLOCK_LABELS: Record<BlockKind, string> = {
 
 export const BLOCK_HINTS: Record<BlockKind, string> = {
   text: "Bir yoki bir necha oddiy xatboshi",
-  richtext: "Formatlangan matn: qalin, kursiv, sarlavha, ro'yxat, havola",
+  richtext: "Qalin, kursiv, sarlavha, ro'yxat, iqtibos, havola",
   code: "Kod namunasi — har buyruq alohida qator",
   choice: "Variantlar tanlovi (to'g'ri/noto'g'ri)",
   image: "Havola yoki yuklangan rasm",
@@ -555,6 +555,15 @@ export function tidyContent(
         kind: "challenge",
         ...(step.gameId?.trim() ? { gameId: step.gameId.trim() } : {}),
         ...(step.variant !== undefined && step.variant >= 0 ? { variant: step.variant } : {}),
+        // Only a parsed object is worth exporting: a config still held as raw
+        // text never parsed, and writing it out would put a string where the
+        // game expects a puzzle.
+        ...(step.customConfig !== null &&
+        typeof step.customConfig === "object" &&
+        !Array.isArray(step.customConfig) &&
+        Object.keys(step.customConfig).length > 0
+          ? { customConfig: step.customConfig }
+          : {}),
       });
     }
   }

@@ -4,6 +4,18 @@ import React, { useMemo, useState } from "react";
 import { IconArrowRight, IconCheck, IconX } from "@tabler/icons-react";
 import type { GameProps } from "../types";
 import { GameBoard, GameHowTo, GameNote, GameShell, pickVariant, useGameCheck } from "../shared";
+import {
+  enumValue,
+  evalPredicate,
+  hasConfig,
+  int,
+  objList,
+  str,
+  strList,
+  toFacts,
+  toPredicate,
+  type Facts,
+} from "../config";
 
 /**
  * Build the decision rule
@@ -26,8 +38,6 @@ import { GameBoard, GameHowTo, GameNote, GameShell, pickVariant, useGameCheck } 
  * Checking is by simulation, not by comparing to one authored answer: an inverted
  * condition with swapped branches is also correct, and is accepted.
  */
-
-type Facts = Record<string, number | boolean>;
 
 /** The action a plain `agar` takes when its condition is false. */
 const NOTHING = "__none__";
@@ -235,10 +245,87 @@ const PUZZLES: Puzzle[] = [
   },
 ];
 
+/** Builds the puzzle an author configured in the writer, or null if incomplete. */
+function fromConfig(config: unknown): Puzzle | null {
+  if (!hasConfig(config)) return null;
+
+  const mode = enumValue(config.mode, ["if", "if-else"] as const);
+  const scenario = str(config.scenario);
+  const facts = strList(config.facts);
+  if (!mode || !scenario || !facts) return null;
+
+  const rows = objList(config.conditions, (row) => {
+    const label = str(row.label);
+    const predicate = toPredicate(row.predicate);
+    return label && predicate ? { label, predicate } : undefined;
+  });
+  // An author writes a condition as data; the board wants a function, and a
+  // function is the one thing that cannot come through JSON.
+  const conditions: Condition[] | undefined = rows?.map((row, i) => ({
+    id: `c${i}`,
+    label: row.label,
+    test: (situation: Facts) => evalPredicate(row.predicate, situation),
+  }));
+
+  // Positional, because `cases[].expected` points into this list by index.
+  const actions = strList(config.actions)?.map((label, i) => ({ id: `a${i}`, label }));
+  if (!conditions || conditions.length < 2 || !actions || actions.length < 2) return null;
+
+  const authored = objList(config.cases, (row) => {
+    const label = str(row.label);
+    const situation = toFacts(row.values);
+    const expected = row.expected === "none" ? -1 : int(row.expected);
+    return label && situation && expected !== undefined
+      ? { label, facts: situation, expected }
+      : undefined;
+  });
+  if (!authored || authored.length < 2) return null;
+  // A case aiming at an action that does not exist has no answer to reach for.
+  if (authored.some((row) => row.expected < -1 || row.expected >= actions.length)) return null;
+
+  const cases: Case[] = authored.map((row) => ({
+    label: row.label,
+    facts: row.facts,
+    expected: row.expected === -1 ? NOTHING : actions[row.expected].id,
+  }));
+
+  // The board accepts any rule that fits every case, so solvability is the same
+  // simulation run over every rule the author's blocks can build. A puzzle with
+  // no correct answer at all is worse than falling back to a built-in one.
+  const elseChoices: (string | null)[] =
+    mode === "if-else" ? actions.map((a) => a.id) : [null];
+  const solvable = conditions.some((condition) =>
+    actions.some((thenAction) =>
+      elseChoices.some((elseId) =>
+        cases.every((testCase) => {
+          const produced = condition.test(testCase.facts) ? thenAction.id : elseId ?? NOTHING;
+          return produced === testCase.expected;
+        })
+      )
+    )
+  );
+  if (!solvable) return null;
+
+  return {
+    mode,
+    scenario,
+    hint: str(config.hint) ?? "Har bir holatda to'g'ri ishlaydigan bitta shartni tanlang.",
+    conditions,
+    actions,
+    cases,
+    why:
+      str(config.why) ??
+      "Bitta qoida barcha holatlarni to'g'ri hal qildi — shart to'g'ri tanlangani shundan bilinadi.",
+  };
+}
+
 export function ConditionBranchGame(props: GameProps) {
+  const { config, seed, variant } = props;
   const puzzle = useMemo(
-    () => pickVariant(PUZZLES, props.seed, { ordinal: props.variant }),
-    [props.seed, props.variant]
+    () =>
+      (hasConfig(config) ? fromConfig(config) : null) ??
+      pickVariant(PUZZLES, seed, { ordinal: variant }),
+    [config, seed, variant]
   );
 
   const hasElse = puzzle.mode === "if-else";
