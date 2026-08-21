@@ -24,6 +24,7 @@ interface AuthContextType {
   method: VerificationMethod;
   pendingPhone: string;
   user: UserProfile | null;
+  isLoading: boolean;
   openAuthModal: (initialMode?: AuthMode, initialTab?: AuthTab) => void;
   closeAuthModal: () => void;
   setMode: (mode: AuthMode) => void;
@@ -43,6 +44,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [method, setMethod] = useState<VerificationMethod>("sms");
   const [pendingPhone, setPendingPhone] = useState("");
   const [user, setUser] = useState<UserProfile | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Restore user session from localStorage if available
   useEffect(() => {
@@ -53,6 +55,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     } catch (e) {
       console.error("Failed to load user from localStorage", e);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
@@ -89,6 +93,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         method,
         pendingPhone,
         user,
+        isLoading,
         openAuthModal,
         closeAuthModal,
         setMode,

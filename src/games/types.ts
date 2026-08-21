@@ -49,6 +49,12 @@ export interface GameProps {
    * src/games/ordinal.ts.
    */
   variant?: number;
+  /**
+   * Custom configuration provided directly from the writer, bypassing standard
+   * puzzle selection if present. Allows authors to define completely new puzzle
+   * configurations without changing code.
+   */
+  config?: any;
 }
 
 export interface GameDefinition {

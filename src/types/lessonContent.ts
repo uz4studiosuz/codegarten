@@ -32,7 +32,9 @@ export interface LessonImage {
   alt: string;
   caption?: string;
   /** Presentation size preset. Defaults to full. */
-  size?: "small" | "medium" | "large" | "full";
+  size?: "small" | "medium" | "large" | "full" | "custom";
+  /** Custom width percentage (20 - 100) or pixel width when dragged interactively */
+  customWidth?: number;
 }
 
 /**
@@ -46,6 +48,7 @@ export interface LessonImage {
  */
 export type SectionBlock =
   | { kind: "text"; text: string }
+  | { kind: "richtext"; content: string }
   | { kind: "code"; caption?: string; lines: string[] }
   | { kind: "image"; image: LessonImage }
   | { kind: "callout"; text: string }
@@ -103,6 +106,8 @@ export type LessonStep =
       gameId?: string;
       /** Specific puzzle/variant of the game (0-indexed). When omitted, picked round-robin/by seed. */
       variant?: number;
+      /** Custom configuration for the game puzzle, overrides standard puzzle selection */
+      customConfig?: any;
     };
 
 export interface LessonContent {

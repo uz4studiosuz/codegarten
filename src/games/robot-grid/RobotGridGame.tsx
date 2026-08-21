@@ -179,11 +179,22 @@ export function RobotGridGame({
   onStatusChange,
   seed,
   variant,
+  config,
 }: GameProps) {
-  const puzzle = useMemo(
-    () => pickVariant(PUZZLES, seed, { ordinal: variant }),
-    [seed, variant]
-  );
+  const puzzle = useMemo(() => {
+    if (config) {
+      // Validate or fallback to default if missing fields
+      return {
+        grid: config.grid ?? 5,
+        start: config.start ?? { x: 0, y: 0 },
+        facing: config.facing ?? "right",
+        target: config.target ?? { x: 4, y: 4 },
+        slots: config.slots ?? 5,
+        hint: config.hint ?? "Maqsaddagi joyga yetib boring.",
+      } as Puzzle;
+    }
+    return pickVariant(PUZZLES, seed, { ordinal: variant });
+  }, [seed, variant, config]);
 
   const [slots, setSlots] = useState<(Command | null)[]>(() =>
     Array(puzzle.slots).fill(null)

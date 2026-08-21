@@ -108,6 +108,7 @@ export type BlockKind = SectionBlock["kind"];
 
 export const BLOCK_LABELS: Record<BlockKind, string> = {
   text: "Matn",
+  richtext: "Rich Matn",
   code: "Kod",
   choice: "Tanlov",
   image: "Rasm",
@@ -115,7 +116,8 @@ export const BLOCK_LABELS: Record<BlockKind, string> = {
 };
 
 export const BLOCK_HINTS: Record<BlockKind, string> = {
-  text: "Bir yoki bir necha xatboshi",
+  text: "Bir yoki bir necha oddiy xatboshi",
+  richtext: "Formatlangan matn: qalin, kursiv, sarlavha, ro'yxat, havola",
   code: "Kod namunasi — har buyruq alohida qator",
   choice: "Variantlar tanlovi (to'g'ri/noto'g'ri)",
   image: "Havola yoki yuklangan rasm",
@@ -137,6 +139,7 @@ export function kindHasGame(kind: LessonKind): boolean {
 // ── Empty shapes ────────────────────────────────────────────────────────────
 
 export function emptyBlock(kind: BlockKind): SectionBlock {
+  if (kind === "richtext") return { kind: "richtext", content: "" };
   if (kind === "code") return { kind: "code", caption: "", lines: [] };
   if (kind === "image") return { kind: "image", image: { src: "", alt: "", size: "full" } };
   if (kind === "callout") return { kind: "callout", text: "" };
@@ -175,6 +178,7 @@ export function draftBlocks(section: ContentSection): SectionBlock[] {
 /** True when nothing has been written into this block yet. */
 export function blockIsEmpty(block: SectionBlock): boolean {
   if (block.kind === "text" || block.kind === "callout") return !block.text.trim();
+  if (block.kind === "richtext") return !block.content.trim();
   if (block.kind === "image") return !block.image.src.trim();
   if (block.kind === "choice") {
     return (
@@ -443,6 +447,7 @@ function tidyImage(
       alt: image.alt.trim() || image.caption?.trim() || "Dars rasmi",
       ...(image.caption?.trim() ? { caption: image.caption.trim() } : {}),
       ...(image.size && image.size !== "full" ? { size: image.size } : {}),
+      ...(image.customWidth !== undefined ? { customWidth: image.customWidth } : {}),
     },
   };
 }
@@ -474,6 +479,9 @@ function tidySection(
     if (block.kind === "text" || block.kind === "callout") {
       const text = block.text.trim();
       if (text) blocks.push({ kind: block.kind, text });
+    } else if (block.kind === "richtext") {
+      const content = block.content.trim();
+      if (content) blocks.push({ kind: "richtext", content });
     } else if (block.kind === "code") {
       const lines = block.lines;
       if (lines.some((line) => line.trim())) {

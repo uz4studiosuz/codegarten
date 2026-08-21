@@ -10,9 +10,11 @@ import {
   IconLayoutSidebar,
   IconPencil,
   IconUpload,
+  IconX,
 } from "@tabler/icons-react";
 import { allTracks, moduleLessons } from "@/data/curriculum";
 import {
+  DraftIssue,
   DraftLesson,
   DraftLevel,
   DraftModule,
@@ -377,10 +379,23 @@ export function WriterWorkspace() {
     return () => clearTimeout(timer);
   }, [status]);
 
+  const [issuesModalTab, setIssuesModalTab] = useState<"errors" | "warnings" | null>(null);
+
   const activeTrack = useMemo(
     () => allTracks.find((t) => t.id === draft.trackId),
     [draft.trackId]
   );
+
+  const handleJumpToIssue = (target: DraftIssue["target"]) => {
+    if (target.kind === "module" || target.kind === "track") {
+      select({ kind: "module" });
+    } else if (target.kind === "level") {
+      select({ kind: "level", levelIndex: target.levelIndex });
+    } else if (target.kind === "lesson") {
+      select({ kind: "lesson", levelIndex: target.levelIndex, lessonIndex: target.lessonIndex });
+    }
+    setIssuesModalTab(null);
+  };
 
   return (
     <>
@@ -404,15 +419,24 @@ export function WriterWorkspace() {
                 Tayyor
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-red-500/15 px-3 py-1.5 text-[12px] font-bold text-red-600 dark:text-red-400">
-                <IconAlertTriangle size={14} />
-                {errors.length} xato
-              </span>
+              <button
+                type="button"
+                onClick={() => setIssuesModalTab("errors")}
+                className="inline-flex items-center gap-1.5 rounded-full bg-red-500/15 hover:bg-red-500/25 px-3 py-1.5 text-[12px] font-bold text-red-600 dark:text-red-400 cursor-pointer transition-colors shadow-2xs group"
+              >
+                <IconAlertTriangle size={14} className="group-hover:scale-110 transition-transform" />
+                <span>{errors.length} xato</span>
+              </button>
             )}
             {warnings.length > 0 && (
-              <span className="hidden sm:inline text-[12px] text-gray-400 dark:text-zinc-500">
-                {warnings.length} ogohlantirish
-              </span>
+              <button
+                type="button"
+                onClick={() => setIssuesModalTab("warnings")}
+                className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/15 hover:bg-amber-500/25 px-3 py-1.5 text-[12px] font-bold text-amber-600 dark:text-amber-400 cursor-pointer transition-colors shadow-2xs group"
+              >
+                <IconAlertTriangle size={14} className="group-hover:scale-110 transition-transform" />
+                <span>{warnings.length} ogohlantirish</span>
+              </button>
             )}
             {hydrated && !saveFailed && (
               <span
@@ -537,8 +561,6 @@ export function WriterWorkspace() {
               actions={actions}
             />
 
-            <IssuePanel issues={issues} onSelect={select} />
-
             <button
               type="button"
               onClick={resetDraft}
@@ -568,6 +590,108 @@ export function WriterWorkspace() {
           </div>
         </div>
       </main>
+
+      {/* ── Issues (Errors / Warnings) Modal ── */}
+      {issuesModalTab !== null && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn">
+          <div className="w-full max-w-2xl max-h-[85vh] rounded-[20px] border-2 border-gray-200 dark:border-[#2a2a30] bg-white dark:bg-[#16161a] shadow-2xl flex flex-col overflow-hidden">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-[#24242a]">
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIssuesModalTab("errors")}
+                  className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[13px] font-bold transition-all cursor-pointer ${
+                    issuesModalTab === "errors"
+                      ? "bg-red-500 text-white shadow-sm"
+                      : "bg-red-500/10 text-red-600 dark:text-red-400 hover:bg-red-500/20"
+                  }`}
+                >
+                  <IconAlertTriangle size={15} />
+                  <span>Xatolar ({errors.length})</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setIssuesModalTab("warnings")}
+                  className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[13px] font-bold transition-all cursor-pointer ${
+                    issuesModalTab === "warnings"
+                      ? "bg-amber-500 text-white shadow-sm"
+                      : "bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-500/20"
+                  }`}
+                >
+                  <IconAlertTriangle size={15} />
+                  <span>Ogohlantirishlar ({warnings.length})</span>
+                </button>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setIssuesModalTab(null)}
+                className="p-1.5 rounded-full text-gray-400 hover:text-black dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#25252a] transition-colors cursor-pointer"
+              >
+                <IconX size={18} />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="flex-1 overflow-y-auto p-5 flex flex-col gap-2.5">
+              {(issuesModalTab === "errors" ? errors : warnings).length === 0 ? (
+                <div className="py-12 flex flex-col items-center justify-center text-center">
+                  <div className="w-12 h-12 rounded-full bg-[#26B54F]/15 text-[#26B54F] flex items-center justify-center mb-3">
+                    <IconCircleCheck size={28} />
+                  </div>
+                  <h4 className="text-[16px] font-bold text-gray-900 dark:text-white">
+                    {issuesModalTab === "errors" ? "Xatoliklar yo'q" : "Ogohlantirishlar yo'q"}
+                  </h4>
+                  <p className="text-[13px] text-gray-500 dark:text-zinc-400 mt-1">
+                    Modul eksport qilishga to&apos;liq tayyor!
+                  </p>
+                </div>
+              ) : (
+                (issuesModalTab === "errors" ? errors : warnings).map((issue, idx) => {
+                  let targetLabel = "Modul";
+                  if (issue.target.kind === "level") {
+                    targetLabel = `${issue.target.levelIndex + 1}-bosqich`;
+                  } else if (issue.target.kind === "lesson") {
+                    const l = draft.levels[issue.target.levelIndex]?.lessons[issue.target.lessonIndex];
+                    targetLabel = `${issue.target.levelIndex + 1}-bosqich · ${issue.target.lessonIndex + 1}-dars: ${l?.title || "(nomsiz)"}`;
+                  }
+
+                  const isErr = issue.level === "error";
+
+                  return (
+                    <div
+                      key={idx}
+                      onClick={() => handleJumpToIssue(issue.target)}
+                      className={`p-3.5 rounded-[14px] border-2 flex items-center justify-between gap-3 cursor-pointer transition-all hover:scale-[1.01] ${
+                        isErr
+                          ? "border-red-500/30 bg-red-500/[0.04] hover:bg-red-500/[0.08]"
+                          : "border-amber-500/30 bg-amber-500/[0.04] hover:bg-amber-500/[0.08]"
+                      }`}
+                    >
+                      <div className="min-w-0 flex-1 flex flex-col gap-1">
+                        <span className={`self-start px-2 py-0.5 rounded-[5px] text-[10.5px] font-bold uppercase tracking-wider ${
+                          isErr ? "bg-red-500/15 text-red-600 dark:text-red-400" : "bg-amber-500/15 text-amber-600 dark:text-amber-400"
+                        }`}>
+                          {targetLabel}
+                        </span>
+                        <p className="text-[13.5px] font-medium text-gray-800 dark:text-zinc-200">
+                          {issue.message}
+                        </p>
+                      </div>
+
+                      <span className="shrink-0 text-[12px] font-bold text-[#26B54F] flex items-center gap-1 hover:underline">
+                        Tahrirlashga o&apos;tish →
+                      </span>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

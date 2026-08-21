@@ -10,6 +10,8 @@ import {
   IconRefresh,
   IconMaximize,
   IconMinimize,
+  IconBook,
+  IconStarFilled,
 } from "@tabler/icons-react";
 import { LessonRunner } from "@/components/lesson/LessonRunner";
 import { resolveGame } from "@/games/resolve";
@@ -236,53 +238,95 @@ function ModulesStage({
 }) {
   const levelsCount = draft.levels.length;
   const lessonsCount = countLessons(draft);
+  const themeColor = draft.accent || "#26B54F";
 
   return (
-    <div className="p-4 flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <span className="text-[12px] font-bold uppercase tracking-wider text-[#26B54F]">
+    <div className="p-5 flex flex-col gap-6 max-w-xl mx-auto">
+      <div className="flex items-center justify-between border-b border-gray-100 dark:border-[#27272a] pb-3">
+        <span className="text-[12.5px] font-bold uppercase tracking-wider text-[#26B54F]">
           {trackTitle}
         </span>
-        <span className="text-[12px] text-gray-400 dark:text-zinc-500">
+        <span className="text-[12px] text-gray-400 dark:text-zinc-500 font-mono">
           {trackModules.length + 1} ta modul
         </span>
       </div>
 
-      <div className="grid grid-cols-1 gap-3">
-        {/* The draft being edited, highlighted */}
+      <div className="flex flex-col gap-4">
+        {/* The draft being edited, full authentic card */}
         <div
           onClick={onOpenDraft}
-          className="rounded-[16px] border-2 border-[#26B54F] bg-[#26B54F]/[0.06] p-4 flex items-center justify-between gap-3 cursor-pointer hover:bg-[#26B54F]/10 transition-colors"
+          className="rounded-[22px] border-2 border-[#26B54F] bg-white dark:bg-[#151518] p-5 flex flex-col gap-4 cursor-pointer hover:shadow-lg transition-all relative overflow-hidden group shadow-sm"
         >
-          <div className="min-w-0">
-            <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#26B54F] text-white mb-1.5">
-              Tahrirlanayotgan modul
-            </span>
-            <h3 className="font-extrabold text-[16px] text-gray-900 dark:text-white truncate">
-              {draft.title || "(Nomsiz modul)"}
+          <div className="flex items-start justify-between gap-3">
+            <div className="w-14 h-14 rounded-[16px] bg-[#26B54F]/10 flex items-center justify-center p-2 shrink-0 border border-[#26B54F]/20">
+              {draft.imageSrc ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={draft.imageSrc}
+                  alt={draft.title}
+                  className="w-full h-full object-contain"
+                />
+              ) : (
+                <IconBook size={28} className="text-[#26B54F]" />
+              )}
+            </div>
+
+            <div className="flex items-center gap-1.5">
+              <span className="px-2.5 py-0.5 rounded-full text-[10.5px] font-extrabold uppercase tracking-wider bg-[#26B54F] text-white shadow-2xs">
+                Tahrirlanmoqda
+              </span>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <h3 className="font-extrabold text-[17px] text-gray-900 dark:text-white group-hover:text-[#26B54F] transition-colors">
+              {draft.title || "(Nomsiz yangi modul)"}
             </h3>
-            <p className="text-[12px] text-gray-500 dark:text-zinc-400 mt-0.5">
-              {levelsCount} bosqich · {lessonsCount} dars
+            <p className="text-[13px] text-gray-500 dark:text-zinc-400 leading-relaxed line-clamp-2">
+              {draft.description || draft.tagline || "Ushbu modul bo'yicha darslar va mashqlar."}
             </p>
           </div>
-          <IconChevronRight size={18} className="text-[#26B54F] shrink-0" />
+
+          <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-[#222226]">
+            <span className="text-[12px] font-bold text-gray-500 dark:text-zinc-400">
+              {levelsCount} bosqich · {lessonsCount} dars
+            </span>
+
+            <span
+              className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-full text-[12px] font-bold text-white shadow-xs group-hover:scale-105 transition-transform"
+              style={{ backgroundColor: themeColor }}
+            >
+              <span>Yo&apos;lni ko&apos;rish</span>
+              <IconChevronRight size={14} />
+            </span>
+          </div>
         </div>
 
-        {/* Existing modules, dimmed */}
+        {/* Existing modules, dimmed authentic preview */}
         {trackModules.map((m) => (
           <div
             key={m.id}
-            className="rounded-[16px] border border-gray-200 dark:border-[#27272a] bg-white dark:bg-[#16161a] p-4 flex items-center justify-between gap-3 opacity-60"
+            className="rounded-[20px] border border-gray-200 dark:border-[#27272a] bg-gray-50/50 dark:bg-[#121215] p-4 flex items-center justify-between gap-3 opacity-60"
           >
-            <div className="min-w-0">
-              <h3 className="font-bold text-[15px] text-gray-700 dark:text-zinc-300 truncate">
-                {m.title}
-              </h3>
-              <p className="text-[12px] text-gray-400 dark:text-zinc-500 mt-0.5">
-                {m.levels.length} bosqich · {m.levels.reduce((s, l) => s + l.lessons.length, 0)} dars
-              </p>
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-11 h-11 rounded-[12px] bg-gray-200/60 dark:bg-[#202025] flex items-center justify-center p-1.5 shrink-0">
+                {m.imageSrc ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={m.imageSrc} alt={m.title} className="w-full h-full object-contain" />
+                ) : (
+                  <IconBook size={20} className="text-gray-400" />
+                )}
+              </div>
+              <div className="min-w-0">
+                <h3 className="font-bold text-[14.5px] text-gray-700 dark:text-zinc-300 truncate">
+                  {m.title}
+                </h3>
+                <p className="text-[11.5px] text-gray-400 dark:text-zinc-500">
+                  {m.levels.length} bosqich · {m.levels.reduce((s, l) => s + l.lessons.length, 0)} dars
+                </p>
+              </div>
             </div>
-            <IconLockFilled size={15} className="text-gray-300 dark:text-zinc-600 shrink-0" />
+            <IconLockFilled size={16} className="text-gray-400 dark:text-zinc-600 shrink-0 mr-2" />
           </div>
         ))}
       </div>
@@ -290,7 +334,9 @@ function ModulesStage({
   );
 }
 
-// ── Stage 2: the lesson path ────────────────────────────────────────────────
+// ── Stage 2: the lesson path with authentic Figma LevelCards & Zigzag Discs ──
+
+const ZIG_PATTERN = [0, 32, 52, 32, 0, -32, -52, -32];
 
 function PathStage({
   draft,
@@ -303,82 +349,133 @@ function PathStage({
   onOpenLesson: (levelIndex: number, lessonIndex: number) => void;
   onOpenLevel: (levelIndex: number) => void;
 }) {
+  const themeColor = draft.accent || "#26B54F";
+  const allLessonsCount = countLessons(draft);
+
   return (
-    <div className="p-4 flex flex-col gap-5">
-      <div className="flex flex-col gap-1 border-b border-gray-100 dark:border-[#27272a] pb-3">
-        <h2 className="text-[18px] font-extrabold text-gray-900 dark:text-white">
-          {draft.title || "Modul yo'li"}
-        </h2>
-        {draft.description && (
-          <p className="text-[13px] text-gray-500 dark:text-zinc-400">{draft.description}</p>
-        )}
+    <div className="p-4 sm:p-6 flex flex-col gap-6 max-w-lg mx-auto">
+      {/* Pinned Module Header */}
+      <div className="rounded-[22px] border border-gray-200 dark:border-[#2b2b31] bg-[#F8F9FA] dark:bg-[#101013] p-5 shadow-2xs flex items-start gap-4">
+        <div className="w-14 h-14 rounded-[16px] bg-white dark:bg-[#1a1a1e] border border-gray-200 dark:border-[#2b2b31] p-2 flex items-center justify-center shrink-0">
+          {draft.imageSrc ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={draft.imageSrc} alt={draft.title} className="w-full h-full object-contain" />
+          ) : (
+            <IconBook size={28} className="text-[#26B54F]" />
+          )}
+        </div>
+        <div className="min-w-0 flex-1">
+          <h2 className="text-[17px] font-bold text-gray-900 dark:text-white truncate">
+            {draft.title || "(Nomsiz modul)"}
+          </h2>
+          <p className="text-[12.5px] text-gray-500 dark:text-zinc-400 mt-0.5 line-clamp-2">
+            {draft.description || "Darslar ro'yxatidan istalgan darsni tanlang."}
+          </p>
+          <div className="flex items-center gap-3 mt-2 text-[12px] font-semibold text-gray-600 dark:text-zinc-400">
+            <span>{draft.levels.length} bosqich</span>
+            <span>·</span>
+            <span>{allLessonsCount} dars</span>
+          </div>
+        </div>
       </div>
 
-      {draft.levels.map((level, li) => {
-        const isSelectedLevel = selection.kind === "level" && selection.levelIndex === li;
-        return (
-          <div
-            key={li}
-            className={`rounded-[16px] border-2 p-3.5 flex flex-col gap-3 transition-colors ${
-              isSelectedLevel
-                ? "border-[#26B54F] bg-[#26B54F]/[0.04]"
-                : "border-gray-100 dark:border-[#222226] bg-gray-50/50 dark:bg-[#16161a]"
-            }`}
-          >
-            <div
-              onClick={() => onOpenLevel(li)}
-              className="flex items-center justify-between cursor-pointer group"
-            >
-              <div className="min-w-0">
-                <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#26B54F]">
-                  {li + 1}-bosqich
-                </span>
-                <h4 className="font-bold text-[14.5px] text-gray-900 dark:text-zinc-100 truncate group-hover:text-[#26B54F] transition-colors">
-                  {level.title || "(Nomsiz bosqich)"}
-                </h4>
+      {/* Levels and Zigzag Trail */}
+      <div className="flex flex-col gap-8 pt-2">
+        {draft.levels.map((level, li) => {
+          const isSelectedLevel = selection.kind === "level" && selection.levelIndex === li;
+
+          return (
+            <div key={li} className="flex flex-col gap-6">
+              {/* Figma Level Card */}
+              <div
+                onClick={() => onOpenLevel(li)}
+                className={`px-4 py-3 bg-white dark:bg-[#0d0d0f] rounded-[20px] flex flex-col justify-start items-stretch cursor-pointer transition-all hover:scale-[1.01] ${
+                  isSelectedLevel ? "ring-2 ring-[#26B54F]" : ""
+                }`}
+                style={{
+                  outline: `2px solid ${themeColor}`,
+                  outlineOffset: "-2px",
+                  boxShadow: `inset 0px -6px 0px 0px ${themeColor}`,
+                }}
+              >
+                <div className="text-center text-[10.5px] font-mono font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                  Level {li + 1}
+                </div>
+                <div className="pt-0.5 text-center text-sm font-bold text-black dark:text-white truncate">
+                  {level.title || `Level ${li + 1}`}
+                </div>
               </div>
-              <span className="text-[11.5px] text-gray-400 dark:text-zinc-500 shrink-0">
-                {level.lessons.length} dars
-              </span>
-            </div>
 
-            <div className="flex flex-col gap-1.5 pl-2 border-l-2 border-gray-200 dark:border-[#2a2a30]">
-              {level.lessons.map((lesson, lei) => {
-                const isSelectedLesson =
-                  selection.kind === "lesson" &&
-                  selection.levelIndex === li &&
-                  selection.lessonIndex === lei;
+              {/* Lessons Zigzag Discs */}
+              <div className="flex flex-col items-center gap-6 py-2">
+                {level.lessons.map((lesson, lei) => {
+                  const globalIdx =
+                    draft.levels.slice(0, li).reduce((sum, l) => sum + l.lessons.length, 0) + lei;
+                  const zigOffset = ZIG_PATTERN[globalIdx % ZIG_PATTERN.length];
+                  const isSelectedLesson =
+                    selection.kind === "lesson" &&
+                    selection.levelIndex === li &&
+                    selection.lessonIndex === lei;
 
-                return (
-                  <button
-                    key={lei}
-                    type="button"
-                    onClick={() => onOpenLesson(li, lei)}
-                    className={`flex items-center justify-between p-2 rounded-[10px] text-left transition-colors cursor-pointer ${
-                      isSelectedLesson
-                        ? "bg-[#26B54F] text-white font-bold"
-                        : "hover:bg-gray-100 dark:hover:bg-[#202025] text-gray-700 dark:text-zinc-300 font-medium"
-                    }`}
-                  >
-                    <span className="text-[13px] truncate">
-                      {lei + 1}. {lesson.title || "(Nomsiz dars)"}
-                    </span>
-                    <span
-                      className={`text-[11px] font-mono px-1.5 py-0.5 rounded ${
-                        isSelectedLesson
-                          ? "bg-white/20 text-white"
-                          : "bg-gray-200/60 dark:bg-[#25252a] text-gray-500 dark:text-zinc-400"
-                      }`}
+                  const isFirst = globalIdx === 0;
+
+                  return (
+                    <div
+                      key={lei}
+                      style={{ transform: `translateX(${zigOffset}px)` }}
+                      className="flex items-center gap-3 transition-transform duration-200"
                     >
-                      {lesson.xp} XP
-                    </span>
-                  </button>
-                );
-              })}
+                      <button
+                        type="button"
+                        onClick={() => onOpenLesson(li, lei)}
+                        title={`${lesson.title || "Dars"} · ${lesson.xp} XP`}
+                        className={`group relative flex items-center justify-center cursor-pointer transition-all duration-100 active:translate-y-[4px]`}
+                      >
+                        {/* Duolingo 3D Pressable Disc */}
+                        <div
+                          className={`w-14 h-12 rounded-full flex items-center justify-center transition-all ${
+                            isSelectedLesson
+                              ? "bg-[#26B54F] shadow-[0px_5px_0px_0px_#177F37] ring-4 ring-[#26B54F]/30"
+                              : isFirst
+                              ? "bg-[#F0B03C] shadow-[0px_5px_0px_0px_#C0851F]"
+                              : "bg-neutral-200 dark:bg-zinc-800 shadow-[0px_5px_0px_0px_rgba(160,160,160,0.8)] dark:shadow-[0px_5px_0px_0px_#27272a]"
+                          }`}
+                        >
+                          {isSelectedLesson ? (
+                            <IconEye size={24} className="text-white" />
+                          ) : isFirst ? (
+                            <IconStarFilled size={22} className="text-white" />
+                          ) : (
+                            <IconBook size={20} className="text-neutral-500 dark:text-zinc-400" />
+                          )}
+                        </div>
+                      </button>
+
+                      {/* Lesson title & XP badge */}
+                      <button
+                        type="button"
+                        onClick={() => onOpenLesson(li, lei)}
+                        className={`text-left max-w-[150px] min-w-[100px] cursor-pointer group-hover:underline ${
+                          isSelectedLesson
+                            ? "font-extrabold text-[#26B54F]"
+                            : "font-semibold text-gray-700 dark:text-zinc-300"
+                        }`}
+                      >
+                        <span className="block text-[12.5px] truncate leading-tight">
+                          {lesson.title || "(nomsiz dars)"}
+                        </span>
+                        <span className="block text-[11px] text-gray-400 dark:text-zinc-500 mt-0.5">
+                          {lesson.xp} XP · {lesson.estMinutes} daq
+                        </span>
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 }

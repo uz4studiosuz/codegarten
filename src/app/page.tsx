@@ -6,16 +6,25 @@ import { useAuth } from "@/context/AuthContext";
 import { LandingPage } from "@/components/landing/LandingPage";
 
 export default function RootPage() {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
   const router = useRouter();
 
-  // If user is already logged in, redirect to /home
+  // If user is already logged in, redirect to /home immediately
   useEffect(() => {
-    if (user) {
-      router.push("/home");
+    if (!isLoading && user) {
+      router.replace("/home");
     }
-  }, [user, router]);
+  }, [user, isLoading, router]);
 
-  // If not logged in, render the full Landing Page
+  // While checking auth status or if user is logged in, show blank/smooth dark background
+  if (isLoading || user) {
+    return (
+      <div className="min-h-screen bg-[#0E0E10] flex items-center justify-center">
+        <div className="w-7 h-7 rounded-full border-2 border-[#26B54F] border-t-transparent animate-spin" />
+      </div>
+    );
+  }
+
+  // If confirmed guest/unauthenticated, render the Landing Page
   return <LandingPage />;
 }

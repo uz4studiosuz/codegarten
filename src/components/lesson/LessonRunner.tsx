@@ -204,6 +204,15 @@ function SectionBlockView({
     );
   }
 
+  if (block.kind === "richtext") {
+    return (
+      <div
+        className="text-[16px] leading-[1.75] text-gray-700 dark:text-[#c9c9d0] space-y-3.5 [&_h1]:text-[22px] [&_h1]:font-extrabold [&_h1]:text-gray-900 [&_h1]:dark:text-white [&_h1]:mt-4 [&_h1]:mb-2 [&_h2]:text-[19px] [&_h2]:font-bold [&_h2]:text-gray-900 [&_h2]:dark:text-white [&_h2]:mt-3 [&_h2]:mb-1.5 [&_h3]:text-[17px] [&_h3]:font-bold [&_h3]:text-gray-800 [&_h3]:dark:text-zinc-200 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1.5 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-1.5 [&_li]:leading-[1.65] [&_blockquote]:border-l-4 [&_blockquote]:border-[#26B54F] [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-gray-600 [&_blockquote]:dark:text-zinc-300 [&_blockquote]:bg-[#26B54F]/[0.05] [&_blockquote]:py-1.5 [&_blockquote]:rounded-r-lg [&_code]:font-mono [&_code]:text-[13.5px] [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded-[6px] [&_code]:bg-gray-100 [&_code]:dark:bg-[#232328] [&_code]:text-[#7C5CE0] [&_code]:dark:text-[#A78BFA] [&_a]:text-[#26B54F] [&_a]:underline [&_a]:underline-offset-2 [&_a]:font-medium [&_mark]:bg-amber-500/20 [&_mark]:text-amber-900 [&_mark]:dark:text-amber-200 [&_mark]:px-1 [&_mark]:rounded [&_strong]:font-bold [&_strong]:text-gray-900 [&_strong]:dark:text-white"
+        dangerouslySetInnerHTML={{ __html: block.content }}
+      />
+    );
+  }
+
   if (block.kind === "choice") {
     return (
       <InlineChoiceBlockView
@@ -216,19 +225,24 @@ function SectionBlockView({
   }
 
   if (block.kind === "image") {
+    const customWidth = block.image.customWidth;
     const size = block.image.size ?? "full";
-    const sizeClasses = {
-      small: "max-w-[280px] max-h-[220px]",
-      medium: "max-w-[440px] max-h-[320px]",
-      large: "max-w-[620px] max-h-[420px]",
-      full: "w-full max-h-[380px]",
-    }[size];
+    const sizeClasses = customWidth
+      ? "w-full"
+      : {
+          small: "max-w-[280px] max-h-[220px]",
+          medium: "max-w-[440px] max-h-[320px]",
+          large: "max-w-[620px] max-h-[420px]",
+          full: "w-full max-h-[380px]",
+          custom: "w-full",
+        }[size];
 
     return (
       <figure
-        className={`rounded-[16px] border border-gray-200 dark:border-[#26262a] bg-gray-50 dark:bg-[#141416] overflow-hidden mx-auto ${
-          size !== "full" ? "w-fit" : "w-full"
+        className={`rounded-[16px] border border-gray-200 dark:border-[#26262a] bg-gray-50 dark:bg-[#141416] overflow-hidden mx-auto transition-all ${
+          customWidth ? "" : size !== "full" ? "w-fit" : "w-full"
         }`}
+        style={customWidth ? { width: `${customWidth}%`, maxWidth: "100%" } : undefined}
       >
         {/* Plain <img>: sources are authored freely — a path in public/, a remote
             URL, or a data: URI from the writer — and next/image would need every
@@ -361,6 +375,8 @@ export function LessonRunner({
       const spoken = sectionBlocks(step.section).flatMap((block) =>
         block.kind === "text" || block.kind === "callout"
           ? [block.text]
+          : block.kind === "richtext"
+          ? [block.content.replace(/<[^>]*>?/gm, " ")]
           : block.kind === "choice"
           ? ([block.question, ...block.options].filter(Boolean) as string[])
           : block.kind === "image"
@@ -852,6 +868,7 @@ export function LessonRunner({
                     seed={lessonId}
                     context={`${lessonTitle} ${levelTitle}`.toLowerCase()}
                     variant={activeVariant}
+                    config={step.customConfig}
                     onSolved={handleChallengeSolved}
                     onReadyChange={setChallengeReady}
                     registerCheck={registerCheck}

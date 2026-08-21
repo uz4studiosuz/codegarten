@@ -2,8 +2,17 @@
 
 import React, { useRef, useState } from "react";
 import {
+  IconAlertTriangle,
+  IconArrowLeft,
+  IconArrowRight,
+  IconArticle,
+  IconBookmarks,
   IconChevronDown,
   IconChevronUp,
+  IconDeviceGamepad2,
+  IconFileText,
+  IconGripVertical,
+  IconHelpCircle,
   IconInfoCircle,
   IconLink,
   IconPhoto,
@@ -13,9 +22,11 @@ import {
   IconWand,
   IconX,
 } from "@tabler/icons-react";
+import { RichTextEditor } from "./RichTextEditor";
 import { ALL_TOPICS, TOPIC_LABELS, type GameTopic } from "@/games/topics";
 import { getGame, listGames } from "@/games/registry";
 import { getGamePuzzles } from "@/games/puzzles";
+import { getGameSample } from "@/games/samples";
 import { resolveGame } from "@/games/resolve";
 import {
   BLOCK_HINTS,
@@ -507,24 +518,58 @@ function LessonForm({
     }
   });
 
-  const [collapsedSteps, setCollapsedSteps] = useState<Record<number, boolean>>({});
+  const [activeStepIndex, setActiveStepIndex] = useState(0);
+  const [deleteConfirmIndex, setDeleteConfirmIndex] = useState<number | null>(null);
+  const [showAddMenu, setShowAddMenu] = useState(false);
+  const [draggedTabIdx, setDraggedTabIdx] = useState<number | null>(null);
+  const [dragOverTabIdx, setDragOverTabIdx] = useState<number | null>(null);
 
-  const toggleStepCollapse = (index: number) => {
-    setCollapsedSteps((prev) => ({ ...prev, [index]: !prev[index] }));
+  // Keep active index within valid bounds
+  const safeActiveIndex = Math.min(Math.max(0, activeStepIndex), Math.max(0, steps.length - 1));
+  const activeStep = steps[safeActiveIndex];
+
+  const handleTabDragStart = (e: React.DragEvent, index: number) => {
+    setDraggedTabIdx(index);
+    e.dataTransfer.setData("text/plain", String(index));
+    e.dataTransfer.effectAllowed = "move";
   };
 
-  const allCollapsed = steps.length > 0 && steps.every((_, i) => Boolean(collapsedSteps[i]));
-
-  const toggleAllSteps = () => {
-    if (allCollapsed) {
-      setCollapsedSteps({});
-    } else {
-      const next: Record<number, boolean> = {};
-      steps.forEach((_, i) => {
-        next[i] = true;
-      });
-      setCollapsedSteps(next);
+  const handleTabDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    if (draggedTabIdx !== null && draggedTabIdx !== index) {
+      setDragOverTabIdx(index);
     }
+  };
+
+  const handleTabDrop = (e: React.DragEvent, dropIndex: number) => {
+    e.preventDefault();
+    if (draggedTabIdx !== null && draggedTabIdx !== dropIndex) {
+      const next = [...steps];
+      const [dragged] = next.splice(draggedTabIdx, 1);
+      next.splice(dropIndex, 0, dragged);
+      setSteps(next);
+      setActiveStepIndex(dropIndex);
+    }
+    setDraggedTabIdx(null);
+    setDragOverTabIdx(null);
+  };
+
+  const handleConfirmDelete = () => {
+    if (deleteConfirmIndex !== null) {
+      const nextSteps = steps.filter((_, i) => i !== deleteConfirmIndex);
+      setSteps(nextSteps);
+      if (safeActiveIndex >= nextSteps.length) {
+        setActiveStepIndex(Math.max(0, nextSteps.length - 1));
+      }
+      setDeleteConfirmIndex(null);
+    }
+  };
+
+  const handleAddStep = (kind: Exclude<LessonStep["kind"], "goal">) => {
+    const nextSteps = [...steps, emptyStep(kind)];
+    setSteps(nextSteps);
+    setActiveStepIndex(nextSteps.length - 1);
+    setShowAddMenu(false);
   };
 
   return (
@@ -599,110 +644,295 @@ function LessonForm({
         </p>
       </Section>
 
-      {/* ── The run: the author decides which screens follow, in what order ── */}
+      {/* ── Steps Section with Drag-and-Drop Tabs ── */}
       <Section
         title="Qadamlar"
         count={steps.length}
         badge={badgeFor(lessonIssues, (m) => /qadam|blok|bo'lim|savol|variant|javob|atama|rasm/.test(m))}
-        action={
-          steps.length > 1 ? (
-            <button
-              type="button"
-              onClick={toggleAllSteps}
-              className="text-[11.5px] font-semibold text-[#26B54F] hover:underline cursor-pointer"
-            >
-              {allCollapsed ? "Hammasini ochish" : "Hammasini yopish"}
-            </button>
-          ) : undefined
-        }
       >
-        <p className="text-[12px] leading-relaxed text-gray-500 dark:text-zinc-400 flex items-start gap-2">
-          <IconInfoCircle size={15} className="shrink-0 mt-0.5 text-[#A78BFA]" />
-          Dars shu tartibda ochiladi. Qadamlarni ochish yoki yopish uchun sarlavhasini bosing.
-        </p>
+        <div className="flex flex-col gap-3">
+          {/* Tabs Bar Header */}
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-[11.5px] font-bold text-gray-500 dark:text-zinc-400 flex items-center gap-1.5">
+              <IconInfoCircle size={14} className="text-[#A78BFA]" />
+              Tabni surib o&apos;rnini almashtirishingiz mumkin:
+            </span>
+          </div>
 
-        {steps.map((step, index) => {
-          const stepSummary = getStepSummary(
-            step,
-            autoGame?.name,
-            games
-          );
+          {/* Horizontal Drag-and-Drop Tabs Strip */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1.5 pt-0.5 scrollbar-thin scrollbar-thumb-gray-200 dark:scrollbar-thumb-[#2a2a30]">
+            {steps.map((st, idx) => {
+              const isActive = idx === safeActiveIndex;
+              const isDragOver = idx === dragOverTabIdx;
+              const isBeingDragged = idx === draggedTabIdx;
+              const quizNum = quizNumbers.get(idx);
 
-          return (
-            <StepCard
-              key={index}
-              index={index}
-              total={steps.length}
-              step={step}
-              quizNumber={quizNumbers.get(index)}
-              isCollapsed={Boolean(collapsedSteps[index])}
-              onToggleCollapse={() => toggleStepCollapse(index)}
-              summary={stepSummary}
-              onMove={(direction) => {
-                moveStep(index, direction);
-                const target = index + direction;
-                if (target >= 0 && target < steps.length) {
-                  setCollapsedSteps((prev) => ({
-                    ...prev,
-                    [index]: prev[target],
-                    [target]: prev[index],
-                  }));
-                }
-              }}
-              onRemove={() => removeStep(index)}
-            >
-              {step.kind === "section" && (
+              let TabIcon = IconFileText;
+              let toneColor = "text-blue-500";
+              let shortTitle = "Bo'lim";
+
+              if (st.kind === "section") {
+                TabIcon = IconFileText;
+                toneColor = "text-blue-500";
+                shortTitle = st.section.heading.trim() || `${idx + 1}-bo'lim`;
+              } else if (st.kind === "quiz") {
+                TabIcon = IconHelpCircle;
+                toneColor = "text-purple-500";
+                shortTitle = st.question.question.trim() ? (st.question.question.slice(0, 18) + (st.question.question.length > 18 ? "..." : "")) : `${quizNum || idx + 1}-savol`;
+              } else if (st.kind === "terms") {
+                TabIcon = IconBookmarks;
+                toneColor = "text-amber-500";
+                shortTitle = "Kalit so'zlar";
+              } else if (st.kind === "challenge") {
+                TabIcon = IconDeviceGamepad2;
+                toneColor = "text-green-500";
+                shortTitle = "O'yin";
+              }
+
+              return (
+                <div
+                  key={idx}
+                  draggable
+                  onDragStart={(e) => handleTabDragStart(e, idx)}
+                  onDragOver={(e) => handleTabDragOver(e, idx)}
+                  onDragLeave={() => setDragOverTabIdx(null)}
+                  onDrop={(e) => handleTabDrop(e, idx)}
+                  onDragEnd={() => {
+                    setDraggedTabIdx(null);
+                    setDragOverTabIdx(null);
+                  }}
+                  onClick={() => setActiveStepIndex(idx)}
+                  className={`group relative shrink-0 flex items-center gap-2 px-3 py-2 rounded-[11px] border-2 cursor-pointer select-none transition-all ${
+                    isBeingDragged
+                      ? "opacity-40 border-dashed border-gray-400 dark:border-zinc-600"
+                      : isDragOver
+                      ? "border-[#26B54F] bg-[#26B54F]/15 scale-105 shadow-md"
+                      : isActive
+                      ? "border-[#26B54F] bg-white dark:bg-[#1a1a1f] shadow-sm text-gray-900 dark:text-white ring-2 ring-[#26B54F]/20 font-bold"
+                      : "border-gray-200 dark:border-[#26262a] bg-gray-50/70 dark:bg-[#151518] hover:border-gray-300 dark:hover:border-zinc-700 text-gray-600 dark:text-zinc-400 font-medium"
+                  }`}
+                  title="Surib o'rnini almashtirish uchun bosing va torting"
+                >
+                  <span className="shrink-0 w-4 h-4 rounded-full bg-gray-200/80 dark:bg-[#25252b] text-[10px] font-mono font-extrabold flex items-center justify-center text-gray-700 dark:text-zinc-300">
+                    {idx + 1}
+                  </span>
+
+                  <TabIcon size={14} className={`shrink-0 ${toneColor}`} />
+
+                  <span className="max-w-[110px] truncate text-[12px]">
+                    {shortTitle}
+                  </span>
+
+                  {/* Close / Delete Tab button */}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setDeleteConfirmIndex(idx);
+                    }}
+                    title="Qadamni o'chirish"
+                    className="shrink-0 p-0.5 rounded-full text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors"
+                  >
+                    <IconX size={13} stroke={2.5} />
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Quick Add Step Buttons Strip */}
+          <div className="flex items-center justify-between flex-wrap gap-2 pt-1 pb-1 border-b border-gray-100 dark:border-[#222226]">
+            <span className="text-[11.5px] font-bold text-gray-500 dark:text-zinc-400">
+              Qadam qo&apos;shish:
+            </span>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <button
+                type="button"
+                onClick={() => handleAddStep("section")}
+                className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-[8px] border-2 border-blue-500/30 bg-blue-500/10 hover:bg-blue-500/20 text-blue-600 dark:text-blue-400 text-[11.5px] font-bold transition-all cursor-pointer shadow-2xs"
+              >
+                <IconPlus size={13} stroke={2.5} />
+                <span>+ Bo&apos;lim</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleAddStep("quiz")}
+                className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-[8px] border-2 border-purple-500/30 bg-purple-500/10 hover:bg-purple-500/20 text-purple-600 dark:text-purple-400 text-[11.5px] font-bold transition-all cursor-pointer shadow-2xs"
+              >
+                <IconPlus size={13} stroke={2.5} />
+                <span>+ Savol</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleAddStep("terms")}
+                className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-[8px] border-2 border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 text-[11.5px] font-bold transition-all cursor-pointer shadow-2xs"
+              >
+                <IconPlus size={13} stroke={2.5} />
+                <span>+ Kalit so&apos;zlar</span>
+              </button>
+              {kindHasGame(lesson.kind) && !hasChallengeStep && (
+                <button
+                  type="button"
+                  onClick={() => handleAddStep("challenge")}
+                  className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-[8px] border-2 border-green-500/30 bg-green-500/10 hover:bg-green-500/20 text-green-600 dark:text-green-400 text-[11.5px] font-bold transition-all cursor-pointer shadow-2xs"
+                >
+                  <IconPlus size={13} stroke={2.5} />
+                  <span>+ O&apos;yin</span>
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Delete Confirmation Modal */}
+          {deleteConfirmIndex !== null && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+              <div className="w-full max-w-sm rounded-[18px] border-2 border-red-500/40 bg-white dark:bg-[#18181c] p-5 shadow-2xl flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-150">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-full bg-red-500/15 text-red-500 flex items-center justify-center shrink-0">
+                    <IconAlertTriangle size={22} />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <h4 className="text-[15px] font-bold text-gray-900 dark:text-white">
+                      Qadamni o&apos;chirishni tasdiqlang
+                    </h4>
+                    <p className="text-[12.5px] text-gray-500 dark:text-zinc-400 leading-relaxed">
+                      {deleteConfirmIndex + 1}-qadamni (
+                      {getStepSummary(steps[deleteConfirmIndex], autoGame?.name, games) || "Qadam"}
+                      ) o&apos;chirmoqchimisiz? Bu amalni bekor qilib bo&apos;lmaydi.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-end gap-2 pt-2 border-t border-gray-100 dark:border-[#26262a]">
+                  <button
+                    type="button"
+                    onClick={() => setDeleteConfirmIndex(null)}
+                    className="px-3.5 py-1.5 rounded-[9px] text-[12.5px] font-bold text-gray-600 dark:text-zinc-300 hover:bg-gray-100 dark:hover:bg-[#25252a] transition-colors cursor-pointer"
+                  >
+                    Bekor qilish
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleConfirmDelete}
+                    className="px-4 py-1.5 rounded-[9px] text-[12.5px] font-bold bg-red-500 text-white hover:bg-red-600 transition-colors shadow-sm cursor-pointer"
+                  >
+                    Ha, o&apos;chirish
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Active Step Dedicated Editor Card */}
+          {activeStep && (
+            <div className="rounded-[14px] border-2 border-gray-200 dark:border-[#26262a] bg-gray-50/40 dark:bg-[#141417]/40 p-4 flex flex-col gap-4 mt-1 shadow-xs">
+              {/* Active Step Top Bar Controls */}
+              <div className="flex items-center justify-between pb-3 border-b border-gray-200/70 dark:border-[#26262a]">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="shrink-0 px-2 py-0.5 rounded-[6px] bg-[#26B54F]/15 text-[#177F37] dark:text-[#4ADE80] font-mono text-[11px] font-bold">
+                    {safeActiveIndex + 1} / {steps.length}
+                  </span>
+                  <span className="text-[13.5px] font-extrabold text-gray-800 dark:text-zinc-200 truncate">
+                    {STEP_LABELS[activeStep.kind as Exclude<LessonStep["kind"], "goal">]}
+                  </span>
+                </div>
+
+                {/* Move Left / Right & Delete */}
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => moveStep(safeActiveIndex, -1)}
+                    disabled={safeActiveIndex === 0}
+                    title="Chapga / Oldinga surish"
+                    className="flex items-center gap-1 px-2 py-1 rounded-[7px] text-[11px] font-bold text-gray-500 dark:text-zinc-400 hover:text-black dark:hover:text-white hover:bg-gray-200 dark:hover:bg-[#25252a] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                  >
+                    <IconArrowLeft size={13} />
+                    <span>Oldinga</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => moveStep(safeActiveIndex, 1)}
+                    disabled={safeActiveIndex === steps.length - 1}
+                    title="O'ngga / Keyinga surish"
+                    className="flex items-center gap-1 px-2 py-1 rounded-[7px] text-[11px] font-bold text-gray-500 dark:text-zinc-400 hover:text-black dark:hover:text-white hover:bg-gray-200 dark:hover:bg-[#25252a] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                  >
+                    <span>Keyinga</span>
+                    <IconArrowRight size={13} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Step Form Body */}
+              {activeStep.kind === "section" && (
                 <SectionStepEditor
-                  section={step.section}
-                  onChange={(section) => replaceStep(index, { kind: "section", section })}
+                  section={activeStep.section}
+                  onChange={(section) => replaceStep(safeActiveIndex, { kind: "section", section })}
                 />
               )}
-              {step.kind === "terms" && (
+              {activeStep.kind === "terms" && (
                 <TermsStepEditor
-                  terms={step.terms}
-                  onChange={(terms) => replaceStep(index, { kind: "terms", terms })}
+                  terms={activeStep.terms}
+                  onChange={(terms) => replaceStep(safeActiveIndex, { kind: "terms", terms })}
                 />
               )}
-              {step.kind === "quiz" && (
+              {activeStep.kind === "quiz" && (
                 <QuizStepEditor
-                  question={step.question}
-                  onChange={(question) => replaceStep(index, { kind: "quiz", question })}
+                  question={activeStep.question}
+                  onChange={(question) => replaceStep(safeActiveIndex, { kind: "quiz", question })}
                 />
               )}
-              {step.kind === "challenge" && (
+              {activeStep.kind === "challenge" && (
                 <ChallengeStepEditor
-                  step={step}
+                  step={activeStep}
                   lessonKind={lesson.kind}
                   moduleTopics={draft.topics}
                   lessonTitle={lesson.title}
                   levelTitle={level.title}
                   lessonId={lesson.id}
                   onChange={(updated) => {
-                    replaceStep(index, updated);
+                    replaceStep(safeActiveIndex, updated);
                     if (updated.gameId !== undefined) {
                       patch({ gameId: updated.gameId });
                     }
                   }}
                 />
               )}
-            </StepCard>
-          );
-        })}
 
-        <div className="flex flex-wrap gap-2 pt-1">
-          <AddButton label={STEP_LABELS.section} onClick={() => addStep("section")} />
-          <AddButton label={STEP_LABELS.quiz} onClick={() => addStep("quiz")} />
-          <AddButton label={STEP_LABELS.terms} onClick={() => addStep("terms")} />
+              {/* Step Navigation Bottom Bar */}
+              <div className="flex items-center justify-between pt-3 border-t border-gray-200/70 dark:border-[#26262a]">
+                <button
+                  type="button"
+                  onClick={() => setActiveStepIndex(Math.max(0, safeActiveIndex - 1))}
+                  disabled={safeActiveIndex === 0}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] text-[12px] font-bold text-gray-600 dark:text-zinc-300 hover:bg-gray-200 dark:hover:bg-[#25252a] disabled:opacity-25 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                >
+                  <IconArrowLeft size={14} />
+                  <span>Oldingi qadam</span>
+                </button>
+
+                <span className="text-[11.5px] font-medium text-gray-400 dark:text-zinc-500">
+                  {safeActiveIndex + 1} / {steps.length}
+                </span>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveStepIndex(Math.min(steps.length - 1, safeActiveIndex + 1))}
+                  disabled={safeActiveIndex === steps.length - 1}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] text-[12px] font-bold text-gray-600 dark:text-zinc-300 hover:bg-gray-200 dark:hover:bg-[#25252a] disabled:opacity-25 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                >
+                  <span>Keyingi qadam</span>
+                  <IconArrowRight size={14} />
+                </button>
+              </div>
+            </div>
+          )}
+
           {kindHasGame(lesson.kind) && !hasChallengeStep && (
-            <AddButton label={STEP_LABELS.challenge} onClick={() => addStep("challenge")} />
+            <p className="text-[11.5px] text-gray-400 dark:text-zinc-500">
+              O&apos;yin qadami qo&apos;shilmasa, o&apos;yin darsning eng oxirida ochiladi.
+            </p>
           )}
         </div>
-
-        {kindHasGame(lesson.kind) && !hasChallengeStep && (
-          <p className="text-[12px] text-gray-400 dark:text-zinc-500">
-            O&apos;yin qadami qo&apos;yilmasa, o&apos;yin darsning eng oxirida ochiladi.
-          </p>
-        )}
       </Section>
     </div>
   );
@@ -785,95 +1015,13 @@ function MoveControls({
   );
 }
 
-function StepCard({
-  index,
-  total,
-  step,
-  quizNumber,
-  isCollapsed,
-  onToggleCollapse,
-  onMove,
-  onRemove,
-  summary,
-  children,
-}: {
-  index: number;
-  total: number;
-  step: LessonStep;
-  /** "2-savol", so a question keeps its own numbering inside the run. */
-  quizNumber?: number;
-  isCollapsed: boolean;
-  onToggleCollapse: () => void;
-  onMove: (direction: -1 | 1) => void;
-  onRemove: () => void;
-  summary?: string;
-  children: React.ReactNode;
-}) {
-  const label =
-    step.kind === "goal"
-      ? "Maqsad"
-      : step.kind === "quiz" && quizNumber
-      ? `${quizNumber}-savol`
-      : STEP_LABELS[step.kind as Exclude<LessonStep["kind"], "goal">];
-
-  const tone =
-    step.kind === "quiz"
-      ? "border-[#A78BFA]/40 bg-[#A78BFA]/[0.02]"
-      : step.kind === "challenge"
-      ? "border-[#26B54F]/40 bg-[#26B54F]/[0.02]"
-      : step.kind === "terms"
-      ? "border-amber-500/40 bg-amber-500/[0.02]"
-      : "border-gray-200 dark:border-[#222226]";
-
-  return (
-    <div className={`rounded-[14px] border-2 ${tone} overflow-hidden transition-all flex flex-col`}>
-      <div className="flex items-center gap-2 px-3.5 py-2.5 bg-gray-50/80 dark:bg-[#1a1a1e]/80 border-b border-gray-100 dark:border-[#222226]/80 select-none">
-        <button
-          type="button"
-          onClick={onToggleCollapse}
-          className="flex items-center gap-2 min-w-0 flex-1 text-left cursor-pointer group"
-        >
-          <IconChevronDown
-            size={16}
-            className={`shrink-0 text-gray-400 dark:text-zinc-500 group-hover:text-black dark:group-hover:text-white transition-transform duration-200 ${
-              isCollapsed ? "-rotate-90" : ""
-            }`}
-          />
-          <span className="shrink-0 w-[22px] h-[22px] rounded-[6px] bg-white dark:bg-[#232327] border border-gray-200 dark:border-[#2a2a30] text-[11px] font-mono font-bold text-gray-600 dark:text-zinc-300 flex items-center justify-center shadow-2xs">
-            {index + 1}
-          </span>
-          <span className="shrink-0 text-[11.5px] font-extrabold uppercase tracking-wider text-gray-700 dark:text-zinc-300">
-            {label}
-          </span>
-          {summary && (
-            <span className="min-w-0 flex-1 text-[12px] text-gray-400 dark:text-zinc-500 truncate font-normal">
-              — {summary}
-            </span>
-          )}
-        </button>
-
-        <div className="flex items-center gap-1 shrink-0 ml-auto">
-          <MoveControls
-            index={index}
-            total={total}
-            onMove={onMove}
-            onRemove={onRemove}
-            removeLabel="Qadamni o'chirish"
-          />
-        </div>
-      </div>
-
-      {!isCollapsed && <div className="p-3.5 flex flex-col gap-3">{children}</div>}
-    </div>
-  );
-}
-
 // ── Step editors ────────────────────────────────────────────────────────────
 
-const BLOCK_ORDER: BlockKind[] = ["text", "code", "choice", "image", "callout"];
+const BLOCK_ORDER: BlockKind[] = ["text", "richtext", "code", "choice", "image", "callout"];
 
 const BLOCK_TONES: Record<BlockKind, string> = {
   text: "border-gray-200 dark:border-[#222226]",
+  richtext: "border-[#7C5CE0]/40 bg-[#7C5CE0]/[0.02]",
   code: "border-[#A78BFA]/40 bg-[#A78BFA]/[0.02]",
   choice: "border-[#3B82F6]/40 bg-[#3B82F6]/[0.02]",
   image: "border-[#3B82F6]/40 bg-[#3B82F6]/[0.02]",
@@ -883,6 +1031,10 @@ const BLOCK_TONES: Record<BlockKind, string> = {
 function getBlockSummary(block: SectionBlock): string {
   if (block.kind === "text") {
     return block.text ? block.text.slice(0, 45) + (block.text.length > 45 ? "..." : "") : "(Bo'sh matn)";
+  }
+  if (block.kind === "richtext") {
+    const stripped = block.content.replace(/<[^>]*>?/gm, " ").trim();
+    return stripped ? stripped.slice(0, 45) + (stripped.length > 45 ? "..." : "") : "(Bo'sh rich matn)";
   }
   if (block.kind === "code") {
     if (block.caption?.trim()) return block.caption;
@@ -920,6 +1072,7 @@ function SectionStepEditor({
 }) {
   const blocks = draftBlocks(section);
   const [collapsedBlocks, setCollapsedBlocks] = useState<Record<number, boolean>>({});
+  const [deleteBlockIndex, setDeleteBlockIndex] = useState<number | null>(null);
 
   const setBlocks = (next: SectionBlock[]) => onChange({ ...section, blocks: next });
   const replace = (index: number, block: SectionBlock) =>
@@ -995,7 +1148,7 @@ function SectionStepEditor({
                 index={i}
                 total={blocks.length}
                 onMove={(direction) => move(i, direction)}
-                onRemove={() => setBlocks(blocks.filter((_, k) => k !== i))}
+                onRemove={() => setDeleteBlockIndex(i)}
                 removeLabel="Blokni o'chirish"
               />
             </div>
@@ -1009,6 +1162,19 @@ function SectionStepEditor({
                       value={block.text}
                       placeholder="Sikl bir xil ishni takrorlash uchun kerak."
                       onChange={(e) => replace(i, { kind: "text", text: e.target.value })}
+                    />
+                  </Field>
+                )}
+
+                {block.kind === "richtext" && (
+                  <Field
+                    label="Rich Matn (Formatlangan)"
+                    hint="Qalin, kursiv, sarlavha, ro'yxat, havola va boshqa boy formatlar"
+                  >
+                    <RichTextEditor
+                      value={block.content}
+                      placeholder="Formatlangan matnni bu yerga yozing..."
+                      onChange={(content) => replace(i, { kind: "richtext", content })}
                     />
                   </Field>
                 )}
@@ -1085,6 +1251,47 @@ function SectionStepEditor({
           " · "
         )}
       </p>
+
+      {/* ── Block Delete Confirmation Modal ── */}
+      {deleteBlockIndex !== null && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-100">
+          <div className="w-full max-w-sm rounded-[18px] border-2 border-red-500/40 bg-white dark:bg-[#18181c] p-5 shadow-2xl flex flex-col gap-4 animate-in zoom-in-95 duration-150">
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 rounded-full bg-red-500/15 text-red-500 flex items-center justify-center shrink-0">
+                <IconTrash size={22} />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h3 className="text-[15px] font-bold text-gray-900 dark:text-white">
+                  Blokni o&apos;chirish
+                </h3>
+                <p className="text-[12.5px] text-gray-500 dark:text-zinc-400 mt-1">
+                  <strong>{deleteBlockIndex + 1}-blok ({blocks[deleteBlockIndex] ? BLOCK_LABELS[blocks[deleteBlockIndex].kind] : "blok"})</strong>ni o&apos;chirishni tasdiqlaysizmi?
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-gray-100 dark:border-[#27272a]">
+              <button
+                type="button"
+                onClick={() => setDeleteBlockIndex(null)}
+                className="px-3.5 py-1.5 rounded-[10px] border border-gray-200 dark:border-[#333339] text-[12.5px] font-bold text-gray-700 dark:text-zinc-300 hover:bg-gray-100 dark:hover:bg-[#25252a] transition-colors cursor-pointer"
+              >
+                Bekor qilish
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setBlocks(blocks.filter((_, k) => k !== deleteBlockIndex));
+                  setDeleteBlockIndex(null);
+                }}
+                className="px-3.5 py-1.5 rounded-[10px] bg-red-500 hover:bg-red-600 text-white text-[12.5px] font-bold shadow-xs transition-colors cursor-pointer"
+              >
+                Ha, o&apos;chirish
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
@@ -1220,9 +1427,51 @@ function ImageField({
   const uploaded = Boolean(image?.src && isUploadedImage(image.src));
   const [mode, setMode] = useState<"url" | "upload">(uploaded ? "upload" : "url");
   const [error, setError] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const bytes = image?.src && uploaded ? dataUriBytes(image.src) : 0;
+
+  // Determine current width percentage
+  const currentWidth = image?.customWidth ?? (
+    image?.size === "small"
+      ? 35
+      : image?.size === "medium"
+      ? 60
+      : image?.size === "large"
+      ? 85
+      : 100
+  );
+
+  const handleStartDrag = (e: React.PointerEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+    const startX = e.clientX;
+    const initialW = currentWidth;
+    const containerWidth = containerRef.current?.getBoundingClientRect().width ?? 350;
+
+    const onPointerMove = (moveEvent: PointerEvent) => {
+      const deltaX = moveEvent.clientX - startX;
+      // Since drag handle is on the right side of centered image, delta * 2 gives balanced width delta
+      const deltaPercent = (deltaX / containerWidth) * 100 * 2;
+      const newWidth = Math.round(Math.min(100, Math.max(20, initialW + deltaPercent)));
+      onChange({
+        ...image!,
+        customWidth: newWidth,
+        size: "custom",
+      });
+    };
+
+    const onPointerUp = () => {
+      setIsDragging(false);
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", onPointerUp);
+    };
+
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", onPointerUp);
+  };
 
   const handleFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -1355,30 +1604,88 @@ function ImageField({
 
       {image?.src && (
         <>
-          <div className="rounded-[10px] border border-gray-200 dark:border-[#27272a] overflow-hidden bg-white dark:bg-[#0d0d0f]">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={image.src}
-              alt={image.alt || "Rasm ko'rinishi"}
-              className="w-full max-h-[160px] object-contain"
+          {/* Interactive Resizable Preview Container */}
+          <div
+            ref={containerRef}
+            className="relative rounded-[12px] border-2 border-gray-200 dark:border-[#27272a] bg-gray-100/70 dark:bg-[#0a0a0c] p-3 flex flex-col items-center justify-center select-none overflow-hidden"
+          >
+            <div
+              className="relative group transition-all duration-75 flex items-center justify-center bg-white dark:bg-[#141416] rounded-[10px] border border-gray-300 dark:border-[#2f2f36] shadow-sm overflow-hidden"
+              style={{
+                width: `${currentWidth}%`,
+                maxWidth: "100%",
+                minWidth: "100px",
+              }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={image.src}
+                alt={image.alt || "Rasm ko'rinishi"}
+                className="w-full max-h-[190px] object-contain pointer-events-none"
+              />
+
+              {/* Drag Handle on the right edge */}
+              <div
+                onPointerDown={handleStartDrag}
+                title="Rasmni tortib o'lchamini o'zgartiring"
+                className={`absolute right-0 top-0 bottom-0 w-4.5 bg-[#26B54F]/20 hover:bg-[#26B54F] group-hover:bg-[#26B54F]/40 cursor-ew-resize flex items-center justify-center transition-all ${
+                  isDragging ? "bg-[#26B54F] shadow-lg" : ""
+                }`}
+              >
+                <div className="w-1 h-6 rounded-full bg-white shadow-xs" />
+              </div>
+
+              {/* Live width badge overlay */}
+              <div className="absolute left-2 bottom-2 px-2 py-0.5 rounded-[6px] bg-black/70 backdrop-blur-xs text-white font-mono text-[10.5px] font-bold pointer-events-none">
+                {currentWidth}%
+              </div>
+            </div>
+
+            <p className="text-[11px] text-gray-400 dark:text-zinc-500 mt-2 flex items-center gap-1">
+              <IconInfoCircle size={13} className="text-[#26B54F]" />
+              Rasmning o&apos;ng chetidan ushlab torting yoki pastdagi slayderdan foydalaning.
+            </p>
+          </div>
+
+          {/* Interactive Width Slider */}
+          <div className="flex flex-col gap-1.5 pt-1">
+            <div className="flex items-center justify-between text-[11px] font-bold text-gray-500 dark:text-zinc-400">
+              <span className="uppercase tracking-wider">O&apos;lcham foizi</span>
+              <span className="font-mono text-[#26B54F] font-extrabold">{currentWidth}%</span>
+            </div>
+            <input
+              type="range"
+              min={20}
+              max={100}
+              step={1}
+              value={currentWidth}
+              onChange={(e) => {
+                const w = Number(e.target.value);
+                onChange({
+                  ...image,
+                  customWidth: w,
+                  size: "custom",
+                });
+              }}
+              className="w-full accent-[#26B54F] cursor-pointer"
             />
           </div>
 
-          {/* Image Size Selector */}
+          {/* Image Size Preset Buttons */}
           <div className="flex flex-col gap-1.5">
             <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-zinc-400">
-              Rasm o&apos;lchami
+              Tezkor shablonlar
             </span>
             <div className="grid grid-cols-4 gap-1.5">
               {(
                 [
-                  { key: "small", label: "Kichik", hint: "~280px" },
-                  { key: "medium", label: "O'rtacha", hint: "~440px" },
-                  { key: "large", label: "Katta", hint: "~620px" },
-                  { key: "full", label: "To'liq", hint: "100%" },
+                  { key: "small", label: "Kichik", width: 35, hint: "35%" },
+                  { key: "medium", label: "O'rtacha", width: 60, hint: "60%" },
+                  { key: "large", label: "Katta", width: 85, hint: "85%" },
+                  { key: "full", label: "To'liq", width: 100, hint: "100%" },
                 ] as const
-              ).map(({ key, label, hint }) => {
-                const active = (image.size ?? "full") === key;
+              ).map(({ key, label, width, hint }) => {
+                const active = currentWidth === width;
                 return (
                   <button
                     key={key}
@@ -1387,6 +1694,7 @@ function ImageField({
                       onChange({
                         ...image,
                         size: key,
+                        customWidth: width,
                       })
                     }
                     className={`flex flex-col items-center justify-center py-1.5 px-2 rounded-[10px] border-2 text-[11.5px] font-bold transition-all cursor-pointer ${
@@ -1754,6 +2062,68 @@ function ChallengeStepEditor({
           </p>
         </div>
       )}
+
+      {/* ── Custom Configuration ── */}
+      <div className="flex flex-col gap-2 pt-2 border-t border-gray-200 dark:border-[#26262a]">
+        <div className="flex items-center justify-between">
+          <span className="text-[12px] font-bold text-gray-700 dark:text-zinc-300">
+            Maxsus konfiguratsiya (JSON)
+          </span>
+          {activeGameId && getGameSample(activeGameId) && (
+            <button
+              type="button"
+              onClick={() => {
+                const s = getGameSample(activeGameId);
+                if (s) {
+                  onChange({ ...step, customConfig: s.sample });
+                }
+              }}
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[7px] bg-[#26B54F]/15 hover:bg-[#26B54F]/25 text-[#177F37] dark:text-[#4ADE80] text-[11.5px] font-bold transition-all cursor-pointer shadow-2xs"
+            >
+              <IconWand size={13} />
+              <span>Namuna JSON ni yuklash</span>
+            </button>
+          )}
+        </div>
+
+        {activeGameId && getGameSample(activeGameId) && (
+          <p className="text-[11.5px] text-gray-500 dark:text-zinc-400">
+            💡 <strong className="text-gray-700 dark:text-zinc-300">{getGameSample(activeGameId)?.gameName}:</strong> {getGameSample(activeGameId)?.description}
+          </p>
+        )}
+
+        <TextArea
+          rows={7}
+          placeholder={`{\n  "grid": 5,\n  "start": { "x": 0, "y": 0 },\n  ...\n}`}
+          value={
+            step.customConfig !== undefined
+              ? typeof step.customConfig === "string"
+                ? step.customConfig
+                : JSON.stringify(step.customConfig, null, 2)
+              : ""
+          }
+          onChange={(e) => {
+            const val = e.target.value;
+            if (!val.trim()) {
+              onChange({ ...step, customConfig: undefined });
+              return;
+            }
+            try {
+              // Try to parse to object, but keep as string in state if they are typing
+              const parsed = JSON.parse(val);
+              onChange({ ...step, customConfig: parsed });
+            } catch (err) {
+              // If it's invalid JSON while typing, we just store the string.
+              onChange({ ...step, customConfig: val });
+            }
+          }}
+          className="font-mono text-[12px] leading-relaxed"
+        />
+
+        {typeof step.customConfig === "string" && step.customConfig.trim() !== "" && (
+          <p className="text-[11px] text-red-500 font-bold">⚠️ Xato JSON formati. Qavslar yoki vergullarni tekshiring.</p>
+        )}
+      </div>
     </div>
   );
 }
